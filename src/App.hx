@@ -3,7 +3,7 @@ import js.node.Http;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import async.IO;
-import lobby.LobbyPage;
+import lobby.ConnectionPage;
 import error.ErrorPage;
 import controller.StyleController;
 import controller.ConnectController;
@@ -37,7 +37,7 @@ class App {
         var route : String = idx == -1 ? im.url : im.url.substring(0, idx);
         Sys.println(route);
         switch (route) { //routage
-            case "/": new LobbyPage(im, sr);
+            case "/": new MainPage(im, sr);
             case "/css": new StyleController(im, sr);
             case "/connect": new ConnectController(im, sr, body);
             //case "/play": new GameController(im, sr, body);

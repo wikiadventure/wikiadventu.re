@@ -1,6 +1,6 @@
 package controller;
 
-import js.html.GamepadEvent;
+import lobby.ConnectionPage;
 import lobby.Lobby;
 import lobby.player.Player;
 import config.Language;
@@ -23,6 +23,10 @@ class ConnectController {
         this.sr = sr;
         this.body = body;
         var data : QuerystringParseResult = null;
+        if (im.method == Get) {
+            new ConnectionPage(im, sr);
+            return;
+        }
         if (im.method != Post) {
             new ErrorPage(im, sr, body, "Method not allowed!", MethodNotAllowed);
             return;
