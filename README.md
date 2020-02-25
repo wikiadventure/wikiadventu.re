@@ -28,8 +28,9 @@ make sure to install the haxe extension pack
 ## Debug
 
 ### Visual Studio Code
-    now you can hit debug > start debugging ( or f5 ), haxe will transpile the project to JavaScript in the bin/App.js file with the         node.hxml config
-    and you can start debugging the node app with the Visual studio code debugger attach
+
+now you can hit debug > start debugging ( or f5 ), haxe will transpile the project to JavaScript in the bin/App.js file with the         node.hxml config and you can start debugging the node app with the Visual studio code debugger attach
+    
     
 ## TODO
 
