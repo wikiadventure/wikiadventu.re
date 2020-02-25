@@ -1,8 +1,8 @@
-#WikiAdventure
+# WikiAdventure
 
-##Setup
+## Setup
 
-###Haxe
+### Haxe
 
 First you need to install haxe > 4.0.0 [here](https://haxe.org/download/)
 
@@ -12,7 +12,7 @@ haxelib install hxnodejs
 haxelib install hxsocketio
 haxelib install hxnodejs-uuid
 ```
-###NodeJS
+### NodeJS
 
 then you need to install nodeJS > 12.16.0 [here](https://nodejs.org/en/download/)
 
@@ -21,17 +21,17 @@ then install the corresponding npm modules with command :
 cd bin
 npm install
 ```
- ###Visual Studio Code   
+ ### Visual Studio Code   
 
 make sure to install the haxe extension pack
 
-##Debug
+## Debug
 
-###Visual Studio Code
+### Visual Studio Code
     now you can hit debug > start debugging ( or f5 ), haxe will transpile the project to JavaScript in the bin/App.js file with the         node.hxml config
     and you can start debugging the node app with the Visual studio code debugger attach
     
-##TODO
+## TODO
 
 - [x] CSS routing
 - [x] Connection form
