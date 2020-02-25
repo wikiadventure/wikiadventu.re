@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Wiki Adventure chat Room $1</title>
+    
+    <link rel="stylesheet" href="/css/chatSection.css">
+  </head>
+  <body>
+    <section class="chatSection">
+      <ul id="outputMessages"></ul>
+      <form action="" id="chatForm">
+        <input id="inputMessage" autocomplete="off" /><button id="send">Send</button>
+      </form>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script>
+    addEventListener("load",function(){
+        var links= document.getElementsByTagName("a");
+        for (var i=0;i<links.length;i++){
+            links[i].addEventListener("click",function(e){
+            links[i].attributes
+            //prevent event action
+            e.preventDefault();
+            })
+        }
+    }); 
+    </script>
+    <script>
+        var playerID = "$2";
+        if (history.pushState) {
+            window.history.pushState("object or string", "WikiAdventure", "play/$1");
+        } else {
+            document.location.href = "play/$1";
+        }
+        var url = window.location.href;
+        var idx = url.indexOf("play/");
+        var id =  url.substring(idx+5);
+        addEventListener("load",(function () {
+            var socket = io("/"+id);
+            document.getElementById('chatForm').onsubmit = function(e){
+                e.preventDefault(); // prevents page reloading
+                socket.emit('message', playerID + ":" +document.getElementById('inputMessage').value);
+                document.getElementById('inputMessage').value = "";
+                return false;
+            };
+            socket.on('message', function(msg){
+                var messageLine = document.createElement('li');
+                messageLine.textContent = msg;
+                document.getElementById('outputMessages').insertBefore(messageLine, document.getElementById('outputMessages').childNodes[0]);
+            });
+        }));
+    </script>
+  </body>
+</html>

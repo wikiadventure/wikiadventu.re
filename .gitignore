@@ -1,0 +1,6 @@
+#ignore the compiled project
+bin/App.js
+#ignore the npm module, you can install them : cd bin ; npm install ;
+bin/node_modules
+#ignore folder dedicated to local testing
+localTesting

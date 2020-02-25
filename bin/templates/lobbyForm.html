@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A layout example that shows off a responsive product landing page.">
+    <title>WikiAdventure lobby</title>    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="/css/lobbyForm.css">
+</head>
+<body>
+    <div class="splash-container">
+        <div class="splash">
+            <h1 class="splash-head">Create or join</h1>
+            <p class="splash-subhead">
+                a game of unlimited knowledge
+            </p>
+            <p>
+                <a href="#publicJoin" class="pure-button pure-button-primary">Join a public lobby</a>
+                <a href="#privateJoin" class="pure-button pure-button-primary">Join a private lobby</a>
+                <a href="#privateCreate" class="pure-button pure-button-primary">Create a private lobby</a>
+            </p>
+        </div>
+    </div>
+    <div class="content-wrapper">
+        <div class="content" id="publicJoin">
+            <h2 class="content-head is-center">Join a public lobby</h2>
+    
+            <div class="pure-g">
+                <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
+                    <form class="pure-form pure-form-stacked" method="post" action="/connect">
+                        <fieldset>
+                            
+                            <input name="language" type="hidden" value="en">
+                            <input name="type" type="hidden" value="publicJoin">
+
+                            <label for="publicJoinPseudo">Your Pseudo</label>
+                            <input id="publicJoinPseudo" name="pseudo" type="text" placeholder="Your Pseudo" minlength="6" maxlength="25">
+    
+                            <button type="submit" class="pure-button">Join</button>
+                        </fieldset>
+                    </form>
+                </div>
+    
+                <div class="l-box-lrg pure-u-1 pure-u-md-3-5">
+                    <h4>How To Play</h4>
+                    <p>
+                        TODO description here
+                    </p>
+    
+                    <h4>Report a bug</h4>
+                    <p>
+                        TODO here
+                    </p>
+                </div>
+            </div>
+    
+        </div>
+
+        <div class="content" id="privateJoin">
+            <h2 class="content-head is-center">Join a private lobby</h2>
+    
+            <div class="pure-g">
+                <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
+                    <form class="pure-form pure-form-stacked" method="post" action="/connect">
+                        <fieldset>
+                            
+                            <input name="language" type="hidden" value="en">
+                            <input name="type" type="hidden" value="privateJoin">
+
+                            <label for="privateJoinPseudo">Your Pseudo</label>
+                            <input id="privateJoinPseudo" name="pseudo" type="text" placeholder="Your Pseudo"  minlength="6" maxlength="25">
+                            
+                            <label for="id">The Lobby ID</label>
+                            <input id="id" name="id" type="text" placeholder="Lobby ID" required>
+
+                            <label for="privateJoinPassword">The Lobby Password</label>
+                            <input id="privateJoinPassword" name="password" type="password" placeholder="Lobby Password"  minlength="6" maxlength="25">
+    
+                            <button type="submit" class="pure-button">Join</button>
+                        </fieldset>
+                    </form>
+                </div>
+    
+                <div class="l-box-lrg pure-u-1 pure-u-md-3-5">
+                    <h4>How To Play</h4>
+                    <p>
+                        TODO description here
+                    </p>
+    
+                    <h4>Report a bug</h4>
+                    <p>
+                        TODO here
+                    </p>
+                </div>
+            </div>
+    
+        </div>
+
+        <div class="content" id="privateCreate">
+            <h2 class="content-head is-center">Create a private lobby</h2>
+    
+            <div class="pure-g">
+                <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
+                    <form class="pure-form pure-form-stacked" method="post" action="/connect">
+                        <fieldset>
+                            
+                            <input name="language" type="hidden" value="en">
+                            <input name="type" type="hidden" value="privateCreate">
+
+                            <label for="privateJCreatePseudo">Your Pseudo</label>
+                            <input id="privateJCreatePseudo" name="pseudo" type="text" placeholder="Your Pseudo" required minlength="6" maxlength="25">
+
+                            <label for="privateJCreatePassword">The Lobby Password</label>
+                            <input id="privateJCreatePassword" name="password" type="password" placeholder="Lobby Password" minlength="6" maxlength="25">
+
+                            <label for="custom">Custom Message</label>
+                            <input id="custom" name="custom" type="text" placeholder="Your Custom Message" maxlength="50">
+    
+                            <button type="submit" class="pure-button">Create</button>
+                        </fieldset>
+                    </form>
+                </div>
+    
+                <div class="l-box-lrg pure-u-1 pure-u-md-3-5">
+                    <h4>How To Play</h4>
+                    <p>
+                        TODO description here
+                    </p>
+    
+                    <h4>Report a bug</h4>
+                    <p>
+                        TODO here
+                    </p>
+                </div>
+            </div>
+    
+        </div>
+    
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,12 @@
+-cp src
+
+-lib hxnodejs
+-lib hxsocketio
+-lib hxnodejs-uuid
+
+-main App
+-js bin/App.js
+
+--next
+
+-cmd cd bin
