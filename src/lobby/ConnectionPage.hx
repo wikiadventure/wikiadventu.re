@@ -13,7 +13,6 @@ class ConnectionPage {
 		this.im = im;
 		this.sr = sr;
 		this.sr.setHeader("Content-Type", "text/html");
-		try {
 		Fs.readFile('templates/lobbyForm.html', function(err, data) {
 			if (err != null) {
 				this.sr.writeHead(404);

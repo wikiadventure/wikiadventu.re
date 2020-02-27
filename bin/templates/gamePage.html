@@ -14,11 +14,19 @@
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script>
+
+    addEventListener("beforeunload", function (event) {
+        var confirmationMessage = "Are you sure you want to exit? you will lose you session.";
+        e.returnValue = confirmationMessage;
+        return confirmationMessage;
+    });
+
+    //Code to toggle of the link of the wikipedia page and redirect them to custom function
     addEventListener("load",function(){
         var links= document.getElementsByTagName("a");
         for (var i=0;i<links.length;i++){
             links[i].addEventListener("click",function(e){
-            links[i].attributes
+            links[i].getAttribute("href");
             //prevent event action
             e.preventDefault();
             })
