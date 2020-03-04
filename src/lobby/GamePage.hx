@@ -1,5 +1,6 @@
 package lobby;
 
+import js.html.XMLHttpRequest;
 import lobby.player.Player;
 import js.lib.RegExp;
 import lobby.Lobby;
@@ -7,6 +8,7 @@ import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import haxe.http.HttpStatus;
 import js.node.Fs;
+
 
 class GamePage {
     var im : IncomingMessage;
@@ -16,7 +18,6 @@ class GamePage {
 		this.im = im;
 		this.sr = sr;
         this.sr.setHeader("Content-Type", "text/html");
-        trace("creating GamePage");
 		Fs.readFile('templates/gamePage.html', function(err, data) {
 			if (err != null) {
                 trace(err);
@@ -34,7 +35,6 @@ class GamePage {
 			}
             this.sr.end();
         });
-        
-
+      
 	}
 }

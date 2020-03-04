@@ -25,7 +25,7 @@ class Lobby {
     public var currentRound:Int;
     public var timeOut:Int; //time in second before a round end automatically
 
-    public static var lobbyLimit:Int = 1000;
+    public static var lobbyLimit:Int = 10000;
     public static var privateLimit:Int = 200;
     public static var lobbyList:Array<Lobby>;
 

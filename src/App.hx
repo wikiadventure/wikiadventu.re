@@ -1,4 +1,12 @@
 import haxe.Timer;
+import haxe.http.HttpBase;
+import js.html.Worker;
+import js.html.ServiceWorker;
+import js.html.FetchObserver;
+import js.node.http.Agent;
+import js.html.XMLHttpRequest;
+import js.html.Request;
+import js.node.http.Method;
 import js.node.Http;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
@@ -10,6 +18,9 @@ import controller.ConnectController;
 import lobby.Lobby;
 
 class App {
+
+    public static var count = 0;
+    public static var timestamp:Float;
     static function main() {
         Lobby.init(); 
 
@@ -28,11 +39,20 @@ class App {
         });
         app.listen(5000);
         IO.init(app);
+       
         
 
     }
 
     function new(im : IncomingMessage, sr : ServerResponse, body : String) {
+        count++;
+        if (count == 1) {
+            timestamp = Timer.stamp();
+        }
+        if (count == 100000) {
+            trace(Timer.stamp()-timestamp);
+        }
+        
         var idx : Int = im.url.indexOf("/", 1);
         var route : String = idx == -1 ? im.url : im.url.substring(0, idx);
         Sys.println(route);

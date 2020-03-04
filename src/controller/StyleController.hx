@@ -15,7 +15,6 @@ class StyleController {
 		this.sr = sr;
 		this.sr.setHeader("Content-Type", "text/css");
 		var requestedFileUrl = '.' + this.im.url;
-		try {
 			Fs.readFile(requestedFileUrl, function(err, data) {
 				if (err != null) {
 					this.sr.writeHead(404);
@@ -27,9 +26,5 @@ class StyleController {
 
 				this.sr.end();
 			});
-		} catch (e:Dynamic) {
-
-		}
-
 	}
 }

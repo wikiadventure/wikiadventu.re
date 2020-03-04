@@ -3,32 +3,60 @@
     padding: 0;
     box-sizing: border-box;
 }
+.chatSection {
+	background: #23272a;
+	color: #eee;
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+	top: 50%;
+	height: 50%;
+	width: 100%;
+
+}
 
 #chatForm {
-	background: #000;
+	background: #23272a;
 	padding: 3px;
-	position: fixed;
 	bottom: 0;
-	width: 50vw;
-	height: calc(3em+6px);
+	width: 100%;
+	border-top: 2px solid #2f353a;
+	display: inline-flex;
+
 }
 
 #inputMessage {
 	border: 0;
+	background: #3d4449;
+	color: #eee;
 	padding: 10px;
-    width: 90%;
-    height: 3em;
+	flex: 1;
 	margin-right: 2px;
 	border-radius: 5px;
 }
 
-#send {
-	width: 9%;
-	background: rgb(130, 224, 255);
+#inputMessage:focus {
+	outline: none;
+}
+
+#send {	
+	font-weight: 800;
+	color: #23272a;
+	background: #158caa;
 	border: none;
 	border-radius: 5px;
-	padding: 2px;
-	height: 3em;
+	padding-left: 1em;
+	padding-right: 1em;
+	transition: all ease-in-out 0.1s;
+}
+
+#send:active {
+	transform: scale(0.95);
+}
+
+#send:focus {
+	outline: none;
 }
 
 #outputMessages {
@@ -38,27 +66,80 @@
 	flex-direction: column-reverse;
 	margin: 0;
 	padding: 0;
-	overflow-y: hidden;
-	height: calc(100% - 3em - 6px);
+	overflow-y: scroll;
+	overflow-x: hidden;
+	flex: 1;
 	width: 100%;
 	scroll-behavior: smooth;
 }
 
 #outputMessages li {
 	padding: 5px 10px;
+	word-break: break-word;
 	border-top: 1px solid #2f353a;
 }
 
-.chatSection {
+.actionSection {
+	background: #393e46;
+	color: #eee;
+	display: flex;
+	margin: 0;
+	padding: 0;
+	top: 0;
+	overflow-y: scroll;
+	height: 50%;
+	width: 100%;
+	scroll-behavior: smooth;
+
+}
+
+.uiSection {
 	background: #23272a;
 	width: 50vw;
 	height: 100vh;
 	position: fixed;
 	bottom: 0;
-	left: -45vw;
+	left: -50vw;
 	transition: all ease-in-out 0.25s;
 }
+.uiSection::before {
+	content: "\25BA";/*►*/
+	font-weight: bold;
+	text-align: center;
+	padding: 0.5em 0.75em;
+	border-radius: 10px;
+	size: 2em;
+	color: white;
+	display: inline-block;
+	background: #158caa;
+	position: absolute;
+	left: 50vw;
+	transition: all ease-in-out 0.2s;
+	transform: rotate(0deg);
+}
+.uiSection:hover::before {
+	transform: rotate(180deg);
+}
 
-.chatSection:hover {
+.uiSection:hover {
 	left: 0vw;
+}
+/* custom Scrollbar for webkit only ( don't work on ie and firefox ) */
+
+/* width */
+#outputMessages::-webkit-scrollbar, .actionSection::-webkit-scrollbar {
+	width: 15px;
+
+}
+  
+  /* Track */
+#outputMessages::-webkit-scrollbar-track, .actionSection::-webkit-scrollbar-track {
+	background: #5a626e; 
+	border-radius: 7.5px;
+}
+   
+  /* Handle */
+#outputMessages::-webkit-scrollbar-thumb, .actionSection::-webkit-scrollbar-thumb {
+	background: #3f444d; 
+	border-radius: 7.5px;
 }

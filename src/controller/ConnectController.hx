@@ -64,7 +64,6 @@ class ConnectController {
     }
     
     public function publicJoin(player:Player) {
-        trace("publicjoin");
         try {
             var lobby = Lobby.joinPublicFree(player);
             new GamePage(im, sr, lobby, player);

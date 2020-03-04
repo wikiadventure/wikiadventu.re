@@ -1,39 +1,25 @@
 <!doctype html>
 <html>
   <head>
+    <meta charset="utf-8">
     <title>Wiki Adventure chat Room $1</title>
-    
-    <link rel="stylesheet" href="/css/chatSection.css">
+    <link id="uiCSS" rel="stylesheet" href="/css/chatSection.css">
   </head>
-  <body>
-    <section class="chatSection">
-      <ul id="outputMessages"></ul>
-      <form action="" id="chatForm">
-        <input id="inputMessage" autocomplete="off" /><button id="send">Send</button>
-      </form>
+  <body id="mwAA" lang="en" class="mw-content-ltr sitedir-ltr ltr mw-body-content parsoid-body mediawiki mw-parser-output" dir="ltr">
+    <section class="uiSection" id="uiSection">
+      <div class="actionSection">
+
+      </div>
+      <div class="chatSection">
+        <ul id="outputMessages"></ul>
+        <form action="" id="chatForm">
+          <input id="inputMessage" placeholder="Send a message to the lobby" autocomplete="off" /><button id="send">&#10004;</button>
+        </form>
+      </div>
     </section>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-    <script>
+    <script id="ioImport" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
-    addEventListener("beforeunload", function (event) {
-        var confirmationMessage = "Are you sure you want to exit? you will lose you session.";
-        e.returnValue = confirmationMessage;
-        return confirmationMessage;
-    });
-
-    //Code to toggle of the link of the wikipedia page and redirect them to custom function
-    addEventListener("load",function(){
-        var links= document.getElementsByTagName("a");
-        for (var i=0;i<links.length;i++){
-            links[i].addEventListener("click",function(e){
-            links[i].getAttribute("href");
-            //prevent event action
-            e.preventDefault();
-            })
-        }
-    }); 
-    </script>
-    <script>
+    <script id="mainScript">
         var playerID = "$2";
         if (history.pushState) {
             window.history.pushState("object or string", "WikiAdventure", "play/$1");
@@ -57,6 +43,67 @@
                 document.getElementById('outputMessages').insertBefore(messageLine, document.getElementById('outputMessages').childNodes[0]);
             });
         }));
+        
+    addEventListener("beforeunload", function (event) {
+        var confirmationMessage = "Are you sure you want to exit? you will lose your session.";
+        e.returnValue = confirmationMessage;
+        return confirmationMessage;
+    });
+
+    addEventListener("load", function () {
+        requestWikiPage("Doritos");
+    });
+
+    //Code to toggle of the link of the wikipedia page and redirect them to custom function
+
+    var disableLinks = function () {
+      var links= document.getElementsByTagName("a");
+        for (var i=0;i<links.length;i++) {
+            links[i].addEventListener("click",function(e){
+              //check if the link go to another wikipage and not info page or external
+
+              if (this.getAttribute("href").lastIndexOf(":") == -1 && this.rel != "mw:ExtLink") {
+                var idx = this.href.lastIndexOf("/");
+                var url = this.href.substring(idx+1);
+                requestWikiPage(url);
+
+              }
+              e.preventDefault();
+            });
+        }
+    };
+
+    var requestWikiPage = function(url) {
+      var requestWiki = new XMLHttpRequest();
+        requestWiki.open("get","https://en.wikipedia.org/api/rest_v1/page/html/" + url);
+        requestWiki.send();
+        requestWiki.onloadend = function () {
+          var parser = new DOMParser();
+          var wikiData = parser.parseFromString(requestWiki.response, "text/html") ;
+          var cssLinks = wikiData.head.getElementsByTagName("link");
+          var content = wikiData.body.innerHTML;
+          for (var i=0;i<document.body.childNodes.length;i++) {
+            if (document.body.childNodes[i].id != "uiSection" && document.body.childNodes[i].id != "mainScript" && document.body.childNodes[i].id != "ioImport") {
+              document.body.childNodes[i].remove();
+            }
+          }
+          for (var i=0;i<document.head.childNodes.length;i++) {
+            if (document.head.childNodes[i].tagName == "link" && document.head.childNodes[i].id != "uiCSS") {
+              document.head.childNodes[i].remove();
+            }
+          }
+          for (var i=0;i<cssLinks.length;i++) {
+            if (cssLinks[i].rel == "stylesheet") {
+              cssLinks[i].href += "https://en.wikipedia.org";
+              document.head.appendChild(cssLinks[i]);
+            }
+          }
+
+          document.body.innerHTML = content + document.body.innerHTML;
+          disableLinks();
+        };
+    };
+
     </script>
   </body>
 </html>
