@@ -40,7 +40,7 @@ now you can hit debug > start debugging ( or f5 ), haxe will transpile the proje
 - [ ] Handle private lobby creation
 - [ ] Handle private lobby connection
 - [ ] Handle connection with direct lobby link ( without the connection form page )
-- [ ] integrate the wikipedia api rest v1 page in the design
+- [x] integrate the wikipedia api rest v1 page in the design
 - [x] Send players message with socket io
 - [x] Share players message with socket io
 - [ ] Send players action with socket io
