@@ -165,8 +165,25 @@ class Lobby {
         return null;
     }
 
+    public function isUUIDvalid(uuid:String):Bool {
+        for (p in playerList) {
+            if (p.uuid == uuid) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function initNamespace() {
         io = IO.server.of('/'+encodeID(id));
+        io.use(function (socket, next) {
+            if ( isUUIDvalid(untyped __js__("socket.handshake.query.playerID")) ) {
+                return untyped __js__("next()");
+            }
+            return untyped __js__("next(new Error('Connection rejected because playerID is not registered in the lobby'))");
+            
+        });
+
         io.on('connection', function(socket:Socket, request) {
             io.emit('message', "connected to the lobby"+ id);
             socket.on('message', function (data) {

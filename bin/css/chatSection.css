@@ -3,7 +3,7 @@
     padding: 0;
     box-sizing: border-box;
 }
-.chatSection {
+#chatSection {
 	background: #23272a;
 	color: #eee;
 	display: flex;
@@ -79,7 +79,7 @@
 	border-top: 1px solid #2f353a;
 }
 
-.actionSection {
+#actionSection {
 	background: #393e46;
 	color: #eee;
 	display: flex;
@@ -93,7 +93,7 @@
 
 }
 
-.uiSection {
+#uiSection {
 	background: #23272a;
 	width: 50vw;
 	height: 100vh;
@@ -102,7 +102,7 @@
 	left: -50vw;
 	transition: all ease-in-out 0.25s;
 }
-.uiSection::before {
+#uiSection::before {
 	content: "\25BA";/*►*/
 	font-weight: bold;
 	text-align: center;
@@ -117,29 +117,29 @@
 	transition: all ease-in-out 0.2s;
 	transform: rotate(0deg);
 }
-.uiSection:hover::before {
+#uiSection:hover::before {
 	transform: rotate(180deg);
 }
 
-.uiSection:hover {
+#uiSection:hover {
 	left: 0vw;
 }
 /* custom Scrollbar for webkit only ( don't work on ie and firefox ) */
 
 /* width */
-#outputMessages::-webkit-scrollbar, .actionSection::-webkit-scrollbar {
+#outputMessages::-webkit-scrollbar, #actionSection::-webkit-scrollbar {
 	width: 15px;
 
 }
   
   /* Track */
-#outputMessages::-webkit-scrollbar-track, .actionSection::-webkit-scrollbar-track {
+#outputMessages::-webkit-scrollbar-track, #actionSection::-webkit-scrollbar-track {
 	background: #5a626e; 
 	border-radius: 7.5px;
 }
    
   /* Handle */
-#outputMessages::-webkit-scrollbar-thumb, .actionSection::-webkit-scrollbar-thumb {
+#outputMessages::-webkit-scrollbar-thumb, #actionSection::-webkit-scrollbar-thumb {
 	background: #3f444d; 
 	border-radius: 7.5px;
 }

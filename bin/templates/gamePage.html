@@ -6,11 +6,15 @@
     <link id="uiCSS" rel="stylesheet" href="/css/chatSection.css">
   </head>
   <body id="mwAA" lang="en" class="mw-content-ltr sitedir-ltr ltr mw-body-content parsoid-body mediawiki mw-parser-output" dir="ltr">
-    <section class="uiSection" id="uiSection">
-      <div class="actionSection">
+    <section id="wikiSection">
+
+    </section>
+    
+    <section id="uiSection">
+      <div id="actionSection">
 
       </div>
-      <div class="chatSection">
+      <div id="chatSection">
         <ul id="outputMessages"></ul>
         <form action="" id="chatForm">
           <input id="inputMessage" placeholder="Send a message to the lobby" autocomplete="off" /><button id="send">&#10004;</button>
@@ -21,6 +25,7 @@
 
     <script id="mainScript">
         var playerID = "$2";
+        var socket;
         if (history.pushState) {
             window.history.pushState("object or string", "WikiAdventure", "play/$1");
         } else {
@@ -30,7 +35,13 @@
         var idx = url.indexOf("play/");
         var id =  url.substring(idx+5);
         addEventListener("load",(function () {
-            var socket = io("/"+id);
+            socket = io("/"+id);
+            socket.on('error', (error) => {
+              console.log(error);
+              console.log("Please make sure you are not modifying your modyfing anything, if not report the issue");
+              addMessage(error);
+              addMessage("Please make sure you are not modifying your modyfing anything, if not report the issue");
+            });
             document.getElementById('chatForm').onsubmit = function(e){
                 e.preventDefault(); // prevents page reloading
                 socket.emit('message', playerID + ":" +document.getElementById('inputMessage').value);
@@ -38,15 +49,19 @@
                 return false;
             };
             socket.on('message', function(msg){
-                var messageLine = document.createElement('li');
-                messageLine.textContent = msg;
-                document.getElementById('outputMessages').insertBefore(messageLine, document.getElementById('outputMessages').childNodes[0]);
+                addMessage(msg);
             });
         }));
+
+        var addMessage = function (message) {
+            var messageLine = document.createElement('li');
+            messageLine.textContent = message;
+            document.getElementById('outputMessages').insertBefore(messageLine, document.getElementById('outputMessages').childNodes[0]);
+        };
         
     addEventListener("beforeunload", function (event) {
         var confirmationMessage = "Are you sure you want to exit? you will lose your session.";
-        e.returnValue = confirmationMessage;
+        event.returnValue = confirmationMessage;
         return confirmationMessage;
     });
 
@@ -81,12 +96,9 @@
           var parser = new DOMParser();
           var wikiData = parser.parseFromString(requestWiki.response, "text/html") ;
           var cssLinks = wikiData.head.getElementsByTagName("link");
-          var content = wikiData.body.innerHTML;
-          for (var i=0;i<document.body.childNodes.length;i++) {
-            if (document.body.childNodes[i].id != "uiSection" && document.body.childNodes[i].id != "mainScript" && document.body.childNodes[i].id != "ioImport") {
-              document.body.childNodes[i].remove();
-            }
-          }
+          var content = wikiData.body.childNodes;
+          document.getElementById("wikiSection").innerHTML = "";
+
           for (var i=0;i<document.head.childNodes.length;i++) {
             if (document.head.childNodes[i].tagName == "link" && document.head.childNodes[i].id != "uiCSS") {
               document.head.childNodes[i].remove();
@@ -99,7 +111,10 @@
             }
           }
 
-          document.body.innerHTML = content + document.body.innerHTML;
+          for (var i = 0; i < content.length; i++) {
+            document.getElementById("wikiSection").appendChild(content[i]);
+          }
+          
           disableLinks();
         };
     };
