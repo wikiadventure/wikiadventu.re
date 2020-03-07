@@ -9,18 +9,20 @@
     <section id="wikiSection">
 
     </section>
-    
-    <section id="uiSection">
-      <div id="actionSection">
+    <input id="showUI" type="checkbox"/>
+      <section id="uiSection" type="checkbox">
+        <label for="showUI" id="labelShowUI">&#9658;</label>
+        <div id="actionSection">
 
-      </div>
-      <div id="chatSection">
-        <ul id="outputMessages"></ul>
-        <form action="" id="chatForm">
-          <input id="inputMessage" placeholder="Send a message to the lobby" autocomplete="off" /><button id="send">&#10004;</button>
-        </form>
-      </div>
-    </section>
+        </div>
+        <div id="chatSection">
+          <ul id="outputMessages"></ul>
+          <form action="" id="chatForm">
+            <input id="inputMessage" placeholder="Send a message to the lobby" autocomplete="off" /><button id="send">&#10004;</button>
+          </form>
+        </div>
+      </section>
+    
     <script id="ioImport" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
     <script id="mainScript">
@@ -35,7 +37,7 @@
         var idx = url.indexOf("play/");
         var id =  url.substring(idx+5);
         addEventListener("load",(function () {
-            socket = io("/"+id);
+            socket = io("/"+id,  { query: "playerID="+playerID });
             socket.on('error', (error) => {
               console.log(error);
               console.log("Please make sure you are not modifying your modyfing anything, if not report the issue");
@@ -77,7 +79,7 @@
             links[i].addEventListener("click",function(e){
               //check if the link go to another wikipage and not info page or external
 
-              if (this.getAttribute("href").lastIndexOf(":") == -1 && this.rel != "mw:ExtLink") {
+              if (this.getAttribute("href").lastIndexOf(":") == -1 && this.getAttribute("href").lastIndexOf(".ogg") == -1 && this.rel != "mw:ExtLink" && !this.classList.contains("new")) {
                 var idx = this.href.lastIndexOf("/");
                 var url = this.href.substring(idx+1);
                 requestWikiPage(url);

@@ -102,8 +102,8 @@
 	left: -50vw;
 	transition: all ease-in-out 0.25s;
 }
-#uiSection::before {
-	content: "\25BA";/*►*/
+#labelShowUI {
+	
 	font-weight: bold;
 	text-align: center;
 	padding: 0.5em 0.75em;
@@ -117,11 +117,17 @@
 	transition: all ease-in-out 0.2s;
 	transform: rotate(0deg);
 }
-#uiSection:hover::before {
+
+#showUI {
+	position: fixed;
+	left: -10000px;
+}
+
+#uiSection:hover #labelShowUI {
 	transform: rotate(180deg);
 }
 
-#uiSection:hover {
+#uiSection:hover, #showUI:checked + #uiSection {
 	left: 0vw;
 }
 /* custom Scrollbar for webkit only ( don't work on ie and firefox ) */
@@ -142,4 +148,9 @@
 #outputMessages::-webkit-scrollbar-thumb, #actionSection::-webkit-scrollbar-thumb {
 	background: #3f444d; 
 	border-radius: 7.5px;
+}
+
+#showUI:checked + #uiSection #labelShowUI {
+	transform: rotate(180deg) !important;
+	background: red !important;
 }
