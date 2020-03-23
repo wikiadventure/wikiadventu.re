@@ -1,20 +1,20 @@
 package lobby.player;
 
 import config.Language;
-import js.node.net.Socket;
+import js.node.socketio.Socket;
 import config.randomName.EnglishNameGenerator;
 import js.npm.Uuid;
 
 class Player {
-    public var connection:Socket;
+    public var socket:Socket;
     public var pseudo:String;
     public var uuid:String;
     public var language:Language;
     public var score:Int=0;
     public var numberOfJump:Int=0;
+    public var votingSuggestion:String;
 
-    public function new(connection:Socket, pseudo:String, language:Language) {
-        this.connection = connection;
+    public function new(pseudo:String, language:Language) {
         this.language = language;
         var dangerRegex : EReg =  ~/[^<>%$]/g;
         if ( pseudo == null || pseudo == "") {
@@ -26,6 +26,14 @@ class Player {
         }
         this.uuid = Uuid.v4();
 
+    }
+
+    public function assignSocket(socket:Socket):Bool {
+        if (this.socket != null) {
+            return false;
+        }
+        this.socket = socket;
+        return true;
     }
 
     //suggest your own language random name generator

@@ -13,12 +13,18 @@
       <section id="uiSection" type="checkbox">
         <label for="showUI" id="labelShowUI">&#9658;</label>
         <div id="actionSection">
-
+          <div><p id="stateName"></p><p id="stateTime"></p></div>
+          <div id="vote"><p>Your vote :</p><p id="playerVote"></p></div>
+          <form action="" id="votingForm" class="uiForm">
+            <input id="inputVote" class="uiInput" placeholder="Send your wiki page title suggestion" autocomplete="off" /><button class="uiSubmit" id="voteSubmit">&#10004;</button>
+          </form>
+          <div><p>Start page :</p><p id="pageStart"></p></div>
+          <div><p>End page :</p><p id="pageEnd"></p></div>
         </div>
         <div id="chatSection">
           <ul id="outputMessages"></ul>
-          <form action="" id="chatForm">
-            <input id="inputMessage" placeholder="Send a message to the lobby" autocomplete="off" /><button id="send">&#10004;</button>
+          <form action="" id="chatForm" class="uiForm">
+            <input id="inputMessage" class="uiInput" placeholder="Send a message to the lobby" autocomplete="off" /><button class="uiSubmit" id="send">&#10004;</button>
           </form>
         </div>
       </section>
@@ -26,10 +32,14 @@
     <script id="ioImport" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
     <script id="mainScript">
+        var lobbyID = "$1";
+        var hasVoted = false;
         var playerID = "$2";
         var socket;
+        var pageStart;
+        var pageEnd;
         if (history.pushState) {
-            window.history.pushState("object or string", "WikiAdventure", "play/$1");
+            window.history.pushState("lobby $1", "WikiAdventure", "play/$1");
         } else {
             document.location.href = "play/$1";
         }
@@ -46,14 +56,65 @@
             });
             document.getElementById('chatForm').onsubmit = function(e){
                 e.preventDefault(); // prevents page reloading
-                socket.emit('message', playerID + ":" +document.getElementById('inputMessage').value);
+                socket.emit('message', document.getElementById('inputMessage').value);
                 document.getElementById('inputMessage').value = "";
+                var hasVoted = true;
+                return false;
+            };
+            document.getElementById('votingForm').onsubmit = function(e){
+                e.preventDefault(); // prevents page reloading
+                socket.emit('vote', document.getElementById('inputVote').value);
+                document.getElementById("playerVote").innerText = document.getElementById('inputVote').value;
+                document.getElementById('inputVote').value = "";
+                document.getElementById('inputVote').placeholder = "Your suggestion will override the previous one";
                 return false;
             };
             socket.on('message', function(msg){
                 addMessage(msg);
             });
+            socket.on('voteResult', function(data){
+                var idx = data.indexOf("?");
+                pageStart = data.substring(0, idx);
+                document.getElementById("pageStart").innerText = pageStart;
+                pageEnd = data.substring(idx+1);
+                document.getElementById("pageEnd").innerText = pageEnd;
+                requestWikiPage(pageStart);
+            });
+            socket.on('gameContent', function(data){
+                var idx = data.indexOf(":");
+                var type = data.substring(0, idx);
+                var content = data.substring(idx+1);
+
+                switch (type) {
+                  case "gameState":
+                      switchState(content);
+                  case "votingResult":
+
+                }
+            });
         }));
+
+        var switchState = function (data) {
+            var hasVoted = false;
+            document.getElementById('inputVote').placeholder = "Send your wiki page title suggestion";
+            var idx = data.indexOf("|");
+            var state = data.substring(0, idx);
+            var time = data.substring(idx+1);
+            document.getElementById("stateName").innerText = state;
+            var timeLeft = time;
+            var timeStamp = Date.now();
+            var stateCounter = setInterval(function() {
+                var time = Date.now();
+                var dt = time - timeStamp;
+                timeStamp = time;
+                timeLeft = timeLeft - dt*0.001;
+                document.getElementById("stateTime").innerText = Math.ceil(timeLeft);
+                if (timeLeft < 0) {
+                  clearInterval(stateCounter);
+                  document.getElementById("stateTime").innerText = 0;
+                }
+            }, 100);
+        };
 
         var addMessage = function (message) {
             var messageLine = document.createElement('li');
@@ -65,10 +126,6 @@
         var confirmationMessage = "Are you sure you want to exit? you will lose your session.";
         event.returnValue = confirmationMessage;
         return confirmationMessage;
-    });
-
-    addEventListener("load", function () {
-        requestWikiPage("Doritos");
     });
 
     //Code to toggle of the link of the wikipedia page and redirect them to custom function
@@ -118,6 +175,13 @@
           }
           
           disableLinks();
+          document.body.scrollTop = 0; // For Safari
+          document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+          if (history.pushState) {
+            window.history.pushState("lobby $1", "WikiAdventure", url);
+          } else {
+            document.location.href = url;
+          }
         };
     };
 

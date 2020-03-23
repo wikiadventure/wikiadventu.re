@@ -26,4 +26,8 @@ class LanguageTools {
         }
     }
 
+    public static function getURL(language:Language):String {
+        return language + ".wikipedia.org";
+    }
+
 }

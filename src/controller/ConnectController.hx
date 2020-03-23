@@ -49,7 +49,7 @@ class ConnectController {
         }
         var player:Player;
         try {
-            player = new Player(im.socket, data['pseudo'], language);
+            player = new Player(data['pseudo'], language);
         } catch (e:Dynamic) {
             new ErrorPage(im, sr, body, e,400);
             return;

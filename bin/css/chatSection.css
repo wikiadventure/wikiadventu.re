@@ -16,7 +16,7 @@
 
 }
 
-#chatForm {
+.uiForm {
 	background: #23272a;
 	padding: 3px;
 	bottom: 0;
@@ -26,7 +26,33 @@
 
 }
 
-#inputMessage {
+#actionSection > div {
+	display: inline-flex;
+	width: 100%;
+	flex: 1;
+	height: 2.5em;
+	text-align: center;
+}
+#stateName, #actionSection > div > p {
+	flex: 1;
+	margin: auto;
+}
+#stateTime, #playerVote, #pageEnd, #pageStart {
+	flex: 2;
+	margin: auto;
+}
+
+#votingForm {
+	height: 2.5em;
+	background: transparent;
+}
+
+#inputVote {
+	background: #23272a;
+}
+
+
+.uiInput {
 	border: 0;
 	background: #3d4449;
 	color: #eee;
@@ -36,11 +62,11 @@
 	border-radius: 5px;
 }
 
-#inputMessage:focus {
+#inputMessage:focus, #inputVote:focus {
 	outline: none;
 }
 
-#send {	
+.uiSubmit {	
 	font-weight: 800;
 	color: #23272a;
 	background: #158caa;
@@ -51,11 +77,11 @@
 	transition: all ease-in-out 0.1s;
 }
 
-#send:active {
+.uiSubmit:active {
 	transform: scale(0.95);
 }
 
-#send:focus {
+.uiSubmit:focus {
 	outline: none;
 }
 
@@ -82,7 +108,8 @@
 #actionSection {
 	background: #393e46;
 	color: #eee;
-	display: flex;
+	flex-wrap: wrap;
+	flex: 1;
 	margin: 0;
 	padding: 0;
 	top: 0;
