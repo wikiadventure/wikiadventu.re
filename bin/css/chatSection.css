@@ -3,6 +3,11 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+body {
+	overflow-x: hidden;
+}
+
 #chatSection {
 	background: #23272a;
 	color: #eee;
@@ -30,20 +35,22 @@
 	display: inline-flex;
 	width: 100%;
 	flex: 1;
-	height: 2.5em;
-	text-align: center;
+	height: 3em;
 }
 #stateName, #actionSection > div > p {
 	flex: 1;
+	text-align: left;
+	padding-left: 5px;
 	margin: auto;
 }
 #stateTime, #playerVote, #pageEnd, #pageStart {
 	flex: 2;
 	margin: auto;
+	text-align: center;
 }
 
 #votingForm {
-	height: 2.5em;
+	height: 3em;
 	background: transparent;
 }
 

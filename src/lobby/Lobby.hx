@@ -1,5 +1,6 @@
 package lobby;
 
+import js.node.Buffer;
 import haxe.Json;
 import js.lib.Promise;
 import js.node.Https.HttpsRequestOptions;
@@ -19,6 +20,10 @@ class Lobby {
     public var type:LobbyType;
     public var state:LobbyState;
     public var timeStampStateBegin:Float;
+    public var loop:Timer;
+
+    public var startPage:String;
+    public var endPage:String;
 
     public var slot:Int;
     public var id:Int;
@@ -28,7 +33,9 @@ class Lobby {
     public var round:Int;
     public var currentRound:Int;
     public var playTimeOut:Int; //time in second before a round end automatically
-    public var voteTimeOut:Int;
+    public var voteTimeOut:Int; //time of the Voting state
+    public var roundFinishTimeOut:Int = 10; //time between the end of the play state and the begin of the vote state
+    public var gameFinishTimeOut:Int = 20;
 
     public static var lobbyLimit:Int = 10000;
     public static var privateLimit:Int = 200;
@@ -86,28 +93,6 @@ class Lobby {
         return i;
     }
     /**
-     * Search a Lobby of type public and the player to this one, if no lobby is found, it create one.
-     * @param player who want to join
-     * @return the lobby
-     */
-    public static function joinPublicFree(player:Player):Lobby {
-        for (l in lobbyList) {
-            if (l.type == Public && (l.slot > l.playerList.length)) {
-                if ( l.language == player.language ) {
-                    l.addPlayer(player);
-                    return l;
-                }
-            }
-        }
-        // if no free slot are find create a new public lobby
-        var lobby = new Lobby(player.language, Public);
-        lobby.giveID();
-        lobby.initNamespace();
-        lobby.addPlayer(player);
-        lobby.startVotingState();
-        return lobby;
-    }
-    /**
      * add player to the lobby ( and check if is not already in )
      * @param player to add
      */
@@ -125,41 +110,6 @@ class Lobby {
         if (playerList.length == 0) {
             Lobby.lobbyList.remove(this);
         }
-    }
-    /**
-     * get the number of private lobby in the lobby list
-     * @return Int
-     */
-    public static function getPrivateLobbyLength():Int {
-        var n = 0;
-        for (l in lobbyList) {
-            if (l.type == Private) n++;
-        }
-        return n;
-    }
-    /**
-     * transform the url string into the lobby id
-     * @param id in url string format
-     * @return Int The lobby id
-     */
-    public static function decodeID(id:String):Int {
-        var bytesValue = Base64.urlDecode(id);
-        var stringValue = bytesValue.getString(0,bytesValue.length);
-        var intValue = Std.parseInt(stringValue);
-        if(intValue == null) {
-            throw "invalid ID";
-        }
-        return intValue;
-    }
-    /**
-     * tranform the lobby id into url string
-     * @param id in Int format
-     * @return the url String
-     */
-    public static function encodeID(id:Int):String {
-        var bytesValue = Bytes.ofString(Std.string(id));
-        var result = Base64.urlEncode(bytesValue);
-        return result;
     }
 
     public function getPlayerFromSocket(socket:Socket):Player {
@@ -180,17 +130,15 @@ class Lobby {
         return null;
     }
 
-    /*public function isUUIDvalid(uuid:String):Bool {
-        for (p in playerList) {
-            if (p.uuid == uuid) {
-                return true;
-            }
-        }
-        return false;
-    }*/
-
+    /**
+     * create a socket io namespace for the lobby and assign data handler to each channel
+     */
     public function initNamespace() {
-        io = IO.server.of('/'+encodeID(id));
+        io = IO.server.of('/'+encodeID(id));//the name of the lobby is his id encoded in Base64
+        /** 
+        * middleware that accept connection only from client that provide a correct player uuid from playerList of the lobby
+        * if the provided uuid is valid assign the socket to the player
+        */
         io.use(function (socket, next) {
             var player = getPlayerFromUUID(untyped __js__("socket.handshake.query.playerID"));
             if ( player != null ) {
@@ -202,9 +150,12 @@ class Lobby {
         });
 
         io.on('connection', function(socket:Socket, request) {
-            io.emit('message', "connected to the lobby"+ id);
-            var timeLeft = voteTimeOut - (Timer.stamp() - timeStampStateBegin);
+            var player = getPlayerFromSocket(socket);
+            if (player == null) return;
+            io.emit('message', player.pseudo + " join the lobby!");
+            var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
             socket.emit('gameContent', "gameState:" + state + "|" + timeLeft );
+            if (state == Playing) socket.emit('voteResult', startPage + '?' + endPage);
             socket.on('message', function (data) {
                 var player = getPlayerFromSocket(socket);
                 if (player == null) return;
@@ -223,24 +174,106 @@ class Lobby {
             socket.on('vote', function (data) {
                 vote(socket, data);
             });
+            socket.on('validateJump', function (data) {
+                validateJump(socket, data);
+            });
         });
     }
 
+
+    /**
+     * get the current state duration
+     * @return Int current state duration in seconde
+     */
+    public function currentStateTimeOut():Int {
+        switch state {
+            case Playing:
+                return playTimeOut;
+            case Voting:
+                return voteTimeOut;
+            case RoundFinish:
+                return roundFinishTimeOut;
+            case GameFinish:
+                return gameFinishTimeOut;
+        }
+    }
+
+    /**
+     * check if the player jump is valid (when he click on a link to go to an another page)
+     * we ask the wikipedia api to do so
+     * @param socket from which the data come from
+     * @param url 
+     */
+    public function validateJump(socket:Socket, url:String) {
+        var player = getPlayerFromSocket(socket);
+        if (player == null) return;
+        if (player.currentPage == url) return;
+        var options:HttpsRequestOptions =  {
+            hostname: LanguageTools.getURL(language),
+            path: "/w/api.php?action=query&prop=links&format=json&formatversion=2&titles=" + player.currentPage + "&pltitles=" + url
+        };
+        var request = Https.request(options, function (response) {
+            response.on('data', function (data) {
+                try {
+                    var parsed:WikiResponse = Json.parse(data);
+                    if (parsed.query.pages[0] == null) {
+                        //kick for cheating
+                        trace(player.currentPage + " --> " + url);
+                        io.emit('message', "it seems that " + player.pseudo + " is cheating! (or the anticheat system is broken)");
+                    } else {
+                        player.numberOfJump +=1;
+                        player.currentPage = url;
+                        if (url == endPage) {
+                            io.emit('message', player.pseudo + " win the round " + currentRound);
+                            loop = null;
+                            votePhase();
+                        } else {
+                            io.emit('message', player.pseudo + " jumped to " + url + ", total jump : " + player.numberOfJump);
+                        }              
+                    }
+                } catch(e:Dynamic) {
+                    trace(e);
+                }
+            });
+        });
+        request.on('error', function (e) {
+            trace(e);
+        });
+        request.end();
+    }
+
+    /**
+     * find the player from his socket
+     * and assign his vote to the [votingSuggestion] variable of the player
+     * PS: we don't verify if the title lead to something, we will in the [selectPage()] method
+     * the client also do the verification so they are aware if there title lead to something
+     * @param socket from which the data come from
+     * @param content the page title we receive
+     */
     public function vote(socket:Socket, content:String) {
         var player = getPlayerFromSocket(socket);
         if (player != null) player.votingSuggestion = content;
     }
 
-    public function startVotingState() {
+    /**
+     * start the voting phase
+     * and call selectPage when the timer run out
+     */
+    public function votePhase() {
         state = Voting;
-        io.emit('gameContent', "gameState:Voting|31");
-        timeStampStateBegin = Timer.stamp();
-        Timer.delay(function () {
+        initNewPhase();
+        loop = Timer.delay(function () {
             selectPage();
-        },31000);
-        
+        },currentStateTimeOut()*1000);
     }
 
+    /**
+     * randomly pick a start page and a end page from each player vote
+     * if an player did not vote, we picked random page to replace his vote
+     * if there is only 1 player we picked an another random page
+     * start the play phase when the selection is completed
+     * PS: NOT OPTIMISED but we do like that so in the future we can do a little drawing animation client side
+     */
     public function selectPage() {
         var promiseList = new Array<Promise<Bool>>();
         var urlList = new Array<String>();
@@ -248,6 +281,7 @@ class Lobby {
         for (i in 0...playerList.length) {
             var title = playerList[i].votingSuggestion;
             if (title != null) {
+                title = StringTools.urlEncode(title);
                 var promise = new Promise<Bool>(
                     function (resolve, reject) {
                         var options:HttpsRequestOptions =  {
@@ -302,18 +336,59 @@ class Lobby {
                 do {
                     randomEnd = Std.random(urlList.length);
                 } while (randomEnd == randomStart);
-                sendingPageToClient(urlList[randomStart], urlList[randomEnd]);
+                startPage = urlList[randomStart];
+                endPage = urlList[randomEnd];
+                playPhase();
 
             }, function(reason) {
                 trace("SEVERE something wrong append : " + reason);
         });
     }
 
-    public function sendingPageToClient(startPage:String, endPage:String) {
-        trace("page send");
+    /**
+     * set the current page of each player to the starting one who get the picked in the voting phase
+     * send the starting and ending page to the client
+     * start the playing phase
+     * and start the interlude phase when the timer run out
+     */
+    public function playPhase() {
+        for (player in playerList) {
+            player.currentPage = startPage;
+        }
         io.emit('voteResult', startPage + '?' + endPage);
+        state = Playing;
+        initNewPhase();
+        loop = Timer.delay(function () {
+            roundFinishPhase();
+        },currentStateTimeOut()*1000);
     }
-     
+
+    /**
+     * start the interlude phase between the voting and playing phase
+     * and start the voting phase when the timer run out
+     */
+    public function roundFinishPhase() {
+        state = RoundFinish;
+        initNewPhase();
+        loop = Timer.delay(function () {
+            votePhase();
+        },currentStateTimeOut()*1000);
+    }
+    /**
+     * refresh the [timeStampBegin] variable
+     * and send the state time avaible to the client
+     */
+    public function initNewPhase() {
+        timeStampStateBegin = Timer.stamp();
+        io.emit('gameContent', "gameState:" + state +"|" + currentStateTimeOut());
+    }
+
+    /**
+     * request the wikipedia api and get a random page
+     * @param urlList the list on wich we will add the random url if nothing go wrong
+     * @param resolve the promise resolve
+     * @param reject the promise reject
+     */
     public function getRandomURL(urlList:Array<String>, resolve:(value:Bool) -> Void, reject:(reason:Dynamic) -> Void) {
         var options:HttpsRequestOptions =  {
             hostname: LanguageTools.getURL(language),
@@ -343,12 +418,65 @@ class Lobby {
 
     }
 
-    public function isLobbyPlayer(socket:Socket):Bool {
-        return true;
-        return false;
+    /**
+     * Search a Lobby of type public and add the player to this one, if no lobby is found, it create one.
+     * @param player who want to join
+     * @return the lobby
+     */
+     public static function joinPublicFree(player:Player):Lobby {
+        for (l in lobbyList) {
+            if (l.type == Public && (l.slot > l.playerList.length)) {
+                if ( l.language == player.language ) {
+                    l.addPlayer(player);
+                    return l;
+                }
+            }
+        }
+        // if no free slot are find create a new public lobby
+        var lobby = new Lobby(player.language, Public);
+        lobby.giveID();// giveID method also add the lobby to the lobbylist
+        lobby.initNamespace();
+        lobby.votePhase();
+        lobby.addPlayer(player);
+        return lobby;
     }
 
+    /**
+     * get the number of private lobby in the lobby list
+     * @return Int
+     */
+     public static function getPrivateLobbyLength():Int {
+        var n = 0;
+        for (l in lobbyList) {
+            if (l.type == Private) n++;
+        }
+        return n;
+    }
 
+    /**
+     * transform the url string into the lobby id
+     * @param id in url string format
+     * @return Int The lobby id
+     */
+     public static function decodeID(id:String):Int {
+        var bytesValue = Base64.urlDecode(id);
+        var stringValue = bytesValue.getString(0,bytesValue.length);
+        var intValue = Std.parseInt(stringValue);
+        if(intValue == null) {
+            throw "invalid ID";
+        }
+        return intValue;
+    }
+    /**
+     * tranform the lobby id into url string
+     * @param id in Int format
+     * @return the url String
+     */
+    public static function encodeID(id:Int):String {
+        var bytesValue = Bytes.ofString(Std.string(id));
+        var result = Base64.urlEncode(bytesValue);
+        return result;
+    }
 
 }
 
@@ -360,6 +488,8 @@ enum abstract LobbyType(Int) {
 enum abstract LobbyState(String) from String to String {
     var Voting;
     var Playing;
+    var RoundFinish;
+    var GameFinish;
 }
 
 typedef WikiResponse = {
@@ -371,9 +501,11 @@ typedef WikiQuery = {
     };
     var search:Array<WikiResult>;
     var random:Array<WikiResult>;
+    var pages:Array<WikiResult>;
 }
 typedef WikiResult = {
     var ns:Int;
     var title:String;
     var pageid:Int;
+    var links:Array<WikiResult>;
 }

@@ -1,9 +1,10 @@
 <!doctype html>
-<html>
+<html lang="${lobbyLang}">
   <head>
     <meta charset="utf-8">
-    <title>Wiki Adventure chat Room $1</title>
+    <title>${lobbyID} Wiki Adventure lobby</title>
     <link id="uiCSS" rel="stylesheet" href="/css/chatSection.css">
+    <meta name="viewport" content="width=device-width, user-scalable=yes">
   </head>
   <body id="mwAA" lang="en" class="mw-content-ltr sitedir-ltr ltr mw-body-content parsoid-body mediawiki mw-parser-output" dir="ltr">
     <section id="wikiSection">
@@ -16,15 +17,15 @@
           <div><p id="stateName"></p><p id="stateTime"></p></div>
           <div id="vote"><p>Your vote :</p><p id="playerVote"></p></div>
           <form action="" id="votingForm" class="uiForm">
-            <input id="inputVote" class="uiInput" placeholder="Send your wiki page title suggestion" autocomplete="off" /><button class="uiSubmit" id="voteSubmit">&#10004;</button>
+            <input id="inputVote" class="uiInput" placeholder="${votePlaceholder}" autocomplete="off" /><button class="uiSubmit" id="voteSubmit">&#10004;</button>
           </form>
-          <div><p>Start page :</p><p id="pageStart"></p></div>
-          <div><p>End page :</p><p id="pageEnd"></p></div>
+          <div><p>${startPage} :</p><p id="pageStart"></p></div>
+          <div><p>${endPage} :</p><p id="pageEnd"></p></div>
         </div>
         <div id="chatSection">
           <ul id="outputMessages"></ul>
           <form action="" id="chatForm" class="uiForm">
-            <input id="inputMessage" class="uiInput" placeholder="Send a message to the lobby" autocomplete="off" /><button class="uiSubmit" id="send">&#10004;</button>
+            <input id="inputMessage" class="uiInput" placeholder="${chatPlaceholder}" autocomplete="off" /><button class="uiSubmit" id="send">&#10004;</button>
           </form>
         </div>
       </section>
@@ -32,16 +33,17 @@
     <script id="ioImport" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
     <script id="mainScript">
-        var lobbyID = "$1";
+        var lobbyID = "${lobbyID}";
+        var playerID = "${playerID}";
+        var lobbyLang="${lobbyLang}";
         var hasVoted = false;
-        var playerID = "$2";
         var socket;
         var pageStart;
         var pageEnd;
         if (history.pushState) {
-            window.history.pushState("lobby $1", "WikiAdventure", "play/$1");
+            window.history.pushState("lobby ${lobbyID}", "WikiAdventure", "play/${lobbyID}");
         } else {
-            document.location.href = "play/$1";
+            document.location.href = "play/${lobbyID}";
         }
         var url = window.location.href;
         var idx = url.indexOf("play/");
@@ -49,10 +51,11 @@
         addEventListener("load",(function () {
             socket = io("/"+id,  { query: "playerID="+playerID });
             socket.on('error', (error) => {
+              var logMessage = "${socketError}";
               console.log(error);
-              console.log("Please make sure you are not modifying your modyfing anything, if not report the issue");
+              console.log(logMessage);
               addMessage(error);
-              addMessage("Please make sure you are not modifying your modyfing anything, if not report the issue");
+              addMessage(logMessage);
             });
             document.getElementById('chatForm').onsubmit = function(e){
                 e.preventDefault(); // prevents page reloading
@@ -63,11 +66,30 @@
             };
             document.getElementById('votingForm').onsubmit = function(e){
                 e.preventDefault(); // prevents page reloading
-                socket.emit('vote', document.getElementById('inputVote').value);
-                document.getElementById("playerVote").innerText = document.getElementById('inputVote').value;
+                var requestTitle = document.getElementById('inputVote').value;
+                socket.emit('vote', requestTitle);
+                document.getElementById("playerVote").innerText = requestTitle;
                 document.getElementById('inputVote').value = "";
-                document.getElementById('inputVote').placeholder = "Your suggestion will override the previous one";
-                return false;
+                document.getElementById('inputVote').placeholder = "${votePlaceholderSubmitted}";
+                fetch("https://${lobbyLang}.wikipedia.org/w/api.php?action=query&origin=*&list=search&srlimit=1&srnamespace=0&srsearch=intitle:" + encodeURIComponent(requestTitle) + "&format=json&srprop=")
+                    .then(function(response){return response.json();})
+                    .then(function(response) {
+                        var trueTitle;
+                        if (typeof response.query.search[0] === 'undefined') trueTitle = "no page found";
+                        else trueTitle = response.query.search[0].title;
+                        document.getElementById("playerVote").innerText += " → " + trueTitle;
+                    });
+                /*var requestWiki = new XMLHttpRequest();
+                  requestWiki.open("GET","https://en.wikipedia.org/w/api.php?action=query&callback=callback&origin=*&list=search&srlimit=1&srnamespace=0&srsearch=intitle:" + encodeURIComponent(requestTitle) + "&format=json&srprop=", true);
+                  requestWiki.setRequestHeader("Access-Control-Allow-Origin","https://en.wikipedia.org");
+                  requestWiki.onreadystatechange = function () {
+                      if (!(this.readyState == 4 && this.status == 200)) return;
+                      var json = JSON.parse(this.responseText);
+                      var title = json.query.search[0].title;
+                      if (title == null) return;
+                      document.getElementById("playerVote").innerText += " &rarr; " + title;
+                  }*/
+                  //requestWiki.send();
             };
             socket.on('message', function(msg){
                 addMessage(msg);
@@ -88,7 +110,6 @@
                 switch (type) {
                   case "gameState":
                       switchState(content);
-                  case "votingResult":
 
                 }
             });
@@ -96,7 +117,7 @@
 
         var switchState = function (data) {
             var hasVoted = false;
-            document.getElementById('inputVote').placeholder = "Send your wiki page title suggestion";
+            document.getElementById('inputVote').placeholder = "${votePlaceholder}";
             var idx = data.indexOf("|");
             var state = data.substring(0, idx);
             var time = data.substring(idx+1);
@@ -123,7 +144,7 @@
         };
         
     addEventListener("beforeunload", function (event) {
-        var confirmationMessage = "Are you sure you want to exit? you will lose your session.";
+        var confirmationMessage = "${exitWarning}";
         event.returnValue = confirmationMessage;
         return confirmationMessage;
     });
@@ -148,10 +169,11 @@
     };
 
     var requestWikiPage = function(url) {
-      var requestWiki = new XMLHttpRequest();
-        requestWiki.open("get","https://en.wikipedia.org/api/rest_v1/page/html/" + url);
-        requestWiki.send();
-        requestWiki.onloadend = function () {
+        socket.emit('validateJump', url);
+        var requestWiki = new XMLHttpRequest();
+        requestWiki.open("GET","https://${lobbyLang}.wikipedia.org/api/rest_v1/page/html/" + url);
+        requestWiki.onreadystatechange = function () {
+          if (!(this.readyState == 4 && this.status == 200)) return;
           var parser = new DOMParser();
           var wikiData = parser.parseFromString(requestWiki.response, "text/html") ;
           var cssLinks = wikiData.head.getElementsByTagName("link");
@@ -165,7 +187,7 @@
           }
           for (var i=0;i<cssLinks.length;i++) {
             if (cssLinks[i].rel == "stylesheet") {
-              cssLinks[i].href += "https://en.wikipedia.org";
+              cssLinks[i].href += "https://${lobbyLang}.wikipedia.org";
               document.head.appendChild(cssLinks[i]);
             }
           }
@@ -178,11 +200,12 @@
           document.body.scrollTop = 0; // For Safari
           document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
           if (history.pushState) {
-            window.history.pushState("lobby $1", "WikiAdventure", url);
+            window.history.pushState("lobby ${lobbyID}", "WikiAdventure", lobbyID + "?" + url);
           } else {
-            document.location.href = url;
+            document.location.href =  lobbyID + "?" + url;
           }
         };
+        requestWiki.send();
     };
 
     </script>

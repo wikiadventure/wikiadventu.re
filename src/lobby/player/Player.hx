@@ -8,11 +8,13 @@ import js.npm.Uuid;
 class Player {
     public var socket:Socket;
     public var pseudo:String;
-    public var uuid:String;
+    public var uuid:String;//for authentification
     public var language:Language;
     public var score:Int=0;
     public var numberOfJump:Int=0;
+    public var currentPage:String;
     public var votingSuggestion:String;
+    public var id:Int;//for client identification
 
     public function new(pseudo:String, language:Language) {
         this.language = language;

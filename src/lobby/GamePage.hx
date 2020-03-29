@@ -1,5 +1,6 @@
 package lobby;
 
+import config.Language.LanguageTools;
 import js.html.XMLHttpRequest;
 import lobby.player.Player;
 import js.lib.RegExp;
@@ -26,11 +27,35 @@ class GamePage {
 
 			} else {
                 this.sr.writeHead(200);
-                var urlRegex = ~/(\$1)/g;
-                var idRegex = ~/(\$2)/g;
-                var modifiedData = urlRegex.replace(data.toString(), Lobby.encodeID(lobby.id));
-                modifiedData = idRegex.replace(modifiedData, player.uuid);
-                this.sr.write(modifiedData);
+                var templateRegex = ~/(\${(.*?)})/g; // anything like ${ ... }
+                var templatedData = templateRegex.map(data.toString(), function(r) {
+                    var match = r.matched(0);
+                    switch (match) {
+                        case "${lobbyID}":
+                            return Lobby.encodeID(lobby.id);
+                        case "${playerID}":
+                            return player.uuid;
+                        case "${lobbyLang}":
+                            return lobby.language;
+                        case "${votePlaceholder}":
+                            return LanguageTools.getVotePlaceholder(lobby.language);
+                        case "${votePlaceholderSubmitted}":
+                            return LanguageTools.getVotePlaceholderSubmitted(lobby.language);
+                        case "${chatPlaceholder}":
+                            return LanguageTools.getChatPlaceholder(lobby.language);
+                        case "${startPage}":
+                            return LanguageTools.translateStartPage(lobby.language);
+                        case "${endPage}":
+                            return LanguageTools.translateEndPage(lobby.language);
+                        case "${socketError}":
+                            return LanguageTools.getSocketError(lobby.language);
+                        case "${exitWarning}":
+                            return LanguageTools.getExitWarning(lobby.language);
+                        default:
+                        return '';
+                    };
+                });
+                this.sr.write(templatedData);
                 
 			}
             this.sr.end();
