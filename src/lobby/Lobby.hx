@@ -210,7 +210,7 @@ class Lobby {
         if (player.currentPage == url) return;
         var options:HttpsRequestOptions =  {
             hostname: LanguageTools.getURL(language),
-            path: "/w/api.php?action=query&prop=links&format=json&formatversion=2&titles=" + player.currentPage + "&pltitles=" + url
+            path: "/w/api.php?action=query&prop=links&format=json&formatversion=2&titles=" + StringTools.urlEncode(player.currentPage) + "&pltitles=" + url
         };
         var request = Https.request(options, function (response) {
             response.on('data', function (data) {

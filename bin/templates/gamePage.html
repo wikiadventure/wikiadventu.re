@@ -29,7 +29,6 @@
           </form>
         </div>
       </section>
-    
     <script id="ioImport" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
     <script id="mainScript">
@@ -40,6 +39,7 @@
         var socket;
         var pageStart;
         var pageEnd;
+        var stateCounter;
         if (history.pushState) {
             window.history.pushState("lobby ${lobbyID}", "WikiAdventure", "play/${lobbyID}");
         } else {
@@ -115,16 +115,27 @@
             });
         }));
 
+        var showAlert = function (title, data) {
+            var div = document.createElement("div");
+            div.className = "alert";
+            div.innerHTML = "<h3>" + title + "</h3><p>" + data + "</p>";
+            div.onclick = function (e) {
+              div.remove();
+            };
+            document.body.appendChild(div);
+        };
+
         var switchState = function (data) {
             var hasVoted = false;
             document.getElementById('inputVote').placeholder = "${votePlaceholder}";
             var idx = data.indexOf("|");
             var state = data.substring(0, idx);
             var time = data.substring(idx+1);
+            showAlert(state, 'Check your board for more info<br/>You can click to close me');
             document.getElementById("stateName").innerText = state;
             var timeLeft = time;
             var timeStamp = Date.now();
-            var stateCounter = setInterval(function() {
+            stateCounter = setInterval(function() {
                 var time = Date.now();
                 var dt = time - timeStamp;
                 timeStamp = time;
@@ -207,6 +218,54 @@
         };
         requestWiki.send();
     };
+
+    /**
+     * part for mobile swipe
+     **/
+
+    window.addEventListener('load', function(){
+    
+    var touchsurface = document.getElementById('mwAA'),
+        startX,
+        startY,
+        dist,
+        threshold = 150, //required min distance traveled to be considered swipe
+        allowedTime = 450, // maximum time allowed to travel that distance
+        elapsedTime,
+        startTime
+
+    function handleswipe(isRightSwipe, isLeftSwipe){
+        if (isRightSwipe) {
+            document.getElementById("showUI").checked = true;
+        } else if (isLeftSwipe){
+          document.getElementById("showUI").checked = false;
+        }
+    }
+
+    touchsurface.addEventListener('touchstart', function(e){
+        var touchobj = e.changedTouches[0]
+        dist = 0
+        startX = touchobj.pageX
+        startY = touchobj.pageY
+        startTime = new Date().getTime() // record time when finger first makes contact with surface
+    }, false)
+
+    touchsurface.addEventListener('touchmove', function(e){
+    }, false)
+
+    touchsurface.addEventListener('touchend', function(e){
+        var touchobj = e.changedTouches[0]
+        dist = touchobj.pageX - startX // get total dist traveled by finger while in contact with surface
+        elapsedTime = new Date().getTime() - startTime // get time elapsed
+        // check that elapsed time is within specified, horizontal dist traveled >= threshold, and vertical dist traveled <= 100
+        var swipeRightBol = (elapsedTime <= allowedTime && dist >= threshold && Math.abs(touchobj.pageY - startY) <= 100)
+        var swipeLeftBol = (elapsedTime <= allowedTime && dist <= -threshold && Math.abs(touchobj.pageY - startY) <= 100)
+        handleswipe(swipeRightBol, swipeLeftBol)
+
+    }, false)
+
+    }, false) // end window.onload
+
 
     </script>
   </body>

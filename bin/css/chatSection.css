@@ -6,6 +6,7 @@
 
 body {
 	overflow-x: hidden;
+	width: 100%;
 }
 
 #chatSection {
@@ -127,22 +128,34 @@ body {
 
 }
 
+.alert {
+	position: fixed;
+	bottom: 0;
+	right:0;
+	max-width: 55vw;
+	padding: 1em;
+	border-radius: 0.5em;
+	background: #f44236;
+}
+
+#wikiSection {
+	width: 100%;
+}
+
 #uiSection {
 	background: #23272a;
 	width: 50vw;
-	height: 100vh;
+	height: 100%;
 	position: fixed;
 	bottom: 0;
 	left: -50vw;
 	transition: all ease-in-out 0.25s;
 }
 #labelShowUI {
-	
 	font-weight: bold;
 	text-align: center;
 	padding: 0.5em 0.75em;
 	border-radius: 10px;
-	size: 2em;
 	color: white;
 	display: inline-block;
 	background: #158caa;
@@ -157,13 +170,6 @@ body {
 	left: -10000px;
 }
 
-#uiSection:hover #labelShowUI {
-	transform: rotate(180deg);
-}
-
-#uiSection:hover, #showUI:checked + #uiSection {
-	left: 0vw;
-}
 /* custom Scrollbar for webkit only ( don't work on ie and firefox ) */
 
 /* width */
@@ -187,4 +193,37 @@ body {
 #showUI:checked + #uiSection #labelShowUI {
 	transform: rotate(180deg) !important;
 	background: red !important;
+}
+
+@media all and (max-width: 768px){
+	#uiSection {
+		width: 90vw;
+		left: -90vw;
+	}
+	#labelShowUI {
+		bottom: 0;
+		left: 90vw;
+	}
+	#showUI:checked + #uiSection #labelShowUI {
+		transform: rotate(180deg);
+	}
+	
+	#showUI:checked + #uiSection {
+		left: 0vw;
+	}
+	.alert {
+		max-width: 95vw;
+	}
+
+
+}
+
+@media all and (min-width: 768px) {
+	#uiSection:hover #labelShowUI {
+		transform: rotate(180deg);
+	}
+	
+	#uiSection:hover, #showUI:checked + #uiSection {
+		left: 0vw;
+	}
 }
