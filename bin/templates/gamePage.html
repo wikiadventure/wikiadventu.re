@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="${lobbyLang}">
+<html lang="${lobbyLang}" id="touchScreen">
   <head>
     <meta charset="utf-8">
     <title>${lobbyID} Wiki Adventure lobby</title>
@@ -8,7 +8,14 @@
   </head>
   <body id="mwAA" lang="en" class="mw-content-ltr sitedir-ltr ltr mw-body-content parsoid-body mediawiki mw-parser-output" dir="ltr">
     <section id="wikiSection">
-
+        <div class="tips">
+          <p>Tips :</p>
+          <p>You can hover the blue icon to open the action menu.</p>
+          <p>You can also lock the menu if you click on the icon.</p>
+          <p>Additionally, you can press escape on the keyboard to lock the menu.</p>
+          <p>After you submitted your vote, the resulted wiki page title will appear after the  → .</p>
+          <p>If no page are found, you will see → no page found.</p>
+        </div>
     </section>
     <input id="showUI" type="checkbox"/>
       <section id="uiSection" type="checkbox">
@@ -17,18 +24,30 @@
           <div><p id="stateName"></p><p id="stateTime"></p></div>
           <div id="vote"><p>Your vote :</p><p id="playerVote"></p></div>
           <form action="" id="votingForm" class="uiForm">
-            <input id="inputVote" class="uiInput" placeholder="${votePlaceholder}" autocomplete="off" /><button class="uiSubmit" id="voteSubmit">&#10004;</button>
+            <input tabindex=1 id="inputVote" class="uiInput" placeholder="${votePlaceholder}" autocomplete="off" /><button class="uiSubmit" id="voteSubmit">&#10004;</button>
           </form>
           <div><p>${startPage} :</p><p id="pageStart"></p></div>
           <div><p>${endPage} :</p><p id="pageEnd"></p></div>
+          <section id="playerScoreSection">
+
+          </section>
         </div>
         <div id="chatSection">
           <ul id="outputMessages"></ul>
           <form action="" id="chatForm" class="uiForm">
-            <input id="inputMessage" class="uiInput" placeholder="${chatPlaceholder}" autocomplete="off" /><button class="uiSubmit" id="send">&#10004;</button>
+            <input tabindex=2 id="inputMessage" class="uiInput" placeholder="${chatPlaceholder}" autocomplete="off" /><button class="uiSubmit" id="send">&#10004;</button>
           </form>
         </div>
       </section>
+
+    <audio id="countdownSound">
+      <source src="res/sound/countDown.ogg" type="audio/ogg">
+      <source src="res/sound/countDown.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="winSound">
+      <source src="res/sound/win.ogg" type="audio/ogg">
+      <source src="res/sound/win.mp3" type="audio/mpeg">
+    </audio>
     <script id="ioImport" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
     <script id="mainScript">
@@ -66,7 +85,11 @@
             };
             document.getElementById('votingForm').onsubmit = function(e){
                 e.preventDefault(); // prevents page reloading
-                var requestTitle = document.getElementById('inputVote').value;
+                voteSubmit(document.getElementById('inputVote').value);
+            };
+            var voteSubmit = function (vote) {
+                e.preventDefault(); // prevents page reloading
+                var requestTitle = vote;
                 socket.emit('vote', requestTitle);
                 document.getElementById("playerVote").innerText = requestTitle;
                 document.getElementById('inputVote').value = "";
@@ -77,19 +100,8 @@
                         var trueTitle;
                         if (typeof response.query.search[0] === 'undefined') trueTitle = "no page found";
                         else trueTitle = response.query.search[0].title;
-                        document.getElementById("playerVote").innerText += " → " + trueTitle;
+                        document.getElementById("playerVote").innerText = requestTitle + " → " + trueTitle;
                     });
-                /*var requestWiki = new XMLHttpRequest();
-                  requestWiki.open("GET","https://en.wikipedia.org/w/api.php?action=query&callback=callback&origin=*&list=search&srlimit=1&srnamespace=0&srsearch=intitle:" + encodeURIComponent(requestTitle) + "&format=json&srprop=", true);
-                  requestWiki.setRequestHeader("Access-Control-Allow-Origin","https://en.wikipedia.org");
-                  requestWiki.onreadystatechange = function () {
-                      if (!(this.readyState == 4 && this.status == 200)) return;
-                      var json = JSON.parse(this.responseText);
-                      var title = json.query.search[0].title;
-                      if (title == null) return;
-                      document.getElementById("playerVote").innerText += " &rarr; " + title;
-                  }*/
-                  //requestWiki.send();
             };
             socket.on('message', function(msg){
                 addMessage(msg);
@@ -101,6 +113,30 @@
                 pageEnd = data.substring(idx+1);
                 document.getElementById("pageEnd").innerText = pageEnd;
                 requestWikiPage(pageStart);
+            });
+            socket.on('playerLeft', function(playerID){
+                document.getElementById("player"+playerID).remove();
+            });
+            socket.on('updateScore', function(data){
+                var idx = data.indexOf(":");
+                var playerID = data.substring(0, idx);
+                var score = data.substring(idx+1);
+                document.getElementById("player"+playerID).getElementsByClassName("playerScore")[0].innerText = score;
+            });
+            socket.on('newPlayer', function(data){
+                var idx = data.indexOf(":");
+                var playerID = data.substring(0, idx);
+                var remain = data.substring(idx+1);
+                idx = remain.indexOf(":");
+                var playerName = remain.substring(0, idx);
+                var playerScore = remain.substring(idx+1);
+                if (document.getElementById("player"+playerID) == null) {
+                    var div = document.createElement("div");
+                    div.className = "score";
+                    div.innerHTML = '<p class="playerName">' + playerName + '</p><p class="playerScore">' + playerScore + '</p>';
+                    div.id = "player" + playerID;
+                    document.getElementById("playerScoreSection").appendChild(div);
+                }
             });
             socket.on('gameContent', function(data){
                 var idx = data.indexOf(":");
@@ -123,10 +159,12 @@
               div.remove();
             };
             document.body.appendChild(div);
+            setTimeout(function(){div.remove();}, 15000);
         };
 
         var switchState = function (data) {
             var hasVoted = false;
+            clearInterval(stateCounter);
             document.getElementById('inputVote').placeholder = "${votePlaceholder}";
             var idx = data.indexOf("|");
             var state = data.substring(0, idx);
@@ -135,15 +173,24 @@
             document.getElementById("stateName").innerText = state;
             var timeLeft = time;
             var timeStamp = Date.now();
+            var countdownSound = document.getElementById("countdownSound");
+            var playing = false;
             stateCounter = setInterval(function() {
                 var time = Date.now();
                 var dt = time - timeStamp;
                 timeStamp = time;
                 timeLeft = timeLeft - dt*0.001;
+                if (timeLeft <= 10) {
+                    if (!playing) {
+                      countdownSound.play();
+                      playing = true;
+                    }
+                }
                 document.getElementById("stateTime").innerText = Math.ceil(timeLeft);
                 if (timeLeft < 0) {
                   clearInterval(stateCounter);
                   document.getElementById("stateTime").innerText = 0;
+                  playing = false;
                 }
             }, 100);
         };
@@ -160,7 +207,7 @@
         return confirmationMessage;
     });
 
-    //Code to toggle of the link of the wikipedia page and redirect them to custom function
+    //Code to toggle off the link of the wikipedia page and redirect them to custom function
 
     var disableLinks = function () {
       var links= document.getElementsByTagName("a");
@@ -181,6 +228,9 @@
 
     var requestWikiPage = function(url) {
         socket.emit('validateJump', url);
+        if (decodeURI(url) == pageEnd) {
+            document.getElementById("winSound").play();
+        }
         var requestWiki = new XMLHttpRequest();
         requestWiki.open("GET","https://${lobbyLang}.wikipedia.org/api/rest_v1/page/html/" + url);
         requestWiki.onreadystatechange = function () {
@@ -220,12 +270,25 @@
     };
 
     /**
+     * part for tab shorcut ( open and close menu with tab )
+     **/
+
+    addEventListener("keydown", event => {
+        if (event.isComposing || event.keyCode === 229) {
+            return;
+        }
+        if (event.keyCode === 27) {
+            document.getElementById("showUI").checked = !document.getElementById("showUI").checked;
+        }
+    });
+
+    /**
      * part for mobile swipe
      **/
 
-    window.addEventListener('load', function(){
+    window.addEventListener('load', function() {
     
-    var touchsurface = document.getElementById('mwAA'),
+    var touchsurface = document.documentElement,
         startX,
         startY,
         dist,

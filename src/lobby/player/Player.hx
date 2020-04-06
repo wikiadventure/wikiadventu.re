@@ -18,11 +18,11 @@ class Player {
 
     public function new(pseudo:String, language:Language) {
         this.language = language;
-        var dangerRegex : EReg =  ~/[^<>%$]/g;
+        var dangerRegex : EReg =  ~/[<>:|%$\/\\]/g;
         if ( pseudo == null || pseudo == "") {
             this.pseudo = randomNameGenerator(this.language);
-        } else if ( pseudo.length < 6 || !dangerRegex.match(pseudo) ) {
-            throw "Invalid Pseudo, pseudo need to be at least 6 character and can't use any of this character < > % $ ";
+        } else if ( pseudo.length < 6 || dangerRegex.match(pseudo) || pseudo.length > 26 ) {
+            throw "Invalid Pseudo, pseudo need to be at least 6 character, no more than 20 character and can't use any of this character < > : | % $ / \\";
         } else {
             this.pseudo = pseudo;
         }

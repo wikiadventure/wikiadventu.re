@@ -15,6 +15,7 @@ import lobby.ConnectionPage;
 import error.ErrorPage;
 import controller.StyleController;
 import controller.ConnectController;
+import controller.ResController;
 import lobby.Lobby;
 
 class App {
@@ -60,6 +61,7 @@ class App {
             case "/": new MainPage(im, sr);
             case "/css": new StyleController(im, sr);
             case "/connect": new ConnectController(im, sr, body);
+            case "/res": new ResController(im, sr);
             //case "/play": new GameController(im, sr, body);
             default: new ErrorPage(im, sr, body, "Sorry, you are looking for something that doesn't exist!", 404);
         }

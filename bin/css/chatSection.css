@@ -7,6 +7,8 @@
 body {
 	overflow-x: hidden;
 	width: 100%;
+	font-family: sans-serif;
+
 }
 
 #chatSection {
@@ -32,19 +34,19 @@ body {
 
 }
 
-#actionSection > div {
+#actionSection > div, #playerScoreSection > div {
 	display: inline-flex;
 	width: 100%;
 	flex: 1;
 	height: 3em;
 }
-#stateName, #actionSection > div > p {
+#stateName, #actionSection > div > p,  #playerScoreSection > div > p {
 	flex: 1;
 	text-align: left;
 	padding-left: 5px;
 	margin: auto;
 }
-#stateTime, #playerVote, #pageEnd, #pageStart {
+#stateTime, #playerVote {
 	flex: 2;
 	margin: auto;
 	text-align: center;
@@ -136,12 +138,61 @@ body {
 	padding: 1em;
 	border-radius: 0.5em;
 	background: #f44236;
+	overflow: hidden;
+	filter: drop-shadow(-3px -3px 15px black);
 }
+.alert::after {
+	animation: ripple 1.2s ease-out infinite;
+	animation-delay: 1s;
+	content: '';
+	mix-blend-mode: screen;
+	position: absolute;
+	top: 16px;
+	width: 150px;
+	height: 150px;
+	margin: auto;
+	background: rgba(50, 0, 0, .25);
+	opacity: 0;
+	border-radius: 100%;
+	transform-origin: 50% 50%;
+}
+
+@keyframes ripple {
+	0%, 35% {
+	  transform: scale(0);
+	  opacity: 1;
+	}
+	50% {
+	  transform: scale(1.5);
+	  opacity: 0.8;
+	}
+	100% {
+	  opacity: 0;
+	  transform: scale(4);
+	}
+  }
 
 #wikiSection {
 	width: 100%;
 }
-
+.tips {
+	position: fixed;
+	display: flex;
+	width: 100vw;
+	height: 100vh;
+    align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	padding: 0 25px;
+	word-wrap: break-word;
+	color:#eee;
+	text-align: center;
+	font-size: 25px;
+	text-shadow:1px 1px #ccc, -1px -1px #fff;
+}
+.tips p {
+	margin: 10px;
+}
 #uiSection {
 	background: #23272a;
 	width: 50vw;
@@ -150,6 +201,7 @@ body {
 	bottom: 0;
 	left: -50vw;
 	transition: all ease-in-out 0.25s;
+	filter: drop-shadow(3px 3px 15px black);
 }
 #labelShowUI {
 	font-weight: bold;
@@ -159,6 +211,7 @@ body {
 	color: white;
 	display: inline-block;
 	background: #158caa;
+	opacity: .7;
 	position: absolute;
 	left: 50vw;
 	transition: all ease-in-out 0.2s;
@@ -168,6 +221,10 @@ body {
 #showUI {
 	position: fixed;
 	left: -10000px;
+}
+
+.playerName::after {
+	content: " : ";
 }
 
 /* custom Scrollbar for webkit only ( don't work on ie and firefox ) */

@@ -21,6 +21,7 @@ class Lobby {
     public var state:LobbyState;
     public var timeStampStateBegin:Float;
     public var loop:Timer;
+    public var totalPlayer:Int = 0;
 
     public var startPage:String;
     public var endPage:String;
@@ -48,7 +49,7 @@ class Lobby {
         lobbyList = new Array<Lobby>();
     }
 
-    public function new(language : Language, type:LobbyType, slot:Int=10, round:Int=3, playTimeOut:Int=600, voteTimeOut:Int=30) {
+    public function new(language : Language, type:LobbyType, slot:Int=10, round:Int=10, playTimeOut:Int=600, voteTimeOut:Int=30) {
         if (lobbyList.length >= lobbyLimit) {
             throw "Lobby limit has been reached!";
         } else if (getPrivateLobbyLength() >= privateLimit) {
@@ -142,7 +143,11 @@ class Lobby {
         io.use(function (socket, next) {
             var player = getPlayerFromUUID(untyped __js__("socket.handshake.query.playerID"));
             if ( player != null ) {
-                if (player.assignSocket(socket) ) return untyped __js__("next()");
+                if (player.assignSocket(socket) ) {
+                    player.id = totalPlayer;
+                    totalPlayer++;
+                    return untyped __js__("next()");
+                }
                 return untyped __js__("next(new Error('Connection rejected because there already a client connected with this playerID'))");
             }
             return untyped __js__("next(new Error('Connection rejected because playerID is not registered in the lobby'))");
@@ -153,17 +158,19 @@ class Lobby {
             var player = getPlayerFromSocket(socket);
             if (player == null) return;
             io.emit('message', player.pseudo + " join the lobby!");
-            var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
-            socket.emit('gameContent', "gameState:" + state + "|" + timeLeft );
-            if (state == Playing) socket.emit('voteResult', startPage + '?' + endPage);
+            sendCurrentState(socket);
+            io.emit('newPlayer', player.id + ":" + player.pseudo + ":" + player.score);
             socket.on('message', function (data) {
                 var player = getPlayerFromSocket(socket);
                 if (player == null) return;
-
                 io.emit('message', player.pseudo + " : " + data);
             });
             socket.on('disconnect', function (data) {
-                
+                var player = getPlayerFromSocket(socket);
+                if (player == null) return;
+                io.emit('playerLeft', player.id);
+                io.emit('message', player.pseudo + " has left the lobby!");
+                playerList.remove(player);
             });
             socket.on('pageRequest', function (data) {
                 
@@ -180,6 +187,14 @@ class Lobby {
         });
     }
 
+    public function sendCurrentState(socket:Socket) {
+        var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
+        socket.emit('gameContent', "gameState:" + state + "|" + timeLeft );
+        if (state == Playing) socket.emit('voteResult', startPage + '?' + endPage);
+        for (player in playerList) {
+            socket.emit('newPlayer', player.id + ":" + player.pseudo + ":" + player.score);
+        }
+    }
 
     /**
      * get the current state duration
@@ -210,7 +225,7 @@ class Lobby {
         if (player.currentPage == url) return;
         var options:HttpsRequestOptions =  {
             hostname: LanguageTools.getURL(language),
-            path: "/w/api.php?action=query&prop=links&format=json&formatversion=2&titles=" + StringTools.urlEncode(player.currentPage) + "&pltitles=" + url
+            path: "/w/api.php?action=query&prop=links&format=json&formatversion=2&titles=" + player.currentPage + "&pltitles=" + StringTools.urlEncode(url)
         };
         var request = Https.request(options, function (response) {
             response.on('data', function (data) {
@@ -218,18 +233,23 @@ class Lobby {
                     var parsed:WikiResponse = Json.parse(data);
                     if (parsed.query.pages[0] == null) {
                         //kick for cheating
-                        trace(player.currentPage + " --> " + url);
+                        trace(player.currentPage + " --> " + StringTools.urlDecode(url));
                         io.emit('message', "it seems that " + player.pseudo + " is cheating! (or the anticheat system is broken)");
                     } else {
                         player.numberOfJump +=1;
-                        player.currentPage = url;
-                        if (url == endPage) {
+                        player.currentPage = StringTools.urlDecode(url);
+                        if (StringTools.urlDecode(url) == endPage) {
+                            startPage = null;
+                            endPage = null;
+                            var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
+                            player.score += 500 + Std.int(timeLeft);
+                            io.emit('updateScore', player.id + ":" + player.score);
+                            io.emit('winRound', player.pseudo);
                             io.emit('message', player.pseudo + " win the round " + currentRound);
+                            currentRound++;
                             loop = null;
                             votePhase();
-                        } else {
-                            io.emit('message', player.pseudo + " jumped to " + url + ", total jump : " + player.numberOfJump);
-                        }              
+                        }             
                     }
                 } catch(e:Dynamic) {
                     trace(e);
@@ -359,7 +379,8 @@ class Lobby {
         state = Playing;
         initNewPhase();
         loop = Timer.delay(function () {
-            roundFinishPhase();
+            currentRound++;
+            votePhase();
         },currentStateTimeOut()*1000);
     }
 
@@ -381,6 +402,7 @@ class Lobby {
     public function initNewPhase() {
         timeStampStateBegin = Timer.stamp();
         io.emit('gameContent', "gameState:" + state +"|" + currentStateTimeOut());
+        io.emit('message', "Changement de phase : " + state + " | " + currentStateTimeOut());
     }
 
     /**
