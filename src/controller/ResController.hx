@@ -23,7 +23,7 @@ class ResController {
             default :
                 "unknown/unknown";
         };
-        trace(mimeType);
+        trace(extension + " - " + mimeType);
         this.sr.setHeader("Content-Type", mimeType);
 		var requestedFileUrl = '.' + this.im.url;
 		Fs.readFile(requestedFileUrl, function(err, data) {

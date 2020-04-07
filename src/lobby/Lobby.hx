@@ -100,6 +100,11 @@ class Lobby {
     public function addPlayer(player:Player) {
         if (playerList.lastIndexOf(player) == -1) {
             playerList.push(player);
+            Timer.delay(function () {
+                if (player.socket == null) {
+                    removePlayer(player);
+                }
+            },30000);
         }
     }
     /**
@@ -109,6 +114,7 @@ class Lobby {
     public function removePlayer(player:Player) {
         playerList.remove(player);
         if (playerList.length == 0) {
+            trace("delete the lobby");
             Lobby.lobbyList.remove(this);
         }
     }
@@ -153,7 +159,6 @@ class Lobby {
             return untyped __js__("next(new Error('Connection rejected because playerID is not registered in the lobby'))");
             
         });
-
         io.on('connection', function(socket:Socket, request) {
             var player = getPlayerFromSocket(socket);
             if (player == null) return;
@@ -170,7 +175,7 @@ class Lobby {
                 if (player == null) return;
                 io.emit('playerLeft', player.id);
                 io.emit('message', player.pseudo + " has left the lobby!");
-                playerList.remove(player);
+                removePlayer(player);
             });
             socket.on('pageRequest', function (data) {
                 
@@ -189,7 +194,7 @@ class Lobby {
 
     public function sendCurrentState(socket:Socket) {
         var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
-        socket.emit('gameContent', "gameState:" + state + "|" + timeLeft );
+        io.emit('gameState', state +"|" + currentRound + "|" + timeLeft);
         if (state == Playing) socket.emit('voteResult', startPage + '?' + endPage);
         for (player in playerList) {
             socket.emit('newPlayer', player.id + ":" + player.pseudo + ":" + player.score);
@@ -292,6 +297,7 @@ class Lobby {
      * if an player did not vote, we picked random page to replace his vote
      * if there is only 1 player we picked an another random page
      * start the play phase when the selection is completed
+     * TODO : pick a random page if start and end page are the same
      * PS: NOT OPTIMISED but we do like that so in the future we can do a little drawing animation client side
      */
     public function selectPage() {
@@ -379,9 +385,13 @@ class Lobby {
         state = Playing;
         initNewPhase();
         loop = Timer.delay(function () {
-            currentRound++;
-            votePhase();
+            playPhaseEnd();
         },currentStateTimeOut()*1000);
+    }
+
+    public function playPhaseEnd() {
+        currentRound++;
+        votePhase();
     }
 
     /**
@@ -401,8 +411,7 @@ class Lobby {
      */
     public function initNewPhase() {
         timeStampStateBegin = Timer.stamp();
-        io.emit('gameContent', "gameState:" + state +"|" + currentStateTimeOut());
-        io.emit('message', "Changement de phase : " + state + " | " + currentStateTimeOut());
+        io.emit('gameState', state +"|" + currentRound + "|" + currentStateTimeOut());
     }
 
     /**

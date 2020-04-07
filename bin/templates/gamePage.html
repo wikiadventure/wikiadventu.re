@@ -9,7 +9,7 @@
   <body id="mwAA" lang="en" class="mw-content-ltr sitedir-ltr ltr mw-body-content parsoid-body mediawiki mw-parser-output" dir="ltr">
     <section id="wikiSection">
         <div class="tips">
-          <p>Tips :</p>
+          <h1>Tips :</h1>
           <p>You can hover the blue icon to open the action menu.</p>
           <p>You can also lock the menu if you click on the icon.</p>
           <p>Additionally, you can press escape on the keyboard to lock the menu.</p>
@@ -88,7 +88,6 @@
                 voteSubmit(document.getElementById('inputVote').value);
             };
             var voteSubmit = function (vote) {
-                e.preventDefault(); // prevents page reloading
                 var requestTitle = vote;
                 socket.emit('vote', requestTitle);
                 document.getElementById("playerVote").innerText = requestTitle;
@@ -138,16 +137,8 @@
                     document.getElementById("playerScoreSection").appendChild(div);
                 }
             });
-            socket.on('gameContent', function(data){
-                var idx = data.indexOf(":");
-                var type = data.substring(0, idx);
-                var content = data.substring(idx+1);
-
-                switch (type) {
-                  case "gameState":
-                      switchState(content);
-
-                }
+            socket.on('gameState', function(data){
+                switchState(data);
             });
         }));
 
@@ -156,10 +147,12 @@
             div.className = "alert";
             div.innerHTML = "<h3>" + title + "</h3><p>" + data + "</p>";
             div.onclick = function (e) {
-              div.remove();
+              div.style.opacity = 0;
+              setTimeout(function(){div.remove();}, 500);
             };
             document.body.appendChild(div);
-            setTimeout(function(){div.remove();}, 15000);
+            setTimeout(function(){div.style.opacity = 0;}, 15000);
+            setTimeout(function(){div.remove();}, 15500);
         };
 
         var switchState = function (data) {
@@ -168,9 +161,12 @@
             document.getElementById('inputVote').placeholder = "${votePlaceholder}";
             var idx = data.indexOf("|");
             var state = data.substring(0, idx);
-            var time = data.substring(idx+1);
-            showAlert(state, 'Check your board for more info<br/>You can click to close me');
-            document.getElementById("stateName").innerText = state;
+            var remain = data.substring(idx+1);
+            idx = remain.indexOf("|");
+            var round = remain.substring(0, idx);
+            var time = remain.substring(idx+1);
+            showAlert(state + " round " + round, 'Check your board for more info<br/>You can click to close me');
+            document.getElementById("stateName").innerText = state + " round " + round;
             var timeLeft = time;
             var timeStamp = Date.now();
             var countdownSound = document.getElementById("countdownSound");
@@ -205,6 +201,10 @@
         var confirmationMessage = "${exitWarning}";
         event.returnValue = confirmationMessage;
         return confirmationMessage;
+    });
+
+    addEventListener("unload", function (event) {
+        socket.close();
     });
 
     //Code to toggle off the link of the wikipedia page and redirect them to custom function
