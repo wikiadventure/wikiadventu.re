@@ -43,8 +43,8 @@ now you can hit debug > start debugging ( or f5 ), haxe will transpile the proje
 - [x] integrate the wikipedia api rest v1 page in the design
 - [x] Send players message with socket io
 - [x] Share players message with socket io
-- [ ] Send players action with socket io
-- [ ] Handle players action on socket io
-- [ ] implemented verification to avoid cheating
+- [x] Send players action with socket io
+- [x] Handle players action on socket io
+- [x] implemented verification to avoid cheating
 - [x] Share players actions with socket io
 - [ ] save data to make some statistic
