@@ -12,8 +12,8 @@ class ErrorPage {
 		this.im = im;
 		this.sr = sr;
 		trace(body.length);
-		this.sr.setHeader("Content-Type", "text/html");
 		this.sr.writeHead(errorCode);
+
 		this.sr.write(reason);
 		this.sr.end();
 	}

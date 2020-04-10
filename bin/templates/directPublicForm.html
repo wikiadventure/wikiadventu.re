@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A layout example that shows off a responsive product landing page.">
+    <title>WikiAdventure lobby</title>    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="/css/menu.css">
+    <meta name="viewport" content="width=device-width, user-scalable=yes">
+</head>
+<body>
+    <div>
+        <div class="content" id="publicJoin">
+            <h2 class="content-head is-center">Join a public lobby</h2>
+    
+            <div class="pure-g">
+                <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
+                    <form id="publicJoinForm" class="pure-form pure-form-stacked" method="post" action="/play/${lobbyID}">
+                        <fieldset>
+                            
+                            <input name="language" type="hidden" value="${lobbyLang}">
+                            <input name="type" type="hidden" value="publicJoin">
+                            <input name="id" type="hidden" value="${lobbyID}">
+                            <label for="publicJoinPseudo">Your Pseudo</label>
+                            <input id="publicJoinPseudo" name="pseudo" type="text" placeholder="Your Pseudo" minlength="6" maxlength="25">
+    
+                            <button type="submit" class="pure-button">Join</button>
+                        </fieldset>
+                    </form>
+                </div>
+    
+                <div class="l-box-lrg pure-u-1 pure-u-md-3-5">
+                    <h4>How To Play</h4>
+                    <p>
+                        The goal is simple, during the play phase, you need to go as fast as 
+                        possible from the start page to the end page, but you can only navigate 
+                        with the link on the wikipedia page.
+                        During the voting phase you can suggest your wikipedia page title in the swipe menu.
+                        At the end of the voting phase the server will randomly pick a start page 
+                        and an end page and the game will begin.
+                    </p>
+    
+                    <h4>Report a bug</h4>
+                    <p>
+                        TODO here
+                    </p>
+                </div>
+            </div>
+    
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha512/0.8.0/sha512.min.js"></script>
+    <script>
+        document.getElementById("publicJoinForm").onsubmit = function (e) {
+            document.getElementById("privateJoinPassword").value = sha512(document.getElementById("privateJoinPassword").value);
+        }
+    </script>  
+</body>
+</html>

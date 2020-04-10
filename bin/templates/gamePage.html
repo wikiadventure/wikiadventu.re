@@ -59,16 +59,13 @@
         var pageStart;
         var pageEnd;
         var stateCounter;
-        if (history.pushState) {
-            window.history.pushState("lobby ${lobbyID}", "WikiAdventure", "play/${lobbyID}");
+        if (history.replaceState) {
+            window.history.replaceState("lobby ${lobbyID}", "WikiAdventure", "/play/${lobbyID}");
         } else {
-            document.location.href = "play/${lobbyID}";
+            document.location.href = "/play/${lobbyID}";
         }
-        var url = window.location.href;
-        var idx = url.indexOf("play/");
-        var id =  url.substring(idx+5);
         addEventListener("load",(function () {
-            socket = io("/"+id,  { query: "playerID="+playerID });
+            socket = io("/"+lobbyID,  { query: "playerID="+playerID });
             socket.on('error', (error) => {
               var logMessage = "${socketError}";
               console.log(error);

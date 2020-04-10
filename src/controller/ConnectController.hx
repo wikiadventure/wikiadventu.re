@@ -1,5 +1,7 @@
 package controller;
 
+import js.node.Crypto.CryptoAlgorithm;
+import js.node.crypto.Verify;
 import lobby.ConnectionPage;
 import lobby.Lobby;
 import lobby.player.Player;
@@ -56,11 +58,11 @@ class ConnectController {
         }
 
         switch data['type'] {
-            case "publicJoin": publicJoin(player);
-            case "privateJoin": privateJoin(data);
-            case "privateCreate": privateCreate(data);
+            case "publicJoin": publicJoin(player); return;
+            case "privateJoin": privateJoin(data, player); return;
+            case "privateCreate": privateCreate(data, player); return;
         }
-        
+        new ErrorPage(im, sr, body, "invalid lobby type",400);
     }
     
     public function publicJoin(player:Player) {
@@ -74,13 +76,28 @@ class ConnectController {
         }
         
     }
-    public function privateJoin(data:QuerystringParseResult) {
+    public function privateJoin(data:QuerystringParseResult, player:Player) {
         trace("privatejoin");
-        new ErrorPage(im, sr, body, "not implemented",400);
+        try {
+            var lobby = Lobby.find(Lobby.decodeID(data['id']));
+            lobby.connect(player, data['password']);
+            new GamePage(im, sr, lobby, player);
+        } catch (e:Dynamic) {
+            new ErrorPage(im, sr, body, "internal error : "+e,400);
+        }
     }
-    public function privateCreate(data:QuerystringParseResult) {
+    public function privateCreate(data:QuerystringParseResult, player:Player) {
         trace("publicreate");
-        new ErrorPage(im, sr, body, "not implemented",400);
+        try {
+            var lobby = new Lobby(player.language, Private, data['password']);
+            lobby.giveID();// giveID method also add the lobby to the lobbylist
+            lobby.initNamespace();
+            lobby.votePhase();
+            lobby.connect(player, data['password']);
+            new GamePage(im, sr, lobby, player);
+        } catch (e:Dynamic) {
+            new ErrorPage(im, sr, body, "internal error"+e,400);
+        }
     }
 
 }

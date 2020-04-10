@@ -49,7 +49,7 @@ class Lobby {
         lobbyList = new Array<Lobby>();
     }
 
-    public function new(language : Language, type:LobbyType, slot:Int=10, round:Int=10, playTimeOut:Int=600, voteTimeOut:Int=30) {
+    public function new(language : Language, type:LobbyType, ?passwordHash:String, slot:Int=15, round:Int=10, playTimeOut:Int=600, voteTimeOut:Int=30) {
         if (lobbyList.length >= lobbyLimit) {
             throw "Lobby limit has been reached!";
         } else if (getPrivateLobbyLength() >= privateLimit) {
@@ -63,6 +63,7 @@ class Lobby {
         currentRound = 1;
         this.playTimeOut = playTimeOut;
         this.voteTimeOut = voteTimeOut;
+        this.passwordHash = passwordHash;
         
     }
     /**
@@ -93,11 +94,22 @@ class Lobby {
         }
         return i;
     }
+
+    public static function find(id:Int):Lobby {
+        for (l in lobbyList) {
+            if (l.id > id) throw "no lobby with id " + id + " found";
+            if (l.id == id) return l;
+        }
+        throw "no lobby with id " + id + " found";
+    }
+
+
     /**
      * add player to the lobby ( and check if is not already in )
      * @param player to add
      */
     public function addPlayer(player:Player) {
+        if (playerList.length >= slot) throw "the lobby is full";
         if (playerList.lastIndexOf(player) == -1) {
             playerList.push(player);
             Timer.delay(function () {
@@ -106,6 +118,11 @@ class Lobby {
                 }
             },30000);
         }
+    }
+
+    public function connect(player:Player, ?passwordHash:String) {
+        if (this.type == Public || this.passwordHash == passwordHash) return addPlayer(player);
+        throw "Invalid password";
     }
     /**
      * remove a player from the lobby and remove the lobby if he go empty
@@ -176,12 +193,6 @@ class Lobby {
                 io.emit('playerLeft', player.id);
                 io.emit('message', player.pseudo + " has left the lobby!");
                 removePlayer(player);
-            });
-            socket.on('pageRequest', function (data) {
-                
-            });
-            socket.on('gameContent', function (data) {
-
             });
             socket.on('vote', function (data) {
                 vote(socket, data);
@@ -458,7 +469,7 @@ class Lobby {
         for (l in lobbyList) {
             if (l.type == Public && (l.slot > l.playerList.length)) {
                 if ( l.language == player.language ) {
-                    l.addPlayer(player);
+                    l.connect(player);
                     return l;
                 }
             }
@@ -468,7 +479,7 @@ class Lobby {
         lobby.giveID();// giveID method also add the lobby to the lobbylist
         lobby.initNamespace();
         lobby.votePhase();
-        lobby.addPlayer(player);
+        lobby.connect(player);
         return lobby;
     }
 
