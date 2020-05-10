@@ -15,7 +15,7 @@ class DirectPublicJoinPage {
 		Fs.readFile('templates/directPublicForm.html', function(err, data) {
 			if (err != null) {
                 trace(err);
-				this.sr.writeHead(404);
+                this.sr.writeHead(404);
                 this.sr.write("ressource not found");
 
 			} else {

@@ -47,13 +47,6 @@ class App {
     }
 
     function new(im : IncomingMessage, sr : ServerResponse, body : String) {
-        count++;
-        if (count == 1) {
-            timestamp = Timer.stamp();
-        }
-        if (count == 100000) {
-            trace(Timer.stamp()-timestamp);
-        }
         
         var idx : Int = im.url.indexOf("/", 1);
         var route : String = idx == -1 ? im.url : im.url.substring(0, idx);

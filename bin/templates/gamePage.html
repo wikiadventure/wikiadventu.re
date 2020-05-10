@@ -228,42 +228,47 @@
         if (decodeURI(url) == pageEnd) {
             document.getElementById("winSound").play();
         }
-        var requestWiki = new XMLHttpRequest();
-        requestWiki.open("GET","https://${lobbyLang}.wikipedia.org/api/rest_v1/page/html/" + url);
-        requestWiki.onreadystatechange = function () {
-          if (!(this.readyState == 4 && this.status == 200)) return;
-          var parser = new DOMParser();
-          var wikiData = parser.parseFromString(requestWiki.response, "text/html") ;
-          var cssLinks = wikiData.head.getElementsByTagName("link");
-          var content = wikiData.body.childNodes;
-          document.getElementById("wikiSection").innerHTML = "";
+        var header= new Headers({
+            "Api-User-Agent":"pediaFinder/1.1 (https://pedia-finder.herokuapp.com/; benjamin.gilloury@gmail.com)",
+            "origin": "*",
+        });
+        var options = { method: 'GET',
+               headers: header,
+               mode: 'cors',
+               cache: 'default' };
+        fetch("https://${lobbyLang}.wikipedia.org/api/rest_v1/page/html/" + url , options)
+                    .then(function(response){return response.text();})
+                    .then(function(response) {
+                        var trueTitle;
+                        var parser = new DOMParser();
+                        console.log(response);
+                        var wikiData = parser.parseFromString(response, "text/html") ;
+                        var cssLinks = wikiData.head.getElementsByTagName("link");
+                        document.getElementById("wikiSection").innerHTML = "";
 
-          for (var i=0;i<document.head.childNodes.length;i++) {
-            if (document.head.childNodes[i].tagName == "link" && document.head.childNodes[i].id != "uiCSS") {
-              document.head.childNodes[i].remove();
-            }
-          }
-          for (var i=0;i<cssLinks.length;i++) {
-            if (cssLinks[i].rel == "stylesheet") {
-              cssLinks[i].href += "https://${lobbyLang}.wikipedia.org";
-              document.head.appendChild(cssLinks[i]);
-            }
-          }
+                        for (var i=0;i<document.head.childNodes.length;i++) {
+                          if (document.head.childNodes[i].tagName == "link" && document.head.childNodes[i].id != "uiCSS") {
+                            document.head.childNodes[i].remove();
+                          }
+                        }
+                        for (var i=0;i<cssLinks.length;i++) {
+                          if (cssLinks[i].rel == "stylesheet") {
+                            cssLinks[i].href += "https://${lobbyLang}.wikipedia.org";
+                            document.head.appendChild(cssLinks[i]);
+                          }
+                        }
 
-          for (var i = 0; i < content.length; i++) {
-            document.getElementById("wikiSection").appendChild(content[i]);
-          }
-          
-          disableLinks();
-          document.body.scrollTop = 0; // For Safari
-          document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-          if (history.pushState) {
-            window.history.pushState("lobby ${lobbyID}", "WikiAdventure", lobbyID + "?" + url);
-          } else {
-            document.location.href =  lobbyID + "?" + url;
-          }
-        };
-        requestWiki.send();
+                        document.getElementById("wikiSection").innerHTML = wikiData.body.innerHTML;
+                        
+                        disableLinks();
+                        document.body.scrollTop = 0; // For Safari
+                        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+                        if (history.pushState) {
+                          window.history.pushState("lobby ${lobbyID}", "WikiAdventure", lobbyID + "?" + url);
+                        } else {
+                          document.location.href =  lobbyID + "?" + url;
+                        }
+                    });
     };
 
     /**
