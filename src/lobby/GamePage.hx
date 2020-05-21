@@ -52,7 +52,7 @@ class GamePage {
                         case "${exitWarning}":
                             return LanguageTools.getExitWarning(lobby.language);
                         default:
-                        return '';
+                            return '';
                     };
                 });
                 this.sr.write(templatedData);

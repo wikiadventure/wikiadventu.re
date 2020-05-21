@@ -59,11 +59,7 @@
         var pageStart;
         var pageEnd;
         var stateCounter;
-        if (history.replaceState) {
-            window.history.replaceState("lobby ${lobbyID}", "WikiAdventure", "/play/${lobbyID}");
-        } else {
-            document.location.href = "/play/${lobbyID}";
-        }
+    
         addEventListener("load",(function () {
             socket = io("/"+lobbyID,  { query: "playerID="+playerID });
             socket.on('error', (error) => {
@@ -214,7 +210,11 @@
 
               if (this.getAttribute("href").lastIndexOf(":") == -1 && this.getAttribute("href").lastIndexOf(".ogg") == -1 && this.rel != "mw:ExtLink" && !this.classList.contains("new")) {
                 var idx = this.href.lastIndexOf("/");
+                decodeURIComponent()
                 var url = this.href.substring(idx+1);
+                var anchor = url.indexOf("#");
+                if (anchor != -1) url = url.substring(0, anchor);
+                url = decodeURIComponent(url);
                 requestWikiPage(url);
 
               }

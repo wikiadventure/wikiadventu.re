@@ -2,5 +2,7 @@
 bin/App.js
 #ignore the npm module, you can install them : cd bin ; npm install ;
 bin/node_modules
+#ignore log folder;
+bin/log
 #ignore folder dedicated to local testing
 localTesting

@@ -1,11 +1,16 @@
 package lobby;
 
+import js.node.util.TextEncoder;
+import js.Syntax;
+import js.Browser;
+import js.node.StringDecoder;
+import haxe.Timer;
+import js.Node;
 import js.node.Buffer;
 import haxe.Json;
 import js.lib.Promise;
 import js.node.Https.HttpsRequestOptions;
 import js.node.Https;
-import haxe.Timer;
 import async.IO;
 import js.node.socketio.Server.Namespace;
 import js.node.socketio.Socket;
@@ -77,6 +82,7 @@ class Lobby {
         } while (pos == -1);
 
         lobbyList.insert(pos,this);
+        log("create the lobby", Info);
     }
 
     /**
@@ -112,6 +118,7 @@ class Lobby {
         if (playerList.length >= slot) throw "the lobby is full";
         if (playerList.lastIndexOf(player) == -1) {
             playerList.push(player);
+            log("new player registered : " + player.uuid + " --> " + player.pseudo, PlayerData);
             Timer.delay(function () {
                 if (player.socket == null) {
                     removePlayer(player);
@@ -122,6 +129,7 @@ class Lobby {
 
     public function connect(player:Player, ?passwordHash:String) {
         if (this.type == Public || this.passwordHash == passwordHash) return addPlayer(player);
+        log("connection rejected : " + player.uuid + " --> " + player.pseudo + "provide a wrong password", PlayerData);
         throw "Invalid password";
     }
     /**
@@ -130,10 +138,16 @@ class Lobby {
      */
     public function removePlayer(player:Player) {
         playerList.remove(player);
+        log("player left : " + player.uuid + " --> " + player.pseudo, PlayerData);
         if (playerList.length == 0) {
-            trace("delete the lobby");
-            Lobby.lobbyList.remove(this);
+            log("No player left, closing the lobby", Info);
+            deleteLobby();
         }
+    }
+
+    public function deleteLobby() {
+        log("delete the lobby", Info);
+        Lobby.lobbyList.remove(this);
     }
 
     public function getPlayerFromSocket(socket:Socket):Player {
@@ -158,6 +172,7 @@ class Lobby {
      * create a socket io namespace for the lobby and assign data handler to each channel
      */
     public function initNamespace() {
+        log("init a socket io namespace for the lobby", Info);
         io = IO.server.of('/'+encodeID(id));//the name of the lobby is his id encoded in Base64
         /** 
         * middleware that accept connection only from client that provide a correct player uuid from playerList of the lobby
@@ -229,6 +244,43 @@ class Lobby {
         }
     }
 
+    public function wikiTitleFormat(s:String):String {
+        return s;
+        var regex = ~/["%&'+=?\\^`~]/g; // anything like ${ ... }
+            var format = regex.map(s, function(r) {
+                var match = r.matched(0);
+                switch (match) {
+                    case "\"":
+                        return "%22";
+                    case "%":
+                        return "%25";
+                    case "&":
+                        return "%26";
+                    case "'":
+                        return "%27";
+                    case "+":
+                        return "%2B";
+                    case "=":
+                        return "%3D";
+                    case "?":
+                        return "%3F";
+                    case "\\":
+                        return "%5C";
+                    case "^":
+                        return "%5E";
+                    case "`":
+                        return "%60";
+                    case "~":
+                        return "%7E";
+                    case "_":
+                        return " ";
+                    default:
+                        return '';
+                }
+            });
+        return format;
+    }
+
     /**
      * check if the player jump is valid (when he click on a link to go to an another page)
      * we ask the wikipedia api to do so
@@ -236,29 +288,50 @@ class Lobby {
      * @param url 
      */
     public function validateJump(socket:Socket, url:String) {
+        trace(url);
         var player = getPlayerFromSocket(socket);
         if (player == null) return;
-        if (player.currentPage == url) return;
+        if (wikiTitleFormat(player.currentPage) == wikiTitleFormat(url)) return;
+        var requestPath = untyped __js__(" encodeURI('/w/api.php?action=query&utf8=1&prop=links&format=json&redirects=1&formatversion=2&titles=')") + wikiTitleFormat(untyped __js__("encodeURIComponent(decodeURIComponent(player.currentPage))")) + untyped __js__(" encodeURI('&pltitles=')") + wikiTitleFormat(untyped __js__("encodeURIComponent(decodeURIComponent(url))"));
+        log(player.pseudo + " validation --> " + requestPath, PlayerData);
         var options:HttpsRequestOptions =  {
             hostname: LanguageTools.getURL(language),
-            path: "/w/api.php?action=query&prop=links&format=json&formatversion=2&titles=" + player.currentPage + "&pltitles=" + StringTools.urlEncode(url)
+            path: requestPath,
+            method: 'POST',
+            headers: {
+                "Api-User-Agent":"pediaFinder/1.1 (https://pedia-finder.herokuapp.com/; benjamin.gilloury@gmail.com)",
+                'Accept': 'application/json',
+                'Content-type': "application/x-www-form-urlencoded"
+
+            }
+            
         };
         var request = Https.request(options, function (response) {
-            response.on('data', function (data) {
+            var body = '';
+
+            response.on('data', function (chunk) {
+                body = body + chunk;
+            });
+            response.on('end', function () {
                 try {
-                    var parsed:WikiResponse = Json.parse(data);
-                    if (parsed.query.pages[0] == null) {
+                    var parsed:WikiResponse = Json.parse(body);
+                    if (parsed.query.pages[0].links == null) {
                         //kick for cheating
-                        trace(player.currentPage + " --> " + StringTools.urlDecode(url));
+                        log(body, PlayerData);
+                        log(player.pseudo + " is cheating!", PlayerData);
+                        log(player.currentPage + " --> " + url, PlayerData);
                         io.emit('message', "it seems that " + player.pseudo + " is cheating! (or the anticheat system is broken)");
+                        io.emit('message', player.pseudo + "jump from " + player.currentPage + " to " + StringTools.urlDecode(url));
                     } else {
                         player.numberOfJump +=1;
-                        player.currentPage = StringTools.urlDecode(url);
+                        player.currentPage = url;
                         if (StringTools.urlDecode(url) == endPage) {
                             startPage = null;
                             endPage = null;
                             var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
                             player.score += 500 + Std.int(timeLeft);
+                            log("updateScore --> " +  player.id + "(" + player.pseudo + ") :" + player.score, PlayerData);
+                            log("WinRound --> " +  player.id + "(" + player.pseudo + ")", PlayerData);
                             io.emit('updateScore', player.id + ":" + player.score);
                             io.emit('winRound', player.pseudo);
                             io.emit('message', player.pseudo + " win the round " + currentRound);
@@ -268,12 +341,14 @@ class Lobby {
                         }             
                     }
                 } catch(e:Dynamic) {
-                    trace(e);
+                    //untyped __js__(" encodeURI(requestPath)")
+                    log(requestPath, Error);
+                    log("Wiki request error during the anti cheat validation : " + e + " | \n" + body, Error);
                 }
             });
         });
         request.on('error', function (e) {
-            trace(e);
+            log("Wiki request error during the anti cheat validation : " + e, Error);
         });
         request.end();
     }
@@ -288,6 +363,7 @@ class Lobby {
      */
     public function vote(socket:Socket, content:String) {
         var player = getPlayerFromSocket(socket);
+        log("player vote : " + player.uuid + " --> " + player.pseudo + " | " + content, PlayerData);
         if (player != null) player.votingSuggestion = content;
     }
 
@@ -314,7 +390,7 @@ class Lobby {
     public function selectPage() {
         var promiseList = new Array<Promise<Bool>>();
         var urlList = new Array<String>();
-        trace("Starting page selection");
+        log("Starting page selection", Info);
         for (i in 0...playerList.length) {
             var title = playerList[i].votingSuggestion;
             if (title != null) {
@@ -343,7 +419,7 @@ class Lobby {
                             });
                         });
                         request.on('error', function (e) {
-                            trace(e);
+                            log("page selection : " + e, Error);
                         });
                         request.end();
                     }
@@ -375,10 +451,12 @@ class Lobby {
                 } while (randomEnd == randomStart);
                 startPage = urlList[randomStart];
                 endPage = urlList[randomEnd];
+                log("Start page : " + startPage, Info);
+                log("End page : " + endPage, Info);
                 playPhase();
 
             }, function(reason) {
-                trace("SEVERE something wrong append : " + reason);
+                log("SEVERE something wrong append during page selection : " + reason, Error);
         });
     }
 
@@ -390,7 +468,7 @@ class Lobby {
      */
     public function playPhase() {
         for (player in playerList) {
-            player.currentPage = startPage;
+            player.currentPage = wikiTitleFormat(startPage);
         }
         io.emit('voteResult', startPage + '?' + endPage);
         state = Playing;
@@ -423,6 +501,7 @@ class Lobby {
     public function initNewPhase() {
         timeStampStateBegin = Timer.stamp();
         io.emit('gameState', state +"|" + currentRound + "|" + currentStateTimeOut());
+        log("New phase init : " + state +"|" + currentRound + "|" + currentStateTimeOut(), Info);
     }
 
     /**
@@ -444,17 +523,16 @@ class Lobby {
                     var url =  spaceRegex.replace(parsed.query.random[0].title, "_");
                     urlList.push(url);
                     resolve(true);
-                    trace("success : random page " + url);
+                    log("success : random page " + url, Info);
     
                 } catch(e:Dynamic) {
-                    trace("error: random page request fail");
-                    trace(e);
+                    log("random page request fail : " + e, Error);
                     reject("SEVERE server Error : " + e);
                 }   
             });
         });
         request.on('error', function (e) {
-            trace(e);
+            log("Wiki request error : " + e, Error);
         });
         request.end();
 
@@ -519,7 +597,22 @@ class Lobby {
         var result = Base64.urlEncode(bytesValue);
         return result;
     }
+    public function log( data : Dynamic, logType:LogType, ?pos : haxe.PosInfos ) {
+        var time = "[" + Date.now().toString() + "]";
+		pos.fileName = time + " lobby " + Lobby.encodeID(id) + " " + logType + " -> " + pos.fileName;
+        haxe.Log.trace(data, pos);
+        var fileName = "lobby/" + Lobby.encodeID(id) + "/" + logType + ".log";
+        var content = haxe.Log.formatOutput(data, pos);
+        fileLog.Log.inFile(fileName, content);
+	}
 
+}
+
+enum abstract LogType(String) {
+    var PlayerData;
+    var Warning;
+    var Error;
+    var Info;
 }
 
 enum abstract LobbyType(Int) {
