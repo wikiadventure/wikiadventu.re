@@ -24,7 +24,6 @@ class GamePage {
                 trace(err);
 				this.sr.writeHead(404);
                 this.sr.write("ressource not found");
-
 			} else {
                 this.sr.writeHead(200);
                 var templateRegex = ~/(\${(.*?)})/g; // anything like ${ ... }

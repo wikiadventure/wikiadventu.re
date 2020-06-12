@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>${lobbyID} Wiki Adventure lobby</title>
     <link id="uiCSS" rel="stylesheet" href="/css/chatSection.css">
+    <link id="uiCSS" rel="stylesheet" href="/css/leaderboard.css">
     <meta name="viewport" content="width=device-width, user-scalable=yes">
   </head>
   <body id="mwAA" lang="en" class="mw-content-ltr sitedir-ltr ltr mw-body-content parsoid-body mediawiki mw-parser-output" dir="ltr">
@@ -18,28 +19,8 @@
         </div>
     </section>
     <input id="showUI" type="checkbox"/>
-      <section id="uiSection" type="checkbox">
-        <label for="showUI" id="labelShowUI">&#9658;</label>
-        <div id="actionSection">
-          <div><p id="stateName"></p><p id="stateTime"></p></div>
-          <div id="vote"><p>Your vote :</p><p id="playerVote"></p></div>
-          <form action="" id="votingForm" class="uiForm">
-            <input tabindex=1 id="inputVote" class="uiInput" placeholder="${votePlaceholder}" autocomplete="off" /><button class="uiSubmit" id="voteSubmit">&#10004;</button>
-          </form>
-          <div><p>${startPage} :</p><p id="pageStart"></p></div>
-          <div><p>${endPage} :</p><p id="pageEnd"></p></div>
-          <section id="playerScoreSection">
-
-          </section>
-        </div>
-        <div id="chatSection">
-          <ul id="outputMessages"></ul>
-          <form action="" id="chatForm" class="uiForm">
-            <input tabindex=2 id="inputMessage" class="uiInput" placeholder="${chatPlaceholder}" autocomplete="off" /><button class="uiSubmit" id="send">&#10004;</button>
-          </form>
-        </div>
-      </section>
-
+    <ui-section id="uiSectionTemplate"></ui-section>
+    <leaderboard id="leaderboardTemplate"></leaderboard>
     <audio id="countdownSound">
       <source src="res/sound/countDown.ogg" type="audio/ogg">
       <source src="res/sound/countDown.mp3" type="audio/mpeg">
@@ -48,290 +29,28 @@
       <source src="res/sound/win.ogg" type="audio/ogg">
       <source src="res/sound/win.mp3" type="audio/mpeg">
     </audio>
-    <script id="ioImport" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-
-    <script id="mainScript">
+    <script id="preload" defer>
         var lobbyID = "${lobbyID}";
         var playerID = "${playerID}";
-        var lobbyLang="${lobbyLang}";
-        var hasVoted = false;
-        var socket;
-        var pageStart;
-        var pageEnd;
-        var stateCounter;
-    
-        addEventListener("load",(function () {
-            socket = io("/"+lobbyID,  { query: "playerID="+playerID });
-            socket.on('error', (error) => {
-              var logMessage = "${socketError}";
-              console.log(error);
-              console.log(logMessage);
-              addMessage(error);
-              addMessage(logMessage);
-            });
-            document.getElementById('chatForm').onsubmit = function(e){
-                e.preventDefault(); // prevents page reloading
-                socket.emit('message', document.getElementById('inputMessage').value);
-                document.getElementById('inputMessage').value = "";
-                var hasVoted = true;
-                return false;
-            };
-            document.getElementById('votingForm').onsubmit = function(e){
-                e.preventDefault(); // prevents page reloading
-                voteSubmit(document.getElementById('inputVote').value);
-            };
-            var voteSubmit = function (vote) {
-                var requestTitle = vote;
-                socket.emit('vote', requestTitle);
-                document.getElementById("playerVote").innerText = requestTitle;
-                document.getElementById('inputVote').value = "";
-                document.getElementById('inputVote').placeholder = "${votePlaceholderSubmitted}";
-                fetch("https://${lobbyLang}.wikipedia.org/w/api.php?action=query&origin=*&list=search&srlimit=1&srnamespace=0&srsearch=intitle:" + encodeURIComponent(requestTitle) + "&format=json&srprop=")
-                    .then(function(response){return response.json();})
-                    .then(function(response) {
-                        var trueTitle;
-                        if (typeof response.query.search[0] === 'undefined') trueTitle = "no page found";
-                        else trueTitle = response.query.search[0].title;
-                        document.getElementById("playerVote").innerText = requestTitle + " → " + trueTitle;
-                    });
-            };
-            socket.on('message', function(msg){
-                addMessage(msg);
-            });
-            socket.on('voteResult', function(data){
-                var idx = data.indexOf("?");
-                pageStart = data.substring(0, idx);
-                document.getElementById("pageStart").innerText = pageStart;
-                pageEnd = data.substring(idx+1);
-                document.getElementById("pageEnd").innerText = pageEnd;
-                requestWikiPage(pageStart);
-            });
-            socket.on('playerLeft', function(playerID){
-                document.getElementById("player"+playerID).remove();
-            });
-            socket.on('updateScore', function(data){
-                var idx = data.indexOf(":");
-                var playerID = data.substring(0, idx);
-                var score = data.substring(idx+1);
-                document.getElementById("player"+playerID).getElementsByClassName("playerScore")[0].innerText = score;
-            });
-            socket.on('newPlayer', function(data){
-                var idx = data.indexOf(":");
-                var playerID = data.substring(0, idx);
-                var remain = data.substring(idx+1);
-                idx = remain.indexOf(":");
-                var playerName = remain.substring(0, idx);
-                var playerScore = remain.substring(idx+1);
-                if (document.getElementById("player"+playerID) == null) {
-                    var div = document.createElement("div");
-                    div.className = "score";
-                    div.innerHTML = '<p class="playerName">' + playerName + '</p><p class="playerScore">' + playerScore + '</p>';
-                    div.id = "player" + playerID;
-                    document.getElementById("playerScoreSection").appendChild(div);
-                }
-            });
-            socket.on('gameState', function(data){
-                switchState(data);
-            });
-        }));
-
-        var showAlert = function (title, data) {
-            var div = document.createElement("div");
-            div.className = "alert";
-            div.innerHTML = "<h3>" + title + "</h3><p>" + data + "</p>";
-            div.onclick = function (e) {
-              div.style.opacity = 0;
-              setTimeout(function(){div.remove();}, 500);
-            };
-            document.body.appendChild(div);
-            setTimeout(function(){div.style.opacity = 0;}, 15000);
-            setTimeout(function(){div.remove();}, 15500);
-        };
-
-        var switchState = function (data) {
-            var hasVoted = false;
-            clearInterval(stateCounter);
-            document.getElementById('inputVote').placeholder = "${votePlaceholder}";
-            var idx = data.indexOf("|");
-            var state = data.substring(0, idx);
-            var remain = data.substring(idx+1);
-            idx = remain.indexOf("|");
-            var round = remain.substring(0, idx);
-            var time = remain.substring(idx+1);
-            showAlert(state + " round " + round, 'Check your board for more info<br/>You can click to close me');
-            document.getElementById("stateName").innerText = state + " round " + round;
-            var timeLeft = time;
-            var timeStamp = Date.now();
-            var countdownSound = document.getElementById("countdownSound");
-            var playing = false;
-            stateCounter = setInterval(function() {
-                var time = Date.now();
-                var dt = time - timeStamp;
-                timeStamp = time;
-                timeLeft = timeLeft - dt*0.001;
-                if (timeLeft <= 10) {
-                    if (!playing) {
-                      countdownSound.play();
-                      playing = true;
-                    }
-                }
-                document.getElementById("stateTime").innerText = Math.ceil(timeLeft);
-                if (timeLeft < 0) {
-                  clearInterval(stateCounter);
-                  document.getElementById("stateTime").innerText = 0;
-                  playing = false;
-                }
-            }, 100);
-        };
-
-        var addMessage = function (message) {
-            var messageLine = document.createElement('li');
-            messageLine.textContent = message;
-            document.getElementById('outputMessages').insertBefore(messageLine, document.getElementById('outputMessages').childNodes[0]);
-        };
-        
-    addEventListener("beforeunload", function (event) {
-        var confirmationMessage = "${exitWarning}";
-        event.returnValue = confirmationMessage;
-        return confirmationMessage;
-    });
-
-    addEventListener("unload", function (event) {
-        socket.close();
-    });
-
-    //Code to toggle off the link of the wikipedia page and redirect them to custom function
-
-    var disableLinks = function () {
-      var links= document.getElementsByTagName("a");
-        for (var i=0;i<links.length;i++) {
-            links[i].addEventListener("click",function(e){
-              //check if the link go to another wikipage and not info page or external
-
-              if (this.getAttribute("href").lastIndexOf(":") == -1 && this.getAttribute("href").lastIndexOf(".ogg") == -1 && this.rel != "mw:ExtLink" && !this.classList.contains("new")) {
-                var idx = this.href.lastIndexOf("/");
-                decodeURIComponent()
-                var url = this.href.substring(idx+1);
-                var anchor = url.indexOf("#");
-                if (anchor != -1) url = url.substring(0, anchor);
-                url = decodeURIComponent(url);
-                requestWikiPage(url);
-
-              }
-              e.preventDefault();
-            });
-        }
-    };
-
-    var requestWikiPage = function(url) {
-        socket.emit('validateJump', url);
-        if (decodeURI(url) == pageEnd) {
-            document.getElementById("winSound").play();
-        }
-        var header= new Headers({
-            "Api-User-Agent":"pediaFinder/1.1 (https://pedia-finder.herokuapp.com/; benjamin.gilloury@gmail.com)",
-            "origin": "*",
+        var lobbyLang ="${lobbyLang}";
+        var socketError = "${socketError}";
+        var votePlaceholder = "${votePlaceholder}";
+        var exitWarning = "${exitWarning}";
+        window.addEventListener('load', async function() {
+          async function loadshtml(url, targetID) {
+            await fetch(url)
+              .then(function(response){return response.text();})
+              .then(function(response) {
+                  document.getElementById(targetID).replaceWith(new DOMParser().parseFromString(response, "text/html").body.firstChild);
+                  dispatchEvent(new CustomEvent(targetID));
+              })
+          }
+        loadshtml("shtml/gameMenu.shtml", "uiSectionTemplate");
+        loadshtml("shtml/gameLeaderboard.shtml", "leaderboardTemplate");
         });
-        var options = { method: 'GET',
-               headers: header,
-               mode: 'cors',
-               cache: 'default' };
-        fetch("https://${lobbyLang}.wikipedia.org/api/rest_v1/page/html/" + url , options)
-                    .then(function(response){return response.text();})
-                    .then(function(response) {
-                        var trueTitle;
-                        var parser = new DOMParser();
-                        console.log(response);
-                        var wikiData = parser.parseFromString(response, "text/html") ;
-                        var cssLinks = wikiData.head.getElementsByTagName("link");
-                        document.getElementById("wikiSection").innerHTML = "";
-
-                        for (var i=0;i<document.head.childNodes.length;i++) {
-                          if (document.head.childNodes[i].tagName == "link" && document.head.childNodes[i].id != "uiCSS") {
-                            document.head.childNodes[i].remove();
-                          }
-                        }
-                        for (var i=0;i<cssLinks.length;i++) {
-                          if (cssLinks[i].rel == "stylesheet") {
-                            cssLinks[i].href += "https://${lobbyLang}.wikipedia.org";
-                            document.head.appendChild(cssLinks[i]);
-                          }
-                        }
-
-                        document.getElementById("wikiSection").innerHTML = wikiData.body.innerHTML;
-                        
-                        disableLinks();
-                        document.body.scrollTop = 0; // For Safari
-                        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-                        if (history.pushState) {
-                          window.history.pushState("lobby ${lobbyID}", "WikiAdventure", lobbyID + "?" + url);
-                        } else {
-                          document.location.href =  lobbyID + "?" + url;
-                        }
-                    });
-    };
-
-    /**
-     * part for tab shorcut ( open and close menu with tab )
-     **/
-
-    addEventListener("keydown", event => {
-        if (event.isComposing || event.keyCode === 229) {
-            return;
-        }
-        if (event.keyCode === 27) {
-            document.getElementById("showUI").checked = !document.getElementById("showUI").checked;
-        }
-    });
-
-    /**
-     * part for mobile swipe
-     **/
-
-    window.addEventListener('load', function() {
-    
-    var touchsurface = document.documentElement,
-        startX,
-        startY,
-        dist,
-        threshold = 150, //required min distance traveled to be considered swipe
-        allowedTime = 450, // maximum time allowed to travel that distance
-        elapsedTime,
-        startTime
-
-    function handleswipe(isRightSwipe, isLeftSwipe){
-        if (isRightSwipe) {
-            document.getElementById("showUI").checked = true;
-        } else if (isLeftSwipe){
-          document.getElementById("showUI").checked = false;
-        }
-    }
-
-    touchsurface.addEventListener('touchstart', function(e){
-        var touchobj = e.changedTouches[0]
-        dist = 0
-        startX = touchobj.pageX
-        startY = touchobj.pageY
-        startTime = new Date().getTime() // record time when finger first makes contact with surface
-    }, false)
-
-    touchsurface.addEventListener('touchmove', function(e){
-    }, false)
-
-    touchsurface.addEventListener('touchend', function(e){
-        var touchobj = e.changedTouches[0]
-        dist = touchobj.pageX - startX // get total dist traveled by finger while in contact with surface
-        elapsedTime = new Date().getTime() - startTime // get time elapsed
-        // check that elapsed time is within specified, horizontal dist traveled >= threshold, and vertical dist traveled <= 100
-        var swipeRightBol = (elapsedTime <= allowedTime && dist >= threshold && Math.abs(touchobj.pageY - startY) <= 100)
-        var swipeLeftBol = (elapsedTime <= allowedTime && dist <= -threshold && Math.abs(touchobj.pageY - startY) <= 100)
-        handleswipe(swipeRightBol, swipeLeftBol)
-
-    }, false)
-
-    }, false) // end window.onload
-
-
     </script>
+    <script id="ioImport" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" defer></script>
+    <script id="gameClient" src="js/gameClient.js" defer></script>
+    <script id="mobileSwipe" src="js/mobileSwipe.js" async></script>
   </body>
 </html>

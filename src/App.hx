@@ -1,3 +1,5 @@
+import controller.SHTMLController;
+import controller.ScriptController;
 import haxe.Timer;
 import haxe.http.HttpBase;
 import js.html.Worker;
@@ -54,6 +56,8 @@ class App {
         switch (route) { //routage
             case "/": new MainPage(im, sr);
             case "/css": new StyleController(im, sr);
+            case "/js": new ScriptController(im, sr);
+            case "/shtml": new SHTMLController(im, sr);
             case "/connect": new ConnectController(im, sr, body);
             case "/res": new ResController(im, sr);
             case "/play": new DirectConnectController(im, sr, body);

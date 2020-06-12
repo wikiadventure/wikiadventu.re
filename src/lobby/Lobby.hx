@@ -41,7 +41,7 @@ class Lobby {
     public var playTimeOut:Int; //time in second before a round end automatically
     public var voteTimeOut:Int; //time of the Voting state
     public var roundFinishTimeOut:Int = 10; //time between the end of the play state and the begin of the vote state
-    public var gameFinishTimeOut:Int = 20;
+    public var gameFinishTimeOut:Int = 30;
 
     public static var lobbyLimit:Int = 10000;
     public static var privateLimit:Int = 200;
@@ -195,7 +195,7 @@ class Lobby {
             var player = getPlayerFromSocket(socket);
             if (player == null) return;
             io.emit('message', player.pseudo + " join the lobby!");
-            sendCurrentState(socket);
+            sendCurrentState(player);
             io.emit('newPlayer', player.id + ":" + player.pseudo + ":" + player.score);
             socket.on('message', function (data) {
                 var player = getPlayerFromSocket(socket);
@@ -218,12 +218,15 @@ class Lobby {
         });
     }
 
-    public function sendCurrentState(socket:Socket) {
+    public function sendCurrentState(player:Player) {
         var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
-        io.emit('gameState', state +"|" + currentRound + "|" + timeLeft);
-        if (state == Playing) socket.emit('voteResult', startPage + '?' + endPage);
-        for (player in playerList) {
-            socket.emit('newPlayer', player.id + ":" + player.pseudo + ":" + player.score);
+        player.socket.emit('gameState', state +"|" + currentRound + "|" + timeLeft);
+        if (state == Playing) {
+            player.currentPage = startPage;
+            player.socket.emit('voteResult', startPage + '?' + endPage);
+        }
+        for (otherPlayer in playerList) {
+            player.socket.emit('newPlayer', otherPlayer.id + ":" + otherPlayer.pseudo + ":" + otherPlayer.score);
         }
     }
 
@@ -246,6 +249,7 @@ class Lobby {
 
     public function wikiTitleFormat(s:String):String {
         return s;
+        
         var regex = ~/["%&'+=?\\^`~]/g; // anything like ${ ... }
             var format = regex.map(s, function(r) {
                 var match = r.matched(0);
@@ -336,7 +340,7 @@ class Lobby {
                             io.emit('winRound', player.pseudo);
                             io.emit('message', player.pseudo + " win the round " + currentRound);
                             currentRound++;
-                            loop = null;
+                            loop.stop();
                             votePhase();
                         }             
                     }
@@ -374,6 +378,7 @@ class Lobby {
     public function votePhase() {
         state = Voting;
         initNewPhase();
+        if (loop != null) loop.stop();
         loop = Timer.delay(function () {
             selectPage();
         },currentStateTimeOut()*1000);
@@ -473,6 +478,7 @@ class Lobby {
         io.emit('voteResult', startPage + '?' + endPage);
         state = Playing;
         initNewPhase();
+        loop.stop();
         loop = Timer.delay(function () {
             playPhaseEnd();
         },currentStateTimeOut()*1000);
@@ -480,7 +486,22 @@ class Lobby {
 
     public function playPhaseEnd() {
         currentRound++;
+        if (currentRound > round) {
+            gameFinishPhase();
+            return;
+        }
         votePhase();
+    }
+
+    public function gameFinishPhase() {
+        currentRound = 1;
+        state = GameFinish;
+        initNewPhase();
+        loop.stop();
+        loop = Timer.delay(function () {
+            votePhase();
+        },currentStateTimeOut()*1000);
+
     }
 
     /**
@@ -490,6 +511,7 @@ class Lobby {
     public function roundFinishPhase() {
         state = RoundFinish;
         initNewPhase();
+        loop.stop();
         loop = Timer.delay(function () {
             votePhase();
         },currentStateTimeOut()*1000);

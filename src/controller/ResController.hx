@@ -20,11 +20,14 @@ class ResController {
                 "audio/ogg";
             case "mp3":
                 "audio/mpeg";
+            case "svg":
+                "image/svg+xml";
             default :
                 "unknown/unknown";
         };
         trace(extension + " - " + mimeType);
         this.sr.setHeader("Content-Type", mimeType);
+        this.sr.setHeader("Cache-Control", "max-age=604800"); //cache for a week
 		var requestedFileUrl = '.' + this.im.url;
 		Fs.readFile(requestedFileUrl, function(err, data) {
 			if (err != null) {
