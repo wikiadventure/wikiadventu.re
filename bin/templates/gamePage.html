@@ -22,12 +22,12 @@
     <ui-section id="uiSectionTemplate"></ui-section>
     <leaderboard id="leaderboardTemplate"></leaderboard>
     <audio id="countdownSound">
-      <source src="res/sound/countDown.ogg" type="audio/ogg">
-      <source src="res/sound/countDown.mp3" type="audio/mpeg">
+      <source src="/res/sound/countDown.ogg" type="audio/ogg">
+      <source src="/res/sound/countDown.mp3" type="audio/mpeg">
     </audio>
     <audio id="winSound">
-      <source src="res/sound/win.ogg" type="audio/ogg">
-      <source src="res/sound/win.mp3" type="audio/mpeg">
+      <source src="/res/sound/win.ogg" type="audio/ogg">
+      <source src="/res/sound/win.mp3" type="audio/mpeg">
     </audio>
     <script id="preload" defer>
         var lobbyID = "${lobbyID}";
@@ -38,7 +38,11 @@
         var exitWarning = "${exitWarning}";
         window.addEventListener('load', async function() {
           async function loadshtml(url, targetID) {
-            await fetch(url)
+            var headers = new Headers();
+            headers.set("lang", lobbyLang);
+            var details = { method: 'GET',
+                          headers: headers };
+            await fetch("/" + url, details)
               .then(function(response){return response.text();})
               .then(function(response) {
                   document.getElementById(targetID).replaceWith(new DOMParser().parseFromString(response, "text/html").body.firstChild);
@@ -50,7 +54,7 @@
         });
     </script>
     <script id="ioImport" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" defer></script>
-    <script id="gameClient" src="js/gameClient.js" defer></script>
-    <script id="mobileSwipe" src="js/mobileSwipe.js" async></script>
+    <script id="gameClient" src="/js/gameClient.js" defer></script>
+    <script id="mobileSwipe" src="/js/mobileSwipe.js" async></script>
   </body>
 </html>

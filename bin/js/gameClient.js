@@ -7,7 +7,7 @@ var players = [];
 
 addEventListener("uiSectionTemplate",(function () {
     if (history.pushState) {
-        window.history.pushState("lobby " + lobbyID, "WikiAdventure", lobbyID);
+        window.history.pushState("lobby " + lobbyID, "WikiAdventure", "/play/" + lobbyID);
       } else {
         document.location.href =  lobbyID;
       }
@@ -115,8 +115,8 @@ function showAlert(title, data) {
     idx = remain.indexOf("|");
     var round = remain.substring(0, idx);
     var time = remain.substring(idx+1);
-    if ( state == "gameFinish") {
-        buildLeaderboard(remain);
+    if ( state == "GameFinish") {
+        buildLeaderboard(time);
     } else {
         showAlert(state + " round " + round, 'Check your board for more info<br/>You can click to close me');
     }
@@ -149,7 +149,7 @@ function buildLeaderboard(duration) {
     var grid = document.getElementById("grid-leaderboard");
     var item = grid.getElementsByClassName('grid-leaderboard-item');
     while(item[0]) item[0].remove();
-    players.sort((a, b) => a.score - b.score);
+    players.sort((a, b) => b.score - a.score);
     var i = 0;
     while (i < players.length) {
         if (i < 3) {
@@ -158,9 +158,9 @@ function buildLeaderboard(duration) {
         } else {
             var template = document.getElementById("template-leaderboard-item");
             var clone = document.importNode(template.content, true);
-            clone.querySelectorAll(".position").innerText = i+1;
-            clone.querySelectorAll(".name").innerText = players[i].name;
-            clone.querySelectorAll(".score").innerText =  players[i].score;
+            clone.querySelectorAll(".position")[0].innerText = i+1;
+            clone.querySelectorAll(".name")[0].innerText = players[i].name;
+            clone.querySelectorAll(".score")[0].innerText =  players[i].score;
             grid.appendChild(clone);
         }
         i++;
@@ -168,8 +168,8 @@ function buildLeaderboard(duration) {
     var leaderboard = document.getElementById("leaderboard");
     leaderboard.style.display = "block";
     leaderboard.style.opacity = "1";
-    setTimeout(function(){leaderboard.style.opacity = "0";}, duration);
-    setTimeout(function(){leaderboard.style.display = "none";}, duration+500);
+    setTimeout(function(){leaderboard.style.opacity = "0";}, duration*1000);
+    setTimeout(function(){leaderboard.style.display = "none";}, duration*1000+500);
 };
 
 function addMessage(message) {

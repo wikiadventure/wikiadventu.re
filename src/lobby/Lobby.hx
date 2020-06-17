@@ -54,7 +54,7 @@ class Lobby {
         lobbyList = new Array<Lobby>();
     }
 
-    public function new(language : Language, type:LobbyType, ?passwordHash:String, slot:Int=15, round:Int=10, playTimeOut:Int=600, voteTimeOut:Int=30) {
+    public function new(language : Language, type:LobbyType, ?passwordHash:String, slot:Int=15, round:Int=3, playTimeOut:Int=10, voteTimeOut:Int=10) {
         if (lobbyList.length >= lobbyLimit) {
             throw "Lobby limit has been reached!";
         } else if (getPrivateLobbyLength() >= privateLimit) {
@@ -220,7 +220,6 @@ class Lobby {
 
     public function sendCurrentState(player:Player) {
         var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
-        player.socket.emit('gameState', state +"|" + currentRound + "|" + timeLeft);
         if (state == Playing) {
             player.currentPage = startPage;
             player.socket.emit('voteResult', startPage + '?' + endPage);
@@ -228,6 +227,7 @@ class Lobby {
         for (otherPlayer in playerList) {
             player.socket.emit('newPlayer', otherPlayer.id + ":" + otherPlayer.pseudo + ":" + otherPlayer.score);
         }
+        player.socket.emit('gameState', state +"|" + currentRound + "|" + timeLeft);
     }
 
     /**

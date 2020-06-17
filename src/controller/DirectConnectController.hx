@@ -32,12 +32,14 @@ class DirectConnectController {
                 var lobby = Lobby.find(lobbyID);
                 if (lobby.type == Private) {
                     new DirectPrivateJoinPage(im, sr, lobby);
+                    return;
                 } else {
                     new DirectPublicJoinPage(im, sr, lobby);
+                    return;
                 }
             } catch (e:Dynamic) {
                 trace(e);
-                new ErrorPage(im, sr, body, "internal error : " + e, MethodNotAllowed);
+                //new ErrorPage(im, sr, body, "internal error : " + e, MethodNotAllowed);
                 return;
             }
         }
