@@ -6,7 +6,9 @@
 
 -main App
 -js bin/App.js
--D source-map-content
+-D https
+#remove this tag if you want an http app
+#to use https make sure you generate a certificate and key in bin/ssl
 
 --next
 

@@ -1,3 +1,5 @@
+import js.node.Fs;
+import js.node.Https;
 import controller.SHTMLController;
 import controller.ScriptController;
 import haxe.Timer;
@@ -25,11 +27,26 @@ class App {
 
     public static var count = 0;
     public static var timestamp:Float;
+
     static function main() {
         Lobby.init(); 
 
-        
-        var app = Http.createServer(function(im : IncomingMessage, sr : ServerResponse) {
+#if https
+        var options = {
+            key: Fs.readFileSync('ssl/key.pem'),
+            cert: Fs.readFileSync('ssl/cert.pem')
+        };
+        var app = Https.createServer(options, handle);
+#else
+        var app = Http.createServer(handle);
+#end
+        app.listen(5000);
+        IO.init(app);
+
+    }
+
+
+    static function handle(im : IncomingMessage, sr : ServerResponse) {        
             //IO.init();
             var body = "";
 			im.on("data", function(chunk : String) {
@@ -40,12 +57,6 @@ class App {
                 body += chunk; 
             });
 			im.on("end", function() { new App(im, sr, body); });
-        });
-        app.listen(5000);
-        IO.init(app);
-       
-        
-
     }
 
     function new(im : IncomingMessage, sr : ServerResponse, body : String) {

@@ -7,7 +7,7 @@ class IO {
     
     public static var server:Server;
 
-    public static function init(app:js.node.http.Server) {
+    public static function init(app:Dynamic) {
 
         server = new Server(app);
 

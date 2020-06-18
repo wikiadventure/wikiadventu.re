@@ -4,5 +4,6 @@ bin/App.js
 bin/node_modules
 #ignore log folder;
 bin/log
+bin/ssl
 #ignore folder dedicated to local testing
 localTesting
