@@ -486,6 +486,9 @@ class Lobby {
 
     public function playPhaseEnd() {
         currentRound++;
+        for (player in playerList) {
+            player.votingSuggestion = null;
+        }
         if (currentRound > round) {
             gameFinishPhase();
             return;
