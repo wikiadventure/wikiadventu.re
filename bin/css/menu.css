@@ -6,8 +6,12 @@
 
 body {
     line-height: 1.7em;
-    color: #7f8c8d;
+    color: #acacac;
     font-size: 13px;
+}
+p {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
@@ -20,7 +24,23 @@ body {
     margin: 10px;
 }
 
-.content-wrapper .content:nth-child(even) {
+.neon-button {
+    border: 1px solid rgb(24, 161, 196);
+    box-shadow: 0 0 7px rgb(24, 161, 196), 0 0 7px rgb(24, 161, 196) inset;
+    background-color: #1f2c41;
+    color: #1f8dd6;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 120%;
+    padding: 1em 3em;
+    
+    text-decoration: none;
+}
+.extra-margin {
+    margin-top: 2em;
+}
+
+.content-wrapper .content:nth-child(even), .dark {
     background-color: #222831;
     color: #29a19c;
 }
@@ -52,10 +72,6 @@ body {
     transform: scale(1.01);
 }
 
-/*
- * -- LAYOUT STYLES --
- * These are some useful classes which I will need
- */
 .l-box {
     padding: 1em;
 }
@@ -114,6 +130,7 @@ a.pure-button-primary {
 
 .splash-head {
     font-size: 20px;
+    margin: 10px;
 		font-weight: bold;
 		color: rgb(24, 161, 196);
 		border: 3px solid rgb(24, 161, 196);
@@ -131,6 +148,9 @@ a.pure-button-primary {
     color: white;
     letter-spacing: 0.05em;
     opacity: 0.8;
+}
+.large-font {
+    font-size: 120%;
 }
 
 .content-wrapper {
@@ -161,8 +181,14 @@ a.pure-button-primary {
         margin-right: 7px;
     }
 
+.QRcode {
+    padding: 30px;
+    border-radius: 15px;
+    background-color: white;
+}
 
-@media (min-width: 48em) {
+
+@media (min-width: 1000px) {
 
     body {
         font-size: 16px;
@@ -175,10 +201,6 @@ a.pure-button-primary {
 
     .splash-head {
         font-size: 250%;
-    }
-
-    .l-box-lrg {
-        border: none;
     }
 
 }

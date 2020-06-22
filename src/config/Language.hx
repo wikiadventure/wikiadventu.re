@@ -78,14 +78,25 @@ class LanguageTools {
             case en: "Are you sure you want to exit? You will lose your session.";
             case fr: "Êtes-vous sûr de vouloir quitter? Vous perdrez votre session.";
             case de: "Sie sind sicher, dass Sie beenden wollen? Sie werden Ihre Sitzung verlieren.";
-            case es: "Real-time connection encountered a problem";
-            case it: "Real-time connection encountered a problem";
-            case eo: "Real-time connection encountered a problem";
-            case pt: "Real-time connection encountered a problem";
+            case es: "Are you sure you want to exit? You will lose your session.";
+            case it: "Are you sure you want to exit? You will lose your session.";
+            case eo: "Are you sure you want to exit? You will lose your session.";
+            case pt: "Are you sure you want to exit? You will lose your session.";
+        }
+    }
+    public static function getVote(language:Language):String {
+        return switch language {
+            case en: "Your vote";
+            case fr: "votre vote";
+            case de: "Your vote";
+            case es: "Your vote";
+            case it: "Your vote";
+            case eo: "Your vote";
+            case pt: "Your vote";
         }
     }
 
-    public static function translateStartPage(language:Language):String {
+    public static function getStartPage(language:Language):String {
         return switch language {
             case en: "Start page";
             case fr: "Page de début";
@@ -97,7 +108,7 @@ class LanguageTools {
         }
     }
 
-    public static function translateEndPage(language:Language):String {
+    public static function getEndPage(language:Language):String {
         return switch language {
             case en: "End page";
             case fr: "Page de fin";

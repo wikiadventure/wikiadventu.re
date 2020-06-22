@@ -39,7 +39,7 @@ class DirectConnectController {
                 }
             } catch (e:Dynamic) {
                 trace(e);
-                //new ErrorPage(im, sr, body, "internal error : " + e, MethodNotAllowed);
+                new ErrorPage(im, sr, body, "internal error : " + e, MethodNotAllowed);
                 return;
             }
         }
@@ -68,7 +68,7 @@ class DirectConnectController {
         try {
             player = new Player(data['pseudo'], lobby.language);
             lobby.connect(player, data['password']);
-            new GamePage(im, sr, lobby, player);
+            new GamePage(im, sr, lobby, player);  
             return;
         } catch (e:Dynamic) {
             new ErrorPage(im, sr, body, e,400);

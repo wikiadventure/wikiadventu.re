@@ -35,6 +35,7 @@ now you can hit debug > start debugging ( or f5 ), haxe will transpile the proje
 ## TODO
 
 - [x] CSS routing
+- [x] JS routing
 - [x] Connection form
 - [x] Handle public lobby
 - [x] Handle private lobby creation
@@ -46,5 +47,7 @@ now you can hit debug > start debugging ( or f5 ), haxe will transpile the proje
 - [x] Send players action with socket io
 - [x] Handle players action on socket io
 - [x] implemented verification to avoid cheating
-- [x] Share players actions with socket io
+- [x] Add a leaderboard at the end of a game
+- [ ] Add an options to show history of page visited by player at the end of a round
+- [ ] Complete the custom name generator for each language
 - [ ] save data to make some statistic

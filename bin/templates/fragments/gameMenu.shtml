@@ -3,7 +3,7 @@
   <label for="showUI" id="labelShowUI">&#9658;</label>
   <div id="actionSection">
     <div><p id="stateName"></p><p id="stateTime"></p></div>
-    <div id="vote"><p>Your vote :</p><p id="playerVote"></p></div>
+    <div id="vote"><p>${vote} :</p><p id="playerVote"></p></div>
     <form action="" id="votingForm" class="uiForm">
       <input tabindex=1 id="inputVote" class="uiInput" placeholder="${votePlaceholder}" autocomplete="off" /><button class="uiSubmit" id="voteSubmit">&#10004;</button>
     </form>

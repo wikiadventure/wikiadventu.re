@@ -43,9 +43,9 @@ class GamePage {
                         case "${chatPlaceholder}":
                             return LanguageTools.getChatPlaceholder(lobby.language);
                         case "${startPage}":
-                            return LanguageTools.translateStartPage(lobby.language);
+                            return LanguageTools.getStartPage(lobby.language);
                         case "${endPage}":
-                            return LanguageTools.translateEndPage(lobby.language);
+                            return LanguageTools.getEndPage(lobby.language);
                         case "${socketError}":
                             return LanguageTools.getSocketError(lobby.language);
                         case "${exitWarning}":

@@ -40,7 +40,7 @@ class Lobby {
     public var currentRound:Int;
     public var playTimeOut:Int; //time in second before a round end automatically
     public var voteTimeOut:Int; //time of the Voting state
-    public var roundFinishTimeOut:Int = 10; //time between the end of the play state and the begin of the vote state
+    public var roundFinishTimeOut:Int = 0; //time between the end of the play state and the begin of the vote state
     public var gameFinishTimeOut:Int = 30;
 
     public static var lobbyLimit:Int = 10000;
@@ -54,7 +54,7 @@ class Lobby {
         lobbyList = new Array<Lobby>();
     }
 
-    public function new(language : Language, type:LobbyType, ?passwordHash:String, slot:Int=15, round:Int=3, playTimeOut:Int=10, voteTimeOut:Int=10) {
+    public function new(language : Language, type:LobbyType, ?passwordHash:String, slot:Int=15, round:Int=3, playTimeOut:Int=600, voteTimeOut:Int=30) {
         if (lobbyList.length >= lobbyLimit) {
             throw "Lobby limit has been reached!";
         } else if (getPrivateLobbyLength() >= privateLimit) {
@@ -490,7 +490,7 @@ class Lobby {
             gameFinishPhase();
             return;
         }
-        votePhase();
+        roundFinishPhase();
     }
 
     public function gameFinishPhase() {

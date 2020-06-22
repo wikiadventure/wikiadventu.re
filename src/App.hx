@@ -36,18 +36,19 @@ class App {
             key: Fs.readFileSync('ssl/key.pem'),
             cert: Fs.readFileSync('ssl/cert.pem')
         };
-        var app = Https.createServer(options, handle);
+        var server = Https.createServer(options, handle);
 #else
-        var app = Http.createServer(handle);
+        var server = Http.createServer(handle);
 #end
-        app.listen(5000);
-        IO.init(app);
+        server.listen(5000);
+        IO.init(server);
 
     }
 
 
     static function handle(im : IncomingMessage, sr : ServerResponse) {        
             //IO.init();
+            sr.setTimeout(150);
             var body = "";
 			im.on("data", function(chunk : String) {
                 if(body.length > 1e4) {

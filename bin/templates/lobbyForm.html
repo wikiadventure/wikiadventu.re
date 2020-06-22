@@ -17,13 +17,7 @@
             <p class="splash-subhead">
                 a game of unlimited knowledge
             </p>
-            <p>
-                <a href="#publicJoin" class="pure-button pure-button-primary">Join a public lobby</a>
-                <a href="#privateJoin" class="pure-button pure-button-primary">Join a private lobby</a>
-                <a href="#privateCreate" class="pure-button pure-button-primary">Create a private lobby</a>
-            </p>
-            
-            <select class="pure-form" id="langSelect">
+            <select class="pure-form large-font" id="langSelect">
                 <option value="en">--Select a language--</option>
                 <option value="en">English</option>
                 <option value="fr">Français</option>
@@ -32,6 +26,11 @@
                 <option value="it">italiano (nessuna traduzione)</option>
                 <option value="eo">esperanto (sen traduko)</option>
             </select>
+            <p>
+                <a href="#publicJoin" class="pure-button pure-button-primary">Join a public lobby</a>
+                <a href="#privateJoin" class="pure-button pure-button-primary">Join a private lobby</a>
+                <a href="#privateCreate" class="pure-button pure-button-primary">Create a private lobby</a>
+            </p>
         </div>
     </div>
     <div class="content-wrapper">
@@ -55,7 +54,7 @@
                 </div>
     
                 <div class="l-box-lrg pure-u-1 pure-u-md-3-5">
-                    <h4>How To Play</h4>
+                    <!--<h4>How To Play</h4>
                     <p>
                         The goal is simple, during the play phase, you need to go as fast as 
                         possible from the start page to the end page, but you can only navigate 
@@ -68,14 +67,14 @@
                     <h4>Report a bug</h4>
                     <p>
                         TODO here
-                    </p>
+                    </p>-->
                 </div>
             </div>
     
         </div>
 
         <div class="content" id="privateJoin">
-            <h2 class="content-head is-center">Join a private lobby (not implemented)</h2>
+            <h2 class="content-head is-center">Join a private lobby</h2>
     
             <div class="pure-g">
                 <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
@@ -100,7 +99,7 @@
                 </div>
     
                 <div class="l-box-lrg pure-u-1 pure-u-md-3-5">
-                    <h4>How To Play</h4>
+                    <!--<h4>How To Play</h4>
                     <p>
                         TODO description here
                     </p>
@@ -108,14 +107,14 @@
                     <h4>Report a bug</h4>
                     <p>
                         TODO here
-                    </p>
+                    </p>-->
                 </div>
             </div>
     
         </div>
 
         <div class="content" id="privateCreate">
-            <h2 class="content-head is-center">Create a private lobby (not implemented)</h2>
+            <h2 class="content-head is-center">Create a private lobby</h2>
     
             <div class="pure-g">
                 <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
@@ -131,8 +130,8 @@
                             <label for="privateCreatePassword">The Lobby Password</label>
                             <input id="privateCreatePassword" name="password" type="password" placeholder="Lobby Password">
 
-                            <label for="custom">Custom Message</label>
-                            <input id="custom" name="custom" type="text" placeholder="Your Custom Message" maxlength="50">
+                            <!--<label for="custom">Custom Message</label>
+                            <input id="custom" name="custom" type="text" placeholder="Your Custom Message" maxlength="50">-->
     
                             <button type="submit" class="pure-button">Create</button>
                         </fieldset>
@@ -140,7 +139,7 @@
                 </div>
     
                 <div class="l-box-lrg pure-u-1 pure-u-md-3-5">
-                    <h4>How To Play</h4>
+                    <!--<h4>How To Play</h4>
                     <p>
                         TODO description here
                     </p>
@@ -148,7 +147,7 @@
                     <h4>Report a bug</h4>
                     <p>
                         TODO here
-                    </p>
+                    </p>-->
                 </div>
             </div>
     
@@ -157,10 +156,6 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha512/0.8.0/sha512.min.js"></script>
     <script>
-        addEventListener('load', swapLanguage);
-        document.getElementById('langSelect').onchange = function(e){
-            swapLanguage();
-        }
         var swapLanguage = function () {
             var target = document.getElementById('langSelect');
             var lang = target.options[target.selectedIndex].value;
@@ -169,7 +164,10 @@
                 elements[i].value = lang;
             }
         };
-
+        addEventListener('DOMContentLoaded', swapLanguage);
+        document.getElementById('langSelect').onchange = function(e){
+            swapLanguage();
+        }
         document.getElementById("privateCreateForm").onsubmit = function (e) {
             document.getElementById("privateCreatePassword").value = sha512(document.getElementById("privateCreatePassword").value);
         }

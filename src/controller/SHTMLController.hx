@@ -36,6 +36,8 @@ class SHTMLController {
 					var templatedData = templateRegex.map(data.toString(), function(r) {
 						var match = r.matched(0);
 						switch (match) {
+							case "${vote}":
+								return LanguageTools.getVote(lang);
 							case "${votePlaceholder}":
 								return LanguageTools.getVotePlaceholder(lang);
 							case "${votePlaceholderSubmitted}":
@@ -43,9 +45,9 @@ class SHTMLController {
 							case "${chatPlaceholder}":
 								return LanguageTools.getChatPlaceholder(lang);
 							case "${startPage}":
-								return LanguageTools.translateStartPage(lang);
+								return LanguageTools.getStartPage(lang);
 							case "${endPage}":
-								return LanguageTools.translateEndPage(lang);
+								return LanguageTools.getEndPage(lang);
 							case "${socketError}":
 								return LanguageTools.getSocketError(lang);
 							case "${exitWarning}":
