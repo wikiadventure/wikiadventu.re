@@ -54,3 +54,4 @@ You can find a digram of the project structure [here](https://app.creately.com/d
 - [ ] Add an options to show history of page visited by player at the end of a round
 - [ ] Complete the custom name generator for each language
 - [ ] save data to make some statistic
+- [ ] add twitch api integration
