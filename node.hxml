@@ -3,6 +3,7 @@
 -lib hxnodejs
 -lib hxsocketio
 -lib hxnodejs-uuid
+-lib twitch-js
 
 -main App
 -js bin/App.js

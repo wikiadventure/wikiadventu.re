@@ -1,7 +1,6 @@
 package controller;
 
-import js.node.Crypto.CryptoAlgorithm;
-import js.node.crypto.Verify;
+import lobby.TwitchLobby;
 import lobby.ConnectionPage;
 import lobby.Lobby;
 import lobby.player.Player;
@@ -87,7 +86,7 @@ class ConnectController {
         }
     }
     public function privateCreate(data:QuerystringParseResult, player:Player) {
-        trace("publicreate");
+        trace("privatecreate");
         try {
             var lobby = new Lobby(player.language, Private, data['password']);
             lobby.giveID();// giveID method also add the lobby to the lobbylist

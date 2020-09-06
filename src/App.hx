@@ -1,3 +1,4 @@
+import config.twitch.TwitchCredential;
 import js.node.Fs;
 import js.node.Https;
 import controller.SHTMLController;
@@ -21,6 +22,7 @@ import controller.StyleController;
 import controller.ConnectController;
 import controller.ResController;
 import controller.DirectConnectController;
+import controller.TwitchController;
 import lobby.Lobby;
 
 class App {
@@ -31,15 +33,16 @@ class App {
     static function main() {
         Lobby.init(); 
 
-#if https
-        var options = {
-            key: Fs.readFileSync('ssl/key.pem'),
-            cert: Fs.readFileSync('ssl/cert.pem')
-        };
-        var server = Https.createServer(options, handle);
-#else
-        var server = Http.createServer(handle);
-#end
+        #if https
+            var options = {
+                key: Fs.readFileSync('config/ssl/key.pem', 'utf8'),
+                cert: Fs.readFileSync('config/ssl/cert.pem', 'utf8')
+            };
+            var server = Https.createServer(options, handle);
+        #else
+            var server = Http.createServer(handle);
+        #end
+        TwitchCredential.init();
         server.listen(5000);
         IO.init(server);
 
@@ -62,7 +65,8 @@ class App {
 
     function new(im : IncomingMessage, sr : ServerResponse, body : String) {
         
-        var idx : Int = im.url.indexOf("/", 1);
+        var idx : Int = im.url.indexOf("?", 1);
+        if (idx == -1) idx = im.url.indexOf("/", 1);
         var route : String = idx == -1 ? im.url : im.url.substring(0, idx);
         Sys.println(route);
         switch (route) { //routage
@@ -73,6 +77,7 @@ class App {
             case "/connect": new ConnectController(im, sr, body);
             case "/res": new ResController(im, sr);
             case "/play": new DirectConnectController(im, sr, body);
+            case "/twitch": new TwitchController(im, sr, body);
             default: new ErrorPage(im, sr, body, "Sorry, you are looking for something that doesn't exist!", 404);
         }
     }

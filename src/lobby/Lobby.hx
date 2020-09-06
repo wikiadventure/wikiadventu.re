@@ -1,15 +1,8 @@
 package lobby;
 
-import js.node.util.TextEncoder;
-import js.Syntax;
-import js.Browser;
-import js.node.StringDecoder;
 import haxe.Timer;
-import js.Node;
-import js.node.Buffer;
 import haxe.Json;
 import js.lib.Promise;
-import js.node.Https.HttpsRequestOptions;
 import js.node.Https;
 import async.IO;
 import js.node.socketio.Server.Namespace;
@@ -380,7 +373,11 @@ class Lobby {
         initNewPhase();
         if (loop != null) loop.stop();
         loop = Timer.delay(function () {
-            selectPage();
+            var suggestionList = new Array<String>();
+            for (player in playerList) {
+                suggestionList.push(player.votingSuggestion);
+            }
+            selectPage(suggestionList);
         },currentStateTimeOut()*1000);
     }
 
@@ -392,12 +389,17 @@ class Lobby {
      * TODO : pick a random page if start and end page are the same
      * PS: NOT OPTIMISED but we do like that so in the future we can do a little drawing animation client side
      */
-    public function selectPage() {
+    public function selectPage(suggestionList:Array<String>) {
+        function onFinish() {
+            log("Start page : " + startPage, Info);
+            log("End page : " + endPage, Info);
+            playPhase();
+        }
         var promiseList = new Array<Promise<Bool>>();
         var urlList = new Array<String>();
         log("Starting page selection", Info);
-        for (i in 0...playerList.length) {
-            var title = playerList[i].votingSuggestion;
+        for (i in 0...suggestionList.length) {
+            var title = suggestionList[i];
             if (title != null) {
                 title = StringTools.urlEncode(title);
                 var promise = new Promise<Bool>(
@@ -439,7 +441,7 @@ class Lobby {
                 promiseList.push(promise);
             }
         }
-        if (playerList.length < 2) {
+        if (suggestionList.length < 2) {
             var promise = new Promise<Bool>(
                 function (resolve, reject) {
                     getRandomURL(urlList, resolve, reject);
@@ -450,15 +452,28 @@ class Lobby {
         Promise.all(promiseList).then(
             function(value) {
                 var randomStart = Std.random(urlList.length);
+                startPage = urlList[randomStart];
+                urlList.remove(startPage);
                 var randomEnd:Int;
                 do {
                     randomEnd = Std.random(urlList.length);
-                } while (randomEnd == randomStart);
-                startPage = urlList[randomStart];
-                endPage = urlList[randomEnd];
-                log("Start page : " + startPage, Info);
-                log("End page : " + endPage, Info);
-                playPhase();
+                    endPage = urlList[randomEnd];
+                    urlList.remove(endPage);
+                } while (endPage == startPage && urlList.length > 0);
+                if (endPage == startPage) {
+                    var promise = new Promise<Bool>(
+                        function (resolve, reject) {
+                            getRandomURL(urlList, resolve, reject);
+                        }
+                    ).then(function(value) {
+                        endPage = urlList[0];
+                        onFinish();
+                    });
+                } else {
+                    onFinish();
+                }
+                
+
 
             }, function(reason) {
                 log("SEVERE something wrong append during page selection : " + reason, Error);
@@ -539,7 +554,7 @@ class Lobby {
         var options:HttpsRequestOptions =  {
             hostname: LanguageTools.getURL(language),
             path: "/w/api.php?action=query&format=json&list=random&rnnamespace=0&rnlimit=1"
-        }
+        };
         var request = Https.request(options, function (response) {
             response.on('data', function (data) {
                 try {
