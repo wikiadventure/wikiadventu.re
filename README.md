@@ -30,7 +30,10 @@ make sure to install the haxe extension pack
 ### Visual Studio Code
 
 now you can hit debug > start debugging ( or f5 ), haxe will transpile the project to JavaScript in the bin/App.js file with the         node.hxml config and you can start debugging the node app with the Visual studio code debugger attach
-    
+
+## Structure ( WIP )
+
+You can find a digram of the project structure [here](https://app.creately.com/diagram/c3k6MCT7yss).
     
 ## TODO
 
@@ -51,3 +54,4 @@ now you can hit debug > start debugging ( or f5 ), haxe will transpile the proje
 - [ ] Add an options to show history of page visited by player at the end of a round
 - [ ] Complete the custom name generator for each language
 - [ ] save data to make some statistic
+- [ ] add twitch api integration
