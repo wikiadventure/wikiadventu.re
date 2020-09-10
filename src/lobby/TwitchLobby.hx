@@ -12,9 +12,8 @@ import twitch_js.Listener;
 class TwitchLobby extends Lobby {
 
     public static var lobbyList:Array<TwitchLobby>;
-
     public static var suggestionLimit:Int = 100;
-
+    
     public var channelName:String;
     public var suggestionList:Array<String>;
     public var twitchBot:Client;

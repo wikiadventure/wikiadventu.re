@@ -11,7 +11,7 @@ class ErrorPage {
 	public function new(im : IncomingMessage, sr : ServerResponse, body:String, reason:String, errorCode:Int) {
 		this.im = im;
 		this.sr = sr;
-		trace(body.length);
+		trace(reason);
 		this.sr.writeHead(errorCode);
 
 		this.sr.write(reason);

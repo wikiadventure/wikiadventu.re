@@ -68,7 +68,7 @@ class App {
         var idx : Int = im.url.indexOf("?", 1);
         if (idx == -1) idx = im.url.indexOf("/", 1);
         var route : String = idx == -1 ? im.url : im.url.substring(0, idx);
-        Sys.println(route);
+        trace(route);
         switch (route) { //routage
             case "/": new MainPage(im, sr);
             case "/css": new StyleController(im, sr);

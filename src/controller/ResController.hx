@@ -12,7 +12,8 @@ class ResController {
     
     public function new(im : IncomingMessage, sr : ServerResponse) {
 		this.im = im;
-		this.sr = sr;
+        this.sr = sr;
+        trace(im.url);
         var idx = this.im.url.lastIndexOf(".");
         var extension = this.im.url.substring(idx+1);
         var mimeType:String = switch extension {
@@ -22,6 +23,8 @@ class ResController {
                 "audio/mpeg";
             case "svg":
                 "image/svg+xml";
+            case "png":
+                "image/png";
             default :
                 "unknown/unknown";
         };

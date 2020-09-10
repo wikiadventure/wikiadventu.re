@@ -19,10 +19,10 @@ class Lobby {
     public var state:LobbyState;
     public var timeStampStateBegin:Float;
     public var loop:Timer;
-    public var totalPlayer:Int = 0;
 
     public var startPage:String;
     public var endPage:String;
+    public var totalPlayer:Int = 0; //use to give an id to player when sending info with socket io
 
     public var slot:Int;
     public var id:Int;
@@ -333,7 +333,6 @@ class Lobby {
                             io.emit('winRound', player.pseudo);
                             io.emit('message', player.pseudo + " win the round " + currentRound);
                             currentRound++;
-                            loop.stop();
                             votePhase();
                         }             
                     }
@@ -369,10 +368,10 @@ class Lobby {
      * and call selectPage when the timer run out
      */
     public function votePhase() {
+        if(playerList.length == 0) return;
         state = Voting;
         initNewPhase();
-        if (loop != null) loop.stop();
-        loop = Timer.delay(function () {
+        Timer.delay(function () {
             var suggestionList = new Array<String>();
             for (player in playerList) {
                 suggestionList.push(player.votingSuggestion);
@@ -487,14 +486,14 @@ class Lobby {
      * and start the interlude phase when the timer run out
      */
     public function playPhase() {
+        if (playerList.length == 0) return;
         for (player in playerList) {
             player.currentPage = wikiTitleFormat(startPage);
         }
         io.emit('voteResult', startPage + '?' + endPage);
         state = Playing;
         initNewPhase();
-        loop.stop();
-        loop = Timer.delay(function () {
+        Timer.delay(function () {
             playPhaseEnd();
         },currentStateTimeOut()*1000);
     }
@@ -512,11 +511,11 @@ class Lobby {
     }
 
     public function gameFinishPhase() {
+        if (playerList.length == 0) return;
         currentRound = 1;
         state = GameFinish;
         initNewPhase();
-        loop.stop();
-        loop = Timer.delay(function () {
+        Timer.delay(function () {
             votePhase();
         },currentStateTimeOut()*1000);
 
@@ -527,10 +526,10 @@ class Lobby {
      * and start the voting phase when the timer run out
      */
     public function roundFinishPhase() {
+        if (playerList.length == 0) return;
         state = RoundFinish;
         initNewPhase();
-        loop.stop();
-        loop = Timer.delay(function () {
+        Timer.delay(function () {
             votePhase();
         },currentStateTimeOut()*1000);
     }
