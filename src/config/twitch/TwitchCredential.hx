@@ -1,6 +1,6 @@
 package config.twitch;
 
-import js.node.Fs;
+import js.Node.process;
 
 class TwitchCredential {
     
@@ -12,11 +12,11 @@ class TwitchCredential {
     
 
     public static function init() {
-        clientID = Fs.readFileSync('config/twitch/clientID', 'utf8');
-        clientSecret = Fs.readFileSync('config/twitch/clientSecret', 'utf8');
-        redirectURL = Fs.readFileSync('config/twitch/redirectURL', 'utf8');
-        botUsername = Fs.readFileSync('config/twitch/botUsername', 'utf8');
-        botPassword = Fs.readFileSync('config/twitch/botPassword', 'utf8');
+        clientID = process.env['TWITCH_CLIENT_ID'];
+        clientSecret = process.env['TWITCH_CLIENT_SECRET'];
+        redirectURL = process.env['TWITCH_REDIRECT_URL'];
+        botUsername = process.env['TWITCH_BOT_USERNAME'];
+        botPassword = process.env['TWITCH_BOT_PASSWORD'];
     }
 
 }
