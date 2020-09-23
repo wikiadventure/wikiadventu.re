@@ -24,6 +24,7 @@ import controller.ResController;
 import controller.DirectConnectController;
 import controller.TwitchController;
 import lobby.Lobby;
+import js.Node.process;
 
 class App {
 
@@ -43,7 +44,7 @@ class App {
             var server = Http.createServer(handle);
         #end
         TwitchCredential.init();
-        server.listen(5000);
+        server.listen(process.env['PORT']);
         IO.init(server);
 
     }
