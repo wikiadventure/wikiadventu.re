@@ -4,9 +4,8 @@
   "description": "Wikipedia race game",
   "main": "App.js",
   "dependencies": {
-    "lodash": "^4.17.20",
     "socket.io": "^2.3.0",
-    "twitch-js": "^1.2.17",
+    "twitch-js": "https://github.com/twitch-js/twitch-js.git",
     "uuid": "^7.0.3"
   },
   "devDependencies": {},
