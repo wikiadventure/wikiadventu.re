@@ -42,7 +42,7 @@ addEventListener("uiSectionTemplate",(function () {
         socket.emit('vote', requestTitle);
         document.getElementById("playerVote").innerText = requestTitle;
         document.getElementById('inputVote').value = "";
-        document.getElementById('inputVote').placeholder = "${votePlaceholderSubmitted}";
+        document.getElementById('inputVote').placeholder = votePlaceholder;
         fetch("https://" + lobbyLang + ".wikipedia.org/w/api.php?action=query&origin=*&list=search&srlimit=1&srnamespace=0&srsearch=intitle:" + encodeURIComponent(requestTitle) + "&format=json&srprop=")
             .then(function(response){return response.json();})
             .then(function(response) {
@@ -247,7 +247,7 @@ fetch( wikiRequestUrlRoot + url , options)
                 }
                 for (var i=0;i<cssLinks.length;i++) {
                   if (cssLinks[i].rel == "stylesheet") {
-                    //cssLinks[i].href += "https://" + lobbyLang + ".wikipedia.org";
+                    cssLinks[i].href += "https://" + lobbyLang + ".wikipedia.org";
                     document.head.appendChild(cssLinks[i]);
                   }
                 }

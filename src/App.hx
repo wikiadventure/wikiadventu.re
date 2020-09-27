@@ -79,6 +79,7 @@ class App {
             case "/res": new ResController(im, sr);
             case "/play": new DirectConnectController(im, sr, body);
             case "/twitch": new TwitchController(im, sr, body);
+            case "/favicon.svg": new ResController(im, sr);
             default: new ErrorPage(im, sr, body, "Sorry, you are looking for something that doesn't exist!", 404);
         }
     }

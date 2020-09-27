@@ -286,6 +286,9 @@ body {
 	}
 }
 @media all and (min-width: 768px) {
+	#uiSection {
+		transition: all ease-in-out 0.25s;
+	}
 	#uiSection:hover #labelShowUI {
 		transform: rotate(180deg);
 	}
