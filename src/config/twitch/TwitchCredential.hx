@@ -1,6 +1,9 @@
 package config.twitch;
 
+import twitch.ApiClient;
+import twitch.AuthProvider;
 import js.Node.process;
+import twitch_auth.ClientCredentialsAuthProvider;
 
 class TwitchCredential {
     
@@ -17,6 +20,10 @@ class TwitchCredential {
         redirectURL = process.env['TWITCH_REDIRECT_URL'];
         botUsername = process.env['TWITCH_BOT_USERNAME'];
         botPassword = process.env['TWITCH_BOT_PASSWORD'];
+    }
+
+    public static function getApiClient():ApiClient {
+        return ApiClient.withClientCredentials(clientID, clientSecret);
     }
 
 }

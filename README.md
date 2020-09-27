@@ -8,7 +8,7 @@ First you need to install haxe > 4.0.0 [here](https://haxe.org/download/)
 
 Then install all needed haxe librairies with command :
 ```
-haxelib install hxnodejs
+haxelib git twitch-chat-client https://github.com/Sacramentix/hx-twitch.git
 haxelib install hxsocketio
 haxelib install hxnodejs-uuid
 ```

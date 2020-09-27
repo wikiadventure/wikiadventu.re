@@ -595,8 +595,8 @@ class Lobby {
         var lobby = new Lobby(player.language, Public);
         lobby.giveID();// giveID method also add the lobby to the lobbylist
         lobby.initNamespace();
-        lobby.votePhase();
         lobby.connect(player);
+        lobby.votePhase();
         return lobby;
     }
 

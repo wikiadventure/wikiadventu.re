@@ -19,16 +19,17 @@ jobs:
         with:
           # Version Spec of the version to use. Example: 3.4.7
           haxe-version: 4.1.4
-      - name: install lib and compile
+      - name: Install lib
         run: |
-          haxelib install hxnodejs
+          haxelib install twitch https://github.com/Sacramentix/hx-twitch.git
           haxelib install hxsocketio
           haxelib install hxnodejs-uuid
-          haxelib git twitch-js https://github.com/Sacramentix/hxtwitch-js.git
-          haxe node.hxml
           git config --global user.email 'benji.u1225u@gmail.com'
           git config --global user.name 'Sacramentix'
-      - name: deploy to heroku
+      - name: Compile
+        run: |
+          haxe node.hxml
+      - name: Deploy to heroku
         uses: Sacramentix/heroku-deploy@30f0b7e30306900d74c1d7fd5414e1f8421652ba
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}

@@ -5,7 +5,8 @@
   "main": "App.js",
   "dependencies": {
     "socket.io": "^2.3.0",
-    "twitch-js": "https://github.com/twitch-js/twitch-js.git",
+    "twitch": "^4.2.4",
+    "twitch-chat-client": "^4.2.4",
     "uuid": "^7.0.3"
   },
   "devDependencies": {},

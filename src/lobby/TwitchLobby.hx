@@ -1,43 +1,36 @@
 package lobby;
 
+import js.lib.Promise;
+import twitch_chat_client.PrivateMessage;
 import config.twitch.TwitchCredential;
 import controller.TwitchController.TwitchUser;
 import haxe.Timer;
-import twitch_js.ClientOptions;
 import config.Language;
 import lobby.Lobby.LobbyType;
-import twitch_js.Client;
-import twitch_js.Listener;
+import twitch_chat_client.ChatClient;
+import twitch_chat_client.lib.chatclient.ChatClientOptions;
+using config.twitch.TwitchBotExtension;
 
 class TwitchLobby extends Lobby {
 
     public static var lobbyList:Array<TwitchLobby>;
     public static var suggestionLimit:Int = 100;
     
-    public var channelName:String;
+    public var channelName:Array<String>; // contain all channelname of all streamer connected to the lobby
     public var suggestionList:Array<String>;
-    public var twitchBot:Client;
+    public var twitchBot:ChatClient;
 
 
     public function new(user:TwitchUser, language:Language, type:LobbyType, ?passwordHash:String, slot:Int=15, round:Int=3, playTimeOut:Int=600, voteTimeOut:Int=30) {
         super(language, Private, passwordHash, slot, round, playTimeOut, voteTimeOut);
-        this.channelName = user.display_name;
+        channelName.push(user.display_name);
         suggestionList = new Array<String>();
-        var options:ClientOptions = {
-            identity: {
-                username: TwitchCredential.botUsername,
-                password: TwitchCredential.botPassword
-            },
-            channels: [
-                channelName
-            ]
-        }
-        twitchBot = new Client(options);
-
+        twitchBot = new ChatClient(TwitchCredential.getApiClient());
         
-        twitchBot.on('message', chatMessageHandler);
-        twitchBot.on('connected', onConnectedHandler);
-        twitchBot.connect();
+
+        twitchBot.onMessage(chatMessageHandler);
+        twitchBot.connect();   
+        join(channelName[0]);
 
     }
 
@@ -45,12 +38,13 @@ class TwitchLobby extends Lobby {
         lobbyList = new Array<TwitchLobby>();
     }
 
+
     /**
      * the id of the lobby is the channel name of the streamer
      */
     public override function giveID() {
         var pos = 0;
-        while ( lobbyList[pos] != null && this.channelName > lobbyList[pos].channelName) {
+        while ( lobbyList[pos] != null && channelName[0] > lobbyList[pos].channelName[0]) {
             pos++;
         }
         lobbyList.insert(pos,this);
@@ -67,18 +61,28 @@ class TwitchLobby extends Lobby {
      * and call selectPage when the timer run out
      */
      public override function votePhase() {
-        twitchBot.say(channelName, "Vote phase open! You can vote for a wiki page with command !vote YourVote");
+        twitchBot.sayAll(channelName, "Vote phase open! You can vote for a wiki page with command !vote YourVote");
         state = Voting;
         initNewPhase();
         if (loop != null) loop.stop();
         loop = Timer.delay(function () {
-            twitchBot.say(channelName, "Vote phase closed!");
+            twitchBot.sayAll(channelName, "Vote phase closed!");
             selectPage(suggestionList);
         },currentStateTimeOut()*1000);
     }
 
-    public function chatMessageHandler(target:String, context:String, msg:String, self:Bool) {
-        if (self) return;
+    public function join(channelName:String) {
+        twitchBot.join(channelName).then(
+            function(value) {
+                twitchBot.say(channelName, channelName + " just join a game of wiki adventure!");
+            }, function(reason) {
+                log("error during chat bot connection on channel " + channelName + " : " + reason, Error);
+        });
+    }
+
+
+    public function chatMessageHandler(channel:String, user:String, msg:String, message:PrivateMessage) {
+        if (user == TwitchCredential.botUsername) return;
         if (msg.length > 231) return;
         msg = StringTools.trim(msg);
         if (StringTools.startsWith(msg, "!vote ") && state == Voting) {
@@ -86,6 +90,7 @@ class TwitchLobby extends Lobby {
             if (suggestionList.length < suggestionLimit) {
                 var title = msg.substr(6);
                 suggestionList.push(title);
+                if (suggestionList.length == suggestionLimit) twitchBot.sayAll(channelName, "Maximun vote reached!");
                 log(title, Info);
             }
             return;
@@ -93,16 +98,12 @@ class TwitchLobby extends Lobby {
         
     }
 
-    function onConnectedHandler (addr:String, port:String) {
-        log("Connected to " + addr + ":" + port, Info);
-        twitchBot.say(channelName, channelName + " just launch a game of wiki adventure!");
-        twitchBot.say(channelName, "Vote phase open! You can vote for a wiki page with command !vote YourVote");
-    }
+ 
 
     public static function find(channelName:String):TwitchLobby {
         for (l in lobbyList) {
-            if (l.channelName > channelName) throw "no lobby with channelName " + channelName + " found";
-            if (l.channelName == channelName) return l;
+            if (l.channelName[0] > channelName) throw "no lobby with channelName " + channelName + " found";
+            if (l.channelName[0] == channelName) return l;
         }
         throw "no lobby with channelName " + channelName + " found";
     }
