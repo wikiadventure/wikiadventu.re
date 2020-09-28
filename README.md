@@ -1,5 +1,9 @@
 # WikiAdventure
 
+<p align="center">
+  <a href="http://wiki-adventure-io.herokuapp.com/" title="Wiki Adventure"><img src="bin/res/svg/logoV1.svg" /></a>
+</p>
+
 ## Setup
 
 ### Haxe

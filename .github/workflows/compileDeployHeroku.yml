@@ -21,7 +21,7 @@ jobs:
           haxe-version: 4.1.4
       - name: Install lib
         run: |
-          haxelib install twitch https://github.com/Sacramentix/hx-twitch.git
+          haxelib git twitch-chat-client https://github.com/Sacramentix/hx-twitch-chat-client.git
           haxelib install hxsocketio
           haxelib install hxnodejs-uuid
           git config --global user.email 'benji.u1225u@gmail.com'
