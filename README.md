@@ -1,7 +1,7 @@
 # WikiAdventure
 
 <p align="center">
-  <a href="http://wiki-adventure-io.herokuapp.com/" title="Wiki Adventure"><img src="bin/res/svg/logoV1.svg" /></a>
+  <a href="http://wiki-adventure-io.herokuapp.com/" title="Wiki Adventure"><img width=147 height=128 src="bin/res/svg/logoV1.svg" /></a>
 </p>
 
 ## Setup
@@ -12,7 +12,7 @@ First you need to install haxe > 4.0.0 [here](https://haxe.org/download/)
 
 Then install all needed haxe librairies with command :
 ```
-haxelib git twitch-chat-client https://github.com/Sacramentix/hx-twitch.git
+haxelib git twitch-chat-client https://github.com/Sacramentix/hx-twitch-chat-client.git
 haxelib install hxsocketio
 haxelib install hxnodejs-uuid
 ```
