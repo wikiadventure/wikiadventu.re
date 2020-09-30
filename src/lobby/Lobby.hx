@@ -657,6 +657,7 @@ enum abstract LogType(String) {
 enum abstract LobbyType(Int) {
     var Public;
     var Private;
+    var Twitch;
 }
 
 enum abstract LobbyState(String) from String to String {

@@ -1,3 +1,4 @@
+import lobby.TwitchLobby;
 import config.twitch.TwitchCredential;
 import js.node.Fs;
 import js.node.Https;
@@ -32,7 +33,8 @@ class App {
     public static var timestamp:Float;
 
     static function main() {
-        Lobby.init(); 
+        Lobby.init();
+        TwitchLobby.init();
 
         #if https
             var options = {

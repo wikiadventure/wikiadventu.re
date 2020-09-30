@@ -42,10 +42,8 @@ class ConnectController {
         var language:Language;
         try {
             language = cast(data['language'], String);
+            if(language==null) throw "";
         } catch (e:Dynamic) {
-            language = en;
-        }
-        if (language == null) {
             language = en;
         }
         var player:Player;
@@ -91,8 +89,8 @@ class ConnectController {
             var lobby = new Lobby(player.language, Private, data['password']);
             lobby.giveID();// giveID method also add the lobby to the lobbylist
             lobby.initNamespace();
-            lobby.votePhase();
             lobby.connect(player, data['password']);
+            lobby.votePhase();
             new GamePage(im, sr, lobby, player);
         } catch (e:Dynamic) {
             new ErrorPage(im, sr, body, "internal error"+e,400);

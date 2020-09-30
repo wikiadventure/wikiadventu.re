@@ -16,16 +16,17 @@ class GamePage {
 	var sr : ServerResponse;
 	
 	public function new(im : IncomingMessage, sr : ServerResponse, lobby:Lobby, player:Player) {
+        trace("gamepage");
 		this.im = im;
-		this.sr = sr;
-        this.sr.setHeader("Content-Type", "text/html");
+        this.sr = sr;
+        if (!this.sr.headersSent) this.sr.setHeader("Content-Type", "text/html");
 		Fs.readFile('templates/gamePage.html', function(err, data) {
 			if (err != null) {
                 trace(err);
-				this.sr.writeHead(404);
+				if (!this.sr.headersSent) this.sr.writeHead(404);
                 this.sr.write("ressource not found");
 			} else {
-                this.sr.writeHead(200);
+                if (!this.sr.headersSent) this.sr.writeHead(200);
                 var templateRegex = ~/(\${(.*?)})/g; // anything like ${ ... }
                 var templatedData = templateRegex.map(data.toString(), function(r) {
                     var match = r.matched(0);
