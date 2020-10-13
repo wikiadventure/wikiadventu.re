@@ -1,0 +1,12 @@
+/* app global css */
+:root {
+    --q-color-almost-black: #222;
+    --q-color-blue-white: #e8ffff;
+    --q-color-dark-blue: #0e1316;
+    --q-color-dark-teal: #29a19c;
+    --q-color-teal: #5fc4bf;
+    --q-color-light-teal: #84d2ce;
+}
+.body--dark .bg-main {
+    background: var(--q-color-almost-black);
+}
