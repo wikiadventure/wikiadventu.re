@@ -55,10 +55,12 @@ class GamePage {
                             return '';
                     };
                 });
-                this.sr.write(templatedData);
+                this.sr.write(templatedData, 'utf-8', function() {
+                    this.sr.end();
+                });
                 
 			}
-            this.sr.end();
+            
         });
       
 	}

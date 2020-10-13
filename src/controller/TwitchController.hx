@@ -1,5 +1,6 @@
 package controller;
 
+import js.Syntax;
 import twitch.AuthProvider;
 import lobby.player.TwitchPlayer;
 import config.Language;
@@ -39,9 +40,9 @@ class TwitchController {
                 var data = Querystring.parse(im.url.substring(idx+1));
                 var code = data['code'];
                 if (code == null) throw "invalid twitch access, please retry!";
-                this.sr.setHeader('Connection', 'Transfer-Encoding');
+                this.sr.setHeader('Connection', 'keep-alive');
                 this.sr.setHeader('Content-Type', 'text/html; charset=utf-8');
-                this.sr.setHeader('Transfer-Encoding', 'chunked');
+                this.sr.setHeader('Transfer-Encoding', '');
                 this.sr.writeProcessing();
                 this.sr.flushHeaders();
                 getAccessToken(code)

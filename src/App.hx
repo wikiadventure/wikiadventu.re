@@ -45,6 +45,7 @@ class App {
         #else
             var server = Http.createServer(handle);
         #end
+        server.keepAliveTimeout = 0;
         TwitchCredential.init();
         server.listen(process.env['PORT']);
         IO.init(server);
