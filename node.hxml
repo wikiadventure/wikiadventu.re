@@ -1,8 +1,9 @@
 -cp src
 
 -lib hxsocketio
--lib hxnodejs-uuid
--lib twitch-chat-client
+-lib uuid
+-lib twitch-chat-client:git:https://github.com/Sacramentix/hx-twitch-chat-client.git
+-lib tink_json
 
 -main App
 -js bin/App.js
