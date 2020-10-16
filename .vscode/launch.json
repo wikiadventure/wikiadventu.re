@@ -15,7 +15,7 @@
             ],
             "cwd": "${workspaceFolder}/bin",
             "program": "${workspaceFolder}/bin/App.js",
-            "preLaunchTask": "haxe: node.hxml"
+            "preLaunchTask": "Complete build"
         }
     ]
 }
