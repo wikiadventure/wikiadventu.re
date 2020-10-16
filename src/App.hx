@@ -4,6 +4,7 @@ import js.node.Fs;
 import js.node.Https;
 import controller.SHTMLController;
 import controller.ScriptController;
+import controller.FrontController;
 import haxe.Timer;
 import haxe.http.HttpBase;
 import js.html.Worker;
@@ -45,7 +46,6 @@ class App {
         #else
             var server = Http.createServer(handle);
         #end
-        server.keepAliveTimeout = 0;
         TwitchCredential.init();
         server.listen(process.env['PORT']);
         IO.init(server);
@@ -55,7 +55,7 @@ class App {
 
     static function handle(im : IncomingMessage, sr : ServerResponse) {        
             //IO.init();
-            sr.setTimeout(150);
+            sr.setTimeout(10000);
             var body = "";
 			im.on("data", function(chunk : String) {
                 if(body.length > 1e4) {
@@ -68,7 +68,11 @@ class App {
     }
 
     function new(im : IncomingMessage, sr : ServerResponse, body : String) {
-        
+        trace(im.url);
+        if (im.url == "/" || im.url.indexOf(".") != -1) {
+            new FrontController(im, sr);
+            return;
+        } 
         var idx : Int = im.url.indexOf("?", 1);
         if (idx == -1) idx = im.url.indexOf("/", 1);
         var route : String = idx == -1 ? im.url : im.url.substring(0, idx);
