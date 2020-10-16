@@ -4,7 +4,7 @@ import config.twitch.TwitchCredential;
 import twitch_chat_client.PrivateMessage;
 import twitch.AuthProvider;
 import twitch_chat_client.ChatClient;
-import config.Language;
+import config.Lang;
 import twitch.HelixPrivilegedUser;
 
 class TwitchPlayer extends Player {
@@ -14,7 +14,7 @@ class TwitchPlayer extends Player {
     public var authProvider:AuthProvider;
     public var twitchLobby:TwitchLobby;
     
-    public function new(twitchUser:HelixPrivilegedUser, authProvider:AuthProvider, language:Language) {
+    public function new(twitchUser:HelixPrivilegedUser, authProvider:AuthProvider, language:Lang) {
         super(twitchUser.name, language);
         this.twitchUser = twitchUser;
         twitchBot = new ChatClient(authProvider);

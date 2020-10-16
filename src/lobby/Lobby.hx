@@ -9,7 +9,7 @@ import js.node.socketio.Server.Namespace;
 import js.node.socketio.Socket;
 import haxe.io.Bytes;
 import lobby.player.Player;
-import config.Language;
+import config.Lang;
 import haxe.crypto.Base64;
 
 class Lobby {
@@ -27,7 +27,7 @@ class Lobby {
     public var slot:Int;
     public var id:Int;
     public var passwordHash:String;
-    public var language:Language;
+    public var language:Lang;
     public var playerList:Array<Player>;
     public var round:Int;
     public var currentRound:Int;
@@ -47,7 +47,7 @@ class Lobby {
         lobbyList = new Array<Lobby>();
     }
 
-    public function new(language : Language, type:LobbyType, ?passwordHash:String, slot:Int=15, round:Int=3, playTimeOut:Int=600, voteTimeOut:Int=30) {
+    public function new(language : Lang, type:LobbyType, ?passwordHash:String, slot:Int=15, round:Int=3, playTimeOut:Int=600, voteTimeOut:Int=30) {
         if (lobbyList.length >= lobbyLimit) {
             throw "Lobby limit has been reached!";
         } else if (getPrivateLobbyLength() >= privateLimit) {
@@ -164,9 +164,10 @@ class Lobby {
     /**
      * create a socket io namespace for the lobby and assign data handler to each channel
      */
-    public function initNamespace() {
+    public function initNamespace(?name:String) {
+        if (name == null) name = encodeID(id);
         log("init a socket io namespace for the lobby", Info);
-        io = IO.server.of('/'+encodeID(id));//the name of the lobby is his id encoded in Base64
+        io = IO.server.of('/'+name);//the name of the lobby is his id encoded in Base64
         /** 
         * middleware that accept connection only from client that provide a correct player uuid from playerList of the lobby
         * if the provided uuid is valid assign the socket to the player
@@ -292,7 +293,7 @@ class Lobby {
         var requestPath = untyped __js__(" encodeURI('/w/api.php?action=query&utf8=1&prop=links&format=json&redirects=1&formatversion=2&titles=')") + wikiTitleFormat(untyped __js__("encodeURIComponent(decodeURIComponent(player.currentPage))")) + untyped __js__(" encodeURI('&pltitles=')") + wikiTitleFormat(untyped __js__("encodeURIComponent(decodeURIComponent(url))"));
         log(player.pseudo + " validation --> " + requestPath, PlayerData);
         var options:HttpsRequestOptions =  {
-            hostname: LanguageTools.getURL(language),
+            hostname: LangTools.getURL(language),
             path: requestPath,
             method: 'POST',
             headers: {
@@ -404,7 +405,7 @@ class Lobby {
                 var promise = new Promise<Bool>(
                     function (resolve, reject) {
                         var options:HttpsRequestOptions =  {
-                            hostname: LanguageTools.getURL(language),
+                            hostname: LangTools.getURL(language),
                             path: "/w/api.php?action=query&list=search&srlimit=1&srnamespace=0&srsearch=intitle:" + title + "&format=json&srprop="
                         };
                         var request = Https.request(options, function (response) {
@@ -551,7 +552,7 @@ class Lobby {
      */
     public function getRandomURL(urlList:Array<String>, resolve:(value:Bool) -> Void, reject:(reason:Dynamic) -> Void) {
         var options:HttpsRequestOptions =  {
-            hostname: LanguageTools.getURL(language),
+            hostname: LangTools.getURL(language),
             path: "/w/api.php?action=query&format=json&list=random&rnnamespace=0&rnlimit=1"
         };
         var request = Https.request(options, function (response) {

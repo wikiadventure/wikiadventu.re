@@ -2,7 +2,7 @@ package config;
 
 //TODO add your language
 
-enum abstract Language(String) from String to String {
+enum abstract Lang(String) from String to String {
     var en;//english
     var fr;//french
     var de;//german
@@ -12,9 +12,9 @@ enum abstract Language(String) from String to String {
     var pt;//portugues
   }
 
-class LanguageTools {
+class LangTools {
 
-    public static function getName(language:Language):String {
+    public static function getName(language:Lang):String {
         return switch language {
             case en: "English";
             case fr: "Français";
@@ -26,7 +26,7 @@ class LanguageTools {
         }
     }
 
-    public static function getVotePlaceholder(language:Language):String {
+    public static function getVotePlaceholder(language:Lang):String {
         return switch language {
             case en: "Send your wiki page title suggestion";
             case fr: "Envoyez votre suggestion de titre de page wiki";
@@ -38,7 +38,7 @@ class LanguageTools {
         }
     }
 
-    public static function getVotePlaceholderSubmitted(language:Language):String {
+    public static function getVotePlaceholderSubmitted(language:Lang):String {
         return switch language {
             case en: "Your suggestion will override the previous one";
             case fr: "Votre suggestion remplacera la précédente";
@@ -50,7 +50,7 @@ class LanguageTools {
         }
     }
 
-    public static function getChatPlaceholder(language:Language):String {
+    public static function getChatPlaceholder(language:Lang):String {
         return switch language {
             case en: "Send a message to the lobby";
             case fr: "Envoyez un message au lobby";
@@ -61,7 +61,7 @@ class LanguageTools {
             case pt: "Send a message to the lobby";
         }
     }
-    public static function getSocketError(language:Language):String {
+    public static function getSocketError(language:Lang):String {
         return switch language {
             case en: "Real-time connection encountered a problem";
             case fr: "La connection temps réel a rencontré un problème";
@@ -73,7 +73,7 @@ class LanguageTools {
         }
     }
 
-    public static function getExitWarning(language:Language):String {
+    public static function getExitWarning(language:Lang):String {
         return switch language {
             case en: "Are you sure you want to exit? You will lose your session.";
             case fr: "Êtes-vous sûr de vouloir quitter? Vous perdrez votre session.";
@@ -84,7 +84,7 @@ class LanguageTools {
             case pt: "Are you sure you want to exit? You will lose your session.";
         }
     }
-    public static function getVote(language:Language):String {
+    public static function getVote(language:Lang):String {
         return switch language {
             case en: "Your vote";
             case fr: "votre vote";
@@ -96,7 +96,7 @@ class LanguageTools {
         }
     }
 
-    public static function getStartPage(language:Language):String {
+    public static function getStartPage(language:Lang):String {
         return switch language {
             case en: "Start page";
             case fr: "Page de début";
@@ -108,7 +108,7 @@ class LanguageTools {
         }
     }
 
-    public static function getEndPage(language:Language):String {
+    public static function getEndPage(language:Lang):String {
         return switch language {
             case en: "End page";
             case fr: "Page de fin";
@@ -120,11 +120,11 @@ class LanguageTools {
         }
     }
 
-    public static function getURL(language:Language):String {
+    public static function getURL(language:Lang):String {
         return language + ".wikipedia.org";
     }
 
-    public static function getApiURL(language:Language):String {
+    public static function getApiURL(language:Lang):String {
         return language + ".wikipedia.org/api/rest_v1/page/html/";
     }
 

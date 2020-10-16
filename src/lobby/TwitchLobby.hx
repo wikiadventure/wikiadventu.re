@@ -1,11 +1,12 @@
 package lobby;
 
+import lobby.Lobby.LogType;
 import haxe.Timer;
 import twitch.HelixPrivilegedUser;
 import twitch.HelixUser;
 import twitch_chat_client.PrivateMessage;
 import config.twitch.TwitchCredential;
-import config.Language;
+import config.Lang;
 import lobby.Lobby.LobbyType;
 import twitch_chat_client.ChatClient;
 import lobby.player.TwitchPlayer;
@@ -22,13 +23,11 @@ class TwitchLobby extends Lobby {
     public var twitchBot:ChatClient;
 
 
-    public function new(player:TwitchPlayer, ?passwordHash:String, slot:Int=15, round:Int=3, playTimeOut:Int=600, voteTimeOut:Int=30) {
+    public function new(player:TwitchPlayer, passwordHash:String, slot:Int=15, round:Int=3, playTimeOut:Int=600, voteTimeOut:Int=30) {
         super(player.language, Twitch, passwordHash, slot, round, playTimeOut, voteTimeOut);
         twitchPlayerList = new Array<TwitchPlayer>();
         suggestionList = new Array<String>();
         name = player.twitchUser.name;
-        join(player);
-
     }
 
     public static function init() {
@@ -45,6 +44,9 @@ class TwitchLobby extends Lobby {
         }
         lobbyList.insert(pos,this);
         log("create the lobby", Info);
+    }
+    public override function initNamespace(?name:String) {
+        super.initNamespace(this.name);
     }
 
     public override function playPhaseEnd() {
@@ -67,8 +69,10 @@ class TwitchLobby extends Lobby {
         },currentStateTimeOut()*1000);
     }
 
-    public function join(twitchPlayer:TwitchPlayer) {
+    public function join(twitchPlayer:TwitchPlayer, passwordHash:String) {
+        if (this.passwordHash != passwordHash) throw "invalid Password";
         twitchPlayer.twitchLobby = this;
+        addPlayer(twitchPlayer);
     }
 
     public static function find(channelName:String):TwitchLobby {
@@ -79,6 +83,13 @@ class TwitchLobby extends Lobby {
         throw "no lobby with channelName " + channelName + " found";
     }
 
-
+    public override function log( data : Dynamic, logType:LogType, ?pos : haxe.PosInfos ) {
+        var time = "[" + Date.now().toString() + "]";
+		pos.fileName = time + "twitch lobby " + name + " " + logType + " -> " + pos.fileName;
+        haxe.Log.trace(data, pos);
+        var fileName = "twitchLobby/" + name + "/" + logType + ".log";
+        var content = haxe.Log.formatOutput(data, pos);
+        fileLog.Log.inFile(fileName, content);
+	}
 
 }

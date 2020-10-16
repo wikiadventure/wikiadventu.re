@@ -1,6 +1,6 @@
 package lobby;
 
-import config.Language.LanguageTools;
+import config.Lang.LangTools;
 import js.html.XMLHttpRequest;
 import lobby.player.Player;
 import js.lib.RegExp;
@@ -38,19 +38,19 @@ class GamePage {
                         case "${lobbyLang}":
                             return lobby.language;
                         case "${votePlaceholder}":
-                            return LanguageTools.getVotePlaceholder(lobby.language);
+                            return LangTools.getVotePlaceholder(lobby.language);
                         case "${votePlaceholderSubmitted}":
-                            return LanguageTools.getVotePlaceholderSubmitted(lobby.language);
+                            return LangTools.getVotePlaceholderSubmitted(lobby.language);
                         case "${chatPlaceholder}":
-                            return LanguageTools.getChatPlaceholder(lobby.language);
+                            return LangTools.getChatPlaceholder(lobby.language);
                         case "${startPage}":
-                            return LanguageTools.getStartPage(lobby.language);
+                            return LangTools.getStartPage(lobby.language);
                         case "${endPage}":
-                            return LanguageTools.getEndPage(lobby.language);
+                            return LangTools.getEndPage(lobby.language);
                         case "${socketError}":
-                            return LanguageTools.getSocketError(lobby.language);
+                            return LangTools.getSocketError(lobby.language);
                         case "${exitWarning}":
-                            return LanguageTools.getExitWarning(lobby.language);
+                            return LangTools.getExitWarning(lobby.language);
                         default:
                             return '';
                     };

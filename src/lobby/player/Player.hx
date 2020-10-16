@@ -1,22 +1,22 @@
 package lobby.player;
 
-import config.Language;
+import config.Lang;
 import js.node.socketio.Socket;
 import config.randomName.EnglishNameGenerator;
-import js.npm.Uuid;
+import uuid.Uuid;
 
 class Player {
     public var socket:Socket;
     public var pseudo:String;
     public var uuid:String;//for authentification
-    public var language:Language;
+    public var language:Lang;
     public var score:Int=0;
     public var numberOfJump:Int=0;
     public var currentPage:String;
     public var votingSuggestion:String;
     public var id:Int;//for client identification
 
-    public function new(pseudo:String, language:Language) {
+    public function new(pseudo:String, language:Lang) {
         this.language = language;
         var dangerRegex : EReg =  ~/[<>:|%$\/\\]/g;
         if ( pseudo == null || pseudo == "") {
@@ -39,7 +39,7 @@ class Player {
     }
 
     //suggest your own language random name generator
-    public static function randomNameGenerator(l:Language):String {
+    public static function randomNameGenerator(l:Lang):String {
         switch l {
             case en: return EnglishNameGenerator.getInstance().getRandomName();
             case fr: return "anonymous";

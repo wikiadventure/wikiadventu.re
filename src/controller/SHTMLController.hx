@@ -1,7 +1,7 @@
 package controller;
 
-import config.Language;
-import config.Language.LanguageTools;
+import config.Lang;
+import config.Lang.LangTools;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import haxe.http.HttpStatus;
@@ -11,7 +11,7 @@ class SHTMLController {
 
     var im : IncomingMessage;
 	var sr : ServerResponse;
-	var lang : Language;
+	var lang : Lang;
     
     public function new(im : IncomingMessage, sr : ServerResponse) {
 		this.im = im;
@@ -37,21 +37,21 @@ class SHTMLController {
 						var match = r.matched(0);
 						switch (match) {
 							case "${vote}":
-								return LanguageTools.getVote(lang);
+								return LangTools.getVote(lang);
 							case "${votePlaceholder}":
-								return LanguageTools.getVotePlaceholder(lang);
+								return LangTools.getVotePlaceholder(lang);
 							case "${votePlaceholderSubmitted}":
-								return LanguageTools.getVotePlaceholderSubmitted(lang);
+								return LangTools.getVotePlaceholderSubmitted(lang);
 							case "${chatPlaceholder}":
-								return LanguageTools.getChatPlaceholder(lang);
+								return LangTools.getChatPlaceholder(lang);
 							case "${startPage}":
-								return LanguageTools.getStartPage(lang);
+								return LangTools.getStartPage(lang);
 							case "${endPage}":
-								return LanguageTools.getEndPage(lang);
+								return LangTools.getEndPage(lang);
 							case "${socketError}":
-								return LanguageTools.getSocketError(lang);
+								return LangTools.getSocketError(lang);
 							case "${exitWarning}":
-								return LanguageTools.getExitWarning(lang);
+								return LangTools.getExitWarning(lang);
 							default:
 								return '';
 						};

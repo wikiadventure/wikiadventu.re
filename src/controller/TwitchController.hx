@@ -1,33 +1,32 @@
 package controller;
 
-import js.Syntax;
-import twitch.AuthProvider;
+import haxe.crypto.Sha256;
+import lobby.LoginType;
+import haxe.Timer;
 import lobby.player.TwitchPlayer;
-import config.Language;
+import config.Lang;
 import twitch.HelixPrivilegedUser;
 import js.lib.Promise;
-import twitch.HelixUser;
 import twitch.StaticAuthProvider;
 import twitch.ApiClient;
-import twitch_auth.lib.Helpers;
 import twitch.AccessToken;
 import config.twitch.TwitchCredential;
-import haxe.Json;
-import js.node.Https;
 import lobby.TwitchLobby;
-import lobby.player.Player;
 import error.ErrorPage;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import haxe.http.HttpStatus;
 import js.node.Querystring;
 import lobby.GamePage;
+import uuid.Uuid;
+import tink.Json;
 
 class TwitchController {
     
     var im : IncomingMessage;
     var sr : ServerResponse;
     var body : String;
+    var form : TwitchConnectRequest;
     var authProvider : StaticAuthProvider;
     
     public function new(im : IncomingMessage, sr : ServerResponse, body : String) {
@@ -35,44 +34,63 @@ class TwitchController {
         this.sr = sr;
         this.body = body;
         if (im.method == Get) {
-            try {
-                var idx = im.url.indexOf("?", 1);
-                var data = Querystring.parse(im.url.substring(idx+1));
-                var code = data['code'];
-                if (code == null) throw "invalid twitch access, please retry!";
-                this.sr.setHeader('Connection', 'keep-alive');
-                this.sr.setHeader('Content-Type', 'text/html; charset=utf-8');
-                this.sr.setHeader('Transfer-Encoding', '');
-                this.sr.writeProcessing();
-                this.sr.flushHeaders();
-                getAccessToken(code)
-                .then(getTwitchUser)
-                .then(function(user:HelixPrivilegedUser) {
-                    var language:Language;
-                    try {
-                        language = cast(data['language'], String);
-                        if(language==null) throw "";
-                    } catch (e:Dynamic) {
-                        language = en;
-                    }
-                    var player:TwitchPlayer;
-                    try {
-                        player = new TwitchPlayer(user, authProvider, language);
-                    } catch (e:Dynamic) {
-                        new ErrorPage(im, sr, body, e,400);
-                        return;
-                    }
-                    privateTwitchCreate(player);
-                }, function(reject) {
-                    throw "promise failed : " + reject;
-                    
-                });
-            } catch (e:Dynamic) {
-                trace(e);
-                new ErrorPage(im, sr, body, e, MethodNotAllowed);
-                return;
-            }
+            onTwitchRedirect();
+            return;
         }
+        if (im.method == Post) {
+            connect();
+        }
+        
+    }
+
+    public function onTwitchRedirect() {
+        var uuid:String;
+        var code:String;
+        try {
+            var idx = im.url.indexOf("?", 1);
+            var data = Querystring.parse(im.url.substring(idx+1));
+            uuid = data['state'];
+            if ( !( Uuid.validate(uuid) && Uuid.version(uuid) == 4 ) ) throw "Invalid uuid please provide a valid version 4 uuid in the redirectUrl state of twitch login";
+            code = data['code'];
+            if (code == null) throw "invalid twitch access, please retry!";
+            sr.setHeader('Content-Type', 'text/html; charset=utf-8');
+            sr.write("
+                <!DOCTYPE html>
+                <html>
+                    <head>
+                        <title>WikiAdventure Twitch login redirection</title>
+                    </head>
+                    <body>
+                    <script type='text/javascript'>setTimeout(function(){ window.close(); }, 500);</script>
+                    </body>
+                </html>
+            ");
+            sr.end();
+        } catch (e:Dynamic) {
+            trace(e);
+            new ErrorPage(im, sr, body, e, PreconditionFailed);
+            return;
+        }
+        proceedTwitchLogin(uuid, code);
+            
+    }
+
+    public function proceedTwitchLogin(uuid:String, code:String) {
+        var loginStatus:TwitchLogin = new TwitchLogin(uuid);
+        TwitchCredential.loginStatusList.push(loginStatus);
+        Timer.delay(function () {
+            TwitchCredential.loginStatusList.remove(loginStatus);
+        },30000); // remove the access if it's not retrieve in 30sec
+        getAccessToken(code)
+        .then(getTwitchUser)
+        .then(function(user:HelixPrivilegedUser) {
+            loginStatus.user = user;
+            loginStatus.authProvider = authProvider;
+            loginStatus.status = Success;
+        }, function(reject) {
+            loginStatus.error = "promise failed : " + reject;
+            loginStatus.status = Error;
+        });
     }
 
     public function getAccessToken(code:String):Promise<AccessToken> {
@@ -85,42 +103,89 @@ class TwitchController {
         trace("get Twitch user");
         authProvider = new StaticAuthProvider(TwitchCredential.clientID, token);
         var apiClient = new ApiClient({authProvider: authProvider});
-        return apiClient.helix.users.getMe();
-        
+        return apiClient.helix.users.getMe();  
     }
 
-    public function privateTwitchCreate(player:TwitchPlayer, ?password:String) {
-        trace("create the twitch lobby");
+    public function connect() {
         try {
-            var lobby = new TwitchLobby(player, password);
-            lobby.giveID();// giveID method also add the lobby to the lobbylist
-            lobby.initNamespace();
-            lobby.connect(player, password);
-            lobby.votePhase();
-            new GamePage(im, sr, lobby, player);
+            form = Json.parse(body);
+            if ( !( form.type == TwitchCreate || (form.type == TwitchJoinWith && form.lobby != null) ) ) throw "To connect with twitch use login type of TwitchCreate, or TwitchJoinWith with the lobby name";
+            if (form.uuid == null) throw "The JSON provided does not have a uuid field";
+            var loginStatus = searchLoginStatus(form.uuid);
+            if (loginStatus.status == Pending) {
+                sr.writeProcessing();
+                loginStatus.onStatusChange = function(status:TwitchLoginStatus) {
+                    respond(loginStatus, status);
+                    loginStatus.onStatusChange = null;
+                };
+                return;
+            }
+            respond(loginStatus);
         } catch (e:Dynamic) {
-            new ErrorPage(im, sr, body, "internal error : "+e,400);
+            trace(e);
+            new ErrorPage(im, sr, body, "error", BadRequest);
+            return;
         }
     }
 
+    public function respond(loginStatus:TwitchLogin, ?status:TwitchLoginStatus) {
+        if (status == null) status = loginStatus.status;
+        if (status == Error) {
+            new ErrorPage(im, sr, body, loginStatus.error, BadRequest);
+            return;
+        }
+        var player = new TwitchPlayer(loginStatus.user, loginStatus.authProvider, form.lang);
+        var passwordHash = Sha256.encode(form.password);
+        var lobby:TwitchLobby;
+        try {
+            if (form.type == TwitchCreate) {
+                lobby = twitchCreate(player, passwordHash);
+            } else {
+                lobby = TwitchLobby.find(form.lobby);
+                lobby.join(player,passwordHash);    
+            }
+        } catch(e:Dynamic) {
+            new ErrorPage(im, sr, body, e,BadRequest);
+            return;
+        }
+        var res:ConnectionResponse = {
+            status: Success,
+            lobbyID: lobby.name,
+            playerID: player.uuid,
+            lang: lobby.language
+        };
+        sr.setHeader('Content-Type', 'application/json');
+        sr.writeHead(200);
+        sr.write(Json.stringify(res));
+        sr.end();
 
+    }
+
+    public function searchLoginStatus(uuid:String):TwitchLogin {
+        for (l in TwitchCredential.loginStatusList) {
+            if (l.uuid == uuid) {
+                return l;
+            }
+        }
+        throw "The uuid provided is not registered or has time out after 30 sec of inactivity";
+    }
+
+    public function twitchCreate(player:TwitchPlayer, passwordHash:String):TwitchLobby {
+        trace("create the twitch lobby");
+        var lobby = new TwitchLobby(player, passwordHash);
+        lobby.giveID();// giveID method also add the lobby to the lobbylist
+        lobby.initNamespace();
+        lobby.join(player, passwordHash);
+        lobby.votePhase();
+        return lobby;
+    }
 }
 
-typedef TwitchAccessTokenResponse = {
-    var access_token:String;
-    var refresh_token:String;
-}
-typedef TwitchUsersResponse = {
-    var data:Array<TwitchUser>;
-}
-typedef TwitchUser = {
-    var id:String;
-    var login:String;
-    var display_name:String;
-    var type:String;
-    var broadcaster_type:String;
-    var profile_image_url:String;
-    var offline_image_url:String;
-    var view_count:Int;
-
+typedef TwitchConnectRequest = {
+    type:LoginType,
+    lang:Lang,
+    pseudo:String,
+    password:String,
+    uuid:String,
+    ?lobby:String
 }

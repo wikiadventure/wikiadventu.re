@@ -4,7 +4,7 @@ import lobby.DirectPublicJoinPage;
 import lobby.DirectPrivateJoinPage;
 import lobby.Lobby;
 import lobby.player.Player;
-import config.Language;
+import config.Lang;
 import error.ErrorPage;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;

@@ -4,7 +4,7 @@ import lobby.TwitchLobby;
 import lobby.ConnectionPage;
 import lobby.Lobby;
 import lobby.player.Player;
-import config.Language;
+import config.Lang;
 import error.ErrorPage;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
@@ -39,7 +39,7 @@ class ConnectController {
             return;
         }
 
-        var language:Language;
+        var language:Lang;
         try {
             language = cast(data['language'], String);
             if(language==null) throw "";
