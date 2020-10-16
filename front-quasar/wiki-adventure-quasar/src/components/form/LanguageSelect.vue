@@ -1,10 +1,11 @@
 <template>
-  <q-select color="grey-10" 
+  <q-select
     @input="onSelect($event)" name="lang" outlined hint=""
     v-model="model" :options="options" label="select a language" 
     :value="gameLang" :display-value="gameLangLabel"
     v-bind="$attrs" v-on="$listeners"
-  ></q-select>
+  >
+  </q-select>
 </template>
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';

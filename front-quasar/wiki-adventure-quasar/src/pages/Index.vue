@@ -2,12 +2,12 @@
   <div>
     <splash-head>
       <div class="row justify-center">
-        <s-btn to="#News">News</s-btn>
-        <s-btn to="#HowToPlay">How to play</s-btn>
-        <s-btn to="#Contribution">Contribution</s-btn>
+        <s-btn @click="scrollToID('News')">News</s-btn>
+        <s-btn @click="scrollToID('HowToPlay')">How to play</s-btn>
+        <s-btn @click="scrollToID('Contribution')">Contribution</s-btn>
       </div>
       <div class="q-mt-md">
-        <s-btn class="neon-btn">Play</s-btn>
+        <s-btn to="/connect" class="neon-btn">Play</s-btn>
       </div>
     </splash-head>
     <content-wrapper>
@@ -70,14 +70,14 @@
 
   .github {
     background: #000;
-    color: var(--q-color-blue-white);
+    color: var(--w-color-blue-white);
   }
   .discord {
     background: #7289DA;
-    color: var(--q-color-blue-white);
+    color: var(--w-color-blue-white);
   }
   .nano {
-    background: var(--q-color-blue-white);
+    background: var(--w-color-blue-white);
     color: #4a90e2;
   }
   .github, .discord, .nano {
@@ -102,6 +102,7 @@ import SBtn from "components/SplashButton.vue";
 import ContentWrapper from 'components/ContentWrapper.vue';
 import ContentPannel from 'components/ContentPannel.vue';
 
+import scrollToID from '../mixins/scrollToID';
 
 import { defineComponent } from '@vue/composition-api';
 
@@ -111,6 +112,9 @@ export default defineComponent({
   methods: {
     openNewPage: function (url: string) {
       openURL(url);
+    },
+    scrollToID(id:string) {
+      scrollToID(id);
     }
   }
 });

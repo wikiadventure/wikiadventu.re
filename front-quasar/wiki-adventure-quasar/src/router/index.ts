@@ -13,7 +13,7 @@ import { Dark } from 'quasar';
 
 export default route<Store<StateInterface>>(function ({ Vue }) {
   Vue.use(VueRouter);
-  //Dark.set(true);
+  Dark.set(true);
   const Router = new VueRouter({
     scrollBehavior: () => ({ x: 0, y: 0 }),
     routes,

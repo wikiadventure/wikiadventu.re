@@ -5,6 +5,7 @@ bin/App.js.map
 bin/node_modules
 #ignore log folder;
 bin/log
+bin/front
 bin/config/twitch
 #ignore folder dedicated to local testing
 localTesting

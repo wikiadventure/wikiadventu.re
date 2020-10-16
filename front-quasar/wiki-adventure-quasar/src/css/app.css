@@ -1,12 +1,16 @@
 /* app global css */
 :root {
-    --q-color-almost-black: #222;
-    --q-color-blue-white: #e8ffff;
-    --q-color-dark-blue: #0e1316;
-    --q-color-dark-teal: #29a19c;
-    --q-color-teal: #5fc4bf;
-    --q-color-light-teal: #84d2ce;
+    --w-color-almost-black: #222;
+    --w-color-blue-white: #e8ffff;
+    --w-color-dark-blue: #0e1316;
+    --w-color-dark-teal: #29a19c;
+    --w-color-teal: #5fc4bf;
+    --w-color-light-teal: #84d2ce;
+    scroll-behavior: smooth;
 }
-.body--dark .bg-main {
-    background: var(--q-color-almost-black);
-}
+  
+@media (prefers-reduced-motion: reduce) {
+    :root {
+      scroll-behavior: auto;
+    }
+} 

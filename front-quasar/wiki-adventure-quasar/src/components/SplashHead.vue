@@ -22,11 +22,11 @@
     position: fixed !important;
 }
     .body--dark .splash-container {
-        background: var(--q-color-dark-blue);
+        background: var(--w-color-dark-blue);
 
     }
     .body--light .splash-container {
-        background: var(--q-color-blue-white);
+        background: var(--wiki-color-blue-white);
     }
 .splash-head {
     font-size: 20px;
