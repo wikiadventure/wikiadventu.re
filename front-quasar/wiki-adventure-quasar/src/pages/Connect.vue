@@ -67,7 +67,7 @@
         <q-form>
         <div class="row">
           <div class="col">
-              <lang-select class="q-ma-sm" input-class="lang-input" popup-content-class="odd-select-popup"/>
+              <lang-select class="q-ma-sm" popup-content-class="odd-select-popup"/>
               <pseudo-input class="q-ma-sm"/>
               <password-input class="q-ma-sm"/>
           </div>
@@ -154,10 +154,6 @@
 .body--dark .even-select-popup {
   background: var(--w-color-almost-black);
 }
-.lang-input {
-  color:aqua;
-  border-color: aqua;
-}
 
 .body--dark .even-select-popup .q-item--dark {
   color: var(--w-color-dark-teal);
@@ -209,7 +205,6 @@ export default defineComponent({
         var twitch = window.open("https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=qjfynifqiehclsandzhh3hvhaacqaa&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Ftwitch&state=" + query.uuid + "&scope=chat%3Aread+chat%3Aedit");
         var loop = setInterval(function() { if (twitch && twitch.closed) {
           clearInterval(loop);
-          //setTimeout(function () {
           console.log("twitch pop up login closed, proceed to fetch the session uuid");
           /* connect to the server send the login query
           and the uid to prove that you are auth
@@ -222,16 +217,17 @@ export default defineComponent({
             },
             body: JSON.stringify(query)
           };
-          fetch('/twitch', options).then(function(response){return response.text();})
-            .then(function(response) {
+          fetch('/twitch', options)
+            .then(function(response:Response):Promise<ConnectionResponse> {
+              return response.json();
+            }).then(function(response) {
               console.log(response);
             }).catch(function(error) {
-            console.log('Fetch error during form submition : ' + error.message);
+              console.log('Fetch error during form submition : ' + error.message);
           });
-          //}, 5000);
-        }}, 1000);// the duration in ms between each call of loop
+        }}, 500);// the duration in ms between each call of loop
       } else {
-        var myInit = {
+        var options = {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -239,6 +235,14 @@ export default defineComponent({
           },
           body: JSON.stringify(query)
         };
+        fetch('/connect', options)
+          .then(function(response:Response):Promise<ConnectionResponse> {
+            return response.json();
+          }).then(function(response) {
+            console.log(response);
+          }).catch(function(error) {
+            console.log('Fetch error during form submition : ' + error.message);
+        });
       }
     },
     scrollToID(id:string) {
@@ -253,5 +257,18 @@ interface loginQuery {
   password?:string;
   uuid?:string;
 }
+interface ConnectionResponse {
+    status:ConnectionStatus,
+    lobbyID:String,
+    playerID:String,
+    lang:Lang,
+    error?:String
+}
+enum ConnectionStatus {
+    Success = 'Success',
+    ClientError = 'ClientError',
+    ServerError = 'ServerError'
+}
+
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-    <q-btn class="submit-button" v-bind="$attrs" v-on="$listeners"/>
+    <q-btn class="submit-button shadow-12" v-bind="$attrs" v-on="$listeners"/>
 </template>
 <style>
 .submit-button {

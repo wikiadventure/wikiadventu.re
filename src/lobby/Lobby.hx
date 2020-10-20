@@ -6,11 +6,11 @@ import js.lib.Promise;
 import js.node.Https;
 import async.IO;
 import js.node.socketio.Server.Namespace;
-import js.node.socketio.Socket;
 import haxe.io.Bytes;
 import lobby.player.Player;
 import config.Lang;
 import haxe.crypto.Base64;
+using lobby.player.Player;
 
 class Lobby {
     
@@ -29,8 +29,10 @@ class Lobby {
     public var passwordHash:String;
     public var language:Lang;
     public var playerList:Array<Player>;
+    
     public var round:Int;
     public var currentRound:Int;
+
     public var playTimeOut:Int; //time in second before a round end automatically
     public var voteTimeOut:Int; //time of the Voting state
     public var roundFinishTimeOut:Int = 0; //time between the end of the play state and the begin of the vote state
@@ -143,15 +145,6 @@ class Lobby {
         Lobby.lobbyList.remove(this);
     }
 
-    public function getPlayerFromSocket(socket:Socket):Player {
-        for (p in playerList) {
-            if (p.socket == socket) {
-                return p;
-            }
-        }
-        return null;
-    }
-
     public function getPlayerFromUUID(uuid:String):Player {
         for (p in playerList) {
             if (p.uuid == uuid) {
@@ -160,68 +153,77 @@ class Lobby {
         }
         return null;
     }
+    public function onWsAuth(ws:Ws, uuid:String) {
+        var player = getPlayerFromUUID(uuid);
+        if ( player != null ) {
+            if (player.assignSocket(ws) ) {
+                player.id = totalPlayer;
+                totalPlayer++;
+                return onPlayerConnection(player);
+            }
+            return ws.close(1008, 'Connection rejected because there already a client connected with this playerID');
+        }
+        return ws.close(1008, 'Connection rejected because playerID is not registered in the lobby');
+    }
+
+    public function onPlayerConnection(player:Player) {
+        playerList.emitMessage(player.pseudo + " join the lobby!");
+        playerList.emitPlayerJoin(player);
+        sendCurrentState(player);
+        player.socket.on('message', function (data:String) {
+            websocketHandler(player, data);
+        });
+        player.socket.on('disconnect', function (data) {
+            websocketDisconnect(player);
+        });
+    }
+
+    public function websocketHandler(player:Player, data:String) {
+        try {
+            var json:WebsocketPackage = tink.Json.parse(data);
+            switch json.type {
+                case Message:
+                    playerList.emitMessage(player, sanitizeMessage(json.value));
+                case Validate:
+                    validateJump(player, json.value);
+                case Vote:
+                    vote(player, json.value);
+            }
+        } catch(e:Dynamic) {
+            trace(e);
+        }
+    }
+
+    public function sanitizeMessage(message:String) {
+        return message;
+    }
+
+    public function websocketDisconnect(player:Player) {
+        removePlayer(player);
+        playerList.emitPlayerLeft(player);
+        playerList.emitMessage(player.pseudo + " has left the lobby!");
+    }
 
     /**
      * create a socket io namespace for the lobby and assign data handler to each channel
      */
     public function initNamespace(?name:String) {
-        if (name == null) name = encodeID(id);
-        log("init a socket io namespace for the lobby", Info);
-        io = IO.server.of('/'+name);//the name of the lobby is his id encoded in Base64
-        /** 
-        * middleware that accept connection only from client that provide a correct player uuid from playerList of the lobby
-        * if the provided uuid is valid assign the socket to the player
-        */
-        io.use(function (socket, next) {
-            var player = getPlayerFromUUID(untyped __js__("socket.handshake.query.playerID"));
-            if ( player != null ) {
-                if (player.assignSocket(socket) ) {
-                    player.id = totalPlayer;
-                    totalPlayer++;
-                    return untyped __js__("next()");
-                }
-                return untyped __js__("next(new Error('Connection rejected because there already a client connected with this playerID'))");
-            }
-            return untyped __js__("next(new Error('Connection rejected because playerID is not registered in the lobby'))");
-            
-        });
-        io.on('connection', function(socket:Socket, request) {
-            var player = getPlayerFromSocket(socket);
-            if (player == null) return;
-            io.emit('message', player.pseudo + " join the lobby!");
-            sendCurrentState(player);
-            io.emit('newPlayer', player.id + ":" + player.pseudo + ":" + player.score);
-            socket.on('message', function (data) {
-                var player = getPlayerFromSocket(socket);
-                if (player == null) return;
-                io.emit('message', player.pseudo + " : " + data);
-            });
-            socket.on('disconnect', function (data) {
-                var player = getPlayerFromSocket(socket);
-                if (player == null) return;
-                io.emit('playerLeft', player.id);
-                io.emit('message', player.pseudo + " has left the lobby!");
-                removePlayer(player);
-            });
-            socket.on('vote', function (data) {
-                vote(socket, data);
-            });
-            socket.on('validateJump', function (data) {
-                validateJump(socket, data);
-            });
-        });
+       
     }
+
 
     public function sendCurrentState(player:Player) {
         var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
         if (state == Playing) {
             player.currentPage = startPage;
-            player.socket.emit('voteResult', startPage + '?' + endPage);
+            [player].emitVoteResult(startPage, endPage);
         }
-        for (otherPlayer in playerList) {
-            player.socket.emit('newPlayer', otherPlayer.id + ":" + otherPlayer.pseudo + ":" + otherPlayer.score);
+        for (p in playerList) {
+            if (p!=player) {
+                [player].emitPlayerJoin(p);
+            }
         }
-        player.socket.emit('gameState', state +"|" + currentRound + "|" + timeLeft);
+        [player].emitGameState(state, currentRound, timeLeft);
     }
 
     /**
@@ -285,10 +287,7 @@ class Lobby {
      * @param socket from which the data come from
      * @param url 
      */
-    public function validateJump(socket:Socket, url:String) {
-        trace(url);
-        var player = getPlayerFromSocket(socket);
-        if (player == null) return;
+    public function validateJump(player:Player, url:String) {
         if (wikiTitleFormat(player.currentPage) == wikiTitleFormat(url)) return;
         var requestPath = untyped __js__(" encodeURI('/w/api.php?action=query&utf8=1&prop=links&format=json&redirects=1&formatversion=2&titles=')") + wikiTitleFormat(untyped __js__("encodeURIComponent(decodeURIComponent(player.currentPage))")) + untyped __js__(" encodeURI('&pltitles=')") + wikiTitleFormat(untyped __js__("encodeURIComponent(decodeURIComponent(url))"));
         log(player.pseudo + " validation --> " + requestPath, PlayerData);
@@ -318,8 +317,8 @@ class Lobby {
                         log(body, PlayerData);
                         log(player.pseudo + " is cheating!", PlayerData);
                         log(player.currentPage + " --> " + url, PlayerData);
-                        io.emit('message', "it seems that " + player.pseudo + " is cheating! (or the anticheat system is broken)");
-                        io.emit('message', player.pseudo + "jump from " + player.currentPage + " to " + StringTools.urlDecode(url));
+                        playerList.emitMessage("it seems that " + player.pseudo + " is cheating! (or the anticheat system is broken)");
+                        playerList.emitMessage(player.pseudo + "jump from " + player.currentPage + " to " + StringTools.urlDecode(url));
                     } else {
                         player.numberOfJump +=1;
                         player.currentPage = url;
@@ -330,9 +329,8 @@ class Lobby {
                             player.score += 500 + Std.int(timeLeft);
                             log("updateScore --> " +  player.id + "(" + player.pseudo + ") :" + player.score, PlayerData);
                             log("WinRound --> " +  player.id + "(" + player.pseudo + ")", PlayerData);
-                            io.emit('updateScore', player.id + ":" + player.score);
-                            io.emit('winRound', player.pseudo);
-                            io.emit('message', player.pseudo + " win the round " + currentRound);
+                            playerList.emitUpdateScore(player);
+                            playerList.emitWinRound(player);
                             currentRound++;
                             votePhase();
                         }             
@@ -358,10 +356,9 @@ class Lobby {
      * @param socket from which the data come from
      * @param content the page title we receive
      */
-    public function vote(socket:Socket, content:String) {
-        var player = getPlayerFromSocket(socket);
+    public function vote(player:Player, content:String) {
         log("player vote : " + player.uuid + " --> " + player.pseudo + " | " + content, PlayerData);
-        if (player != null) player.votingSuggestion = content;
+        player.votingSuggestion = content;
     }
 
     /**
@@ -491,7 +488,7 @@ class Lobby {
         for (player in playerList) {
             player.currentPage = wikiTitleFormat(startPage);
         }
-        io.emit('voteResult', startPage + '?' + endPage);
+        playerList.emitVoteResult(startPage, endPage);
         state = Playing;
         initNewPhase();
         Timer.delay(function () {
@@ -540,7 +537,7 @@ class Lobby {
      */
     public function initNewPhase() {
         timeStampStateBegin = Timer.stamp();
-        io.emit('gameState', state +"|" + currentRound + "|" + currentStateTimeOut());
+        playerList.emitGameState(state, currentRound, currentStateTimeOut());
         log("New phase init : " + state +"|" + currentRound + "|" + currentStateTimeOut(), Info);
     }
 
@@ -648,6 +645,16 @@ class Lobby {
 
 }
 
+typedef WebsocketPackage = {
+    type:WebsocketPackageType,
+    value:String
+}
+enum abstract WebsocketPackageType(String) {
+    var Message;
+    var Vote;
+    var Validate;
+}
+
 enum abstract LogType(String) {
     var PlayerData;
     var Warning;
@@ -661,7 +668,7 @@ enum abstract LobbyType(Int) {
     var Twitch;
 }
 
-enum abstract LobbyState(String) from String to String {
+enum abstract LobbyState(String) {
     var Voting;
     var Playing;
     var RoundFinish;

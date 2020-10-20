@@ -1,10 +1,9 @@
-package controller;
+package controller.connect.twitch;
 
+import controller.connect.twitch.TwitchConnectionRequest;
 import haxe.crypto.Sha256;
-import lobby.LoginType;
 import haxe.Timer;
 import lobby.player.TwitchPlayer;
-import config.Lang;
 import twitch.HelixPrivilegedUser;
 import js.lib.Promise;
 import twitch.StaticAuthProvider;
@@ -17,7 +16,6 @@ import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import haxe.http.HttpStatus;
 import js.node.Querystring;
-import lobby.GamePage;
 import uuid.Uuid;
 import tink.Json;
 
@@ -36,11 +34,13 @@ class TwitchController {
         if (im.method == Get) {
             onTwitchRedirect();
             return;
-        }
+        } 
         if (im.method == Post) {
             connect();
+            return;
         }
-        
+        new ErrorPage(im, sr, body, "Invalid method. Method available: Get and Post",BadRequest);
+        return;
     }
 
     public function onTwitchRedirect() {
@@ -79,6 +79,8 @@ class TwitchController {
         var loginStatus:TwitchLogin = new TwitchLogin(uuid);
         TwitchCredential.loginStatusList.push(loginStatus);
         Timer.delay(function () {
+            loginStatus.error = "Cannot retrieve token after 30 sec";
+            loginStatus.status = Error;
             TwitchCredential.loginStatusList.remove(loginStatus);
         },30000); // remove the access if it's not retrieve in 30sec
         getAccessToken(code)
@@ -179,13 +181,4 @@ class TwitchController {
         lobby.votePhase();
         return lobby;
     }
-}
-
-typedef TwitchConnectRequest = {
-    type:LoginType,
-    lang:Lang,
-    pseudo:String,
-    password:String,
-    uuid:String,
-    ?lobby:String
 }

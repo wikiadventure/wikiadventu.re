@@ -1,12 +1,14 @@
 package lobby.player;
 
+import lobby.Lobby.LobbyState;
 import config.Lang;
-import js.node.socketio.Socket;
 import config.randomName.EnglishNameGenerator;
 import uuid.Uuid;
+import haxe.Json;
+using Lambda;
 
 class Player {
-    public var socket:Socket;
+    public var socket:Ws;
     public var pseudo:String;
     public var uuid:String;//for authentification
     public var language:Lang;
@@ -18,19 +20,16 @@ class Player {
 
     public function new(pseudo:String, language:Lang) {
         this.language = language;
+        this.uuid = Uuid.v4();
         var dangerRegex : EReg =  ~/[<>:|%$\/\\]/g;
-        if ( pseudo == null || pseudo == "") {
+        if ( pseudo == null || pseudo == "" || pseudo.length < 3 || pseudo.length > 26 || dangerRegex.match(pseudo) ) {
             this.pseudo = randomNameGenerator(this.language);
-        } else if ( pseudo.length < 6 || dangerRegex.match(pseudo) || pseudo.length > 26 ) {
-            throw "Invalid Pseudo, pseudo need to be at least 6 character, no more than 25 character and can't use any of this character < > : | % $ / \\";
         } else {
             this.pseudo = pseudo;
         }
-        this.uuid = Uuid.v4();
-
     }
 
-    public function assignSocket(socket:Socket):Bool {
+    public function assignSocket(socket:Ws):Bool {
         if (this.socket != null) {
             return false;
         }
@@ -51,4 +50,161 @@ class Player {
         }
     }
 
+    public static function emitPlayerJoin(playerList:Array<Player>, player:Player) {
+        var data:LobbyEvent<PlayerJoin> = {
+            type: PlayerJoin,
+            data: {
+                id: player.id,
+                pseudo: player.pseudo,
+                self: false,
+                score: player.score
+            }
+        }
+        var textData = Json.stringify(data);
+        for (p in playerList) {
+            if (p.socket != null) {
+                if (p != player) {
+                    p.socket.send(textData);
+                } else {
+                    data.data.self = true;
+                    var text = Json.stringify(data);
+                    p.socket.send(text);
+                }
+            }
+        }
+    }
+    public static function emitPlayerLeft(playerList:Array<Player>, player:Player) {
+        var data:LobbyEvent<PlayerLeft> = {
+            type: PlayerLeft,
+            data: {
+                id: player.id,
+            }
+        }
+        var textData = Json.stringify(data);
+        for (p in playerList) {
+            if (p.socket != null) {
+                p.socket.send(textData);
+            }
+        }
+    }
+    public static function emitVoteResult(playerList:Array<Player>, startPage:String, endPage:String) {
+        var data:LobbyEvent<VoteResult> = {
+            type: VoteResult,
+            data: {
+                start: startPage,
+                end: endPage
+            }
+        }
+        var textData = Json.stringify(data);
+        for (p in playerList) {
+            if (p.socket != null) {
+                p.socket.send(textData);
+            }
+        }
+    }
+    public static function emitGameState(playerList:Array<Player>, state:LobbyState, currentRound:Int, timeleft:Float) {
+        var data:LobbyEvent<GameState> = {
+            type: GameState,
+            data: {
+                state: state,
+                round: currentRound,
+                time: timeleft
+            }
+        }
+        var textData = Json.stringify(data);
+        for (p in playerList) {
+            if (p.socket != null) {
+                p.socket.send(textData);
+            }
+        }
+    }
+    public static function emitUpdateScore(playerList:Array<Player>, player:Player) {
+        var data:LobbyEvent<UpdateScore> = {
+            type: UpdateScore,
+            data: {
+                id: player.id,
+                score: player.score
+            }
+        }
+        var textData = Json.stringify(data);
+        for (p in playerList) {
+            if (p.socket != null) {
+                p.socket.send(textData);
+            }
+        }
+    }
+    public static function emitWinRound(playerList:Array<Player>, player:Player) {
+        var data:LobbyEvent<WinRound> = {
+            type: WinRound,
+            data: {
+                id: player.id
+            }
+        }
+        var textData = Json.stringify(data);
+        for (p in playerList) {
+            if (p.socket != null) {
+                p.socket.send(textData);
+            }
+        }
+    }
+    public static function emitMessage(playerList:Array<Player>, ?player:Player, message:String) {
+        var data:LobbyEvent<Message> = {
+            type: Message,
+            data: {
+                id: player == null ? -1 : player.id,
+                mes: message
+            }
+        }
+        var textData = Json.stringify(data);
+        for (p in playerList) {
+            if (p.socket != null) {
+                p.socket.send(textData);
+            }
+        }
+    }
+
+}
+
+enum abstract LobbyEventType(String) {
+    var PlayerJoin;
+    var PlayerLeft;
+    var VoteResult;
+    var GameState;
+    var UpdateScore;
+    var WinRound;
+    var Message;
+}
+
+typedef LobbyEvent<T> = {
+    type:LobbyEventType,
+    data:T
+}
+typedef PlayerJoin  = {
+    pseudo:String,
+    id:Int,
+    score:Int,
+    self:Bool
+}
+typedef PlayerLeft = {
+    id:Int
+}
+typedef VoteResult = {
+    start:String,
+    end:String
+}
+typedef GameState = {
+    state:LobbyState,
+    round:Int,
+    time:Float
+}
+typedef UpdateScore = {
+    id:Int,
+    score:Int
+}
+typedef WinRound = {
+    id:Int
+}
+typedef Message = {
+    id:Int,
+    mes:String
 }

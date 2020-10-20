@@ -1,21 +1,17 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
-        {
-            "type": "node",
-            "args": ["--prof"],
-            "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "cwd": "${workspaceFolder}/bin",
-            "program": "${workspaceFolder}/bin/App.js",
-            "preLaunchTask": "Complete build"
-        }
-    ]
+    {
+        "type": "node",
+        "request": "launch",
+        "name": "nodemon",
+        "args": ["--watch App.js"],
+        "cwd": "${workspaceFolder}/bin",
+        //"runtimeExecutable": "${workspaceFolder}/bin/node_modules/nodemon/bin/nodemon.js",
+        "program": "${workspaceFolder}/bin/App.js",
+        "restart": true,
+        "console": "integratedTerminal",
+        "preLaunchTask": "Complete build",
+        "internalConsoleOptions": "neverOpen"
+    }]
 }

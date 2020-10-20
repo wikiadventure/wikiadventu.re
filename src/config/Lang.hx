@@ -2,7 +2,7 @@ package config;
 
 //TODO add your language
 
-enum abstract Lang(String) from String to String {
+enum abstract Lang(String) {
     var en;//english
     var fr;//french
     var de;//german

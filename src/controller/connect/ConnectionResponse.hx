@@ -1,4 +1,4 @@
-package controller;
+package controller.connect;
 
 import config.Lang;
 
