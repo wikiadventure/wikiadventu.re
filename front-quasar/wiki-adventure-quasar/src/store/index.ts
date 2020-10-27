@@ -2,6 +2,7 @@ import { store } from 'quasar/wrappers';
 import Vuex from 'vuex';
 
 import globalForm from './globalForm'
+import gameData from './gameData'
 // import example from './module-example';
 // import { ExampleStateInterface } from './module-example/state';
 
@@ -20,7 +21,8 @@ export default store(function ({ Vue }) {
 
   const Store = new Vuex.Store<StateInterface>({
     modules: {
-      globalForm
+      globalForm,
+      gameData
     },
 
     // enable strict mode (adds overhead!)

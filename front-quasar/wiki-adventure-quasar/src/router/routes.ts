@@ -9,6 +9,10 @@ const routes: RouteConfig[] = [
     path: '/connect',
     component: () => import('pages/Connect.vue')
   },
+  {
+    path: '/play',
+    component: () => import('pages/Game.vue')
+  },
 
   // Always leave this as last one,
   // but you can also remove it
