@@ -1,10 +1,9 @@
 <template>
-    <q-btn class="s-btn shadow-24 q-mx-lg" v-bind="$attrs" v-on="$listeners"><slot></slot></q-btn>
+    <q-btn class="s-btn shadow-24 q-ma-xs" v-bind="$attrs" v-on="$listeners"><slot></slot></q-btn>
 </template>
 
 <style scoped>
 .s-btn {
-    margin: 10px;
     font-size: 125%;
 }
     .body--dark .s-btn {

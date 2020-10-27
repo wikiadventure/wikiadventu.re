@@ -1,25 +1,25 @@
 <template>
   <div>
     <splash-head>
-      <div class="row justify-center">
-        <s-btn @click="scrollToID('PublicJoin')">Join a public lobby</s-btn>
-        <s-btn @click="scrollToID('PrivateCreate')">Create a private lobby</s-btn>
-        <s-btn @click="scrollToID('PrivateJoin')">Join a private lobby</s-btn>
+      <div class="vertical-middle justify-evenly">
+        <s-btn @click="scrollToID('PublicJoin')">Join public lobby</s-btn>
+        <s-btn @click="scrollToID('PrivateCreate')">Create private lobby</s-btn>
+        <s-btn @click="scrollToID('PrivateJoin')">Join private lobby</s-btn>
       </div>
-      <div class="q-mt-md">
-        <s-btn class="twitch-btn" @click="scrollToID('TwitchCreate')" icon-right="mdi-twitch">Create a Twitch lobby</s-btn>
-        <s-btn class="twitch-btn" @click="scrollToID('TwitchJoin')" icon-right="mdi-twitch">Join a Twitch lobby</s-btn>
+      <div class="vertical-middle justify-evenly">
+        <s-btn class="twitch-btn" @click="scrollToID('TwitchCreate')" icon-right="mdi-twitch">Create Twitch lobby</s-btn>
+        <s-btn class="twitch-btn" @click="scrollToID('TwitchJoin')" icon-right="mdi-twitch">Join Twitch lobby</s-btn>
       </div>
     </splash-head>
     <content-wrapper>
       <content-pannel id="PublicJoin" head="Join a public lobby">
         <q-form>
         <div class="row">
-          <div class="col">
+          <div class="col-12 col-sm-6">
               <lang-select class="q-ma-sm" popup-content-class="odd-select-popup"/>
               <pseudo-input class="q-ma-sm"/>
           </div>
-          <div class="col">
+          <div class="col-12 col-sm-6 row col-reverse-sm">
             <div class="row justify-center">
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat optio, tempora dolorem neque odio 
@@ -31,7 +31,7 @@
               </p>
             </div>
             <div class="row justify-center">
-              <submit-button name="type" value="PublicJoin" icon-right="mdi-play" class="row items-center" label="Join" @click="login('PublicJoin')"/> 
+              <submit-button name="type" value="PublicJoin" icon-right="mdi-play" class="row items-center q-ma-sm" label="Join" @click="login('PublicJoin')"/> 
             </div>
           </div>
         </div>
@@ -39,8 +39,8 @@
       </content-pannel>
       <content-pannel id="PrivateCreate" head="Create a private lobby">
         <q-form>
-        <div class="row">
-          <div class="col">
+        <div class="row col-reverse-sm">
+          <div class="col-12 col-sm-6 row col-reverse-sm">
             <div class="row justify-center">
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat optio, tempora dolorem neque odio 
@@ -52,10 +52,10 @@
               </p>
             </div>
             <div class="row justify-center">
-              <submit-button name="type" value="PrivateCreate" icon-right="mdi-plus" class="row items-center" label="Create" @click="login('PrivateCreate')"/> 
+              <submit-button name="type" value="PrivateCreate" icon-right="mdi-plus" class="row items-center q-ma-sm" label="Create" @click="login('PrivateCreate')"/> 
             </div>
           </div>
-          <div class="col">
+          <div class="col-12 col-sm-6">
               <lang-select class="q-ma-sm" popup-content-class="even-select-popup"/>
               <pseudo-input class="q-ma-sm"/>
               <password-input class="q-ma-sm"/>
@@ -66,12 +66,12 @@
       <content-pannel id="PrivateJoin" head="Join a private lobby">
         <q-form>
         <div class="row">
-          <div class="col">
+          <div class="col-12 col-sm-6">
               <lang-select class="q-ma-sm" popup-content-class="odd-select-popup"/>
               <pseudo-input class="q-ma-sm"/>
               <password-input class="q-ma-sm"/>
           </div>
-          <div class="col">
+          <div class="col-12 col-sm-6 row col-reverse-sm">
             <div class="row justify-center">
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat optio, tempora dolorem neque odio 
@@ -83,7 +83,7 @@
               </p>
             </div>
             <div class="row justify-center">
-              <submit-button name="type" value="PrivateJoin" icon-right="mdi-play" class="row items-center" label="Join" @click="login('PrivateJoin')"/> 
+              <submit-button name="type" value="PrivateJoin" icon-right="mdi-play" class="row items-center q-ma-sm" label="Join" @click="login('PrivateJoin')"/> 
             </div>
           </div>
         </div>
@@ -92,7 +92,7 @@
       <content-pannel id="TwitchCreate" head="Create a Twitch lobby">
         <q-form>
         <div class="row">
-          <div class="col">
+          <div class="col-12 col-sm-6 row col-reverse-sm">
             <div class="row justify-center">
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat optio, tempora dolorem neque odio 
@@ -104,10 +104,10 @@
               </p>
             </div>
             <div class="row justify-center">
-              <submit-button name="type" value="TwitchCreate" icon-right="mdi-twitch" class="twitch-btn row items-center" label="Create with twitch" @click="login('TwitchCreate')"/> 
+              <submit-button name="type" value="TwitchCreate" icon-right="mdi-twitch" class="twitch-btn row items-center q-ma-sm" label="Create with twitch" @click="login('TwitchCreate')"/> 
             </div>
           </div>
-          <div class="col">
+          <div class="col-12 col-sm-6">
               <lang-select  class="q-ma-sm" popup-content-class="even-select-popup"/>
               <pseudo-input class="q-ma-sm"/>
               <password-input class="q-ma-sm"/>
@@ -118,12 +118,12 @@
       <content-pannel id="TwitchJoin" head="Join a Twitch lobby">
         <q-form>
         <div class="row">
-          <div class="col">
+          <div class="col-12 col-sm-6">
               <lang-select class="q-ma-sm" popup-content-class="odd-select-popup"/>
               <pseudo-input class="q-ma-sm"/>
               <password-input class="q-ma-sm"/>
           </div>
-          <div class="col">
+          <div class="col-12 col-sm-6 row col-reverse-sm">
             <div class="row justify-center">
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat optio, tempora dolorem neque odio 
@@ -135,8 +135,8 @@
               </p>
             </div>
             <div class="row justify-evenly">
-              <submit-button name="type" value="TwitchJoinWith" icon-right="mdi-twitch" class="twitch-btn row items-center" label="Join with Twitch" @click="login('TwitchJoinWith')"/>
-              <submit-button name="type" value="TwitchJoinWithout" icon-right="mdi-play" class="row items-center" label="Join" @click="login('TwitchJoinWithout')"/> 
+              <submit-button name="type" value="TwitchJoinWith" icon-right="mdi-twitch" class="twitch-btn row items-center q-ma-sm" label="Join with Twitch" @click="login('TwitchJoinWith')"/>
+              <submit-button name="type" value="TwitchJoinWithout" icon-right="mdi-play" class="row items-center q-ma-sm" label="Join" @click="login('TwitchJoinWithout')"/> 
             </div>
           </div>
         </div>
@@ -147,6 +147,10 @@
   </div>
 </template>
 <style>
+.test2 {
+  flex: 1;
+  width: 100%;
+}
 .body--light .odd-select-popup {
   background: var(--w-color-light-teal);
   color: var(--w-color-almost-black);
@@ -162,11 +166,17 @@
   background: #6441A4!important;
   color: var(--w-color-blue-white)!important;
 }
+@media (max-width: 600px) {
+  .col-reverse-sm {
+    flex-direction: column-reverse;
+  }
+}
 </style>
 
 <script lang="ts">
 import { uuid } from 'vue-uuid'; 
 import { openURL } from 'quasar';
+import Vuex from 'vuex';
 
 import SplashHead from 'components/SplashHead.vue';
 import SBtn from "components/SplashButton.vue";
@@ -178,18 +188,21 @@ import LangSelect from "components/form/LanguageSelect.vue";
 import PseudoInput from "components/form/PseudoInput.vue";
 import PasswordInput from "components/form/PasswordInput.vue";
 import SubmitButton from "components/form/SubmitButton.vue";
-import MenuLayout from "layouts/menu.vue";
+import MenuLayout from "layouts/Menu.vue";
 
 import { defineComponent } from '@vue/composition-api';
 import { Lang } from '../store/globalForm/state';
 
 import scrollToID from '../mixins/scrollToID';
+import { LobbyType } from '../store/gameData/state';
 
 export default defineComponent({
   name: 'Connect',
   components: { SplashHead, SBtn, LangSelect, PseudoInput, PasswordInput, SubmitButton, ContentWrapper, ContentPannel, MenuLayout },
   methods: {
     login(type:string) {
+      var store = this.$store;
+      var router = this.$router;
       var query:loginQuery = {
         type: type,
         lang: this.$store.state.globalForm.lang,
@@ -220,8 +233,8 @@ export default defineComponent({
           fetch('/twitch', options)
             .then(function(response:Response):Promise<ConnectionResponse> {
               return response.json();
-            }).then(function(response) {
-              console.log(response);
+            }).then(function(json:ConnectionResponse) {
+              
             }).catch(function(error) {
               console.log('Fetch error during form submition : ' + error.message);
           });
@@ -238,8 +251,13 @@ export default defineComponent({
         fetch('/connect', options)
           .then(function(response:Response):Promise<ConnectionResponse> {
             return response.json();
-          }).then(function(response) {
-            console.log(response);
+          }).then(function(json) {
+            store.commit('gameData/setLang', json.lang);
+            store.commit('gameData/setLobbyID', json.lobbyID);
+            store.commit('gameData/setLobbyType', json.lobbyType);
+            store.commit('gameData/setUuid', json.playerID);
+            router.push('/play');
+            console.log(json);
           }).catch(function(error) {
             console.log('Fetch error during form submition : ' + error.message);
         });
@@ -260,6 +278,7 @@ interface loginQuery {
 interface ConnectionResponse {
     status:ConnectionStatus,
     lobbyID:String,
+    lobbyType:LobbyType,
     playerID:String,
     lang:Lang,
     error?:String

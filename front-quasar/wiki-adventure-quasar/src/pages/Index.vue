@@ -48,6 +48,7 @@
         </div>
       </content-pannel>
     </content-wrapper>
+    <menu-layout/>
   </div>
 </template>
 <style>
@@ -101,6 +102,7 @@ import SplashHead from 'components/SplashHead.vue';
 import SBtn from "components/SplashButton.vue";
 import ContentWrapper from 'components/ContentWrapper.vue';
 import ContentPannel from 'components/ContentPannel.vue';
+import MenuLayout from "layouts/Menu.vue";
 
 import scrollToID from '../mixins/scrollToID';
 
@@ -108,7 +110,7 @@ import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'Index',
-  components: { SplashHead, SBtn, ContentWrapper, ContentPannel },
+  components: { SplashHead, SBtn, ContentWrapper, ContentPannel, MenuLayout },
   methods: {
     openNewPage: function (url: string) {
       openURL(url);
