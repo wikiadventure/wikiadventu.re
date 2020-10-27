@@ -1,24 +1,23 @@
 package lobby;
 
+import js.node.Timers;
+import js.node.Timers.Timeout;
 import haxe.Timer;
 import haxe.Json;
 import js.lib.Promise;
 import js.node.Https;
-import async.IO;
-import js.node.socketio.Server.Namespace;
 import haxe.io.Bytes;
-import lobby.player.Player;
 import config.Lang;
 import haxe.crypto.Base64;
 using lobby.player.Player;
 
 class Lobby {
     
-    public var io:Namespace;
     public var type:LobbyType;
     public var state:LobbyState;
     public var timeStampStateBegin:Float;
-    public var loop:Timer;
+    public var loop:Timeout;
+    public var heartbeat:Timeout;
 
     public var startPage:String;
     public var endPage:String;
@@ -64,7 +63,19 @@ class Lobby {
         this.playTimeOut = playTimeOut;
         this.voteTimeOut = voteTimeOut;
         this.passwordHash = passwordHash;
-        
+        heartbeat = Timers.setInterval(function() {
+            for (p in playerList) {
+                if (p.socket != null) {
+                    if (p.alive == false) {
+                        p.socket.terminate();
+                        kickOnTimeout(p);
+                    } else {
+                        p.alive = false;
+                        p.socket.ping();
+                    }
+                }
+            }
+        }, 30000);
     }
     /**
      * give the lobby a valid id, loop until it found a unused one
@@ -113,13 +124,17 @@ class Lobby {
         if (playerList.length >= slot) throw "the lobby is full";
         if (playerList.lastIndexOf(player) == -1) {
             playerList.push(player);
+            kickOnTimeout(player);
             log("new player registered : " + player.uuid + " --> " + player.pseudo, PlayerData);
-            Timer.delay(function () {
-                if (player.socket == null) {
-                    removePlayer(player);
-                }
-            },30000);
         }
+    }
+
+    public function kickOnTimeout(player:Player):Timeout {
+        return Timers.setTimeout(function () {
+            if (player.socket == null) {
+                removePlayer(player);
+            }
+        },30000);
     }
 
     public function connect(player:Player, ?passwordHash:String) {
@@ -159,6 +174,7 @@ class Lobby {
             if (player.assignSocket(ws) ) {
                 player.id = totalPlayer;
                 totalPlayer++;
+                trace(ws.OPEN);
                 return onPlayerConnection(player);
             }
             return ws.close(1008, 'Connection rejected because there already a client connected with this playerID');
@@ -167,13 +183,12 @@ class Lobby {
     }
 
     public function onPlayerConnection(player:Player) {
-        playerList.emitMessage(player.pseudo + " join the lobby!");
         playerList.emitPlayerJoin(player);
         sendCurrentState(player);
         player.socket.on('message', function (data:String) {
             websocketHandler(player, data);
         });
-        player.socket.on('disconnect', function (data) {
+        player.socket.on('close', function (data) {
             websocketDisconnect(player);
         });
     }
@@ -199,9 +214,9 @@ class Lobby {
     }
 
     public function websocketDisconnect(player:Player) {
-        removePlayer(player);
+        player.socket = null;
+        kickOnTimeout(player);
         playerList.emitPlayerLeft(player);
-        playerList.emitMessage(player.pseudo + " has left the lobby!");
     }
 
     /**
@@ -369,7 +384,7 @@ class Lobby {
         if(playerList.length == 0) return;
         state = Voting;
         initNewPhase();
-        Timer.delay(function () {
+        Timers.setTimeout(function () {
             var suggestionList = new Array<String>();
             for (player in playerList) {
                 suggestionList.push(player.votingSuggestion);
@@ -491,7 +506,7 @@ class Lobby {
         playerList.emitVoteResult(startPage, endPage);
         state = Playing;
         initNewPhase();
-        Timer.delay(function () {
+        Timers.setTimeout(function () {
             playPhaseEnd();
         },currentStateTimeOut()*1000);
     }
@@ -513,7 +528,7 @@ class Lobby {
         currentRound = 1;
         state = GameFinish;
         initNewPhase();
-        Timer.delay(function () {
+        Timers.setTimeout(function () {
             votePhase();
         },currentStateTimeOut()*1000);
 
@@ -527,7 +542,7 @@ class Lobby {
         if (playerList.length == 0) return;
         state = RoundFinish;
         initNewPhase();
-        Timer.delay(function () {
+        Timers.setTimeout(function () {
             votePhase();
         },currentStateTimeOut()*1000);
     }
@@ -662,7 +677,7 @@ enum abstract LogType(String) {
     var Info;
 }
 
-enum abstract LobbyType(Int) {
+enum abstract LobbyType(String) {
     var Public;
     var Private;
     var Twitch;

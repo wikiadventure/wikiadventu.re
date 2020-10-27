@@ -153,6 +153,7 @@ class TwitchController {
         var res:ConnectionResponse = {
             status: Success,
             lobbyID: lobby.name,
+            lobbyType: Twitch,
             playerID: player.uuid,
             lang: lobby.language
         };

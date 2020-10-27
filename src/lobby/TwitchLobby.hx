@@ -1,5 +1,6 @@
 package lobby;
 
+import js.node.Timers;
 import lobby.Lobby.LogType;
 import haxe.Timer;
 import twitch.HelixPrivilegedUser;
@@ -62,8 +63,7 @@ class TwitchLobby extends Lobby {
         twitchBot.sayAll(twitchPlayerList, "Vote phase open! You can vote for a wiki page with command !vote YourVote");
         state = Voting;
         initNewPhase();
-        if (loop != null) loop.stop();
-        loop = Timer.delay(function () {
+        loop = Timers.setTimeout(function () {
             twitchBot.sayAll(twitchPlayerList, "Vote phase closed!");
             selectPage(suggestionList);
         },currentStateTimeOut()*1000);

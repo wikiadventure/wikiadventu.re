@@ -26,6 +26,7 @@ class PublicJoinController {
             var json:ConnectionResponse = {
                 status: Success,
                 lobbyID: Lobby.encodeID(lobby.id),
+                lobbyType: Public,
                 playerID: player.uuid,
                 lang: lobby.language           
             }

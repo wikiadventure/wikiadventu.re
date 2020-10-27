@@ -17,6 +17,7 @@ class Player {
     public var currentPage:String;
     public var votingSuggestion:String;
     public var id:Int;//for client identification
+    public var alive:Bool;
 
     public function new(pseudo:String, language:Lang) {
         this.language = language;
@@ -34,6 +35,7 @@ class Player {
             return false;
         }
         this.socket = socket;
+        alive = true;
         return true;
     }
 
@@ -179,7 +181,7 @@ typedef LobbyEvent<T> = {
     type:LobbyEventType,
     data:T
 }
-typedef PlayerJoin  = {
+typedef PlayerJoin = {
     pseudo:String,
     id:Int,
     score:Int,

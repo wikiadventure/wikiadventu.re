@@ -29,6 +29,7 @@ class PrivateJoinController {
             var json:ConnectionResponse = {
                 status: Success,
                 lobbyID: Lobby.encodeID(lobby.id),
+                lobbyType: Private,
                 playerID: player.uuid,
                 lang: lobby.language           
             };
