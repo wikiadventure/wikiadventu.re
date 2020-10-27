@@ -6,8 +6,8 @@
 <style lang="scss">
     .content-wrapper {
         position: absolute;
-        top: 87%;
         width: 100%;
+        top: 88vh;
         min-height: 12%;
         z-index: 2;
         box-shadow: 0px 15px 25px 25px rgba(0,0,0,0.5);
