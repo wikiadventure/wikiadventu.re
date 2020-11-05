@@ -35,6 +35,9 @@ class Player {
             return false;
         }
         this.socket = socket;
+        this.socket.on('pong', function() {
+            alive = true;
+        });
         alive = true;
         return true;
     }

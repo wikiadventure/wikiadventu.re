@@ -125,7 +125,7 @@ class LangTools {
     }
 
     public static function getApiURL(language:Lang):String {
-        return language + ".wikipedia.org/api/rest_v1/page/html/";
+        return language + ".wikipedia.org/api/rest_v1/page/html";
     }
 
 }
