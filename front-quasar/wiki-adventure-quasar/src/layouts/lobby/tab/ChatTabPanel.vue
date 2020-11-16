@@ -14,7 +14,7 @@
     <q-form class="chatForm">
       <q-input autogrow dense class="chatInput" maxlength="512" outlined v-model="message" label="Send a message" spellcheck="false">
         <template v-slot:after>
-          <q-btn round dense flat icon="mdi-send" class="chatSubmit" @click="send()"/>
+          <q-btn round dense flat icon="mdi-send" class="chatSubmit" @click="submitMessage()"/>
         </template>
       </q-input>
     </q-form>
@@ -72,7 +72,7 @@
 import { date } from 'quasar'
 
 import { defineComponent } from '@vue/composition-api';
-import { Message } from '../../store/gameData/state';
+import { Message } from '../../../store/gameData/state';
 
 export default defineComponent({
   name: 'ChatTabPanel',
@@ -99,7 +99,7 @@ export default defineComponent({
     getFormatTime(timeStamp:number):string {
       return date.formatDate(timeStamp, 'HH:mm');
     },
-    send(e:Event) {
+    submitMessage(e:Event) {
       this.$store.dispatch('gameData/sendMessage', this.message);
       this.message = "";
       console.log("send");
