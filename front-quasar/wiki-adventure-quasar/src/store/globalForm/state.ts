@@ -1,6 +1,7 @@
 export interface GlobalForm {
   lang: Lang;
   pseudo: string;
+  lobbyID: string;
 }
 
 export enum Lang {
@@ -36,7 +37,8 @@ export function getLabel(lang:string):string {
 
 const state: GlobalForm = {
   lang: Lang.en,
-  pseudo: "roger"
+  pseudo: "roger",
+  lobbyID: ""
 };
 
 export default state;

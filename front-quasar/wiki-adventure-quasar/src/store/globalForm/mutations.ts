@@ -9,6 +9,9 @@ const mutation: MutationTree<GlobalForm> = {
   setPseudo(state:GlobalForm, p:string) {
     state.pseudo = p;
   },
+  setLobbyID(state:GlobalForm, id:string) {
+    state.lobbyID = id;
+  },
   randomizePseudo(state:GlobalForm) {
     state.pseudo = getRandomPseudo(state.lang);
   }
