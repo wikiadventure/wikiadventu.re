@@ -27,6 +27,7 @@ export interface Player {
   id: number;
   score: number;
   winStreak: number;
+  isConnected:boolean;
 }
 
 export interface Message {

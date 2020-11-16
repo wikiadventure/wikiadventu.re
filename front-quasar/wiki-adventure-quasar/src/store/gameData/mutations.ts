@@ -31,6 +31,7 @@ const mutation: MutationTree<GameData> = {
       id: p.id,
       score: p.score,
       winStreak: 0,
+      isConnected: true
     }
     if (p.self) state.selfPlayerID = p.id;
     state.players.push(player);
@@ -38,7 +39,7 @@ const mutation: MutationTree<GameData> = {
   playerLeft(state:GameData, p:PlayerLeft) {
     for(var i=0;i<state.players.length; ++i) {
       if (state.players[i].id == p.id) {
-        state.players.splice(i);
+        state.players[i].isConnected = false;
         return;
       }
     }
