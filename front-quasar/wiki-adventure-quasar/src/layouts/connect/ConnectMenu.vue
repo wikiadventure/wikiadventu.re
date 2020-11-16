@@ -34,11 +34,11 @@
 
         <q-tab-panel name="twitch" class="q-pa-none tabContent">
           <q-tab-panels class="tabContent" v-model="twitchTab" animated>
-            <q-tab-panel name="twitchJoin" class="q-pa-none tabContent scroll-y">
+            <q-tab-panel name="TwitchJoin" class="q-pa-none tabContent scroll-y">
               <twitch-join></twitch-join>
             </q-tab-panel>
 
-            <q-tab-panel name="twitchCreate" class="q-pa-none tabContent scroll-y">
+            <q-tab-panel name="TwitchCreate" class="q-pa-none tabContent scroll-y">
               <twitch-create></twitch-create>
             </q-tab-panel>
           </q-tab-panels>
