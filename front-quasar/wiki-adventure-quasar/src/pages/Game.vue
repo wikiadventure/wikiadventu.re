@@ -1,26 +1,42 @@
 <template>
   <div>
-    <game-slide-menu></game-slide-menu>
+    <game-slide-menu/>
+    <wiki-page ref="wikiPage"/>
   </div>
 </template>
-<style>
-</style>
-
 <script lang="ts">
-import GameSlideMenu from "layouts/GameSlideMenu.vue";
+import GameSlideMenu from "../layouts/lobby/GameSlideMenu.vue";
+import WikiPage from "../layouts/lobby/WikiPage.vue";
 
 import { defineComponent } from '@vue/composition-api';
-import { GameState, LobbyEvent, LobbyEventType, LobbyType, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, WinRound, WsMessage } from "../store/gameData/state";
-import { IncomingMessage } from "http";
 
 export default defineComponent({
   name: 'Index',
-  components: { GameSlideMenu },
+  components: { GameSlideMenu, WikiPage },
+  data():{
+    unsubscribe:() => void
+  } {
+    return {
+      unsubscribe: () => {}
+    }
+  },
   mounted() {
     this.$store.dispatch('gameData/connect');
-  }/*,
+  },
+  methods: {
+    getStartingPage(url:string) {
+      this.$emit('id-selected', 1)
+    }
+  },
+  created() {
+    /*this.unsubscribe = this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'gameData/voteResult') {
+        this.getStartingPage(state.gameData.startPage);
+      }
+    });*/
+  },
   beforeDestroy() {
-    //store reset
-  }*/
+    this.unsubscribe!();
+  }
 });
 </script>
