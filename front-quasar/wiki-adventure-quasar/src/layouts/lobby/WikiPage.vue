@@ -1,0 +1,251 @@
+<template>
+  <section id="wikiPage" class="absolute-full">
+    <div id="wikiCore">
+      <h1 id="wikiTitle">{{ title }}</h1>
+      <div id="wikiMain">
+        <div id="wikiContent" v-html="content"></div>
+        <!--<aside id="wikiInfobox" v-if="infobox" v-html="infobox"></aside>-->
+      </div>
+    </div>
+  </section>
+</template>
+<style lang="scss">
+#wikiPage {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 15px;
+  overflow-wrap: break-word;
+}
+#wikiTitle {
+  text-align: center;
+}
+#wikiCore {
+  width: 100%;
+  h1 {
+    font-size: 4rem;
+    margin: 20px auto;
+  }
+  h2 {
+    font-size: 2rem;
+    margin: 10px auto;
+  }
+  h3 {
+    font-size: 1.8rem;
+    margin: 7px auto;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+#wikiMain {
+  width: 100%;
+  padding: 2em 4em;
+  @media screen and (max-width: 1220px) {
+    padding: .5em 2em;
+  }
+  @media screen and (max-width: 720px) {
+    padding: 0 0;
+  }
+  >>> ul {
+    list-style-type: disc;
+    padding-left: 2.5em;
+    margin: 1em 0;
+  }
+}   
+.infobox {
+    display: table;
+    font-size: 0.9em;
+    line-height: 1.4;
+    max-width: 16em;
+    min-width: 30%;
+    float: right;
+    clear: right;
+    margin: 15px 0 15px 15px;
+    background: var(--w-color-dark-blue);
+    border: 1px solid grey;
+    border-radius: 5px;
+    border-collapse: collapse;
+    @media(max-width: 720px) {
+      display: flex;
+      flex: 1 1 100%;
+      flex-flow: column nowrap;
+      width: 100% !important;
+      max-width: 100% !important;
+      th {
+        padding: 7px 10px;
+      }
+      > tbody, > caption {
+        display: flex;
+        flex-flow: column nowrap;
+      }
+      > tbody > tr {
+        min-width: 100%;
+        display: flex;
+        flex-flow: row nowrap;
+      }
+      td:only-child, th:only-child {
+        width: 100%;
+      }
+      tbody > tr > td, tbody > tr > th {
+        flex: 1 0;
+      }
+    }
+    caption, tr {
+      border-bottom: 1px solid grey;
+    }
+    th {
+      text-align: left;
+    }
+    caption, tr, th, td {
+      border: 1px solid grey;
+    }
+  }
+#wikiContent {
+  .hatnote {
+    padding: .5em 1.5em;
+    display: inline-block;
+    font-size: .85em;
+    line-height: 1.4;
+    margin-bottom: 1em;
+    border-radius: 2em;
+  }
+  .tleft, .floatleft {
+    float: left;
+    clear: left;
+    margin: 0 1.2em 1.2em;
+  }
+  .tright, .floatright {
+    float: right;
+    clear: right;
+    margin: 0 1.2em 1.2em;
+  }
+  .tleft {
+    margin-left: -.95 * 4em;
+    @media screen and (max-width: 1220px) {
+      margin-left: -.95 * 2em;
+    }
+  }
+  .tright {
+    margin-right: -.95 * 4em;
+    @media screen and (max-width: 1220px) {
+      margin-right: -.95 * 2em;
+    }
+  }
+  .thumbcaption {
+    font-size: .8em;
+    padding-right: .5em;
+  }
+  .thumbinner {
+    max-width: 100%;
+  }
+  .gallerycaption {
+    text-align: center;
+    font-weight: bold;
+  }
+  .gallerybox {
+    display: inline-block;
+    vertical-align: top;
+    img {
+      display: block;
+    }
+  }
+  .gallerytext {
+    font-size: .8em;
+    p {
+      margin-top: .3em;
+    }
+  } 
+  .reflist {
+    font-size: .8em;
+  }
+}
+.body--dark {
+  #wikiPage {
+    background: var(--w-color-almost-black);
+    color: var(--w-color-blue-white);
+    a {
+      color: var(--w-color-dark-teal);
+    }
+  }
+  #wikiContent {
+    .hatnote {
+      background-color: var(--w-color-dark-blue);
+      color: var(--w-color-teal);
+    }
+  }
+}
+      
+</style>
+<script lang="ts">
+import Vue from 'vue';
+import { defineComponent } from '@vue/composition-api';
+import WikiArticle from '../../mixins/wikiArticle';
+
+export default defineComponent({
+  name: 'WikiPage',
+  data():{
+    title:string,
+    content:string,
+    //infobox?:string,
+    unsubscribe:() => void
+  } {
+    return {
+      unsubscribe: () => {},
+      title: "Welcome",
+      content: ""
+    }
+  },
+  methods: {
+    requestWikiPage(url:string) {
+      var vm:any = this;
+      vm.fetchArticle(url).then(
+        function(article:WikiArticle) {
+          //document.body.scrollTop = 0; // For Safari
+          //document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+          vm.title = article.title;
+          vm.content = article.content;
+          //vm.infobox = article.infobox;
+          Vue.nextTick().then(function () {
+            vm.redirectLinks(document.getElementById("wikiPage"));
+          });
+        }
+      );
+    },
+    redirectLinks(doc:Document) {
+      var vm = this;
+      var links= doc.getElementsByTagName("a");
+      for (var i=0;i<links.length;i++) {
+          links[i].addEventListener("click",function(e){
+            //check if the link go to another wikipage and not info page or external
+            if (this.getAttribute("href")!.lastIndexOf(":") == -1 && !this.classList.contains("internal") && !this.classList.contains("external") && this.rel != "mw:ExtLink" && !this.classList.contains("new")) {
+              var idx = this.href.lastIndexOf("/");
+              var url = this.href.substring(idx+1);
+              var anchor = url.indexOf("#");
+              if (anchor != -1) url = url.substring(0, anchor);
+              url = decodeURIComponent(url);
+              vm.requestWikiPage(url);
+            }
+            e.preventDefault();
+          });
+      }
+    },
+    async fetchArticle(url:string) {
+      var article = new WikiArticle(url, this.$store.state.gameData.lang, this.$q.platform.is.mobile);
+      return await article.fetch().catch(() => {
+        //notify
+      });
+    },
+  },
+  created() {
+    this.unsubscribe = this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'gameData/voteResult') {
+        this.requestWikiPage(state.gameData.startPage);
+      }
+    });
+  },
+  beforeDestroy() {
+    this.unsubscribe!();
+  }
+});
+</script>
