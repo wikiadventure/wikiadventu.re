@@ -1,7 +1,7 @@
 <template>
     <div class="content-pannel">
         <h2 class="content-pannel-head is-center">{{ head }}</h2>
-        <h2 class="content-pannel-subhead is-center">{{ subhead }}</h2>
+        <h2 v-if="subhead" class="content-pannel-subhead is-center">{{ subhead }}</h2>
         <div class="content-pannel-core row">
             <slot></slot>
         </div>
@@ -9,7 +9,8 @@
 </template>
 <style scoped>
 .content-pannel {
-    padding: 1em 1em 3em;
+    padding: 0 1em 1em;
+    width: 100%;
 }
 .content-pannel-head {
     font-weight: 400;
@@ -17,14 +18,14 @@
     line-height: 1.5em;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    margin: 2em 0 1em;
+    margin: 0 0 1em;
     text-align: center;
 }
 .content-pannel-subhead {
     text-align: center;
 }
 .content-pannel-core > div {
-    border-bottom: 1px solid rgba(0,0,0,0.1);
+    /*border-bottom: 1px solid rgba(0,0,0,0.3);*/
     text-align: center;
     padding: 1.5em;
     width: 100%;
@@ -44,8 +45,6 @@ export default defineComponent({
   props: {
     head: String,
     subhead: String,
-    contentLeft: String,
-    contentRight: String
   }
 });
 </script>
