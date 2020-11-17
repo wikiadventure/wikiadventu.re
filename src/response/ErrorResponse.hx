@@ -1,10 +1,10 @@
-package error;
+package response;
 
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import haxe.http.HttpStatus;
 
-class ErrorPage {
+class ErrorResponse {
 	var im : IncomingMessage;
 	var sr : ServerResponse;
 	
