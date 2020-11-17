@@ -3,7 +3,7 @@
 -lib uuid
 -lib twitch-chat-client:git:https://github.com/Sacramentix/hx-twitch-chat-client.git
 -lib tink_json
--lib ws
+-lib ws:git:https://github.com/Sacramentix/hx-ws.git
 
 -main App
 -js bin/App.js
