@@ -11,7 +11,7 @@ import twitch.ApiClient;
 import twitch.AccessToken;
 import config.twitch.TwitchCredential;
 import lobby.TwitchLobby;
-import error.ErrorPage;
+import response.ErrorResponse;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import haxe.http.HttpStatus;
@@ -39,7 +39,7 @@ class TwitchController {
             connect();
             return;
         }
-        new ErrorPage(im, sr, body, "Invalid method. Method available: Get and Post",BadRequest);
+        new ErrorResponse(im, sr, body, "Invalid method. Method available: Get and Post",BadRequest);
         return;
     }
 
@@ -68,7 +68,7 @@ class TwitchController {
             sr.end();
         } catch (e:Dynamic) {
             trace(e);
-            new ErrorPage(im, sr, body, e, PreconditionFailed);
+            new ErrorResponse(im, sr, body, e, PreconditionFailed);
             return;
         }
         proceedTwitchLogin(uuid, code);
@@ -125,7 +125,7 @@ class TwitchController {
             respond(loginStatus);
         } catch (e:Dynamic) {
             trace(e);
-            new ErrorPage(im, sr, body, "error", BadRequest);
+            new ErrorResponse(im, sr, body, "error", BadRequest);
             return;
         }
     }
@@ -133,7 +133,7 @@ class TwitchController {
     public function respond(loginStatus:TwitchLogin, ?status:TwitchLoginStatus) {
         if (status == null) status = loginStatus.status;
         if (status == Error) {
-            new ErrorPage(im, sr, body, loginStatus.error, BadRequest);
+            new ErrorResponse(im, sr, body, loginStatus.error, BadRequest);
             return;
         }
         var player = new TwitchPlayer(loginStatus.user, loginStatus.authProvider, form.lang);
@@ -147,7 +147,7 @@ class TwitchController {
                 lobby.join(player,passwordHash);    
             }
         } catch(e:Dynamic) {
-            new ErrorPage(im, sr, body, e,BadRequest);
+            new ErrorResponse(im, sr, body, e,BadRequest);
             return;
         }
         var res:ConnectionResponse = {

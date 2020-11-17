@@ -1,3 +1,4 @@
+import macros.Env;
 import lobby.player.Player;
 import lobby.TwitchLobby;
 import config.twitch.TwitchCredential;
@@ -6,7 +7,7 @@ import js.node.Http;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import async.WS;
-import error.ErrorPage;
+import response.ErrorResponse;
 import controller.connect.ConnectController;
 import controller.connect.twitch.TwitchController;
 import lobby.Lobby;
@@ -19,7 +20,6 @@ class App {
 
     static function main() {
         trace("server start");
-        trace("test");
         Lobby.init();
         TwitchLobby.init();
 
@@ -33,38 +33,39 @@ class App {
             var server = Http.createServer(handle);
         #end
         TwitchCredential.init();
-        server.listen(process.env['PORT']);
-        //IO.init(server);
+        server.listen(Env.getPort());// take the port mentionned in the port compilation flag otherwise take the env one
         WS.init(server);
 
     }
 
 
     static function handle(im : IncomingMessage, sr : ServerResponse) { 
-            sr.setTimeout(10000);
-            var body = "";
-			im.on("data", function(chunk : String) {
-                if(body.length > 1e4) {
-                    new ErrorPage(im, sr, body, "you are trying to send too much data to the server", 413);
-                    im.destroy();
-                }
-                body += chunk; 
-            });
-			im.on("end", function() { new App(im, sr, body); });
+        sr.setTimeout(10000);
+        var body = "";
+		im.on("data", function(chunk : String) {
+            if(body.length > 1e4) {
+                new ErrorResponse(im, sr, body, "you are trying to send too much data to the server", 413);
+                im.destroy();
+            }
+            body += chunk; 
+        });
+		im.on("end", function() { new App(im, sr, body); });
     }
 
     function new(im : IncomingMessage, sr : ServerResponse, body : String) {
-        if (im.url == "/" || im.url.indexOf(".") != -1) {
-            new FrontController(im, sr);
-            return;
-        } 
-        var idx : Int = im.url.indexOf("?", 1);
-        if (idx == -1) idx = im.url.indexOf("/", 1);
-        var route : String = idx == -1 ? im.url : im.url.substring(0, idx);
-        switch (route) { //routage
-            case "/connect": new ConnectController(im, sr, body);
-            case "/twitch": new TwitchController(im, sr, body);
-            default: new ErrorPage(im, sr, body, "Sorry, you are looking for something that doesn't exist!", 404);
+        var idx1 = im.url.indexOf("/", 1);
+        var route1 : String = idx1 == -1 ? im.url : im.url.substring(1, idx1);
+        switch (route1) {
+            case "api": 
+                var idx2 = im.url.indexOf("/", 5);
+                var route2 : String = idx2 == -1 ? im.url.substring(5) : im.url.substring(5, idx2);
+                switch (route2) {
+                    case "connect": new ConnectController(im, sr, body);
+                    case "twitch": new TwitchController(im, sr, body);
+                    //case "help" to help dev
+                    default: new ErrorResponse(im, sr, body, "Sorry, you are looking for something that doesn't exist!", 404);
+                }
+            default: new FrontController(im, sr);
         }
     }
 

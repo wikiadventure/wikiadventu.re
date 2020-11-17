@@ -2,7 +2,7 @@ package controller.connect;
 
 import response.SuccessResponse;
 import haxe.crypto.Sha256;
-import error.ErrorPage;
+import response.ErrorResponse;
 import lobby.Lobby;
 import lobby.player.Player;
 import js.node.http.ServerResponse;
@@ -38,7 +38,7 @@ class PrivateCreateController {
             };
             new SuccessResponse(im, sr, Json.stringify(json));
         } catch (e:Dynamic) {
-            new ErrorPage(im, sr, body, "internal error : "+e,400);
+            new ErrorResponse(im, sr, body, "internal error : "+e,400);
         }
     }                   
 

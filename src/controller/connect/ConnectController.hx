@@ -1,7 +1,7 @@
 package controller.connect;
 
 import tink.Json;
-import error.ErrorPage;
+import response.ErrorResponse;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import haxe.http.HttpStatus;
@@ -18,20 +18,20 @@ class ConnectController {
         this.sr = sr;
         this.body = body;
         if (im.method != Post) {
-            new ErrorPage(im, sr, body, "Method not allowed!", MethodNotAllowed);
+            new ErrorResponse(im, sr, body, "Method not allowed!", MethodNotAllowed);
             return;
         }
         try {
             form = Json.parse(body);
         } catch (e:Dynamic) {
-            new ErrorPage(im, sr, body, "form data is invalid",400);
+            new ErrorResponse(im, sr, body, "form data is invalid",400);
             return;
         }
         switch form.type {
             case PublicJoin: new PublicJoinController(im, sr, body, form);
             case PrivateCreate: new PrivateCreateController(im, sr, body, form);
             case PrivateJoin: new PrivateJoinController(im, sr, body, form);
-            default: new ErrorPage(im, sr, body, "invalid lobby type",400);
+            default: new ErrorResponse(im, sr, body, "invalid lobby type",400);
         }
         
     }
@@ -42,7 +42,7 @@ class ConnectController {
             new GamePage(im, sr, lobby, player);
         } catch (e:Dynamic) {
             trace("here");
-            new ErrorPage(im, sr, body, "server full"+e,400);
+            new ErrorResponse(im, sr, body, "server full"+e,400);
             
         }
         
@@ -54,7 +54,7 @@ class ConnectController {
             lobby.connect(player, data['password']);
             new GamePage(im, sr, lobby, player);
         } catch (e:Dynamic) {
-            new ErrorPage(im, sr, body, "internal error : "+e,400);
+            new ErrorResponse(im, sr, body, "internal error : "+e,400);
         }
     }
     public function privateCreate(data:QuerystringParseResult, player:Player) {
@@ -67,7 +67,7 @@ class ConnectController {
             lobby.votePhase();
             new GamePage(im, sr, lobby, player);
         } catch (e:Dynamic) {
-            new ErrorPage(im, sr, body, "internal error"+e,400);
+            new ErrorResponse(im, sr, body, "internal error"+e,400);
         }
     }*/
 

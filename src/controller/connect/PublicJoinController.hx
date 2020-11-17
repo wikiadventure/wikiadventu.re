@@ -1,7 +1,7 @@
 package controller.connect;
 
 import haxe.Json;
-import error.ErrorPage;
+import response.ErrorResponse;
 import lobby.Lobby;
 import lobby.player.Player;
 import js.node.http.ServerResponse;
@@ -32,7 +32,7 @@ class PublicJoinController {
             }
             new SuccessResponse(im, sr, Json.stringify(json));
         } catch (e:Dynamic) {
-            new ErrorPage(im, sr, body, "server full"+e,400);
+            new ErrorResponse(im, sr, body, "server full"+e,400);
             
         }
     }

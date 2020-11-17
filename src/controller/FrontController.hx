@@ -13,11 +13,32 @@ class FrontController {
     public function new(im : IncomingMessage, sr : ServerResponse) {
 		this.im = im;
         this.sr = sr;
-        trace(im.url);
+        var mimeType = "text/html";
         var idx = this.im.url.lastIndexOf(".");
-        var extension = this.im.url.substring(idx+1);
+        var url:String = "/index.html";
+        if (idx != -1) {
+            var extension = this.im.url.substring(idx+1);
+            mimeType = getMimeType(extension);
+            url = this.im.url;
+        }
+        this.sr.setHeader("Content-Type", mimeType);
+        this.sr.setHeader("Cache-Control", "max-age=604800"); //cache for a week
+		var requestedFileUrl = './front' + url;
+		Fs.readFile(requestedFileUrl, function(err, data) {
+			if (err != null) {
+				this.sr.writeHead(404);
+				this.sr.write("ressource not found");
+			} else {
+				this.sr.writeHead(200);
+				this.sr.write(data);
+			}
+            this.sr.end();
+		});
+    }
+    
+    public function getMimeType(extension:String) {
         var mimeType:String = switch extension {
-            case "/":
+            case "html":
                 "text/html";
             case "js":
                 "application/javascript";
@@ -40,20 +61,7 @@ class FrontController {
             default :
                 "unknown/unknown";
         };
-        trace(extension + " - " + mimeType);
-        this.sr.setHeader("Content-Type", mimeType);
-        this.sr.setHeader("Cache-Control", "max-age=604800"); //cache for a week
-        var url = this.im.url == "/" ? "/index.html" : this.im.url; 
-		var requestedFileUrl = './front' + url;
-		Fs.readFile(requestedFileUrl, function(err, data) {
-			if (err != null) {
-				this.sr.writeHead(404);
-				this.sr.write("ressource not found");
-			} else {
-				this.sr.writeHead(200);
-				this.sr.write(data);
-			}
-            this.sr.end();
-		});
-	}
+        return mimeType;
+    }
+
 }
