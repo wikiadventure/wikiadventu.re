@@ -8,6 +8,4 @@ export default function scrollToID(id:string, scrollContainer?:Element) {
     } else {
         scrollContainer.scrollTo(0, top);
     }
-    
-    console.log(id + " scroll");
 }
