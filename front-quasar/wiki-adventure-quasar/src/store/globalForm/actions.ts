@@ -3,8 +3,10 @@ import { StateInterface } from '../index';
 import { GlobalForm } from './state';
 
 const actions: ActionTree<GlobalForm, StateInterface> = {
-  someAction (/* context */) {
-    // your code
+  validatePseudo({ commit, state }) {
+    if (state.pseudo.length <= 3 || state.pseudo.length >= 25 || state.pseudo.match(/[<>:|%$\/\\]/g) ) {
+        commit("randomizePseudo");
+    }
   }
 };
 
