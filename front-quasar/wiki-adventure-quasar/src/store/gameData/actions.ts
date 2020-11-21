@@ -3,7 +3,7 @@ import { StateInterface } from '../index';
 import { GameData, GameState, LobbyEvent, LobbyEventType, LobbyType, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, WinRound, WsMessage } from './state';
 
 const actions: ActionTree<GameData, StateInterface> = {
-  connect({ commit, state }) {
+  connect({ commit, dispatch, state }) {
     
     console.log("try to connect");
     var loc = window.location;
@@ -11,52 +11,30 @@ const actions: ActionTree<GameData, StateInterface> = {
     var lobbyType = state.lobbyType == LobbyType.Twitch ? "twitch" : "lobby"
     var wsURL = protocol + loc.host + "/" + lobbyType + "/" + state.lobbyID + "/" + state.uuid;
     state.ws  = new WebSocket(wsURL);
-    function onMessage(data:WsMessage) {
-      console.log("message received");
-      commit('pushMessage', data);
-    };
-    function onGameState(data:GameState) {
-      commit('gameState', data);
-    };
-    function onVoteResult(data:VoteResult) {
-      commit('voteResult', data);
-    };
-    function onUpdateScore(data:UpdateScore) {
-      commit('updateScore', data);
-    };
-    function onWinRound(data:WinRound) {
-      //store.commit('gameData/pushMessage', data);
-    };
-    function onPlayerJoin(data:PlayerJoin) {
-      commit('playerJoin', data);
-    };
-    function onPlayerLeft(data:PlayerLeft) {
-      commit('playerLeft', data);
-    };
     function dataHandler(e:MessageEvent) {
       console.log(e);
       var json:LobbyEvent<any> = JSON.parse(e.data);
       switch (json.type) {
-        case LobbyEventType.Message: { 
-          return onMessage(json.data);
+        case LobbyEventType.Message: {
+          return dispatch('onMessage', json.data);
         };
-        case LobbyEventType.GameState: { 
-          return onGameState(json.data);
+        case LobbyEventType.GameState: {
+          return dispatch('onGameState', json.data);
         };
-        case LobbyEventType.VoteResult: { 
-          return onVoteResult(json.data);
+        case LobbyEventType.VoteResult: {
+          return dispatch('onVoteResult', json.data);
         };
-        case LobbyEventType.UpdateScore: { 
-          return onUpdateScore(json.data);
+        case LobbyEventType.UpdateScore: {
+          return dispatch('onUpdateScore', json.data);
         };
-        case LobbyEventType.WinRound: { 
-          return onWinRound(json.data);
+        case LobbyEventType.WinRound: {
+          return dispatch('onWinRound', json.data);
         };
-        case LobbyEventType.PlayerJoin: { 
-          return onPlayerJoin(json.data);
+        case LobbyEventType.PlayerJoin: {
+          return dispatch('onPlayerJoin', json.data);
         };
-        case LobbyEventType.PlayerLeft: { 
-          return onPlayerLeft(json.data);
+        case LobbyEventType.PlayerLeft: {
+          return dispatch('onPlayerLeft', json.data);
         };
         default: {
           return;
@@ -70,7 +48,6 @@ const actions: ActionTree<GameData, StateInterface> = {
       console.log(e);
     };
     function onOpen(e:Event) {
-      console.log("connected");
       console.log(e);
     };
     state.ws.onmessage = dataHandler;
@@ -78,10 +55,44 @@ const actions: ActionTree<GameData, StateInterface> = {
     state.ws.onerror = errorHandler;
     state.ws.onopen = onOpen;
   },
-  sendMessage({ commit, state }, data) {
-    console.log("sendMessage");
+  onMessage({ commit }, data:WsMessage) {
+    commit('pushMessage', data);
+  },
+  onGameState({ commit }, data:GameState) {
+    commit('gameState', data);
+  },
+  onVoteResult({ commit }, data:VoteResult) {
+    commit('voteResult', data);
+  },
+  onUpdateScore({ commit }, data:UpdateScore) {
+    commit('updateScore', data);
+  },
+  onWinRound({}, data:WinRound) {
+    
+  },
+  onPlayerJoin({ commit }, data:PlayerJoin) {
+    commit('playerJoin', data);
+  },
+  onPlayerLeft({ commit }, data:PlayerLeft) {
+    commit('playerLeft', data);
+  },
+  sendMessage({ state }, data) {
     var json:WebsocketPackage = {
       type: WebsocketPackageType.Message,
+      value: data
+    };
+    state.ws?.send(JSON.stringify(json));
+  },
+  sendVote({ state}, data) {
+    var json:WebsocketPackage = {
+      type: WebsocketPackageType.Vote,
+      value: data
+    };
+    state.ws?.send(JSON.stringify(json));
+  },
+  validateJump({ state}, data) {
+    var json:WebsocketPackage = {
+      type: WebsocketPackageType.Validate,
       value: data
     };
     state.ws?.send(JSON.stringify(json));
