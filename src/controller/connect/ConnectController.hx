@@ -35,40 +35,5 @@ class ConnectController {
         }
         
     }
-    
-    /*public function publicJoin(player:Player) {
-        try {
-            var lobby = Lobby.joinPublicFree(player);
-            new GamePage(im, sr, lobby, player);
-        } catch (e:Dynamic) {
-            trace("here");
-            new ErrorResponse(im, sr, body, "server full"+e,400);
-            
-        }
-        
-    }
-    public function privateJoin(data:QuerystringParseResult, player:Player) {
-        trace("privatejoin");
-        try {
-            var lobby = Lobby.find(Lobby.decodeID(data['id']));
-            lobby.connect(player, data['password']);
-            new GamePage(im, sr, lobby, player);
-        } catch (e:Dynamic) {
-            new ErrorResponse(im, sr, body, "internal error : "+e,400);
-        }
-    }
-    public function privateCreate(data:QuerystringParseResult, player:Player) {
-        trace("privatecreate");
-        try {
-            var lobby = new Lobby(player.language, Private, data['password']);
-            lobby.giveID();// giveID method also add the lobby to the lobbylist
-            lobby.initNamespace();
-            lobby.connect(player, data['password']);
-            lobby.votePhase();
-            new GamePage(im, sr, lobby, player);
-        } catch (e:Dynamic) {
-            new ErrorResponse(im, sr, body, "internal error"+e,400);
-        }
-    }*/
 
 }
