@@ -1,7 +1,7 @@
 <template>
-  <q-layout class="gameSlideMenu" @click="close">
+  <q-layout class="gameSlideMenu">
     <input id="showMenu" type="checkbox" v-model="showMenu"/>
-    <div id="slideMenu" @click.stop="open" >
+    <div id="slideMenu">
       <label @click.stop="showMenu = !showMenu" id="labelShowMenu"><q-icon size="md" name="mdi-play"/></label>
       <q-tab-panels class="content" v-model="tab" animated>
         <q-tab-panel name="chat" class="q-pa-none">
@@ -42,6 +42,7 @@
   pointer-events: auto;
 }
 #slideMenu {
+  transition: all ease-in-out 0.2s;
 	background: var(--w-color-almost-black);
 	width: 50%;
   height: 100%;
@@ -181,30 +182,28 @@ export default defineComponent({
       //startTime = new Date().getTime(); // record time when finger first makes contact with surface
     }
 
-    function mouseMove(e:MouseEvent) {
-      if (e.clientX < 15 && !vm.showMenu) {
-        var offset =  -slideMenu.clientWidth + 15;
-        slideMenu!.style.transition = "all ease-in-out 0.2s";
-        slideMenu!.style.transform = "translateX(" + offset + "px)";
-      } else {
-        slideMenu!.style.transition = "all ease-in-out 0.2s";
-        slideMenu!.style.transform = "";
+    function keyDown(e:KeyboardEvent) {
+      if (event.defaultPrevented) {
+        return;
+      }
+      if (e.key == "Escape") {
+        vm.showMenu = !vm.showMenu;
       }
     }
 
-    this.touchsurface.addEventListener('touchstart', touchStart, false);
+    this.touchsurface!.addEventListener('touchstart', touchStart, false);
 
-    this.touchsurface.addEventListener('touchmove', touchMove, false);
+    this.touchsurface!.addEventListener('touchmove', touchMove, false);
 
-    this.touchsurface.addEventListener('touchend', touchEnd, false);
+    this.touchsurface!.addEventListener('touchend', touchEnd, false);
 
-    this.touchsurface.addEventListener('mousemove', mouseMove, false);
+    this.touchsurface!.addEventListener("keydown", keyDown, false);
 
     this.onDestroy = function () {
       this.touchsurface!.removeEventListener('touchstart', touchStart, false);
       this.touchsurface!.removeEventListener('touchmove', touchMove, false);
       this.touchsurface!.removeEventListener('touchend', touchEnd, false);
-      this.touchsurface!.removeEventListener('mousemove', mouseMove, false);
+      this.touchsurface!.addEventListener("keydown", keyDown, false);
     };
   },
   beforeDestroy() {
