@@ -46,9 +46,6 @@ class TwitchLobby extends Lobby {
         lobbyList.insert(pos,this);
         log("create the lobby", Info);
     }
-    public override function initNamespace(?name:String) {
-        super.initNamespace(this.name);
-    }
 
     public override function playPhaseEnd() {
         suggestionList = new Array<String>();
