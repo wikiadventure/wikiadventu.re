@@ -139,8 +139,8 @@ export default defineComponent({
     login(event:ConnectEvent) {
       var store = this.$store;
       var router = this.$router;
+      this.$store.dispatch('globalForm/validatePseudo');
       var query:loginQuery = {
-
         type: event.type,
         lang: this.$store.state.globalForm.lang,
         pseudo: this.$store.state.globalForm.pseudo
@@ -151,7 +151,7 @@ export default defineComponent({
       if (event.type == ConnectType.TwitchJoinWith || event.type == ConnectType.TwitchCreate) {
         console.log("twitch login");
         query.uuid = uuid.v4();
-        var twitch = window.open("https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=qjfynifqiehclsandzhh3hvhaacqaa&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Ftwitch&state=" + query.uuid + "&scope=chat%3Aread+chat%3Aedit");
+        var twitch = window.open("https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=qjfynifqiehclsandzhh3hvhaacqaa&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fapi%2Ftwitch&state=" + query.uuid + "&scope=chat%3Aread+chat%3Aedit");
         var loop = setInterval(function() { if (twitch && twitch.closed) {
           clearInterval(loop);
           console.log("twitch pop up login closed, proceed to fetch the session uuid");
@@ -166,7 +166,7 @@ export default defineComponent({
             },
             body: JSON.stringify(query)
           };
-          fetch('/twitch', options)
+          fetch('/api/twitch', options)
             .then(function(response:Response):Promise<ConnectionResponse> {
               return response.json();
             }).then(function(json:ConnectionResponse) {
@@ -184,7 +184,7 @@ export default defineComponent({
           },
           body: JSON.stringify(query)
         };
-        fetch('/connect', options)
+        fetch('/api/connect', options)
           .then(function(response:Response):Promise<ConnectionResponse> {
             return response.json();
           }).then(function(json) {
