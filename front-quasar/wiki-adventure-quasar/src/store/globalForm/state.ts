@@ -31,13 +31,13 @@ export function getLabel(lang:string):string {
     case Lang.pt:
       return "Português"; 
     default:
-      return "Select a Language";
+      return "";
   }
 }
 
 const state: GlobalForm = {
   lang: Lang.en,
-  pseudo: "roger",
+  pseudo: "",
   lobbyID: ""
 };
 
