@@ -1,6 +1,6 @@
 <template>
-  <connect-form ref="PrivateCreate" createLobby title="Create a private lobby">
-    <connect-btn @click="submit" label="Create"/>
+  <connect-form ref="PrivateCreate" createLobby :title="$t('menu.createPrivateLobby')">
+    <connect-btn @click="submit" :label="$t('create')"/>
   </connect-form>
 </template>
 <style lang="scss">

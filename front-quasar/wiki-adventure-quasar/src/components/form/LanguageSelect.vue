@@ -1,7 +1,7 @@
 <template>
   <q-select
     @input="onSelect($event)" name="lang" outlined hint=""
-    v-model="model" :options="options" label="select a language" 
+    v-model="model" :options="options" :label="$t('input.langSelect')" 
     :value="gameLang" :display-value="gameLangLabel"
     v-bind="$attrs" v-on="$listeners"
   >

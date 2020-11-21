@@ -1,7 +1,7 @@
 <template>
-  <connect-form ref="TwitchJoin" title="Join a Twitch lobby">
-    <connect-btn @click="submit(false)" label="Join"/>
-    <twitch-btn @click="submit(true)" :label="$q.screen.lt.sm ? 'Join' : 'Join with Twitch' "/>
+  <connect-form ref="TwitchJoin" :title="$t('menu.joinTwitchLobby')">
+    <connect-btn @click="submit(false)" :label="$t('join')"/>
+    <twitch-btn @click="submit(true)" :label="$q.screen.lt.sm ? $t('join') : $t('menu.button.joinWithTwitch') "/>
   </connect-form>
 </template>
 <style lang="scss">

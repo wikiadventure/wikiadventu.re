@@ -1,5 +1,5 @@
 <template>
-  <q-input outlined v-model="lobbyID" name="lobbyID" label="LobbyID" spellcheck="false" v-bind="$attrs" v-on="$listeners"
+  <q-input outlined v-model="lobbyID" name="lobbyID" :label="$t('input.lobbyID')" spellcheck="false" v-bind="$attrs" v-on="$listeners"
   hint="">
   </q-input>
 </template>

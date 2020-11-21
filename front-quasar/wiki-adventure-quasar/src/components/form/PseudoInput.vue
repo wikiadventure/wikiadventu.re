@@ -1,5 +1,5 @@
 <template>
-  <q-input outlined v-model="pseudo" label="Pseudo"
+  <q-input outlined v-model="pseudo" :label="$t('input.pseudo')"
           name="pseudo" spellcheck="false" v-bind="$attrs" v-on="$listeners"
           :rules="[ val => val && val.length >= 3 || '3 character minimum',
                     val => val && val.length <= 25 || '25 character maximum',

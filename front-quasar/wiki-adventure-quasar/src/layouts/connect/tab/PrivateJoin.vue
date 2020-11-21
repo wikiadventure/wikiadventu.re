@@ -1,6 +1,6 @@
 <template>
-    <connect-form ref="PrivateJoin" title="Join a private lobby">
-      <connect-btn @click="submit" label="Join"/>
+    <connect-form ref="PrivateJoin" :title="$t('menu.joinPrivateLobby')">
+      <connect-btn @click="submit" :label="$t('join')"/>
     </connect-form>
 </template>
 <style lang="scss">
