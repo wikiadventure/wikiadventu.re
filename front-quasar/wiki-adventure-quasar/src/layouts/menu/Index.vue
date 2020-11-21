@@ -1,6 +1,6 @@
 <template>
   <div class="main-menu-index">
-    <logo-show-in class="absolute"></logo-show-in>
+    <logo-show-in class="absolute" title="Wiki Adventure"></logo-show-in>
     <div class="skewLineContainer first"><div class="skewLine"></div></div>
     <div class="row wrapper first">
       <content-pannel id="HowToPlay" head="Play">
@@ -27,19 +27,19 @@
           <content-pannel id="Contribution" head="Contribution">
             <div class="row justify-evenly">
               <div class="q-ma-xs">
-                <p>Join the community on Discord</p>
+                <p>{{ $t('contributionSection.discord') }}</p>
                 <q-btn push icon="mdi-discord" class="discord" size="xl" label="discord" @click="openNewPage('https://discord.gg/wRN6Dam')" />
               </div>
               <div class="q-ma-xs">
-                <p>Contribute to the game on Github</p>
+                <p>{{ $t('contributionSection.github') }}</p>
                 <q-btn push icon="mdi-github" class="github" size="xl" label="Github" @click="openNewPage('https://github.com/Sacramentix/WikiAdventure')"/>
               </div>
               <div class="q-ma-xs">
-                <p>Buy me a coffee</p>  
+                <p>{{ $t('contributionSection.nano') }}</p>  
                 <q-btn push icon="img:icons/kofi.svg" class="kofi" size="xl" label="Ko-fi" @click="openNewPage('https://ko-fi.com/sacramentix')"/>
               </div>
               <div class="q-ma-xs">
-                <p>Donate some Nano</p>
+                <p>{{ $t('contributionSection.nano') }}</p>
                 <q-btn push icon="img:https://cryptologos.cc/logos/nano-nano-logo.svg?v=006" class="nano" size="xl" label="Nano" @click="openNewPage('https://nano.org')" />
               </div>
             </div>
