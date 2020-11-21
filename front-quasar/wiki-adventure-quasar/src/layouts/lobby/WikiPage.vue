@@ -15,6 +15,8 @@
   overflow-y: scroll;
   padding: 15px;
   overflow-wrap: break-word;
+  opacity: 1;
+  transition: opacity ease-in-out 0.1s;
 }
 #wikiTitle {
   text-align: center;
@@ -32,6 +34,10 @@
   h3 {
     font-size: 1.8rem;
     margin: 7px auto;
+  }
+  h4 {
+    font-size: 1.5rem;
+    margin: 5px auto;
   }
   img {
     max-width: 100%;
@@ -53,7 +59,7 @@
     margin: 1em 0;
   }
 }   
-.infobox {
+.infobox, .infobox_v2, .infobox_v3 {
     display: table;
     font-size: 0.9em;
     line-height: 1.4;
@@ -167,6 +173,12 @@
     a {
       color: var(--w-color-dark-teal);
     }
+    .notWikiLink {
+      filter: grayscale(0.75);
+    }
+    .anchorLink {
+      filter: hue-rotate(45deg);
+    }
   }
   #wikiContent {
     .hatnote {
@@ -174,13 +186,14 @@
       color: var(--w-color-teal);
     }
   }
-}
-      
+}      
 </style>
 <script lang="ts">
 import Vue from 'vue';
 import { defineComponent } from '@vue/composition-api';
 import WikiArticle from '../../mixins/wikiArticle';
+
+import scrollToID from '../../mixins/scrollToID';
 
 export default defineComponent({
   name: 'WikiPage',
@@ -199,16 +212,22 @@ export default defineComponent({
   methods: {
     requestWikiPage(url:string) {
       var vm:any = this;
+      vm.$store.dispatch('gameData/validateJump', url);
       vm.fetchArticle(url).then(
         function(article:WikiArticle) {
           //document.body.scrollTop = 0; // For Safari
           //document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-          vm.title = article.title;
-          vm.content = article.content;
-          //vm.infobox = article.infobox;
-          Vue.nextTick().then(function () {
-            vm.redirectLinks(document.getElementById("wikiPage"));
-          });
+          document.getElementById("wikiPage").style.opacity = "0";
+          setTimeout(function() {
+            vm.title = article.title;
+            vm.content = article.content;
+            //vm.infobox = article.infobox;
+            Vue.nextTick().then(function () {
+              vm.redirectLinks(document.getElementById("wikiPage"));
+            });
+            document.getElementById("wikiPage").scrollTo(0,0);
+            document.getElementById("wikiPage").style.opacity = "1";
+          }, 100);
         }
       );
     },
@@ -216,15 +235,26 @@ export default defineComponent({
       var vm = this;
       var links= doc.getElementsByTagName("a");
       for (var i=0;i<links.length;i++) {
+          if (links[i].getAttribute("href")!.startsWith("#")) {
+            links[i].classList.add("anchorLink");
+          } else if (links[i].getAttribute("href")!.startsWith("/wiki/")) {
+            links[i].classList.add("wikiLink");
+          } else {
+            links[i].classList.add("notWikiLink");
+          }
           links[i].addEventListener("click",function(e){
             //check if the link go to another wikipage and not info page or external
-            if (this.getAttribute("href")!.lastIndexOf(":") == -1 && !this.classList.contains("internal") && !this.classList.contains("external") && this.rel != "mw:ExtLink" && !this.classList.contains("new")) {
-              var idx = this.href.lastIndexOf("/");
-              var url = this.href.substring(idx+1);
-              var anchor = url.indexOf("#");
-              if (anchor != -1) url = url.substring(0, anchor);
+            if(!this.getAttribute("href")) return;
+            if (this.getAttribute("href")!.lastIndexOf(":") == -1 && !this.classList.contains("internal") && !this.classList.contains("external") && this.rel != "mw:ExtLink" && !this.classList.contains("new") && this.getAttribute("href")!.startsWith("/wiki/")) {
+              var idx = this.getAttribute("href")!.lastIndexOf("/");
+              var url = this.getAttribute("href")!.substring(idx+1);
+              var anchor = url!.indexOf("#");
+              if (anchor != -1) url = url!.substring(0, anchor);
               url = decodeURIComponent(url);
               vm.requestWikiPage(url);
+            } else if (this.getAttribute("href")!.startsWith("#")) {
+              var id = this.getAttribute("href")!.substring(1);
+              scrollToID(id, document.getElementById("wikiPage"));
             }
             e.preventDefault();
           });
