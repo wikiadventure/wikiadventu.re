@@ -1,5 +1,6 @@
 package lobby.player;
 
+import js.lib.Promise;
 import lobby.Lobby.LobbyState;
 import config.Lang;
 import config.randomName.EnglishNameGenerator;
@@ -15,6 +16,7 @@ class Player {
     public var score:Int=0;
     public var numberOfJump:Int=0;
     public var currentPage:String;
+    public var validationBuffer:Array<Promise<Bool>>;
     public var votingSuggestion:String;
     public var id:Int;//for client identification
     public var alive:Bool;
@@ -22,6 +24,7 @@ class Player {
     public function new(pseudo:String, language:Lang) {
         this.language = language;
         this.uuid = Uuid.v4();
+        validationBuffer = [];
         var dangerRegex : EReg =  ~/[<>:|%$\/\\]/g;
         if ( pseudo == null || pseudo == "" || pseudo.length < 3 || pseudo.length > 26 || dangerRegex.match(pseudo) ) {
             this.pseudo = randomNameGenerator(this.language);

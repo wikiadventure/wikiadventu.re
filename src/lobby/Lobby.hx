@@ -253,7 +253,7 @@ class Lobby {
     public function wikiTitleFormat(s:String):String {
         return s;
         
-        var regex = ~/["%&'+=?\\^`~]/g; // anything like ${ ... }
+        var regex = ~/["%&'+=?\\^`~]/g;
             var format = regex.map(s, function(r) {
                 var match = r.matched(0);
                 switch (match) {
@@ -298,6 +298,9 @@ class Lobby {
         if (wikiTitleFormat(player.currentPage) == wikiTitleFormat(url)) return;
         var requestPath = untyped __js__(" encodeURI('/w/api.php?action=query&utf8=1&prop=links&format=json&redirects=1&formatversion=2&titles=')") + wikiTitleFormat(untyped __js__("encodeURIComponent(decodeURIComponent(player.currentPage))")) + untyped __js__(" encodeURI('&pltitles=')") + wikiTitleFormat(untyped __js__("encodeURIComponent(decodeURIComponent(url))"));
         log(player.pseudo + " validation --> " + requestPath, PlayerData);
+        var oldPage = player.currentPage;
+        player.numberOfJump +=1;
+        player.currentPage = url;
         var options:HttpsRequestOptions =  {
             hostname: LangTools.getURL(language),
             path: requestPath,
@@ -310,49 +313,68 @@ class Lobby {
             }
             
         };
-        var request = Https.request(options, function (response) {
-            var body = '';
+        var validation:Promise<Bool>;
+        var validation = new Promise<Bool>(
+            function(resolve, reject) {
+                var request = Https.request(options, function (response) {
+                    var body = '';
+        
+                    response.on('data', function (chunk) {
+                        body = body + chunk;
+                    });
+                    response.on('end', function () {
+                        try {
+                            var parsed:WikiResponse = Json.parse(body);
+                            if (parsed.query.pages[0].links == null) {
+                                onCheat(player, url, body, oldPage);
+                                reject("player " + player.uuid + " for cheat");
+                            } else {
+                                resolve(true);
+                                player.validationBuffer.remove(validation);
+             
+                            }
+                        } catch(e:Dynamic) {
+                            //untyped __js__(" encodeURI(requestPath)")
+                            reject("Wiki request error during the anti cheat validation : " + e);
+                            log(requestPath, Error);
+                            log("Wiki request error during the anti cheat validation : " + e + " | \n" + body, Error);
+                        }
+                    });
+                });
+                request.on('error', function (e) {
+                    reject("Wiki request error during the anti cheat validation : " + e);
+                    log("Wiki request error during the anti cheat validation : " + e, Error);
+                });
+                request.end();
+            }
+        );
+        player.validationBuffer.push(validation);
+        if (StringTools.urlDecode(url) == endPage) {
+            Promise.all(player.validationBuffer).then(
+                function(value) {
+                    //player win
+                    startPage = null;
+                    endPage = null;
+                    var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
+                    player.score += 500 + Std.int(timeLeft);
+                    log("updateScore --> " +  player.id + "(" + player.pseudo + ") :" + player.score, PlayerData);
+                    log("WinRound --> " +  player.id + "(" + player.pseudo + ")", PlayerData);
+                    playerList.emitUpdateScore(player);
+                    playerList.emitWinRound(player);
+                    currentRound++;
+                    votePhase();
+                }, function(reason) {
+                    log("player " + player.uuid + " cheat on final validation : ", PlayerData);     
+            });
+        } 
+    }
 
-            response.on('data', function (chunk) {
-                body = body + chunk;
-            });
-            response.on('end', function () {
-                try {
-                    var parsed:WikiResponse = Json.parse(body);
-                    if (parsed.query.pages[0].links == null) {
-                        //kick for cheating
-                        log(body, PlayerData);
-                        log(player.pseudo + " is cheating!", PlayerData);
-                        log(player.currentPage + " --> " + url, PlayerData);
-                        playerList.emitMessage("it seems that " + player.pseudo + " is cheating! (or the anticheat system is broken)");
-                        playerList.emitMessage(player.pseudo + "jump from " + player.currentPage + " to " + StringTools.urlDecode(url));
-                    } else {
-                        player.numberOfJump +=1;
-                        player.currentPage = url;
-                        if (StringTools.urlDecode(url) == endPage) {
-                            startPage = null;
-                            endPage = null;
-                            var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
-                            player.score += 500 + Std.int(timeLeft);
-                            log("updateScore --> " +  player.id + "(" + player.pseudo + ") :" + player.score, PlayerData);
-                            log("WinRound --> " +  player.id + "(" + player.pseudo + ")", PlayerData);
-                            playerList.emitUpdateScore(player);
-                            playerList.emitWinRound(player);
-                            currentRound++;
-                            votePhase();
-                        }             
-                    }
-                } catch(e:Dynamic) {
-                    //untyped __js__(" encodeURI(requestPath)")
-                    log(requestPath, Error);
-                    log("Wiki request error during the anti cheat validation : " + e + " | \n" + body, Error);
-                }
-            });
-        });
-        request.on('error', function (e) {
-            log("Wiki request error during the anti cheat validation : " + e, Error);
-        });
-        request.end();
+    public function onCheat(player:Player, url:String, body:String, oldPage:String) {
+        log(body, PlayerData);
+        log(player.pseudo + " is cheating!", PlayerData);
+        log(oldPage + " --> " + url, PlayerData);
+        playerList.emitMessage("it seems that " + player.pseudo + " is cheating! (or the anticheat system is broken)");
+        playerList.emitMessage(player.pseudo + "jump from " + player.currentPage + " to " + StringTools.urlDecode(url));
     }
 
     /**
@@ -599,7 +621,6 @@ class Lobby {
         // if no free slot are find create a new public lobby
         var lobby = new Lobby(player.language, Public);
         lobby.giveID();// giveID method also add the lobby to the lobbylist
-        lobby.initNamespace();
         lobby.connect(player);
         lobby.votePhase();
         return lobby;
