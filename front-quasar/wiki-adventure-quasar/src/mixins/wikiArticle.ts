@@ -47,7 +47,7 @@ export default class WikiArticle {
   }
 
   async fetch() {
-    const response:wikiResponse = await fetch('https://'+this.lang+'.wikipedia.org/w/api.php?action=parse&prop=text&format=json&origin=*&disableeditsection&'+(this.isMobile ? "mobileformat":"")+'&page='+this.pageURL).then(function(response){return response.json()});
+    const response:wikiResponse = await fetch('https://'+this.lang+'.wikipedia.org/w/api.php?action=parse&prop=text&redirects=1&format=json&origin=*&disableeditsection&'+(this.isMobile ? "mobileformat":"")+'&page='+this.pageURL).then(function(response){return response.json()});
     this.title = response.parse.title;
     this.formatHTML(response.parse.text['*']);
     return this;
