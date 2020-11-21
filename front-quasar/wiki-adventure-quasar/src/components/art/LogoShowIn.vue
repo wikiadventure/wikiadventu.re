@@ -5,7 +5,7 @@
         <img src="svg/logoV1.svg" alt="wikipedia logo"/>
       </div>
     </div>
-    <div id="logoShowInTitle"><p>Wiki Adventure</p></div>
+    <div id="logoShowInTitle"><p>{{ title }}</p></div>
   </div>
 </template>
 <style>
@@ -124,6 +124,9 @@ import { defineComponent } from '@vue/composition-api';
 export default defineComponent({
   name: 'LogoShowIn',
   components: {  },
+  props: {
+    title: String
+  },
   mounted() {
     var logo = document.getElementById("logoShowInLogo");
     logo.addEventListener('animationend', () => {
