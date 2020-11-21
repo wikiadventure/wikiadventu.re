@@ -177,7 +177,6 @@ class TwitchController {
         trace("create the twitch lobby");
         var lobby = new TwitchLobby(player, passwordHash);
         lobby.giveID();// giveID method also add the lobby to the lobbylist
-        lobby.initNamespace();
         lobby.join(player, passwordHash);
         lobby.votePhase();
         return lobby;

@@ -219,14 +219,6 @@ class Lobby {
         playerList.emitPlayerLeft(player);
     }
 
-    /**
-     * create a socket io namespace for the lobby and assign data handler to each channel
-     */
-    public function initNamespace(?name:String) {
-       
-    }
-
-
     public function sendCurrentState(player:Player) {
         var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
         if (state == Playing) {
