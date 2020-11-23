@@ -3,17 +3,17 @@
     <div id="grid-leaderboard">
       <div class="grid-leaderboard-podium grid-leaderboard-2">
         <div id="position-2"><img src="svg/podium2neonV2.svg" alt="number 2"/></div>
-        <div id="name-2">{{ playerByScore[1] ? playerByScore[1].name : "" }}</div>
+        <div id="name-2">{{ playerByScore[1] ? playerByScore[1].pseudo : "" }}</div>
         <div id="score-2">{{ playerByScore[1] ? playerByScore[1].score : "" }}</div>
       </div>
       <div class="grid-leaderboard-podium grid-leaderboard-1">
         <div id="position-1"><img src="svg/podium1neonV2.svg" alt="number 1"/></div>
-        <div id="name-1">{{ playerByScore[0] ? playerByScore[0].name : "" }}</div>
+        <div id="name-1">{{ playerByScore[0] ? playerByScore[0].pseudo : "" }}</div>
         <div id="score-1">{{ playerByScore[0] ? playerByScore[0].score : "" }}</div>
       </div>
       <div class="grid-leaderboard-podium grid-leaderboard-3">
         <div id="position-3"><img src="svg/podium3neonV2.svg" alt="number 3"/></div>
-        <div id="name-3">{{ playerByScore[1] ? playerByScore[1].name : "" }}</div>
+        <div id="name-3">{{ playerByScore[1] ? playerByScore[1].pseudo : "" }}</div>
         <div id="score-3">{{ playerByScore[1] ? playerByScore[1].score : "" }}</div>
       </div>
       <div class="grid-leaderboard-item" v-for="(p, i) in playerByScore.slice(3)" :key="p.id">
