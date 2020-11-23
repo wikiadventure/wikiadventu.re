@@ -1,7 +1,7 @@
 import { store } from 'quasar/wrappers';
 import { MutationTree } from 'vuex';
 import { Lang } from '../globalForm/state';
-import { GameData, GameState, LobbyType, Message, Player, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, WsMessage } from './state';
+import { GameData, GameState, LobbyType, Message, Player, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, WinRound, WsMessage } from './state';
 
 const mutation: MutationTree<GameData> = {
   setLang(state:GameData, l:Lang) {
@@ -60,17 +60,20 @@ const mutation: MutationTree<GameData> = {
     state.lobbyState = g.state;
     state.round = g.round;
     state.timeLeft = g.time;
-    var timeStamp = Date.now();
-    var stateCounter = setInterval(function() {
+    state.timeStamp = Date.now();
+    state.stateCounter = setInterval(function() {
       var time = Date.now();
-      var dt = time - timeStamp;
-      timeStamp = time;
+      var dt = time - state.timeStamp;
+      state.timeStamp = time;
       state.timeLeft = state.timeLeft - dt*0.001;
       if (state.timeLeft <= 0) {
-        clearInterval(stateCounter);
+        clearInterval(state.stateCounter);
         state.timeLeft = 0;
       }
-  }, 100);
+    }, 100);
+  },
+  winRound(state:GameData, w:WinRound) {
+    state.winnerId = w.id;
   }
   
 };

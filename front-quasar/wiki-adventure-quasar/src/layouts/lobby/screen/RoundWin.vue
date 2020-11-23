@@ -12,6 +12,7 @@
   left: 0;
   background: rgba(0,0,0,0.5);
   z-index: 10;
+  opacity: 0;
   transition: all ease-in-out 0.2s;
 }
 </style>

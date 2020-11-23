@@ -34,7 +34,7 @@ class Lobby {
 
     public var playTimeOut:Int; //time in second before a round end automatically
     public var voteTimeOut:Int; //time of the Voting state
-    public var roundFinishTimeOut:Int = 0; //time between the end of the play state and the begin of the vote state
+    public var roundFinishTimeOut:Int = 5; //time between the end of the play state and the begin of the vote state
     public var gameFinishTimeOut:Int = 30;
 
     public static var lobbyLimit:Int = 10000;
@@ -48,7 +48,7 @@ class Lobby {
         lobbyList = new Array<Lobby>();
     }
 
-    public function new(language : Lang, type:LobbyType, ?passwordHash:String, slot:Int=15, round:Int=3, playTimeOut:Int=600, voteTimeOut:Int=30) {
+    public function new(language : Lang, type:LobbyType, ?passwordHash:String, slot:Int=15, round:Int=1, playTimeOut:Int=45, voteTimeOut:Int=30) {
         if (lobbyList.length >= lobbyLimit) {
             throw "Lobby limit has been reached!";
         } else if (getPrivateLobbyLength() >= privateLimit) {
@@ -362,7 +362,7 @@ class Lobby {
                     playerList.emitUpdateScore(player);
                     playerList.emitWinRound(player);
                     currentRound++;
-                    votePhase();
+                    roundFinishPhase();
                 }, function(reason) {
                     log("player " + player.uuid + " cheat on final validation : ", PlayerData);     
             });
@@ -388,23 +388,6 @@ class Lobby {
     public function vote(player:Player, content:String) {
         log("player vote : " + player.uuid + " --> " + player.pseudo + " | " + content, PlayerData);
         player.votingSuggestion = content;
-    }
-
-    /**
-     * start the voting phase
-     * and call selectPage when the timer run out
-     */
-    public function votePhase() {
-        if(playerList.length == 0) return;
-        state = Voting;
-        initNewPhase();
-        Timers.setTimeout(function () {
-            var suggestionList = new Array<String>();
-            for (player in playerList) {
-                suggestionList.push(player.votingSuggestion);
-            }
-            selectPage(suggestionList);
-        },currentStateTimeOut()*1000);
     }
 
     /**
@@ -498,13 +481,28 @@ class Lobby {
                 } else {
                     onFinish();
                 }
-                
-
-
             }, function(reason) {
                 log("SEVERE something wrong append during page selection : " + reason, Error);
         });
     }
+
+        /**
+     * start the voting phase
+     * and call selectPage when the timer run out
+     */
+     public function votePhase() {
+        if(playerList.length == 0) return;
+        state = Voting;
+        initNewPhase();
+        loop = Timers.setTimeout(function () {
+            var suggestionList = new Array<String>();
+            for (player in playerList) {
+                suggestionList.push(player.votingSuggestion);
+            }
+            selectPage(suggestionList);
+        },currentStateTimeOut()*1000);
+    }
+
 
     /**
      * set the current page of each player to the starting one who get the picked in the voting phase
@@ -520,19 +518,14 @@ class Lobby {
         playerList.emitVoteResult(startPage, endPage);
         state = Playing;
         initNewPhase();
-        Timers.setTimeout(function () {
+        loop = Timers.setTimeout(function () {
             playPhaseEnd();
         },currentStateTimeOut()*1000);
     }
 
     public function playPhaseEnd() {
-        currentRound++;
         for (player in playerList) {
             player.votingSuggestion = null;
-        }
-        if (currentRound > round) {
-            gameFinishPhase();
-            return;
         }
         roundFinishPhase();
     }
@@ -542,7 +535,7 @@ class Lobby {
         currentRound = 1;
         state = GameFinish;
         initNewPhase();
-        Timers.setTimeout(function () {
+        loop = Timers.setTimeout(function () {
             votePhase();
         },currentStateTimeOut()*1000);
 
@@ -553,10 +546,17 @@ class Lobby {
      * and start the voting phase when the timer run out
      */
     public function roundFinishPhase() {
+        Timers.clearTimeout(loop);
+        if (state == RoundFinish) return;
         if (playerList.length == 0) return;
+        currentRound++;
         state = RoundFinish;
         initNewPhase();
-        Timers.setTimeout(function () {
+        loop = Timers.setTimeout(function () {        
+            if (currentRound > round) {
+                gameFinishPhase();
+                return;
+            }
             votePhase();
         },currentStateTimeOut()*1000);
     }
@@ -588,9 +588,9 @@ class Lobby {
                     var spaceRegex = ~/ +/g;
                     var url =  spaceRegex.replace(parsed.query.random[0].title, "_");
                     urlList.push(url);
-                    resolve(true);
                     log("success : random page " + url, Info);
-    
+                    resolve(true);
+
                 } catch(e:Dynamic) {
                     log("random page request fail : " + e, Error);
                     reject("SEVERE server Error : " + e);

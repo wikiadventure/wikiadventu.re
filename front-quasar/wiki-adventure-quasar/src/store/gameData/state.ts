@@ -13,13 +13,16 @@ export interface GameData {
   lobbyType: LobbyType;
   startPage: string;
   lobbyState: LobbyState;
+  stateCounter: NodeJS.Timeout;
   round: number;
-  timeLeft: number,
+  timeLeft: number;
+  timeStamp: number;
   endPage: string;
   lobbyID: string;
   selfPlayerID: number;
   players: Array<Player>;
   messages: Array<Message>;
+  winnerId: number;
 }
 
 export interface Player {
@@ -50,13 +53,16 @@ const state: GameData = {
   lobbyType: LobbyType.Public,
   lobbyID: "",
   lobbyState: LobbyState.Voting,
+  stateCounter: undefined,
   round: 0,
   timeLeft: 0,
+  timeStamp: 0,
   startPage: "",
   endPage: "",
   selfPlayerID: -1,
   players: [],
-  messages: []
+  messages: [],
+  winnerId: -1
 };
 
 export enum LobbyEventType {

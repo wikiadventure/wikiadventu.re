@@ -67,8 +67,8 @@ const actions: ActionTree<GameData, StateInterface> = {
   onUpdateScore({ commit }, data:UpdateScore) {
     commit('updateScore', data);
   },
-  onWinRound({}, data:WinRound) {
-    
+  onWinRound({ commit }, data:WinRound) {
+    commit('winRound', data);
   },
   onPlayerJoin({ commit }, data:PlayerJoin) {
     commit('playerJoin', data);
