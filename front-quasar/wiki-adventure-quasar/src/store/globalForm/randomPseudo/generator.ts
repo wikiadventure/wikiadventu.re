@@ -1,4 +1,5 @@
 import { Lang } from '../state';
+import { getEnglish } from './lang/english';
 
 export function getRandomPseudo(lang:string):string {
     switch (lang) {
@@ -20,34 +21,3 @@ export function getRandomPseudo(lang:string):string {
         return "Anonymous";
     }
 }
-const disheList:Array<string> = [
-  "Cobbler",
-  "Faggots",
-  "Scones",
-  "Brownie",
-  "Cookie",
-  "Muffins",
-  "Tea",
-  "PopCorn"
-];
-const actionList:Array<string> = [
-  "Monster",
-  "Devourer",
-  "Smasher",
-  "Lawyer",
-  "Zealot",
-  "Leader",
-  "Dealer",
-  "Manager"
-];
-function getEnglish():string {
-
-
-    var randomDisheID = Math.floor(Math.random() * Math.floor(disheList.length));
-    var randomActionID = Math.floor(Math.random() * Math.floor(actionList.length));
-    return disheList[randomDisheID] + actionList[randomActionID];
-}
-
-
-
-
