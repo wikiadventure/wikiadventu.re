@@ -12,10 +12,7 @@ First you need to install haxe > 4.0.0 [here](https://haxe.org/download/)
 
 Then install all needed haxe librairies with command :
 ```
-haxelib git twitch-chat-client https://github.com/Sacramentix/hx-twitch-chat-client.git
-haxelib install hxsocketio
-haxelib install uuid
-haxelib install tink_json
+haxelib install node.hxml
 ```
 ### NodeJS
 
@@ -26,6 +23,10 @@ then install the corresponding npm modules with command :
 cd bin
 npm install
 ```
+### Quasar
+
+Check the README.md in front-quasar/wiki-adventure-quasar
+
  ### Visual Studio Code   
 
 make sure to install the haxe extension pack
@@ -42,6 +43,14 @@ You can find a digram of the project structure [here](https://app.creately.com/d
     
 ## TODO
 
-- [ ] Make a game layout in quasar
-- [ ] Vuex store for game data
-- [ ] handle connection with the new front end
+- [x] Make a game layout in quasar
+- [x] Vuex store for game data
+- [x] Handle connection with the new front end
+- [x] Add round winner animation
+- [x] Add a leaderboard at the end of the game
+- [ ] Add close button to the round winner animation and leaderboard
+- [ ] Integrate theme switch, ui language select ( ui lange != game lang which define the wiki language )
+- [ ] Complete the i18n internalization
+- [ ] Add sound in game
+- [ ] Add a volume slider and a mute button
+- [ ] Add an celebration on the leaderboard screen
