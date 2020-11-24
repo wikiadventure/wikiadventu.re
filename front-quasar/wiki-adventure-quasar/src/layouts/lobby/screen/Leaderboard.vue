@@ -1,5 +1,6 @@
 <template>
   <div id="leaderboard">
+    <exit-btn target="leaderboard"/>
     <div id="grid-leaderboard">
       <div class="grid-leaderboard-podium grid-leaderboard-2">
         <div id="position-2"><img src="svg/podium2neonV2.svg" alt="number 2"/></div>
@@ -193,16 +194,22 @@
 }
 </style>
 <script lang="ts">
+import ExitBtn from '../../../components/ExitButton.vue'
+
 import { defineComponent } from '@vue/composition-api';
 import { Player } from '../../../store/gameData/state';
 
 export default defineComponent({
   name: 'Leaderboard',
+  components: { ExitBtn },
   computed: {
     playerByScore():Player[] {
       var players = this.$store.state.gameData.players as Player[];
       return players.sort((a:Player, b:Player) => {return a.score - b.score});
     }
+  },
+  props: {
+    toggle:Boolean
   }
 });
 </script>

@@ -8,7 +8,7 @@
     --w-color-light-teal: #84d2ce;
     scroll-behavior: smooth;
 }
-:root {
+.body {
   overscroll-behavior: none;
 }
   
@@ -17,9 +17,6 @@
       scroll-behavior: auto;
     }
 }
-
-
-
 body.no-touch.body--dark ::-webkit-scrollbar {
 	width: 12px;
   background: rgba(0,0,0,.3);

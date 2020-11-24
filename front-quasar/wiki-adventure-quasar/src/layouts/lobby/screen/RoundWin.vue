@@ -1,5 +1,6 @@
 <template>
   <div class="round-win">
+    <exit-btn target="round-win"/>
     <logo-show-in :title="winner" ></logo-show-in>
   </div>
 </template>
@@ -17,15 +18,17 @@
 }
 </style>
 <script lang="ts">
+import ExitBtn from '../../../components/ExitButton.vue'
 import LogoShowIn from '../../../components/art/LogoShowIn.vue';
 
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'RoundWin',
-  components: { LogoShowIn },
+  components: { LogoShowIn, ExitBtn },
   props: {
-    winner:String
+    winner:String,
+    toggle:Boolean
   }
 });
 </script>

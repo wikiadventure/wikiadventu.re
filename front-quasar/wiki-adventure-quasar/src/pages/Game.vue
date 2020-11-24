@@ -2,7 +2,7 @@
   <div>
     <game-slide-menu/>
     <wiki-page ref="wikiPage"/>
-    <round-win id="roundWin" v-if="showWinRound" :winner="winner ? winner.pseudo : ''"></round-win>
+    <round-win id="roundWin" v-if="showRoundWin" :winner="winner ? winner.pseudo : ''"></round-win>
     <leaderboard v-if="showLeaderboard"></leaderboard>
   </div>
 </template>
@@ -21,12 +21,12 @@ export default defineComponent({
   name: 'Index',
   components: { GameSlideMenu, WikiPage, RoundWin, Leaderboard },
   data(): {
-    showWinRound:boolean,
-    showLeaderboard:boolean,
+    showRoundWin:boolean,
+    showLeaderboard:Boolean,
     unsubscribe:() => void
   } {
     return {
-      showWinRound: false,
+      showRoundWin: false,
       showLeaderboard: false,
       unsubscribe: () => {}
     }
@@ -36,10 +36,49 @@ export default defineComponent({
       var players = this.$store.state.gameData.players as Player[];
       var winner = players.find(p => p.id == this.$store.state.gameData.winnerId );
       return winner;
-    }
+    },
+    roundWin: {
+      get: function ():Boolean {
+        return this.showRoundWin;
+      },
+      set: function (v:boolean) {
+        var vm = this;
+        if (v) this.showRoundWin = v;
+        else setTimeout(() => {this.showRoundWin  = v}, 200);
+        Vue.nextTick().then(function () {
+          document.getElementById("roundWin").style.opacity = Number(v).toString(); 
+        });
+      }
+    },
+    leaderboard: {
+      get: function ():Boolean {
+        return this.showLeaderboard;
+      },
+      set: function (v:boolean) {
+        var vm = this;
+        if (v) this.showLeaderboard = v;
+        else setTimeout(() => {this.showLeaderboard  = v}, 200);
+        Vue.nextTick().then(function () {
+          document.getElementById("leaderboard").style.opacity = Number(v).toString(); 
+        });;
+      }
+    } 
   },
   mounted() {
     this.$store.dispatch('gameData/connect');
+    this.$root.$on('close-screen', this.close);
+  },
+  methods: {
+    close(target:string) {
+      console.log(target);
+      switch (target) {
+        case "round-win":
+          return this.roundWin = false;
+        case "leaderboard":
+          return this.leaderboard = false;
+        default: return;
+      }
+    }
   },
   created() {
     var vm = this;
@@ -47,20 +86,12 @@ export default defineComponent({
       if (action.type === 'gameData/onGameState') {
         if ( action.payload!.state == LobbyState.RoundFinish ) {
           if (!vm.winner) return;
-          vm.showWinRound = true;
-          Vue.nextTick().then(function () {
-            document.getElementById("roundWin").style.opacity = "1";
-            setTimeout(() => {document.getElementById("roundWin").style.opacity = "0";}, action.payload!.time*1000-200);
-            setTimeout(() => {vm.showWinRound = false}, action.payload!.time*1000);
-          });
+          vm.roundWin = true;
+          setTimeout(() => {vm.roundWin = false}, action.payload!.time*1000);
         }
         else if ( action.payload!.state == LobbyState.GameFinish ) {
-          vm.showLeaderboard = true;
-          Vue.nextTick().then(function () {
-            document.getElementById("leaderboard").style.opacity = "1";
-            setTimeout(() => {document.getElementById("leaderboard").style.opacity = "0";}, action.payload!.time*1000-200);
-            setTimeout(() => {vm.showLeaderboard = false}, action.payload!.time*1000);            
-          });
+          vm.leaderboard = true;
+          setTimeout(() => {vm.leaderboard = false}, action.payload!.time*1000);
         }
       }
     });
