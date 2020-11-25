@@ -4,6 +4,10 @@
     <wiki-page ref="wikiPage"/>
     <round-win id="roundWin" v-if="showRoundWin" :winner="winner ? winner.pseudo : ''"></round-win>
     <leaderboard v-if="showLeaderboard"></leaderboard>
+    <audio id="winSound">
+      <source src="sound/win.ogg" type="audio/ogg">
+      <source src="sound/win.mp3" type="audio/mpeg">
+    </audio>
   </div>
 </template>
 <script lang="ts">
@@ -14,7 +18,7 @@ import WikiPage from "../layouts/lobby/WikiPage.vue";
 import RoundWin from "../layouts/lobby/screen/RoundWin.vue"
 
 import { defineComponent } from '@vue/composition-api';
-import { LobbyState, Player } from "../store/gameData/state";
+import { GameState, LobbyState, Player, WinRound } from "../store/gameData/state";
 import Leaderboard from "../layouts/lobby/screen/Leaderboard.vue";
 
 export default defineComponent({
@@ -78,21 +82,39 @@ export default defineComponent({
           return this.leaderboard = false;
         default: return;
       }
+    },
+    onGameState(payload:GameState) {
+      var vm = this;
+      switch (payload.state) {
+        case LobbyState.RoundFinish:
+          if (!vm.winner) return;
+          return;
+        case LobbyState.GameFinish:
+          vm.leaderboard = true;
+          setTimeout(() => {vm.leaderboard = false}, payload.time*1000);
+          return;
+      }
+    },
+    onWinRound(payload:WinRound) {
+      var vm = this;
+      if (payload.id == vm.$store.state.gameData.selfPlayerID) {
+        var winSound = document.getElementById("winSound") as HTMLAudioElement;
+        winSound.play();
+        vm.roundWin = true;
+        setTimeout(() => {vm.roundWin = false}, 5000);
+        return;
+      }
     }
   },
   created() {
     var vm = this;
     vm.unsubscribe = vm.$store.subscribeAction((action, state) => {
-      if (action.type === 'gameData/onGameState') {
-        if ( action.payload!.state == LobbyState.RoundFinish ) {
-          if (!vm.winner) return;
-          vm.roundWin = true;
-          setTimeout(() => {vm.roundWin = false}, action.payload!.time*1000);
-        }
-        else if ( action.payload!.state == LobbyState.GameFinish ) {
-          vm.leaderboard = true;
-          setTimeout(() => {vm.leaderboard = false}, action.payload!.time*1000);
-        }
+
+      switch (action.type) {
+        case "gameData/onGameState":
+          return this.onGameState(action.payload);
+        case "gameData/onWinRound":
+          return this.onWinRound(action.payload);
       }
     });
   },
