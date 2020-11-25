@@ -14,8 +14,8 @@
       </div>
       <div class="grid-leaderboard-podium grid-leaderboard-3">
         <div id="position-3"><img src="svg/podium3neonV2.svg" alt="number 3"/></div>
-        <div id="name-3">{{ playerByScore[1] ? playerByScore[1].pseudo : "" }}</div>
-        <div id="score-3">{{ playerByScore[1] ? playerByScore[1].score : "" }}</div>
+        <div id="name-3">{{ playerByScore[2] ? playerByScore[2].pseudo : "" }}</div>
+        <div id="score-3">{{ playerByScore[2] ? playerByScore[2].score : "" }}</div>
       </div>
       <div class="grid-leaderboard-item" v-for="(p, i) in playerByScore.slice(3)" :key="p.id">
         <div class="position">{{ i+3 }}</div>
@@ -205,7 +205,7 @@ export default defineComponent({
   computed: {
     playerByScore():Player[] {
       var players = this.$store.state.gameData.players as Player[];
-      return players.sort((a:Player, b:Player) => {return a.score - b.score});
+      return players.sort((a:Player, b:Player) => {return b.score - a.score});
     }
   },
   props: {
