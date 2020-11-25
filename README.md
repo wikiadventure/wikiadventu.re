@@ -48,7 +48,7 @@ You can find a digram of the project structure [here](https://app.creately.com/d
 - [x] Handle connection with the new front end
 - [x] Add round winner animation
 - [x] Add a leaderboard at the end of the game
-- [ ] Add close button to the round winner animation and leaderboard
+- [x] Add close button to the round winner animation and leaderboard
 - [ ] Integrate theme switch, ui language select ( ui lange != game lang which define the wiki language )
 - [ ] Complete the i18n internalization
 - [ ] Add sound in game
