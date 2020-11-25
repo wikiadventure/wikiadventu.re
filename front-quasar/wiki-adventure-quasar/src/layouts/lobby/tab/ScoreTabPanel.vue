@@ -33,7 +33,8 @@ export default defineComponent({
   },
   computed: {
     players():Array<Player> {
-      return this.$store.state.gameData.players.filter((p:Player) => p.isConnected);
+      var players = this.$store.state.gameData.players as Player[];
+      return players.sort((a:Player, b:Player) => {return b.score - a.score}).filter((p:Player) => p.isConnected);
     }
   },
   methods: {
