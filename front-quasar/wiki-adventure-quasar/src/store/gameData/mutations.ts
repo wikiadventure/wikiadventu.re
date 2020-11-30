@@ -1,6 +1,6 @@
 import { store } from 'quasar/wrappers';
+import { Lang } from 'src/i18n';
 import { MutationTree } from 'vuex';
-import { Lang } from '../globalForm/state';
 import { GameData, GameState, LobbyType, Message, Player, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, WinRound, WsMessage } from './state';
 
 const mutation: MutationTree<GameData> = {
@@ -74,6 +74,12 @@ const mutation: MutationTree<GameData> = {
   },
   winRound(state:GameData, w:WinRound) {
     state.winnerId = w.id;
+  },
+  mute(state:GameData, m:boolean) {
+    state.mute = m;
+  },
+  volume(state:GameData, v:number) {
+    state.volume = v;
   }
   
 };

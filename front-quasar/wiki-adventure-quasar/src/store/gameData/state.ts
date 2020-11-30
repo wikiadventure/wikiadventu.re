@@ -1,4 +1,4 @@
-import { Lang } from "../globalForm/state";
+import { Lang } from "src/i18n";
 
 export enum LobbyType {
   Public = "Public",
@@ -23,6 +23,8 @@ export interface GameData {
   players: Array<Player>;
   messages: Array<Message>;
   winnerId: number;
+  volume:number;
+  mute:boolean;
 }
 
 export interface Player {
@@ -62,7 +64,9 @@ const state: GameData = {
   selfPlayerID: -1,
   players: [],
   messages: [],
-  winnerId: -1
+  winnerId: -1,
+  volume: 1,
+  mute: false
 };
 
 export enum LobbyEventType {
