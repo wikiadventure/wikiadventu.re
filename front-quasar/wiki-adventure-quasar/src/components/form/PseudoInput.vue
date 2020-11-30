@@ -23,7 +23,6 @@
 
 <script lang="ts">
 import { defineComponent, ref } from '@vue/composition-api';
-import { Lang, getLabel } from '../../store/globalForm/state';
 
 export default defineComponent({
   name: 'PseudoInput',

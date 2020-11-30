@@ -2,15 +2,14 @@
   <q-select
     @input="onSelect($event)" name="lang" outlined hint=""
     v-model="model" :options="options" :label="$t('input.langSelect')" 
-    :value="gameLang" :display-value="gameLangLabel"
+    :value="getLang" :display-value="getLangLabel"
     v-bind="$attrs" v-on="$listeners"
   >
   </q-select>
 </template>
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
-import { QSelect } from 'quasar';
-import { Lang, getLabel } from '../../store/globalForm/state';
+import { getLabel, Lang } from '../../i18n';
 
 export default defineComponent({
   name: 'LangSelect',
@@ -34,10 +33,10 @@ export default defineComponent({
       return optionsList;
 
     },
-    gameLang():string {
+    getLang():string {
       return this.$store.state.globalForm.lang.toString();
     },
-    gameLangLabel():string {
+    getLangLabel():string {
      return getLabel(this.$store.state.globalForm.lang);
     }
   }
