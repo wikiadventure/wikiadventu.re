@@ -1,6 +1,7 @@
 import { MutationTree } from 'vuex';
-import { GlobalForm, Lang } from './state';
+import { GlobalForm } from './state';
 import { getRandomPseudo } from './randomPseudo/generator';
+import { Lang } from 'src/i18n';
 
 const mutation: MutationTree<GlobalForm> = {
   setLang(state:GlobalForm, l:Lang) {

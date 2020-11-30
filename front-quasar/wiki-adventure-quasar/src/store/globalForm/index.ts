@@ -1,6 +1,6 @@
 import { Module } from 'vuex';
 import { StateInterface } from '../index';
-import state, { GlobalForm, Lang } from './state';
+import state, { GlobalForm } from './state';
 import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';

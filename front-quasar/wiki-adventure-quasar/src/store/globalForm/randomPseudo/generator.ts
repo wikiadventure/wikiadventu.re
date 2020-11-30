@@ -1,4 +1,4 @@
-import { Lang } from '../state';
+import { Lang } from 'src/i18n';
 import { getEnglish } from './lang/english';
 
 export function getRandomPseudo(lang:string):string {

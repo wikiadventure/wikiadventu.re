@@ -118,8 +118,8 @@ import Index from "../../layouts/menu/Index.vue";
 
 import { defineComponent } from '@vue/composition-api';
 import { ConnectEvent, ConnectType } from "../../mixins/connectEvent";
-import { Lang } from "../../store/globalForm/state";
 import { LobbyType } from "../../store/gameData/state";
+import { Lang } from '../../i18n';
 
 export default defineComponent({
   name: 'ConnectMenu',

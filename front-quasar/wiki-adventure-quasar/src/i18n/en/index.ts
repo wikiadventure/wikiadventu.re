@@ -18,7 +18,7 @@ export default {
   join: "join",
   create: "create",
   input: {
-    langSelect: "select a language",
+    langSelect: "select wiki language",
     lobbyID: "lobby id",
     pseudo: "pseudo",
     password: "password"

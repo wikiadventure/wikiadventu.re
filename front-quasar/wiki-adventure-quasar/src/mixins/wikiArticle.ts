@@ -1,4 +1,4 @@
-import { Lang } from 'src/store/globalForm/state';
+import { Lang } from "src/i18n";
 
 interface heading {
   title:string,
