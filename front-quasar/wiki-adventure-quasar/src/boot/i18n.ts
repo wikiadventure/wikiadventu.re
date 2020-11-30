@@ -12,8 +12,8 @@ declare module 'vue/types/vue' {
 Vue.use(VueI18n);
 
 export const i18n = new VueI18n({
-  locale: "en-us",
-  fallbackLocale: "en-us",
+  locale: "en",
+  fallbackLocale: "en",
   messages
 });
 
