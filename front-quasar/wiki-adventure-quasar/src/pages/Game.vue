@@ -27,12 +27,16 @@ export default defineComponent({
   data(): {
     showRoundWin:boolean,
     showLeaderboard:Boolean,
-    unsubscribe:() => void
+    winAudio:HTMLAudioElement | null,
+    unsubscribeAction:() => void,
+    unsubscribeMutation:() => void
   } {
     return {
       showRoundWin: false,
       showLeaderboard: false,
-      unsubscribe: () => {}
+      winAudio: null,
+      unsubscribeAction: () => {},
+      unsubscribeMutation:() => {}
     }
   },
   computed: {
@@ -71,6 +75,7 @@ export default defineComponent({
   mounted() {
     this.$store.dispatch('gameData/connect');
     this.$root.$on('close-screen', this.close);
+    this.winAudio = document.getElementById("winSound") as HTMLAudioElement;
   },
   methods: {
     close(target:string) {
@@ -98,18 +103,22 @@ export default defineComponent({
     onWinRound(payload:WinRound) {
       var vm = this;
       if (payload.id == vm.$store.state.gameData.selfPlayerID) {
-        var winSound = document.getElementById("winSound") as HTMLAudioElement;
-        winSound.play();
+        this.winAudio.play();
         vm.roundWin = true;
         setTimeout(() => {vm.roundWin = false}, 5000);
         return;
       }
+    },
+    onVolume(payload:number) {
+      this.winAudio.volume = payload;
+    },
+    onMute(payload:boolean) {
+      this.winAudio.muted = payload;
     }
   },
   created() {
     var vm = this;
-    vm.unsubscribe = vm.$store.subscribeAction((action, state) => {
-
+    vm.unsubscribeAction = vm.$store.subscribeAction((action, state) => {
       switch (action.type) {
         case "gameData/onGameState":
           return this.onGameState(action.payload);
@@ -117,9 +126,18 @@ export default defineComponent({
           return this.onWinRound(action.payload);
       }
     });
+    vm.unsubscribeMutation = vm.$store.subscribe((mutation, state) => {
+      switch (mutation.type) {
+        case "gameData/volume":
+          return this.onVolume(mutation.payload);
+        case "gameData/mute":
+          return this.onMute(mutation.payload);
+      }
+    });
   },
   beforeDestroy() {
-    this.unsubscribe!();
+    this.unsubscribeAction!();
+    this.unsubscribeMutation!();
   }
 });
 </script>
