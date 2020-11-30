@@ -15,6 +15,10 @@
         <q-tab-panel name="game" class="q-pa-none">
           <game-tab-panel></game-tab-panel>
         </q-tab-panel>
+
+        <q-tab-panel name="setting" class="q-pa-none">
+          <setting-tab-panel></setting-tab-panel>
+        </q-tab-panel>
       </q-tab-panels>
 
       <q-separator></q-separator>
@@ -29,6 +33,7 @@
         <q-tab name="chat" icon="mdi-android-messages"></q-tab><!-- or icon="mdi-chat" -->
         <q-tab name="score" icon="mdi-crown"></q-tab>
         <q-tab name="game" icon="mdi-gamepad"></q-tab>
+        <q-tab name="setting" icon="mdi-cog"></q-tab>
       </q-tabs>
     </div>
   </q-layout>
@@ -104,12 +109,13 @@
 import ChatTabPanel from "./tab/ChatTabPanel.vue";
 import GameTabPanel from "./tab/GameTabPanel.vue";
 import ScoreTabPanel from "./tab/ScoreTabPanel.vue";
+import SettingTabPanel from "./tab/SettingTabPanel.vue";
 
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'GameSlideMenu',
-  components: { ChatTabPanel, GameTabPanel, ScoreTabPanel },
+  components: { ChatTabPanel, GameTabPanel, ScoreTabPanel, SettingTabPanel },
   data():{
     tab:string,
     showMenu:boolean,
