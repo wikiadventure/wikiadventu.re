@@ -39,6 +39,14 @@ export default defineComponent({
       unsubscribeMutation:() => {}
     }
   },
+  beforeRouteLeave (to, from, next) {
+    const answer = window.confirm('Do you really want to leave the lobby?');
+    if (answer) {
+      next();
+    } else {
+      next(false);
+    }
+  },
   computed: {
     winner():Player {
       var players = this.$store.state.gameData.players as Player[];
