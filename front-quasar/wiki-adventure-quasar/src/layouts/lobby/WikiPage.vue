@@ -68,7 +68,6 @@
     float: right;
     clear: right;
     margin: 15px 0 15px 15px;
-    background: var(--w-color-dark-blue);
     border: 1px solid grey;
     border-radius: 5px;
     border-collapse: collapse;
@@ -167,6 +166,9 @@
   }
 }
 .body--dark {
+  .infobox, .infobox_v2, .infobox_v3 {
+    background: var(--w-color-dark-blue);
+  }
   #wikiPage {
     background: var(--w-color-almost-black);
     color: var(--w-color-blue-white);
@@ -235,29 +237,30 @@ export default defineComponent({
       var vm = this;
       var links= doc.getElementsByTagName("a");
       for (var i=0;i<links.length;i++) {
-          if (links[i].getAttribute("href")!.startsWith("#")) {
-            links[i].classList.add("anchorLink");
-          } else if (links[i].getAttribute("href")!.startsWith("/wiki/")) {
-            links[i].classList.add("wikiLink");
-          } else {
-            links[i].classList.add("notWikiLink");
+        if (links[i].getAttribute("href") == null) return;
+        if (links[i].getAttribute("href")!.startsWith("#")) {
+          links[i].classList.add("anchorLink");
+        } else if (links[i].getAttribute("href")!.startsWith("/wiki/")) {
+          links[i].classList.add("wikiLink");
+        } else {
+          links[i].classList.add("notWikiLink");
+        }
+        links[i].addEventListener("click",function(e){
+          if (this.getAttribute("href") == null) return;
+          //check if the link go to another wikipage and not info page or external
+          if (this.getAttribute("href")!.lastIndexOf(":") == -1 && !this.classList.contains("internal") && !this.classList.contains("external") && this.rel != "mw:ExtLink" && !this.classList.contains("new") && this.getAttribute("href")!.startsWith("/wiki/")) {
+            var idx = this.getAttribute("href")!.lastIndexOf("/");
+            var url = this.getAttribute("href")!.substring(idx+1);
+            var anchor = url!.indexOf("#");
+            if (anchor != -1) url = url!.substring(0, anchor);
+            url = decodeURIComponent(url);
+            vm.requestWikiPage(url);
+          } else if (this.getAttribute("href")!.startsWith("#")) {
+            var id = this.getAttribute("href")!.substring(1);
+            scrollToID(id, document.getElementById("wikiPage"));
           }
-          links[i].addEventListener("click",function(e){
-            //check if the link go to another wikipage and not info page or external
-            if(!this.getAttribute("href")) return;
-            if (this.getAttribute("href")!.lastIndexOf(":") == -1 && !this.classList.contains("internal") && !this.classList.contains("external") && this.rel != "mw:ExtLink" && !this.classList.contains("new") && this.getAttribute("href")!.startsWith("/wiki/")) {
-              var idx = this.getAttribute("href")!.lastIndexOf("/");
-              var url = this.getAttribute("href")!.substring(idx+1);
-              var anchor = url!.indexOf("#");
-              if (anchor != -1) url = url!.substring(0, anchor);
-              url = decodeURIComponent(url);
-              vm.requestWikiPage(url);
-            } else if (this.getAttribute("href")!.startsWith("#")) {
-              var id = this.getAttribute("href")!.substring(1);
-              scrollToID(id, document.getElementById("wikiPage"));
-            }
-            e.preventDefault();
-          });
+          e.preventDefault();
+        });
       }
     },
     async fetchArticle(url:string) {
