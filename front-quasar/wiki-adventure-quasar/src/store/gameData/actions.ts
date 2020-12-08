@@ -1,6 +1,7 @@
+import { Lang } from 'src/i18n';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
-import { GameData, GameState, LobbyEvent, LobbyEventType, LobbyType, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, WinRound, WsMessage } from './state';
+import { GameData, GameState, LobbyEvent, LobbyEventType, LobbyState, LobbyType, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, WinRound, WsMessage } from './state';
 
 const actions: ActionTree<GameData, StateInterface> = {
   connect({ commit, dispatch, state }) {
@@ -83,19 +84,37 @@ const actions: ActionTree<GameData, StateInterface> = {
     };
     state.ws?.send(JSON.stringify(json));
   },
-  sendVote({ state}, data) {
+  sendVote({ state }, data) {
     var json:WebsocketPackage = {
       type: WebsocketPackageType.Vote,
       value: data
     };
     state.ws?.send(JSON.stringify(json));
   },
-  validateJump({ state}, data) {
+  validateJump({ state }, data) {
     var json:WebsocketPackage = {
       type: WebsocketPackageType.Validate,
       value: data
     };
     state.ws?.send(JSON.stringify(json));
+  },
+  reset({ state }) {
+    state.ws = undefined;
+    state.uuid = "";
+    state.lang = Lang.en;
+    state.lobbyType = LobbyType.Public;
+    state.lobbyID = "";
+    state.lobbyState = LobbyState.Voting;
+    state.stateCounter = undefined;
+    state.round = 0;
+    state.timeLeft = 0;
+    state.timeStamp = 0;
+    state.startPage = "";
+    state.endPage = "";
+    state.selfPlayerID = -1;
+    state.players = [];
+    state.messages = [];
+    state.winnerId = -1;
   }
 };
 
