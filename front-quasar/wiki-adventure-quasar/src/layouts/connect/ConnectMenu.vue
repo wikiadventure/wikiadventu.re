@@ -2,7 +2,7 @@
   <q-layout class="tabMenu">
     <div class="tabPanel">
       <q-tab-panels class="tabContent" v-model="tab" animated swipeable infinite>
-        <q-tab-panel name="home" class="q-pa-none tabContent scroll-y">
+        <q-tab-panel name="Home" class="q-pa-none tabContent scroll-y">
           <index></index>
         </q-tab-panel>
         
@@ -64,9 +64,9 @@
               indicator-color="primary"
               align="justify"
               narrow-indicator>
-        <q-tab :label="$q.screen.lt.md ? '' : 'Home' " name="home" icon="mdi-home"></q-tab>
+        <q-tab :label="$q.screen.lt.md ? '' : 'Home' " name="Home" icon="mdi-home"></q-tab>
         <q-tab :label="$q.screen.lt.md ? '' : 'Public lobby' " name="PublicJoin" icon="mdi-earth"></q-tab>
-        <q-tab :label="$q.screen.lt.md ? '' : 'Private lobby' " name="private" icon="mdi-lock"></q-tab>
+        <q-tab :label="$q.screen.lt.md ? '' : 'Private lobby' " name="Private" icon="mdi-lock"></q-tab>
         <q-tab class="twitchTab" :label="$q.screen.lt.md ? '' : 'Twitch lobby' " name="twitch" icon="mdi-twitch"></q-tab>
 <!--    <q-tab name="PrivateJoin" icon="mdi-account-arrow-right"></q-tab>
         <q-tab name="PrivateCreate" icon="mdi-account-edit"></q-tab>
@@ -118,7 +118,7 @@ import Index from "../../layouts/menu/Index.vue";
 
 import { defineComponent } from '@vue/composition-api';
 import { ConnectEvent, ConnectType } from "../../mixins/connectEvent";
-import { LobbyType } from "../../store/gameData/state";
+import { LobbyState, LobbyType } from "../../store/gameData/state";
 import { Lang } from '../../i18n';
 
 export default defineComponent({
@@ -130,7 +130,7 @@ export default defineComponent({
     twitchTab:string
   } {
     return {
-      tab: 'home',
+      tab: 'Home',
       privateTab: 'PrivateJoin',
       twitchTab: 'TwitchJoin'
     }
@@ -192,13 +192,36 @@ export default defineComponent({
             store.commit('gameData/setLobbyID', json.lobbyID);
             store.commit('gameData/setLobbyType', json.lobbyType);
             store.commit('gameData/setUuid', json.playerID);
-            router.push('/play');
+            router.push('/play/'+json.lobbyID);
             console.log(json);
           }).catch(function(error) {
             console.log('Fetch error during form submition : ' + error.message);
         });
       }
     }
+  },
+  created() {
+    var vm = this;
+    var p = vm.$route.params;
+    fetch('/api/info/'+ p.id)
+    .then(function(response:Response):Promise<InfoResponse> {
+      return response.json();
+    }).then(function(json) {
+      if (json.status == InfoStatus.Found) {
+        vm.$store.commit('globalForm/setLobbyID', json.lobbyID);
+        vm.$store.commit('globalForm/setLang', json.lobbyLang);
+        if (json.lobbyType == LobbyType.Public) {
+          vm.tab = "PublicJoin";
+        } else if (json.lobbyType == LobbyType.Private) {
+          vm.tab = "Private";
+          vm.privateTab = "PrivateJoin";
+        }
+      } else {
+        //notify
+      }
+    }).catch(function(error) {
+      console.log('Fetch error during form submition : ' + error.message);
+    });
   },
   mounted() {
     this.$root.$on('submit-form', this.login);
@@ -213,15 +236,30 @@ interface loginQuery {
 }
 interface ConnectionResponse {
     status:ConnectionStatus,
-    lobbyID:String,
+    lobbyID:string,
     lobbyType:LobbyType,
-    playerID:String,
+    playerID:string,
     lang:Lang,
-    error?:String
+    error?:string
 }
 enum ConnectionStatus {
     Success = 'Success',
     ClientError = 'ClientError',
     ServerError = 'ServerError'
+}
+interface InfoResponse {
+    status:InfoStatus,
+    lobbyID?:String,
+    lobbyType?:LobbyType,
+    lobbyLang?:Lang,
+    slot?:number,
+    players?:number,
+    state?:LobbyState,
+    error?:String
+}
+enum InfoStatus {
+  Found = "Found",
+  NotFound = "NotFound",
+  ServerError = "ServerError"
 }
 </script>
