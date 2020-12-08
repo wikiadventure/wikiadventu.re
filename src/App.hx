@@ -1,3 +1,4 @@
+import controller.info.InfoController;
 import macros.Env;
 import lobby.player.Player;
 import lobby.TwitchLobby;
@@ -60,6 +61,7 @@ class App {
                 var idx2 = im.url.indexOf("/", 5);
                 var route2 : String = idx2 == -1 ? im.url.substring(5) : im.url.substring(5, idx2);
                 switch (route2) {
+                    case "info": new InfoController(im,sr);
                     case "connect": new ConnectController(im, sr, body);
                     case "twitch": new TwitchController(im, sr, body);
                     //case "help" to help dev
