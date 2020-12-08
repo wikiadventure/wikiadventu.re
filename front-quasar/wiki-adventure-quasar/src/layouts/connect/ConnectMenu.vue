@@ -10,7 +10,7 @@
           <public-join></public-join>
         </q-tab-panel>
 
-        <q-tab-panel name="private" class="q-pa-none tabContent">
+        <q-tab-panel name="Private" class="q-pa-none tabContent">
           <q-tab-panels class="tabContent" v-model="privateTab" animated>
             <q-tab-panel name="PrivateJoin" class="q-pa-none tabContent scroll-y">
               <private-join></private-join>
