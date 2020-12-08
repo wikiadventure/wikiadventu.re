@@ -1,3 +1,4 @@
+import { Quasar } from 'quasar';
 import { boot } from 'quasar/wrappers';
 import messages from 'src/i18n';
 import Vue from 'vue';
@@ -11,8 +12,12 @@ declare module 'vue/types/vue' {
 
 Vue.use(VueI18n);
 
+var localLang = Quasar.lang.getLocale() as string;
+var computedLocalLang = localLang.split("-")[0];
+console.log(computedLocalLang);
+
 export const i18n = new VueI18n({
-  locale: "en",
+  locale: computedLocalLang,
   fallbackLocale: "en",
   messages
 });
