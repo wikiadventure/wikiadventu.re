@@ -1,3 +1,4 @@
+import { Store } from '../store'
 import { RouteConfig } from 'vue-router';
 
 const routes: RouteConfig[] = [
@@ -10,8 +11,24 @@ const routes: RouteConfig[] = [
     component: () => import('pages/Connect.vue')
   },*/
   {
-    path: '/play',
-    component: () => import('pages/Game.vue')
+    path: '/play/:id',
+    beforeEnter: (to, from, next) => {
+      var store = Store as any;
+      if (store.state.gameData.uuid == "") {
+        next('/connect/'+to.params.id);
+      } else {
+        next();
+      }
+    },
+    component: () => {
+      return import('pages/Game.vue');
+    }
+  },
+  {
+    path: '/connect/:id',
+    component: () => {
+      return import('pages/Connect.vue');
+    }
   },
   {
     path: '/test',

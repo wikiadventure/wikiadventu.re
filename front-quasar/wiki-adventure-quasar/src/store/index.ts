@@ -1,4 +1,5 @@
 import { store } from 'quasar/wrappers';
+import Vue from 'vue';
 import Vuex from 'vuex';
 
 import globalForm from './globalForm'
@@ -16,19 +17,19 @@ export interface StateInterface {
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
 }
 
+Vue.use(Vuex);
+const Store = new Vuex.Store<StateInterface>({
+  modules: {
+    globalForm,
+    gameData
+  },
+  // enable strict mode (adds overhead!)
+  // for dev mode only
+  strict: !!process.env.DEV
+});
+
 export default store(function ({ Vue }) {
-  Vue.use(Vuex);
-
-  const Store = new Vuex.Store<StateInterface>({
-    modules: {
-      globalForm,
-      gameData
-    },
-
-    // enable strict mode (adds overhead!)
-    // for dev mode only
-    strict: !!process.env.DEV
-  });
-
   return Store;
 });
+
+export  { Store };
