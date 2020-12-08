@@ -144,6 +144,7 @@ export default defineComponent({
     });
   },
   beforeDestroy() {
+    this.$store.dispatch('gameData/reset');
     this.unsubscribeAction!();
     this.unsubscribeMutation!();
   }
