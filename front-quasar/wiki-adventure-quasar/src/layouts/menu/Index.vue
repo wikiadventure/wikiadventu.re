@@ -1,6 +1,8 @@
 <template>
   <div class="main-menu-index">
     <logo-show-in class="absolute" title="Wiki Adventure"></logo-show-in>
+    <compact-lang-switch class="testing2" />
+    <theme-switch class="testing3" />
     <div class="skewLineContainer first"><div class="skewLine"></div></div>
     <div class="row wrapper first">
       <content-pannel id="HowToPlay" head="Play">
@@ -50,9 +52,27 @@
   </div>
 </template>
 <style lang="scss">
+.testing2 {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+}
+.testing3 {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+}
 .main-menu-index {
   --w-angle: -5deg;
   --w-slope-ratio: 11.66vw;
+  pointer-events: all;
+  .first {
+    z-index: 3;
+    pointer-events: none;
+  }
+  .logo-show-in {
+    pointer-events: none;
+  }
 }
 .skewLineContainer {
   position: relative;
@@ -63,15 +83,14 @@
 .skewLineContainer.first {
   height: calc(65vmin + var(--w-slope-ratio) + 5px);
   .skewLine {
-  background: var(--w-color-dark-blue);
-  top: calc(65vmin + var(--w-slope-ratio));
+    top: calc(65vmin + var(--w-slope-ratio));
+  }
 }
-}
+
 .skewLineContainer.second {
   height: calc(var(--w-slope-ratio) + 55px);
   margin-top: -50px;
   .skewLine {
-    background: var(--w-color-almost-black);
     top: calc(var(--w-slope-ratio) + 50px );
   }
 }
@@ -79,7 +98,6 @@
   height: calc(var(--w-slope-ratio) + 55px);
   margin-top: -50px;
   .skewLine {
-    background: var(--w-color-dark-blue);
     top: calc(var(--w-slope-ratio) + 50px );
   }
 }
@@ -98,12 +116,6 @@
   top: -1px;
   width: 100%;
 }
-.wrapper.first, .wrapper.third {
-  background: var(--w-color-dark-blue);
-}
-.wrapper.second {
-  background: var(--w-color-almost-black);
-}
 #HowToPlay, #News, #Contribution {
   display: inline-block; // To force a new block formatting context
   margin-top: -3.7vmax;
@@ -115,7 +127,6 @@
   color: var(--w-color-dark-teal);
 }
 #News {
-  //background: var(--w-color-almost-black);
   color: var(--w-color-blue-white);
 }
 .github {
@@ -138,11 +149,77 @@
   border-radius: 5px;
   margin: 0 15px 5px;
 }
+.body--dark {
+  #HowToPlay, #Contribution{
+    color: var(--w-color-dark-teal);
+  }
+  #News {
+    color: var(--w-color-blue-white);
+  }
+  .skewLineContainer.first {
+    .skewLine {
+      background: var(--w-color-dark-blue);
+    }
+  }
+  .skewLineContainer.second {
+    .skewLine {
+      background: var(--w-color-almost-black);
+    }
+  }
+  .skewLineContainer.third {
+    .skewLine {
+      background: var(--w-color-dark-blue);
+    }
+  }
+  .wrapper.first, .wrapper.third {
+    background: var(--w-color-dark-blue);
+  }
+  .wrapper.second {
+    background: var(--w-color-almost-black);
+  }
+  .skewLine {
+    box-shadow: 0 0 50px rgba(18, 230, 238, 1);
+  }
+}
+.body--light {
+  #HowToPlay, #Contribution{
+    color: var(--w-color-dark-blue);
+  }
+  #News {
+    color: var(--w-color-almost-black);
+  }
+  .skewLineContainer.first {
+    .skewLine {
+      background: var(--w-color-light-teal);
+    }
+  }
+  .skewLineContainer.second {
+    .skewLine {
+      background: var(--w-color-blue-white);
+    }
+  }
+  .skewLineContainer.third {
+    .skewLine {
+      background: var(--w-color-light-teal);
+    }
+  }
+  .wrapper.first, .wrapper.third {
+    background: var(--w-color-light-teal);
+  }
+  .wrapper.second {
+    background: var(--w-color-blue-white);
+  }
+  .skewLine {
+    box-shadow: 0 0 50px rgb(3, 151, 157);
+  }
+}
 </style>
 <script lang="ts">
 import { openURL } from 'quasar';
 
-import ContentPannel from 'components/ContentPannel.vue';
+import ContentPannel from '../../components/ContentPannel.vue';
+import CompactLangSwitch from '../../components/setting/CompactLangSwitch.vue';
+import ThemeSwitch from '../../components/setting/ThemeSwitch.vue'
 import LogoShowIn from '../../components/art/LogoShowIn.vue';
 
 import scrollToID from '../../mixins/scrollToID';
@@ -151,9 +228,10 @@ import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'Index',
-  components: { ContentPannel, LogoShowIn },
+  components: { ContentPannel, LogoShowIn, CompactLangSwitch, ThemeSwitch },
   methods: {
-    openNewPage: function (url: string) {
+    
+    CompactLangSwitchopenNewPage: function (url: string) {
       openURL(url);
     },
     scrollToID(id:string) {
