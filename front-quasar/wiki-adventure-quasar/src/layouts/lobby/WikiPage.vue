@@ -264,9 +264,14 @@ export default defineComponent({
       }
     },
     async fetchArticle(url:string) {
+      var vm = this;
       var article = new WikiArticle(url, this.$store.state.gameData.lang, this.$q.platform.is.mobile);
       return await article.fetch().catch(() => {
-        //notify
+        this.$q.notify({
+          type: 'negative',
+          position: 'bottom-right',
+          message: 'A problem occurs when fetching wikipedia article'
+        })
       });
     },
   },
