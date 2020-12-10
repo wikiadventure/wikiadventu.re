@@ -20,12 +20,9 @@
           <setting-tab-panel></setting-tab-panel>
         </q-tab-panel>
       </q-tab-panels>
-
-      <q-separator></q-separator>
-
       <q-tabs v-model="tab"
               dense
-              class="text-grey"
+              class="text-grey game-tabs"
               active-color="primary"
               indicator-color="primary"
               align="justify"
@@ -98,6 +95,23 @@
   #showMenu:checked + #slideMenu #labelShowMenu {
     background: var(--w-color-dark-blue);
     color: var(--w-color-blue-white);
+  }
+  .game-tabs {
+    background: #111;
+  }
+}
+.body--light {
+  #labelShowMenu {
+    color: var(--w-color-blue-white);
+    background: var(--w-color-dark-blue);
+  }
+  #showMenu:checked + #slideMenu #labelShowMenu {
+    background: var(--w-color-blue-white);
+    color: var(--w-color-dark-blue);
+  }
+  .game-tabs {
+    background: var(--w-color-blue-white);
+    color: darkgray;
   }
 }
 
