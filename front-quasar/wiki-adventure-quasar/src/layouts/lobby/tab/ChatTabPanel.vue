@@ -38,12 +38,12 @@
   }
 }
 .chatForm {
-		background: #23272a;
+		//background: #23272a;
 		padding: 3px;
 		bottom: 0;
     width: 100%;
     flex: 0 0 auto;
-		border-top: 2px solid #2f353a;
+		//border-top: 2px solid #2f353a;
 		display: inline-flex;
 	}
 	.chatInput {
@@ -58,9 +58,6 @@
     justify-content: space-between;
     p {
       margin: 0;
-    }
-    p:nth-child(1) {
-      
     }
     p:nth-child(2) {
       opacity: 0.7;
