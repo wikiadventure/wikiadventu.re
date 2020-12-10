@@ -8,7 +8,7 @@
     <div id="logoShowInTitle"><p>{{ title }}</p></div>
   </div>
 </template>
-<style>
+<style lang="scss">
 #logoShowInContainer {
   display: flex;
   width: 100%;
@@ -51,20 +51,31 @@
     position: absolute;
     /*background: rgba(255, 0, 0, 0.1);*/
     text-align: center;
-    color: #cce7f8;
     margin-top: .5em;
     font-size: 7vw;
     transform: translate3d(0px, 0px, 0px);
     animation: 6s ease-out 0.31s logoShowInBlurFadeIn;
-    text-shadow: 0 0 6px rgba(182, 211, 207, 0.9),
-        0 0 30px rgba(182, 211, 207, 0.3), 0 0 12px rgba(15, 115, 223, 0.5),
-        0 0 21px rgba(15, 115, 223, 0.9), 0 0 34px rgba(15, 115, 223, 0.8),
-        0 0 54px rgba(15, 115, 223, 0.9);
     
   }
-  #logoShowInTitle p {
-    /*animation: 6s ease-out infinite neon;*/
+  .body--dark {
+    #logoShowInTitle {
+      color: #cce7f8;
+      text-shadow: 0 0 6px rgba(182, 211, 207, 0.9),
+        0 0 30px rgba(182, 211, 207, 0.3), 0 0 12px rgba(18, 230, 238, 0.5),
+        0 0 21px rgba(18, 230, 238, 0.8), 0 0 34px rgba(18, 230, 238, 0.75),
+        0 0 54px rgba(18, 230, 238, 0.8);
+    }
   }
+  .body--light {
+    #logoShowInTitle {
+      color: #ebf7ff;
+      text-shadow: 0 0 6px rgba(72, 84, 82, 0.9),
+        0 0 30px rgba(182, 211, 207, 0.3), 0 0 12px rgba(18, 230, 238, 0.5),
+        0 0 21px rgba(18, 230, 238, 0.8), 0 0 34px rgba(18, 230, 238, 0.75),
+        0 0 54px rgba(18, 230, 238, 0.8);
+    }
+  }
+
 
   @keyframes logoShowInBlurFadeIn {
     0% {
