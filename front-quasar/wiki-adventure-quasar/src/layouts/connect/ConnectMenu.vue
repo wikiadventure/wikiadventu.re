@@ -22,7 +22,7 @@
           </q-tab-panels>
           <q-tabs v-model="privateTab"
               dense
-              class="text-grey"
+              class="connect-sub-tabs"
               active-color="primary"
               indicator-color="primary"
               align="justify"
@@ -44,7 +44,7 @@
           </q-tab-panels>
           <q-tabs v-model="twitchTab"
               dense
-              class="text-grey"
+              class="connect-sub-tabs"
               active-color="primary"
               indicator-color="primary"
               align="justify"
@@ -55,11 +55,9 @@
         </q-tab-panel>
       </q-tab-panels>
 
-      <q-separator></q-separator>
-
       <q-tabs v-model="tab"
               dense
-              class="text-grey"
+              class="connect-tabs"
               active-color="primary"
               indicator-color="primary"
               align="justify"
@@ -102,8 +100,35 @@
     flex: 0 1 36px;
   }
 }
+.q-tab--active, .q-tab__indicator {
+  color: var(--w-color-dark-teal)!important;
+}
 .q-tab--active.twitchTab, .twitchTab .q-tab__indicator {
   color: #6441A4!important;
+}
+.body--dark {
+  .connect-tabs {
+    background: rgb(17,17,17);
+    color: darkgray;
+    border-top: solid 1px grey;
+  }
+  .connect-sub-tabs {
+    background: rgb(22,22,22);
+    color: darkgray;
+    border-top: solid 1px grey;
+  }
+}
+.body--light {
+  .connect-tabs {
+    background: rgb(200,200,200);
+    color: dimgray;
+    border-top: solid 1px grey;
+  }
+  .connect-sub-tabs {
+    background: rgb(230,230,230);
+    color: dimgray;
+    border-top: solid 1px grey;
+  }
 }
 </style>
 <script lang="ts">
@@ -202,6 +227,7 @@ export default defineComponent({
   },
   created() {
     var vm = this;
+    if (vm.$route.params == undefined) return;
     var p = vm.$route.params;
     fetch('/api/info/'+ p.id)
     .then(function(response:Response):Promise<InfoResponse> {
@@ -217,7 +243,13 @@ export default defineComponent({
           vm.privateTab = "PrivateJoin";
         }
       } else {
-        //notify
+        if (json.status == InfoStatus.NotFound) {
+          vm.$q.notify({
+            type: 'negative',
+            position: 'top',
+            message: 'No lobby found with id ' + p.id
+          })
+        }
       }
     }).catch(function(error) {
       console.log('Fetch error during form submition : ' + error.message);
