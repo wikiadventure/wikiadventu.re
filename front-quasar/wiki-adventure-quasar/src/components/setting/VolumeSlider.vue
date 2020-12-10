@@ -5,7 +5,7 @@
 
     </q-item-section>
     <q-item-section>
-      <q-slider v-model="volume" :min="0" :max="1" />
+      <q-slider v-model="volume" :min="0" :step="0" :max="1" />
     </q-item-section>
   </q-item>
 </template>
