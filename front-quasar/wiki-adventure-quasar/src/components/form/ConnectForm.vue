@@ -22,6 +22,10 @@
 <style lang="scss">
 .formTitle {
   text-align: center;
+  @media(max-width: 720px) {
+    margin: 2px;
+    font-size: 2.5em;
+  }
 }
 </style>
 <script lang="ts">
