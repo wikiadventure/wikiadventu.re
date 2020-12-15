@@ -227,9 +227,10 @@ export default defineComponent({
   },
   created() {
     var vm = this;
-    if (vm.$route.params == undefined) return;
-    var p = vm.$route.params;
-    fetch('/api/info/'+ p.id)
+    console.log(vm.$route.params);
+    if (vm.$route.params.id == undefined) return;
+    var id = vm.$route.params.id;
+    fetch('/api/info/'+ id)
     .then(function(response:Response):Promise<InfoResponse> {
       return response.json();
     }).then(function(json) {
@@ -247,7 +248,7 @@ export default defineComponent({
           vm.$q.notify({
             type: 'negative',
             position: 'top',
-            message: 'No lobby found with id ' + p.id
+            message: 'No lobby found with id ' + id
           })
         }
       }
