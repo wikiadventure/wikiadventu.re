@@ -4,6 +4,7 @@
   "description": "Wikipedia race game",
   "main": "App.js",
   "dependencies": {
+    "pm2": "^4.5.1",
     "twitch": "^4.2.6",
     "twitch-chat-client": "^4.2.6",
     "uuid": "^8.3.1",
