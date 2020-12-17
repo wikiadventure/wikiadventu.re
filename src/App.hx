@@ -12,6 +12,7 @@ import response.ErrorResponse;
 import controller.connect.ConnectController;
 import controller.connect.twitch.TwitchController;
 import lobby.Lobby;
+import js.Node.console;
 import js.Node.process;
 #if https
 import js.node.Https;
@@ -19,8 +20,7 @@ import js.node.Https;
 
 class App {
 
-    static function main() {
-        trace("server start");
+    static function main() {     
         Lobby.init();
         TwitchLobby.init();
 
@@ -36,7 +36,7 @@ class App {
         TwitchCredential.init();
         server.listen(Env.getPort());// take the port mentionned in the port compilation flag otherwise take the env one
         WS.init(server);
-
+        console.log("server start");
     }
 
 
