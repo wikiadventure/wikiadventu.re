@@ -20,6 +20,7 @@ jobs:
           # Version Spec of the version to use. Example: 3.4.7
           haxe-version: 4.1.4
       - name: Install haxe lib
+        continue-on-error: true
         run: |
           haxelib git twitch-auth https://github.com/Sacramentix/hx-twitch-auth.git --always
           haxelib git twitch-api-call https://github.com/Sacramentix/hx-twitch-api-call.git --always
