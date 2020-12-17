@@ -27,10 +27,13 @@ jobs:
           haxelib git d-fischer-logger https://github.com/Sacramentix/hx-d-fischer-logger.git --always
           haxelib git d-fischer-shared-utils https://github.com/Sacramentix/hx-d-fischer-shared-utils.git --always
           haxelib git d-fischer-typed-event-emitter https://github.com/Sacramentix/hx-d-fischer-typed-event-emitter.git --always
-          haxelib git d-fischer-connection https://github.com/Sacramentix/hx-d-fischer-connection.git --always
           haxelib git ws https://github.com/Sacramentix/hx-ws.git --always
           haxelib install uuid --always
           haxelib install tink_json --always
+      - name: Install d-fischer-connection lib
+        continue-on-error: true
+        run: |
+          haxelib git d-fischer-connection https://github.com/Sacramentix/hx-d-fischer-connection.git --always
       - name: Install twitch lib
         continue-on-error: true
         run: |
