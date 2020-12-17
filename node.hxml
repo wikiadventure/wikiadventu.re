@@ -1,10 +1,17 @@
 -cp src
 
 -lib uuid
--lib twitch-chat-client:git:https://github.com/Sacramentix/hx-twitch-chat-client.git
 -lib tink_json
 -lib ws:git:https://github.com/Sacramentix/hx-ws.git
-
+-lib twitch-chat-client:git:https://github.com/Sacramentix/hx-twitch-chat-client.git
+    -lib ircv3:git:https://github.com/Sacramentix/hx-ircv3.git
+        -lib d-fischer-connection:git:https://github.com/Sacramentix/hx-d-fischer-connection.git
+        -lib d-fischer-typed-event-emitter:git:https://github.com/Sacramentix/hx-d-fischer-typed-event-emitter.git
+    -lib twitch:git:https://github.com/Sacramentix/hx-twitch.git
+        -lib twitch-api-call:git:https://github.com/Sacramentix/hx-twitch-api-call.git
+        -lib twitch-auth:git:https://github.com/Sacramentix/hx-twitch-auth.git
+        -lib d-fischer-logger:git:https://github.com/Sacramentix/hx-d-fischer-logger.git
+        -lib d-fischer-shared-utils:git:https://github.com/Sacramentix/hx-d-fischer-shared-utils.git
 -main App
 -js bin/App.js
 -debug
