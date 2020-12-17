@@ -22,7 +22,7 @@ class FrontController {
             url = this.im.url;
         }
         this.sr.setHeader("Content-Type", mimeType);
-        this.sr.setHeader("Cache-Control", "max-age=604800"); //cache for a week
+        if (url != "/index.html") this.sr.setHeader("Cache-Control", "max-age=604800"); //cache for a week
 		var requestedFileUrl = './front' + url;
 		Fs.readFile(requestedFileUrl, function(err, data) {
 			if (err != null) {
