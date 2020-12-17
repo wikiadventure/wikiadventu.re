@@ -161,7 +161,7 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
     electron: {
-      bundler: 'packager', // 'packager' or 'builder'
+      bundler: 'builder', // 'packager' or 'builder'
 
       packager: {
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
@@ -174,12 +174,17 @@ module.exports = configure(function (/* ctx */) {
 
         // Windows only
         // win32metadata: { ... }
+        win: {
+          icon: 'src-electron/icons/icon.ico'
+        }
       },
-
+      
       builder: {
         // https://www.electron.build/configuration/configuration
-
-        appId: 'wiki-adventure-quasar'
+        appId: 'wiki-adventure',
+        win: {
+          icon: 'src-electron/icons/icon.ico'
+        }
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
