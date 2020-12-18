@@ -9,7 +9,8 @@ class Log {
     public static function inFile(fileName:String, content:String) {
         var file = "log/" + fileName;
         try {
-            ensureDirectoryExistence(file)
+            var dirs = file.substring(0, file.lastIndexOf('/'));
+            ensureDirectoryExistence(dirs)
             .then(
                 function (b) {
                     Fs.appendFile(file, content + "\n", function (error) {
@@ -27,11 +28,9 @@ class Log {
     public static function ensureDirectoryExistence(filePath):Promise<Bool> {
         return new Promise<Bool>(
             function (resolve, reject) {
-                var dirname = Path.dirname(filePath);
-                Fs.access(dirname, function (e:js.lib.Error) {
+                Fs.mkdir(filePath,  js.Syntax.code("{ recursive: true }"), function (e:js.lib.Error) {
                     if (e != null) {
-                        ensureDirectoryExistence(dirname);
-                        Fs.mkdirSync(dirname);
+                        reject(false);
                     } else {
                         resolve(true);
                     }
