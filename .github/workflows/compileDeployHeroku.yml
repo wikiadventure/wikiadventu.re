@@ -42,7 +42,11 @@ jobs:
           haxelib git ircv3 https://github.com/Sacramentix/hx-ircv3.git --always
       - continue-on-error: true
         run: |
-          haxelib git twitch-chat-client https://github.com/Sacramentix/hx-twitch-chat-client.git --always   
+          haxelib git twitch-chat-client https://github.com/Sacramentix/hx-twitch-chat-client.git --always
+      - continue-on-error: true
+        run: |
+          git config --global user.email 'benji.u1225u@gmail.com'
+          git config --global user.name 'Sacramentix'
       - name: Build backend
         run: |
           haxe node.hxml
