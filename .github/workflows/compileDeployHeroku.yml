@@ -57,7 +57,8 @@ jobs:
         uses: mikeal/npx@1.0.0
       - name: Build frontend
         run: |
-           npx quasar build
+          npm install @quasar/cli
+          npm run quasar build
       - name: Deploy to heroku
         uses: Sacramentix/heroku-deploy@30f0b7e30306900d74c1d7fd5414e1f8421652ba
         with:
