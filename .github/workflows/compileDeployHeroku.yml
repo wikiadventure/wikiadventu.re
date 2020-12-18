@@ -61,6 +61,7 @@ jobs:
         uses: mikeal/npx@1.0.0
       - name: Build frontend
         run: |
+          cd front-quasar/wiki-adventure-quasar
           npm i @quasar/cli
           npx quasar build
       - name: Deploy to heroku
