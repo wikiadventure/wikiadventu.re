@@ -7,7 +7,7 @@ import js.node.Fs;
 class Log {
     
     public static function inFile(fileName:String, content:String) {
-        var file = "log/" + fileName + ".log";
+        var file = "log/" + fileName;
         try {
             var dirs = file.substring(0, file.lastIndexOf('/'));
             ensureDirectoryExistence(dirs)
