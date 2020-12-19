@@ -1,3 +1,4 @@
+import config.admin.Guard;
 import controller.info.InfoController;
 import macros.Env;
 import lobby.player.Player;
@@ -11,6 +12,7 @@ import async.WS;
 import response.ErrorResponse;
 import controller.connect.ConnectController;
 import controller.connect.twitch.TwitchController;
+import controller.log.LogController;
 import lobby.Lobby;
 import js.Node.console;
 import js.Node.process;
@@ -23,7 +25,7 @@ class App {
     static function main() {     
         Lobby.init();
         TwitchLobby.init();
-
+        Guard.init();
         #if https
             var options = {
                 key: Fs.readFileSync('config/ssl/key.pem', 'utf8'),
@@ -64,6 +66,7 @@ class App {
                     case "info": new InfoController(im,sr);
                     case "connect": new ConnectController(im, sr, body);
                     case "twitch": new TwitchController(im, sr, body);
+                    case "log": new LogController(im, sr, body);
                     //case "help" to help dev
                     default: new ErrorResponse(im, sr, body, "Sorry, you are looking for something that doesn't exist!", 404);
                 }
