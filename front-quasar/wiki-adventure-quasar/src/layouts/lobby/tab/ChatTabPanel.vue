@@ -12,7 +12,7 @@
       </q-item>
     </q-list>
     <q-form class="chatForm">
-      <q-input autogrow dense class="chatInput" maxlength="512" outlined v-model="message" label="Send a message" spellcheck="false">
+      <q-input dense class="chatInput" maxlength="512" outlined v-model="messageInput" @keydown.enter.prevent="submitMessage()" :label="$t('chatTab.send')" spellcheck="false">
         <template v-slot:after>
           <q-btn round dense flat icon="mdi-send" class="chatSubmit" @click="submitMessage()"/>
         </template>
@@ -75,7 +75,7 @@ export default defineComponent({
   name: 'ChatTabPanel',
   data() {
     return {
-      message: ""
+      messageInput: ""
     }
   },
   computed: {
@@ -97,9 +97,10 @@ export default defineComponent({
       return date.formatDate(timeStamp, 'HH:mm');
     },
     submitMessage(e:Event) {
-      this.$store.dispatch('gameData/sendMessage', this.message);
-      this.message = "";
-      console.log("send");
+      if (!this.messageInput.match(/^\s*$/g)) {
+        this.$store.dispatch('gameData/sendMessage', this.messageInput);
+        this.messageInput = "";
+      }
     }
   }
 });
