@@ -68,7 +68,7 @@ jobs:
         uses: Sacramentix/heroku-deploy@30f0b7e30306900d74c1d7fd5414e1f8421652ba
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "wiki-adventure-io"
+          heroku_app_name: "wiki-adventure"
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           appdir: "bin"
         env:
