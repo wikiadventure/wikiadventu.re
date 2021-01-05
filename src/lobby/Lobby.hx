@@ -48,7 +48,7 @@ class Lobby {
         lobbyList = new Array<Lobby>();
     }
 
-    public function new(language : Lang, type:LobbyType, ?passwordHash:String, slot:Int=25, round:Int=1, playTimeOut:Int=600, voteTimeOut:Int=30) {
+    public function new(language : Lang, type:LobbyType, ?passwordHash:String, slot:Int=25, round:Int=5, playTimeOut:Int=600, voteTimeOut:Int=30) {
         if (lobbyList.length >= lobbyLimit) {
             throw "Lobby limit has been reached!";
         } else if (getPrivateLobbyLength() >= privateLimit) {
@@ -203,6 +203,8 @@ class Lobby {
                     validateJump(player, json.value);
                 case Vote:
                     vote(player, json.value);
+                case ResetVote:
+                    resetVote(player);
             }
         } catch(e:Dynamic) {
             trace(e);
@@ -379,15 +381,19 @@ class Lobby {
 
     /**
      * find the player from his socket
-     * and assign his vote to the [votingSuggestion] variable of the player
+     * and assign his vote to the [vote] variable of the player
      * PS: we don't verify if the title lead to something, we will in the [selectPage()] method
      * the client also do the verification so they are aware if there title lead to something
-     * @param socket from which the data come from
+     * @param player from which the data come from
      * @param content the page title we receive
      */
     public function vote(player:Player, content:String) {
         log("player vote : " + player.uuid + " --> " + player.pseudo + " | " + content, PlayerData);
-        player.votingSuggestion = content;
+        player.vote = content;
+    }
+
+    public function resetVote(player:Player) {
+        player.vote = null;
     }
 
     /**
@@ -493,11 +499,14 @@ class Lobby {
      public function votePhase() {
         if(playerList.length == 0) return;
         state = Voting;
+        for (player in playerList) {
+            player.vote = null;
+        }
         initNewPhase();
         loop = Timers.setTimeout(function () {
             var suggestionList = new Array<String>();
             for (player in playerList) {
-                suggestionList.push(player.votingSuggestion);
+                suggestionList.push(player.vote);
             }
             selectPage(suggestionList);
         },currentStateTimeOut()*1000);
@@ -525,7 +534,7 @@ class Lobby {
 
     public function playPhaseEnd() {
         for (player in playerList) {
-            player.votingSuggestion = null;
+            player.vote = null;
         }
         roundFinishPhase();
     }
@@ -562,7 +571,7 @@ class Lobby {
     }
     /**
      * refresh the [timeStampBegin] variable
-     * and send the state time avaible to the client
+     * and send the state time to the client
      */
     public function initNewPhase() {
         timeStampStateBegin = Timer.stamp();
@@ -602,6 +611,14 @@ class Lobby {
         });
         request.end();
 
+    }
+    public var encodedID(get, never):String;
+    /**
+     * get the lobbyId to string
+     * @return Int
+     */
+     public function get_encodedID():String {
+        return Lobby.encodeID(id);
     }
 
     /**
@@ -675,11 +692,12 @@ class Lobby {
 
 typedef WebsocketPackage = {
     type:WebsocketPackageType,
-    value:String
+    ?value:String
 }
 enum abstract WebsocketPackageType(String) {
     var Message;
     var Vote;
+    var ResetVote;
     var Validate;
 }
 

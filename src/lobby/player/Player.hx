@@ -16,8 +16,8 @@ class Player {
     public var score:Int=0;
     public var numberOfJump:Int=0;
     public var currentPage:String;
-    public var validationBuffer:Array<Promise<Bool>>;
-    public var votingSuggestion:String;
+    public var validationBuffer:Array<Promise<Bool>>;//used to store validation of visited
+    public var vote:String;
     public var id:Int;//for client identification
     public var alive:Bool;
 
