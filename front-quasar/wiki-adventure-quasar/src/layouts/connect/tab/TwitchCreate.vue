@@ -1,6 +1,6 @@
 <template>
   <connect-form ref="TwitchCreate" createLobby :title="$t('menu.createTwitchLobby')">
-    <twitch-btn @click="submit" label="Create with Twitch"/>
+    <twitch-btn @click="submit" :label="$t('menu.button.createWithTwitch')"/>
   </connect-form>
 </template>
 <style lang="scss">
