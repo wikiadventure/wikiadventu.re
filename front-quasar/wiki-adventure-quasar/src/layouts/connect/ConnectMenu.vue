@@ -62,15 +62,10 @@
               indicator-color="primary"
               align="justify"
               narrow-indicator>
-        <q-tab :label="$q.screen.lt.md ? '' : 'Home' " name="Home" icon="mdi-home"></q-tab>
-        <q-tab :label="$q.screen.lt.md ? '' : 'Public lobby' " name="PublicJoin" icon="mdi-earth"></q-tab>
-        <q-tab :label="$q.screen.lt.md ? '' : 'Private lobby' " name="Private" icon="mdi-lock"></q-tab>
-        <q-tab class="twitchTab" :label="$q.screen.lt.md ? '' : 'Twitch lobby' " name="twitch" icon="mdi-twitch"></q-tab>
-<!--    <q-tab name="PrivateJoin" icon="mdi-account-arrow-right"></q-tab>
-        <q-tab name="PrivateCreate" icon="mdi-account-edit"></q-tab>
-        <q-tab name="twitchJoin" icon="svguse:icons/twitch.svg#join"></q-tab>
-        <q-tab name="twitchCreate" icon="svguse:icons/twitch.svg#create"></q-tab> 
--->
+        <q-tab :label="$q.screen.lt.md ? '' : $t('home') " name="Home" icon="mdi-home"></q-tab>
+        <q-tab :label="$q.screen.lt.md ? '' : $t('publicLobby') " name="PublicJoin" icon="mdi-earth"></q-tab>
+        <q-tab :label="$q.screen.lt.md ? '' : $t('privateLobby') " name="Private" icon="mdi-lock"></q-tab>
+        <q-tab class="twitchTab" :label="$q.screen.lt.md ? '' : $t('twitchLobby')" name="twitch" icon="mdi-twitch"></q-tab>
       </q-tabs>
       </div>
   </q-layout>
@@ -152,16 +147,21 @@ export default defineComponent({
   data():{
     tab:string,
     privateTab:string,
-    twitchTab:string
+    twitchTab:string,
+    connecting:boolean
   } {
     return {
       tab: 'Home',
       privateTab: 'PrivateJoin',
-      twitchTab: 'TwitchJoin'
+      twitchTab: 'TwitchJoin',
+      connecting: false
     }
   },
   methods: {
     login(event:ConnectEvent) {
+      var vm = this;
+      if(vm.connecting) return;
+      vm.connecting = true;
       var store = this.$store;
       var router = this.$router;
       this.$store.dispatch('globalForm/validatePseudo');
@@ -197,6 +197,7 @@ export default defineComponent({
             }).then(function(json:ConnectionResponse) {
               
             }).catch(function(error) {
+              vm.connecting = false;
               console.log('Fetch error during form submition : ' + error.message);
           });
         }}, 500);// the duration in ms between each call of loop
@@ -220,12 +221,14 @@ export default defineComponent({
             router.push('/play/'+json.lobbyID);
             console.log(json);
           }).catch(function(error) {
+            vm.connecting = false;
             console.log('Fetch error during form submition : ' + error.message);
         });
       }
     }
   },
   created() {
+    //check if the lobby provided in the url exist
     var vm = this;
     console.log(vm.$route.params);
     if (vm.$route.params.id == undefined) return;
@@ -248,11 +251,16 @@ export default defineComponent({
           vm.$q.notify({
             type: 'negative',
             position: 'top',
-            message: 'No lobby found with id ' + id
-          })
+            message: vm.$t('noLobbyFound') + ' ' + id
+          });
         }
       }
     }).catch(function(error) {
+      vm.$q.notify({
+            type: 'negative',
+            position: 'top',
+            message: vm.$t('fetchError') + ' : ' + error.message
+          });
       console.log('Fetch error during form submition : ' + error.message);
     });
   },
