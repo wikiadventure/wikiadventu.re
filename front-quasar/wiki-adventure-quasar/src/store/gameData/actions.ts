@@ -91,6 +91,12 @@ const actions: ActionTree<GameData, StateInterface> = {
     };
     state.ws?.send(JSON.stringify(json));
   },
+  resetVote({ state }) {
+    var json:WebsocketPackage = {
+      type: WebsocketPackageType.ResetVote
+    };
+    state.ws?.send(JSON.stringify(json));
+  },
   validateJump({ state }, data) {
     var json:WebsocketPackage = {
       type: WebsocketPackageType.Validate,
@@ -120,11 +126,12 @@ const actions: ActionTree<GameData, StateInterface> = {
 
 interface WebsocketPackage {
   type:WebsocketPackageType,
-  value:String
+  value?:String
 }
 enum WebsocketPackageType {
   Message = "Message",
   Vote = "Vote",
+  ResetVote = "ResetVote",
   Validate = "Validate"
 }
 

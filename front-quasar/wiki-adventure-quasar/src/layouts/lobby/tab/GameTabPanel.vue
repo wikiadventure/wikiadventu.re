@@ -1,27 +1,35 @@
 <template>
   <div id="gameTab">
-    <div class="row q-ma-md"><h3 class="q-ma-none flex-grow text-center">Round {{ round }}</h3></div>
-    <div class="row items-baseline q-ma-sm"><h4 class="q-ma-none flex-fix">Phase</h4><h5 class="q-ma-none q-ml-sm text-center flex-grow">{{ lobbyState }}</h5></div>
+    <div class="row q-ma-md"><h3 class="q-ma-none flex-grow text-center">{{ $t('gameTab.round') }} {{ round }}</h3></div>
+    <div class="row items-baseline q-ma-sm"><h4 class="q-ma-none flex-fix">{{ $t('gameTab.phase') }}</h4><h5 class="q-ma-none q-ml-sm text-center flex-grow">{{ $t('phase.'+lobbyState) }}</h5></div>
     <q-separator spaced="lg"/>
-    <div class="row items-baseline q-ma-sm"><h4 class="q-ma-none flex-fix">Time left</h4><h5 class="q-ma-none q-ml-sm text-center flex-grow">{{ timeLeft }}</h5></div>
+    <div class="row items-baseline q-ma-sm"><h4 class="q-ma-none flex-fix">{{ $t('gameTab.timeLeft') }}</h4><h5 class="q-ma-none q-ml-sm text-center flex-grow">{{ timeLeft }}</h5></div>
     <q-separator  spaced="lg"/>
-    <div id="vote" class="row items-baseline q-ma-sm"><p class="q-ma-none flex-fix">Your vote :</p><p class="q-ma-none q-ml-sm text-left flex-grow">{{ vote }}</p></div>
+    <div id="vote" class="row items-baseline q-ma-sm"><p class="q-ma-none flex-fix">{{ $t('gameTab.vote') }} :</p><p class="q-ma-none q-ml-sm text-left flex-grow">{{ vote }}</p><q-btn round dense flat icon="mdi-delete" class="voteDelete" @click="resetVote()"></q-btn></div>
     <q-form class="voteForm q-ma-sm">
-      <q-input dense class="voteInput" @keydown.enter.prevent="submitVote()" maxlength="255" outlined v-model="voteInput" label="Submit your vote" spellcheck="false">
+      <q-input dense class="voteInput" @keydown.enter.prevent="submitVote()" maxlength="255" outlined v-model="voteInput" :label="$t('gameTab.submitVote')" spellcheck="false">
         <template v-slot:after>
-          <q-btn round dense flat icon="mdi-send" class="voteSubmit" @click="submitVote()"/>
+          <q-btn round dense flat icon="mdi-send" @click="submitVote()"/>
         </template>
       </q-input>
     </q-form>
     <q-separator spaced="lg"/>
-    <div class="row items-baseline q-ma-sm"><p class="q-ma-none flex-fix">Start page :</p><p class="q-ma-none q-ml-sm text-left flex-grow">{{ startPage }}</p></div>
-    <div class="row items-baseline q-ma-sm"><p class="q-ma-none flex-fix">End page :</p><p class="q-ma-none q-ml-sm text-left flex-grow">{{ endPage }}</p></div>
+    <div class="row items-baseline q-ma-sm"><p class="q-ma-none flex-fix">{{ $t('gameTab.startPage') }} :</p><p class="q-ma-none q-ml-sm text-left flex-grow">{{ startPage }}</p></div>
+    <div class="row items-baseline q-ma-sm"><p class="q-ma-none flex-fix">{{ $t('gameTab.endPage') }} :</p><p class="q-ma-none q-ml-sm text-left flex-grow">{{ endPage }}</p></div>
     <q-separator  spaced="lg"/>
+    <div class="row q-ma-md"><h3 class="q-ma-none flex-grow text-center">End page intro</h3></div>
+    <div class="row q-ma-md"><p class="q-ma-none flex-grow text-center">{{ endPageIntro }}</p></div>
   </div>
 </template>
 <style lang="scss">
 #gameTab {
   font-size: 120%;
+}
+.voteDelete {
+  transition: all ease-in-out 0.2s;
+}
+.voteDelete:active {
+  transform: rotate(145deg);
 }
 .flex-grow {
   flex:1;
@@ -37,8 +45,9 @@ import { Message } from '../../../store/gameData/state';
 export default defineComponent({
   name: 'GameTabPanel',
   data() {
+    var vm = this as any;
     return {
-      vote: "Random page ???",
+      vote: vm.$t('gameTab.randomPage'),
       voteInput: ""
     }
   },
@@ -73,6 +82,11 @@ export default defineComponent({
           vm.voteInput = "";
         });
         return;
+    },
+    resetVote(e:Event) {
+      var vm:any = this;
+      vm.$store.dispatch('gameData/resetVote');
+      vm.vote = this.$t('gameTab.randomPage');
     }
   }
 });
