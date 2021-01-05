@@ -57,8 +57,6 @@ export default class WikiArticle {
     this.doc = new DOMParser().parseFromString(html, 'text/html');
     const selectors = '.navbox, .ambox, .sistersitebox, .mw-empty-elt';
     const elementsToRemove = [...this.doc.querySelectorAll(selectors)];
-
-    // strip out unneeded (meta) html elements
     elementsToRemove.forEach(e => e.parentElement!.removeChild(e));
   }
 }

@@ -6,10 +6,6 @@ const routes: RouteConfig[] = [
     path: '/',
     component: () => import('pages/Connect.vue')
   },
-  /*{
-    path: '/connect',
-    component: () => import('pages/Connect.vue')
-  },*/
   {
     path: '/play/:id',
     beforeEnter: (to, from, next) => {
@@ -29,10 +25,6 @@ const routes: RouteConfig[] = [
     component: () => {
       return import('pages/Connect.vue');
     }
-  },
-  {
-    path: '/test',
-    component: () => import('pages/Connect.vue')
   },
 
   // Always leave this as last one,

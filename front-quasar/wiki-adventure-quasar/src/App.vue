@@ -8,5 +8,10 @@ import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'App',
+  meta () {
+    return {
+      title: "Wiki Adventure"
+    }
+  }
 });
 </script>

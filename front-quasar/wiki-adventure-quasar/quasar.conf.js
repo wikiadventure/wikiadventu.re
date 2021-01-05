@@ -95,7 +95,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify','AppFullscreen']
+      plugins: ['Notify','AppFullscreen','Meta']
     },
 
     // animations: 'all', // --- includes all animations
@@ -112,9 +112,9 @@ module.exports = configure(function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: `Quasar App`,
-        short_name: `Quasar App`,
-        description: `wiki adventure`,
+        name: `Wiki Adventure`,
+        short_name: `Wiki Adventure`,
+        description: `A wikipedia exploration game`,
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

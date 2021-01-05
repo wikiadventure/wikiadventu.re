@@ -213,6 +213,12 @@ export default defineComponent({
       loading: false
     }
   },
+  meta () {
+    var vm = this as any;
+    return {
+      title: "Wiki Adventure : " + vm.title
+    }
+  },
   methods: {
     requestWikiPage(url:string) {
       var vm:any = this;
