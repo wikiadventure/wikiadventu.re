@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import { Store } from "vuex";
 import { StateInterface } from '../store';
 import routes from './routes';
+import { Notify } from 'quasar'
 import { Dark } from 'quasar';
 
 
@@ -14,6 +15,13 @@ import { Dark } from 'quasar';
 export default route<Store<StateInterface>>(function ({ Vue }) {
   Vue.use(VueRouter);
   Dark.set(true);
+  Notify.registerType('annonce', {
+    icon: 'announcement',
+    progress: true,
+    color: 'teal',
+    textColor: 'white',
+    actions: [{ icon: 'close', color: 'white' }]
+  })
   const Router = new VueRouter({
     scrollBehavior: () => ({ x: 0, y: 0 }),
     routes,

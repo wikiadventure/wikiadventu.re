@@ -18,7 +18,7 @@ import WikiPage from "../layouts/lobby/WikiPage.vue";
 import RoundWin from "../layouts/lobby/screen/RoundWin.vue"
 
 import { defineComponent } from '@vue/composition-api';
-import { GameState, LobbyState, Player, WinRound } from "../store/gameData/state";
+import { GameState, LobbyState, Player, VoteResult, WinRound } from "../store/gameData/state";
 import Leaderboard from "../layouts/lobby/screen/Leaderboard.vue";
 
 export default defineComponent({
@@ -40,7 +40,7 @@ export default defineComponent({
     }
   },
   beforeRouteLeave (to, from, next) {
-    const answer = window.confirm('Do you really want to leave the lobby?');
+    const answer = window.confirm(this.$t('exitWarn') as string);
     if (answer) {
       next();
     } else {
@@ -106,6 +106,14 @@ export default defineComponent({
           vm.leaderboard = true;
           setTimeout(() => {vm.leaderboard = false}, payload.time*1000);
           return;
+        case LobbyState.Voting:
+        case LobbyState.Playing:
+          vm.$q.notify({
+            type: 'annonce',
+            position: 'bottom-right',
+            message: vm.$t('phase.notify.'+payload.state) as string
+          });
+          return;
       }
     },
     onWinRound(payload:WinRound) {
@@ -116,6 +124,14 @@ export default defineComponent({
         setTimeout(() => {vm.roundWin = false}, 5000);
         return;
       }
+    },
+    onVoteResult(payload:VoteResult) {
+      var vm = this;
+      vm.$q.notify({
+        type: 'annonce',
+        position: 'top',
+        message: vm.$t('gameTab.endPage') as string + " : " + payload.end
+      });
     },
     onVolume(payload:number) {
       this.winAudio.volume = payload;
@@ -132,6 +148,8 @@ export default defineComponent({
           return this.onGameState(action.payload);
         case "gameData/onWinRound":
           return this.onWinRound(action.payload);
+        case "gameData/onVoteResult":
+          return this.onVoteResult(action.payload);
       }
     });
     vm.unsubscribeMutation = vm.$store.subscribe((mutation, state) => {
