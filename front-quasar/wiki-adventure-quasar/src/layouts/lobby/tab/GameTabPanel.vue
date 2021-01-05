@@ -17,8 +17,6 @@
     <div class="row items-baseline q-ma-sm"><p class="q-ma-none flex-fix">{{ $t('gameTab.startPage') }} :</p><p class="q-ma-none q-ml-sm text-left flex-grow">{{ startPage }}</p></div>
     <div class="row items-baseline q-ma-sm"><p class="q-ma-none flex-fix">{{ $t('gameTab.endPage') }} :</p><p class="q-ma-none q-ml-sm text-left flex-grow">{{ endPage }}</p></div>
     <q-separator  spaced="lg"/>
-    <div class="row q-ma-md"><h3 class="q-ma-none flex-grow text-center">End page intro</h3></div>
-    <div class="row q-ma-md"><p class="q-ma-none flex-grow text-center">{{ endPageIntro }}</p></div>
   </div>
 </template>
 <style lang="scss">

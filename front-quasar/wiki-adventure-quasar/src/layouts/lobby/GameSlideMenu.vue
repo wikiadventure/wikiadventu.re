@@ -206,7 +206,7 @@ export default defineComponent({
       if (event.defaultPrevented) {
         return;
       }
-      if (e.key == "Tab") {
+      if (e.key == "Shift") {
         vm.showMenu = !vm.showMenu;
       }
     }
