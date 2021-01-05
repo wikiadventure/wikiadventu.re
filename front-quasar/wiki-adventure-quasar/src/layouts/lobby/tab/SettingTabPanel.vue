@@ -1,6 +1,6 @@
 <template>
   <div id="settingTab" class="col">
-    <div class="row justify-evenly q-ma-none"><h3>Setting</h3></div>
+    <div class="row justify-evenly q-ma-none"><h3>{{ $t('settingTab.settings') }}</h3></div>
     <div class="row justify-evenly"><theme-switch/><fullscreen-switch/></div>
     <lang-switch/>
     <volume-slider/>
