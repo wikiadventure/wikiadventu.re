@@ -12,7 +12,8 @@ import async.WS;
 import response.ErrorResponse;
 import controller.connect.ConnectController;
 import controller.connect.twitch.TwitchController;
-import controller.log.LogController;
+import controller.admin.LogController;
+import controller.admin.StatController;
 import lobby.Lobby;
 import js.Node.console;
 import js.Node.process;
@@ -67,6 +68,7 @@ class App {
                     case "connect": new ConnectController(im, sr, body);
                     case "twitch": new TwitchController(im, sr, body);
                     case "log": new LogController(im, sr, body);
+                    case "stat": new StatController(im, sr, body);
                     //case "help" to help dev
                     default: new ErrorResponse(im, sr, body, "Sorry, you are looking for something that doesn't exist!", 404);
                 }
