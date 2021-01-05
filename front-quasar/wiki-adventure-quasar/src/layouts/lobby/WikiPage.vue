@@ -202,56 +202,54 @@ export default defineComponent({
   data():{
     title:string,
     content:string,
+    loading:boolean,
     //infobox?:string,
     unsubscribe:() => void
   } {
     return {
       unsubscribe: () => {},
       title: "Welcome",
-      content: ""
+      content: "",
+      loading: false
     }
   },
   methods: {
     requestWikiPage(url:string) {
       var vm:any = this;
+      if (vm.loading) return;
+      vm.loading = true;
       vm.$store.dispatch('gameData/validateJump', url);
       vm.fetchArticle(url).then(
         function(article:WikiArticle) {
-          //document.body.scrollTop = 0; // For Safari
-          //document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
           document.getElementById("wikiPage").style.opacity = "0";
           setTimeout(function() {
             vm.title = article.title;
             vm.content = article.content;
-            //vm.infobox = article.infobox;
             Vue.nextTick().then(function () {
+              vm.loading = false;
               vm.redirectLinks(document.getElementById("wikiPage"));
             });
             document.getElementById("wikiPage").scrollTo(0,0);
             document.getElementById("wikiPage").style.opacity = "1";
           }, 100);
         }
-      );
+      ).catch((e:any) => {
+        vm.loading = false;
+        document.getElementById("wikiPage").style.opacity = "1";
+        this.$q.notify({
+          type: 'negative',
+          position: 'bottom-right',
+          message: 'A problem occurs when fetching wikipedia article : ' + e
+        })
+      });
     },
     redirectLinks(doc:Document) {
       var vm = this;
-      var links= doc.getElementsByTagName("a");
+      var links = doc.getElementsByTagName("a");
       for (var i=0;i<links.length;i++) {
         links[i].addEventListener("click",function(e){
           e.preventDefault();
-          if (this.getAttribute("href") == undefined) return;
-          //check if the link go to another wikipage and not info page or external
-          if (this.getAttribute("href")!.lastIndexOf(":") == -1 && !this.classList.contains("internal") && !this.classList.contains("external") && this.rel != "mw:ExtLink" && !this.classList.contains("new") && this.getAttribute("href")!.startsWith("/wiki/")) {
-            var idx = this.getAttribute("href")!.lastIndexOf("/");
-            var url = this.getAttribute("href")!.substring(idx+1);
-            var anchor = url!.indexOf("#");
-            if (anchor != -1) url = url!.substring(0, anchor);
-            url = decodeURIComponent(url);
-            vm.requestWikiPage(url);
-          } else if (this.getAttribute("href")!.startsWith("#")) {
-            var id = this.getAttribute("href")!.substring(1);
-            scrollToID(id, document.getElementById("wikiPage"));
-          }
+          vm.onLinkClick(this);
         });
         if (links[i].getAttribute("href") == undefined) continue;
         if (links[i].getAttribute("href")!.startsWith("#")) {
@@ -263,16 +261,26 @@ export default defineComponent({
         }
       }
     },
+    onLinkClick(link:HTMLAnchorElement) {
+      var vm = this;
+      if (link.getAttribute("href") == undefined) return;
+      //check if the link go to another wikipage and not info page or external
+      if (link.getAttribute("href")!.lastIndexOf(":") == -1 && !link.classList.contains("internal") && !link.classList.contains("external") && link.rel != "mw:ExtLink" && !link.classList.contains("new") && link.getAttribute("href")!.startsWith("/wiki/")) {
+        var idx = link.getAttribute("href")!.lastIndexOf("/");
+        var url = link.getAttribute("href")!.substring(idx+1);
+        var anchor = url!.indexOf("#");
+        if (anchor != -1) url = url!.substring(0, anchor);
+        url = decodeURIComponent(url);
+        vm.requestWikiPage(url);
+      } else if (link.getAttribute("href")!.startsWith("#")) {
+        var id = link.getAttribute("href")!.substring(1);
+        scrollToID(id, document.getElementById("wikiPage"));
+      }
+    },
     async fetchArticle(url:string) {
       var vm = this;
       var article = new WikiArticle(url, this.$store.state.gameData.lang, this.$q.platform.is.mobile);
-      return await article.fetch().catch(() => {
-        this.$q.notify({
-          type: 'negative',
-          position: 'bottom-right',
-          message: 'A problem occurs when fetching wikipedia article'
-        })
-      });
+      return await article.fetch();
     },
   },
   created() {
