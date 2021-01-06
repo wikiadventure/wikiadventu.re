@@ -28,10 +28,10 @@
 }
 </style>
 <script lang="ts">
-import LangSelect from "components/form/LanguageSelect.vue";
-import PseudoInput from "components/form/PseudoInput.vue";
-import PasswordInput from "components/form/PasswordInput.vue";
-import IdInput from "components/form/IdInput.vue";
+import LangSelect from "./LanguageSelect.vue";
+import PseudoInput from "./PseudoInput.vue";
+import PasswordInput from "./PasswordInput.vue";
+import IdInput from "./IdInput.vue";
 
 import { defineComponent } from '@vue/composition-api';
 
