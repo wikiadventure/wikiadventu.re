@@ -54,14 +54,14 @@ export default defineComponent({
         vm.$q.notify({
           type: 'annonce',
           position: 'bottom',
-          message: vm.$t('copySuccess')
+          message: vm.$t('copySuccess') as string
         });
       })
       .catch(() => {
         vm.$q.notify({
           type: 'error',
           position: 'bottom',
-          message: vm.$t('copyFail')
+          message: vm.$t('copyFail') as string
         });
       })
     }
