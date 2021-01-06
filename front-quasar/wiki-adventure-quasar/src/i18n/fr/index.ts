@@ -62,5 +62,7 @@ export default {
     },
     exitWarn: "Voulez-vous vraiment quitter le lobby?",
     noLobbyFound: "Aucun lobby trouvé avec l'id",
-    fetchError: "Une erreur a eu lieu lors de la communication avec le serveur"
+    fetchError: "Une erreur a eu lieu lors de la communication avec le serveur",
+    copySuccess: "Copié avec succès!",
+    copyFail: "Erreur lors de la copie"
   };

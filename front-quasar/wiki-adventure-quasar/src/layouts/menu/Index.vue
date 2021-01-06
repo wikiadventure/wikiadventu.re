@@ -42,8 +42,9 @@
               </div>
               <div class="q-ma-xs">
                 <p>{{ $t('contributionSection.nano') }}</p>
-                <q-btn push icon="img:https://cryptologos.cc/logos/nano-nano-logo.svg?v=006" class="nano" size="xl" label="Nano" @click="openNewPage('https://nano.org')" />
+                <q-btn push icon="img:https://cryptologos.cc/logos/nano-nano-logo.svg?v=006" class="nano" size="xl" label="Nano" @click="showNano = true" />
               </div>
+              <wallet-dialog v-model="showNano"/>
             </div>
           </content-pannel>
         </div>
@@ -224,15 +225,22 @@ import ContentPannel from '../../components/ContentPannel.vue';
 import CompactLangSwitch from '../../components/setting/CompactLangSwitch.vue';
 import ThemeSwitch from '../../components/setting/ThemeSwitch.vue'
 import LogoShowIn from '../../components/art/LogoShowIn.vue';
+import WalletDialog from '../../components/nano/WalletDialog.vue'
 
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'Index',
-  components: { ContentPannel, LogoShowIn, CompactLangSwitch, ThemeSwitch },
+  components: { ContentPannel, LogoShowIn, CompactLangSwitch, ThemeSwitch, WalletDialog },
+  data():{
+    showNano:boolean
+  } {
+    return {
+      showNano: false
+    }
+  },
   methods: {
-    
-    openNewPage: function (url: string) {
+    openNewPage(url: string) {
       openURL(url);
     }
   }
