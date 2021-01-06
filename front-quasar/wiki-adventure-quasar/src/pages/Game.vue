@@ -5,8 +5,8 @@
     <round-win id="roundWin" v-if="showRoundWin" :winner="winner ? winner.pseudo : ''"></round-win>
     <leaderboard v-if="showLeaderboard"></leaderboard>
     <audio id="winSound">
-      <source src="sound/win.ogg" type="audio/ogg">
-      <source src="sound/win.mp3" type="audio/mpeg">
+      <source src="sounds/win.ogg" type="audio/ogg">
+      <source src="sounds/win.mp3" type="audio/mpeg">
     </audio>
   </div>
 </template>
