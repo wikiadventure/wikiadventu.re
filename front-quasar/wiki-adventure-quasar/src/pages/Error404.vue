@@ -23,6 +23,10 @@
 </template>
 
 <script lang="ts">
+/**
+ * @todo Make a custom error page 
+ * @body The error page should follow the design of the connection page
+ */
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
