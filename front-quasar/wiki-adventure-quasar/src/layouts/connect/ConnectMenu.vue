@@ -11,7 +11,9 @@
         </q-tab-panel>
 
         <q-tab-panel name="Private" class="q-pa-none tabContent">
+          
           <q-tab-panels class="tabContent" v-model="privateTab" animated>
+
             <q-tab-panel name="PrivateJoin" class="q-pa-none tabContent scroll-y">
               <private-join></private-join>
             </q-tab-panel>
@@ -19,21 +21,20 @@
             <q-tab-panel name="PrivateCreate" class="q-pa-none tabContent scroll-y">
               <private-create></private-create>
             </q-tab-panel>
+
           </q-tab-panels>
-          <q-tabs v-model="privateTab"
-              dense
-              class="connect-sub-tabs"
-              active-color="primary"
-              indicator-color="primary"
-              align="justify"
-              narrow-indicator>
+
+          <q-tabs v-model="privateTab" dense class="connect-sub-tabs" align="justify" narrow-indicator>
             <q-tab :label="$q.screen.lt.sm ? '' : 'Join' " name="PrivateJoin" icon="mdi-account-arrow-right"></q-tab>
             <q-tab :label="$q.screen.lt.sm ? '' : 'Create' " name="PrivateCreate" icon="mdi-account-edit"></q-tab>
           </q-tabs>
+
         </q-tab-panel>
 
         <q-tab-panel name="twitch" class="q-pa-none tabContent">
+
           <q-tab-panels class="tabContent" v-model="twitchTab" animated>
+
             <q-tab-panel name="TwitchJoin" class="q-pa-none tabContent scroll-y">
               <twitch-join></twitch-join>
             </q-tab-panel>
@@ -41,33 +42,24 @@
             <q-tab-panel name="TwitchCreate" class="q-pa-none tabContent scroll-y">
               <twitch-create></twitch-create>
             </q-tab-panel>
+
           </q-tab-panels>
-          <q-tabs v-model="twitchTab"
-              dense
-              class="connect-sub-tabs"
-              active-color="primary"
-              indicator-color="primary"
-              align="justify"
-              narrow-indicator>
+
+          <q-tabs v-model="twitchTab" dense class="connect-sub-tabs" align="justify" narrow-indicator>
             <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : 'Join' " name="TwitchJoin" icon="svguse:icons/twitch.svg#join"></q-tab>
             <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : 'Create' " name="TwitchCreate" icon="svguse:icons/twitch.svg#create"></q-tab>
           </q-tabs>
+
         </q-tab-panel>
       </q-tab-panels>
 
-      <q-tabs v-model="tab"
-              dense
-              class="connect-tabs"
-              active-color="primary"
-              indicator-color="primary"
-              align="justify"
-              narrow-indicator>
+      <q-tabs v-model="tab" dense class="connect-tabs" align="justify" narrow-indicator>
         <q-tab :label="$q.screen.lt.md ? '' : $t('home') " name="Home" icon="mdi-home"></q-tab>
         <q-tab :label="$q.screen.lt.md ? '' : $t('publicLobby') " name="PublicJoin" icon="mdi-earth"></q-tab>
         <q-tab :label="$q.screen.lt.md ? '' : $t('privateLobby') " name="Private" icon="mdi-lock"></q-tab>
         <q-tab class="twitchTab" :label="$q.screen.lt.md ? '' : $t('twitchLobby')" name="twitch" icon="mdi-twitch"></q-tab>
       </q-tabs>
-      </div>
+    </div>
   </q-layout>
 </template>
 <style lang="scss">

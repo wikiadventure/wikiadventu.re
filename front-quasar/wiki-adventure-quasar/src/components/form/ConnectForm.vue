@@ -2,20 +2,19 @@
     <div class="connect-form">
       <h3 class="formTitle">{{ title }}</h3>
         <q-form>
-        <div class="row">
-          <div class="col-12 col-sm-6">
+          <div class="row">
+            <div class="col-12 col-sm-6">
               <lang-select class="q-ma-sm" popup-content-class="odd-select-popup"/>
               <pseudo-input class="q-ma-sm"/>
+            </div>
+            <div class="col-12 col-sm-6">
+              <id-input v-if="!createLobby" class="q-ma-sm"/>
+              <password-input v-model="password" v-if="!publicLobby" class="q-ma-sm"/>   
+            </div>
           </div>
-          <div class="col-12 col-sm-6">
-                <id-input v-if="!createLobby" class="q-ma-sm"/>
-                <password-input v-model="password" v-if="!publicLobby" class="q-ma-sm"/>
-                
+          <div class="row justify-evenly q-my-lg">
+            <slot></slot>
           </div>
-        </div>
-        <div class="row justify-evenly q-my-lg">
-          <slot></slot>
-        </div>
         </q-form>
       </div>
 </template>
