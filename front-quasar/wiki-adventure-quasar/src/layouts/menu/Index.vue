@@ -1,8 +1,8 @@
 <template>
   <div class="main-menu-index">
     <logo-show-in class="absolute" title="Wiki Adventure"></logo-show-in>
-    <compact-lang-switch class="testing2" />
-    <theme-switch class="testing3" />
+    <compact-lang-switch class="topLeft" />
+    <theme-switch class="topRight" />
     <div class="skewLineContainer first"><div class="skewLine"></div></div>
     <div class="row wrapper first">
       <content-pannel id="HowToPlay" head="Play">
@@ -37,7 +37,7 @@
                 <q-btn push icon="mdi-github" class="github" size="xl" label="Github" @click="openNewPage('https://github.com/Sacramentix/WikiAdventure')"/>
               </div>
               <div class="q-ma-xs">
-                <p>{{ $t('contributionSection.nano') }}</p>  
+                <p>{{ $t('contributionSection.kofi') }}</p>  
                 <q-btn push icon="img:icons/kofi.svg" class="kofi" size="xl" label="Ko-fi" @click="openNewPage('https://ko-fi.com/sacramentix')"/>
               </div>
               <div class="q-ma-xs">
@@ -52,12 +52,12 @@
   </div>
 </template>
 <style lang="scss">
-.testing2 {
+.topLeft {
   position: absolute;
   left: 2px;
   top: 2px;
 }
-.testing3 {
+.topRight {
   position: absolute;
   right: 2px;
   top: 2px;
@@ -128,6 +128,9 @@
 }
 #News {
   color: var(--w-color-blue-white);
+}
+#Contribution {
+  pointer-events: all;
 }
 .github {
   background: #000;
@@ -222,8 +225,6 @@ import CompactLangSwitch from '../../components/setting/CompactLangSwitch.vue';
 import ThemeSwitch from '../../components/setting/ThemeSwitch.vue'
 import LogoShowIn from '../../components/art/LogoShowIn.vue';
 
-import scrollToID from '../../mixins/scrollToID';
-
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
@@ -231,11 +232,8 @@ export default defineComponent({
   components: { ContentPannel, LogoShowIn, CompactLangSwitch, ThemeSwitch },
   methods: {
     
-    CompactLangSwitchopenNewPage: function (url: string) {
+    openNewPage: function (url: string) {
       openURL(url);
-    },
-    scrollToID(id:string) {
-      scrollToID(id);
     }
   }
 });
