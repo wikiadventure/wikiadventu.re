@@ -1,7 +1,8 @@
 <template>
   <div>
     <game-slide-menu/>
-    <wiki-page ref="wikiPage"/>
+    <wait v-if="lobbyState == 'Waiting'" />
+    <wiki-page ref="wikiPage" v-else />
     <round-win id="roundWin" v-if="showRoundWin" :winner="winner ? winner.pseudo : ''"></round-win>
     <leaderboard v-if="showLeaderboard"></leaderboard>
     <audio id="winSound">
@@ -15,15 +16,17 @@ import Vue from 'vue';
 
 import GameSlideMenu from "../layouts/lobby/GameSlideMenu.vue";
 import WikiPage from "../layouts/lobby/WikiPage.vue";
-import RoundWin from "../layouts/lobby/screen/RoundWin.vue"
+import RoundWin from "../layouts/lobby/screen/RoundWin.vue";
+import Leaderboard from "../layouts/lobby/screen/Leaderboard.vue";
+import Wait from "../layouts/lobby/screen/Wait.vue";
+
+import { GameState, LobbyState, Player, VoteResult, WinRound } from "../store/gameData/state";
 
 import { defineComponent } from '@vue/composition-api';
-import { GameState, LobbyState, Player, VoteResult, WinRound } from "../store/gameData/state";
-import Leaderboard from "../layouts/lobby/screen/Leaderboard.vue";
 
 export default defineComponent({
   name: 'Index',
-  components: { GameSlideMenu, WikiPage, RoundWin, Leaderboard },
+  components: { GameSlideMenu, WikiPage, RoundWin, Leaderboard, Wait },
   data(): {
     showRoundWin:boolean,
     showLeaderboard:Boolean,
@@ -52,6 +55,9 @@ export default defineComponent({
       var players = this.$store.state.gameData.players as Player[];
       var winner = players.find(p => p.id == this.$store.state.gameData.winnerId );
       return winner;
+    },
+    lobbyState():LobbyState {
+      return this.$store.state.gameData.lobbyState;
     },
     roundWin: {
       get: function ():Boolean {
@@ -118,7 +124,7 @@ export default defineComponent({
     },
     onWinRound(payload:WinRound) {
       var vm = this;
-      if (payload.id == vm.$store.state.gameData.selfPlayerID) {
+      if (payload.id == vm.$store.state.gameData.self) {
         this.winAudio.play();
         vm.roundWin = true;
         setTimeout(() => {vm.roundWin = false}, 5000);

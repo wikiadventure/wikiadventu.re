@@ -1,7 +1,7 @@
 import { Lang } from 'src/i18n';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
-import { GameData, GameState, LobbyEvent, LobbyEventType, LobbyState, LobbyType, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, WinRound, WsMessage } from './state';
+import { GameData, GameState, LobbyEvent, LobbyEventType, LobbyState, LobbyType, PlayerJoin, PlayerLeft, SetOwner, UpdateScore, VoteResult, WinRound, WsMessage } from './state';
 
 const actions: ActionTree<GameData, StateInterface> = {
   connect({ commit, dispatch, state }) {
@@ -77,6 +77,15 @@ const actions: ActionTree<GameData, StateInterface> = {
   onPlayerLeft({ commit }, data:PlayerLeft) {
     commit('playerLeft', data);
   },
+  onSetOwner({ commit }, data:SetOwner) {
+    commit('setOwner', data.id);
+  },
+  sendStart({ state }) {
+    var json:WebsocketPackage = {
+      type: WebsocketPackageType.Start,
+    };
+    state.ws?.send(JSON.stringify(json));
+  },
   sendMessage({ state }, data) {
     var json:WebsocketPackage = {
       type: WebsocketPackageType.Message,
@@ -117,7 +126,7 @@ const actions: ActionTree<GameData, StateInterface> = {
     state.timeStamp = 0;
     state.startPage = "";
     state.endPage = "";
-    state.selfPlayerID = -1;
+    state.self = -1;
     state.players = [];
     state.messages = [];
     state.winnerId = -1;
@@ -129,6 +138,7 @@ interface WebsocketPackage {
   value?:String
 }
 enum WebsocketPackageType {
+  Start = "Start",
   Message = "Message",
   Vote = "Vote",
   ResetVote = "ResetVote",

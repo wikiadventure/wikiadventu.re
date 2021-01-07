@@ -27,7 +27,7 @@ class PrivateCreateController {
             var lobby = new Lobby(player.language, Private, passwordHash);
             lobby.giveID();// giveID method also add the lobby to the lobbylist
             lobby.connect(player, passwordHash);
-            lobby.votePhase();
+            lobby.waitPhase();
             var json:ConnectionResponse = {
                 status: Success,
                 lobbyID: Lobby.encodeID(lobby.id),

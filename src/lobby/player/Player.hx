@@ -170,6 +170,20 @@ class Player {
             }
         }
     }
+    public static function emitSetOwner(playerList:Array<Player>) {
+        var data:LobbyEvent<SetOwner> = {
+            type: SetOwner,
+            data: {
+                id: playerList[0].id,
+            }
+        }
+        var textData = Json.stringify(data);
+        for (p in playerList) {
+            if (p.socket != null) {
+                p.socket.send(textData);
+            }
+        }
+    }
 
 }
 
@@ -181,6 +195,7 @@ enum abstract LobbyEventType(String) {
     var UpdateScore;
     var WinRound;
     var Message;
+    var SetOwner;
 }
 
 typedef LobbyEvent<T> = {
@@ -215,4 +230,8 @@ typedef WinRound = {
 typedef Message = {
     id:Int,
     mes:String
+}
+
+typedef SetOwner = {
+    id:Int
 }

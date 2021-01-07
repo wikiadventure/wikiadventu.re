@@ -16,6 +16,9 @@ const mutation: MutationTree<GameData> = {
   setLobbyType(state:GameData, type:LobbyType) {
     state.lobbyType = type;
   },
+  setOwner(state:GameData, o:number) {
+    state.owner = o;
+  },
   pushMessage(state:GameData, m:WsMessage) {
     console.log("push message");
     var message:Message = {
@@ -33,7 +36,7 @@ const mutation: MutationTree<GameData> = {
       winStreak: 0,
       isConnected: true
     }
-    if (p.self) state.selfPlayerID = p.id;
+    if (p.self) state.self = p.id;
     state.players.push(player);
   },
   playerLeft(state:GameData, p:PlayerLeft) {

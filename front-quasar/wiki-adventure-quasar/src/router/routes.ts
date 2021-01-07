@@ -26,7 +26,12 @@ const routes: RouteConfig[] = [
       return import('pages/Connect.vue');
     }
   },
-
+  {
+    path: '/test',
+    component: () => {
+      return import('pages/Game.vue');
+    }
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

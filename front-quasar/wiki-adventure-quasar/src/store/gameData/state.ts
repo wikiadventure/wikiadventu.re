@@ -19,7 +19,8 @@ export interface GameData {
   timeStamp: number;
   endPage: string;
   lobbyID: string;
-  selfPlayerID: number;
+  owner:number;//id the owner player
+  self: number;//id the player
   players: Array<Player>;
   messages: Array<Message>;
   winnerId: number;
@@ -42,6 +43,7 @@ export interface Message {
 }
 
 export enum LobbyState {
+  Waiting = "Waiting",
   Voting = "Voting",
   Playing = "Playing",
   RoundFinish = "RoundFinish",
@@ -55,13 +57,14 @@ const state: GameData = {
   lobbyType: LobbyType.Public,
   lobbyID: "",
   lobbyState: LobbyState.Voting,
+  owner: -2,
   stateCounter: undefined,
   round: 0,
   timeLeft: 0,
   timeStamp: 0,
   startPage: "",
   endPage: "",
-  selfPlayerID: -1,
+  self: -1,
   players: [],
   messages: [],
   winnerId: -1,
@@ -85,12 +88,15 @@ export interface LobbyEvent<T> {
 }
 export interface PlayerJoin {
   pseudo:string,
-  id:number,
+  id:number,//The player id
   score:number,
   self:boolean
 }
+export interface SetOwner {
+  id:number//The player id
+}
 export interface PlayerLeft {
-  id:number
+  id:number//The player id
 }
 export interface VoteResult {
   start:string,
@@ -102,14 +108,14 @@ export interface GameState {
   time:number
 }
 export interface UpdateScore {
-  id:number,
+  id:number,//The player id
   score:number
 }
 export interface WinRound {
-  id:number
+  id:number//The player id
 }
 export interface WsMessage {
-  id:number,
+  id:number,//The player id
   mes:string
 }
 

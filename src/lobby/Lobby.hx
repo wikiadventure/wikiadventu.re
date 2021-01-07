@@ -1,5 +1,6 @@
 package lobby;
 
+import fileLog.Log;
 import js.node.Timers;
 import js.node.Timers.Timeout;
 import haxe.Timer;
@@ -28,6 +29,10 @@ class Lobby {
     public var passwordHash:String;
     public var language:Lang;
     public var playerList:Array<Player>;
+    public var owner(get, never):Player;
+    public function get_owner() {
+        return playerList[0];
+    }
     
     public var round:Int;
     public var currentRound:Int;
@@ -143,11 +148,15 @@ class Lobby {
         throw "Invalid password";
     }
     /**
-     * remove a player from the lobby and remove the lobby if he go empty
+     * remove a player from the lobby,
+     * send the new owner if he get remove
+     *  and delete the lobby if it go empty
      * @param player to remove
      */
     public function removePlayer(player:Player) {
+        var doOwnerChange = owner == player;
         playerList.remove(player);
+        if (doOwnerChange) playerList.emitSetOwner();
         log("player left : " + player.uuid + " --> " + player.pseudo, PlayerData);
         if (playerList.length == 0) {
             log("No player left, closing the lobby", Info);
@@ -184,6 +193,7 @@ class Lobby {
 
     public function onPlayerConnection(player:Player) {
         playerList.emitPlayerJoin(player);
+        [player].emitSetOwner();
         sendCurrentState(player);
         player.socket.on('message', function (data:String) {
             websocketHandler(player, data);
@@ -197,6 +207,8 @@ class Lobby {
         try {
             var json:WebsocketPackage = tink.Json.parse(data);
             switch json.type {
+                case Start:
+                    start(player);
                 case Message:
                     playerList.emitMessage(player, sanitizeMessage(json.value));
                 case Validate:
@@ -208,6 +220,15 @@ class Lobby {
             }
         } catch(e:Dynamic) {
             trace(e);
+        }
+    }
+
+    public function start(player:Player) {
+        if (state != Waiting) return log("Game already start --> "  + player.uuid, LogType.Error);
+        if (player==owner) {
+            votePhase();
+        } else {
+            log("Someone who is not owner tried to start --> " + player.uuid, LogType.Error);
         }
     }
 
@@ -241,6 +262,8 @@ class Lobby {
      */
     public function currentStateTimeOut():Int {
         switch state {
+            case Waiting:
+                return 0;
             case Playing:
                 return playTimeOut;
             case Voting:
@@ -492,7 +515,17 @@ class Lobby {
         });
     }
 
-        /**
+    /**
+     * start the voting phase
+     * and call selectPage when the timer run out
+     */
+     public function waitPhase() {
+        if(playerList.length == 0) return;
+        state = Waiting;
+        initNewPhase();
+        playerList.emitSetOwner();
+    }
+    /**
      * start the voting phase
      * and call selectPage when the timer run out
      */
@@ -695,6 +728,7 @@ typedef WebsocketPackage = {
     ?value:String
 }
 enum abstract WebsocketPackageType(String) {
+    var Start;
     var Message;
     var Vote;
     var ResetVote;
@@ -715,6 +749,7 @@ enum abstract LobbyType(String) {
 }
 
 enum abstract LobbyState(String) {
+    var Waiting;
     var Voting;
     var Playing;
     var RoundFinish;
