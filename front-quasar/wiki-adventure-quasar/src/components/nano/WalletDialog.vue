@@ -12,7 +12,7 @@
       </q-card-section>
       <q-separator/>
       <q-card-actions align="center">
-        <div class="row items-end"><p class="nanoAddress">{{ nanoAddress }}</p><q-btn round flat icon="mdi-content-copy" @click="clip()" /></div>
+        <div class="row items-end q-mx-sm"><p class="nanoAddress">{{ nanoAddress }}</p><q-btn round flat icon="mdi-content-copy" @click="clip()" /></div>
       </q-card-actions>
     </q-card>
   </q-dialog>
