@@ -15,7 +15,12 @@
       </div>
       <q-separator/>
       <div class="wait-action justify-center">
-        <q-btn :disabled="self != owner" push class="wait-start" label="start" @click="start()" icon="mdi-check-bold"/>
+        <div><!--Only to display tooltip over the disabled q btn -->
+          <q-btn :disable="self != owner" push class="wait-start" label="start" @click="start()" icon="mdi-check-bold"/>
+          <q-tooltip v-if="self != owner"  anchor="top middle" self="bottom middle" :offset="[10, 10]">
+            Only <q-icon size="xs" class="owner" name="mdi-crown"/> {{ ownerPseudo }} can choose to start
+          </q-tooltip>
+        </div>
       </div>
     </div>
   </div>
@@ -45,24 +50,17 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 2px;
+  padding: 4px;
   div {
     flex: 0 0 auto;
     border-radius: 6px;
-    margin: 2px;
+    margin: 1px;
     display: flex;
     flex-direction: row;
     align-items: end;
     padding: 3px 6px;
     div {
       padding: 1px 4px;
-      color: var(--w-color-blue-white);
-    }
-    .self {
-      color: var(--w-color-dark-teal);
-    }
-    .owner {
-      color: var(--w-color-dark-teal);
     }
   }
 }
@@ -73,21 +71,59 @@
 }
 .wait-slot {
   font-size: 2em;
-  color: var(--w-color-blue-white);
-}
-.wait-start {
-  background: var(--w-color-dark-teal);
-  color: var(--w-color-blue-white);
 }
 .body--dark {
   .wait-container {
     background: var(--w-color-almost-black);
-    .wait-players {
+  }
+  .wait-players {
+    background: var(--w-color-almost-black);
+    div {
       background: #191919;
       div {
-        background: var(--w-color-almost-black);
+        color: var(--w-color-blue-white);
+      }
+      .self {
+        color: var(--w-color-dark-teal);
+      }
+      .owner {
+        color: var(--w-color-dark-teal);
       }
     }
+  }
+  .wait-slot {
+    color: var(--w-color-blue-white);
+  }
+  .wait-start {
+    background: var(--w-color-dark-teal);
+    color: var(--w-color-blue-white);
+  }
+}
+.body--light {
+  .wait-container {
+    background: var(--w-color-light-teal);
+  }
+  .wait-players {
+    background: var(--w-color-light-teal);
+    div {
+      background: var(--w-color-blue-white);
+      div {
+        color: var(--w-color-almost-black);
+      }
+      .self {
+        color: var(--w-color-dark-teal);
+      }
+      .owner {
+        color: var(--w-color-dark-teal);
+      }
+    }
+  }
+  .wait-slot {
+    color: var(--w-color-blue-white);
+  }
+  .wait-start {
+    background: var(--w-color-dark-teal);
+    color: var(--w-color-blue-white);
   }
 }
 </style>
@@ -99,14 +135,19 @@ export default defineComponent({
   name: 'Wait',
   computed: {
     players():Player[] {
-      return this.$store.state.gameData.players as Player[];
+      return (this.$store.state.gameData.players as Player[]).filter((p) => {return p.isConnected});
     },
     owner():number {
-      console.log(this.$store.state.gameData.owner);
       return this.$store.state.gameData.owner;
     },
+    ownerPseudo():string {
+      var players = this.$store.state.gameData.players as Player[];
+      for (var p of players) {
+        if (p.id == this.$store.state.gameData.owner) return p.pseudo;
+      }
+      return;
+    },
     self():number {
-      console.log(this.$store.state.gameData.self);
       return this.$store.state.gameData.self;
     }
   },
