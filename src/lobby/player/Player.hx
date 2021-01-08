@@ -170,7 +170,7 @@ class Player {
             }
         }
     }
-    public static function emitSetOwner(playerList:Array<Player>) {
+    public static function emitSetOwner(playerList:Array<Player>, ?to:Player) {
         var data:LobbyEvent<SetOwner> = {
             type: SetOwner,
             data: {
@@ -178,6 +178,12 @@ class Player {
             }
         }
         var textData = Json.stringify(data);
+        if (to != null) {
+            if (to.socket != null) {
+                to.socket.send(textData);
+            }
+            return;
+        }
         for (p in playerList) {
             if (p.socket != null) {
                 p.socket.send(textData);

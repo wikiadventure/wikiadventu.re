@@ -193,7 +193,7 @@ class Lobby {
 
     public function onPlayerConnection(player:Player) {
         playerList.emitPlayerJoin(player);
-        [player].emitSetOwner();
+        playerList.emitSetOwner(player);
         sendCurrentState(player);
         player.socket.on('message', function (data:String) {
             websocketHandler(player, data);

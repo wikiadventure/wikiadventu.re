@@ -37,6 +37,9 @@ const actions: ActionTree<GameData, StateInterface> = {
         case LobbyEventType.PlayerLeft: {
           return dispatch('onPlayerLeft', json.data);
         };
+        case LobbyEventType.SetOwner: {
+          return dispatch('onSetOwner', json.data);
+        };
         default: {
           return;
         }

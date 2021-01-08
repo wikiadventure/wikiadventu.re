@@ -73,6 +73,7 @@ const state: GameData = {
 };
 
 export enum LobbyEventType {
+  SetOwner = "SetOwner",
   PlayerJoin = "PlayerJoin",
   PlayerLeft = "PlayerLeft",
   VoteResult = "VoteResult",
