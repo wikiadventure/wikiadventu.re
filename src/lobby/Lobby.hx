@@ -156,7 +156,7 @@ class Lobby {
     public function removePlayer(player:Player) {
         var doOwnerChange = owner == player;
         playerList.remove(player);
-        if (doOwnerChange) playerList.emitSetOwner();
+        if (doOwnerChange && playerList.length>0) playerList.emitSetOwner();
         log("player left : " + player.uuid + " --> " + player.pseudo, PlayerData);
         if (playerList.length == 0) {
             log("No player left, closing the lobby", Info);
@@ -578,7 +578,11 @@ class Lobby {
         state = GameFinish;
         initNewPhase();
         loop = Timers.setTimeout(function () {
-            votePhase();
+            if (type == Public) {
+                votePhase();
+            } else {
+                waitPhase();
+            }
         },currentStateTimeOut()*1000);
 
     }
