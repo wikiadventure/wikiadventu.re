@@ -194,6 +194,7 @@ export default defineComponent({
       }
     }
     function touchStart(e:TouchEvent) {
+      e.preventDefault();
       var touchobj = e.changedTouches[0];
       dist = 0;
       startX = touchobj.pageX;
@@ -206,7 +207,7 @@ export default defineComponent({
       if (event.defaultPrevented) {
         return;
       }
-      if (e.key == "Shift") {
+      if (e.key == "Shift" && e.ctrlKey) {
         vm.showMenu = !vm.showMenu;
       }
     }
