@@ -51,6 +51,7 @@ export default {
       settings: "Options"
     },
     phase: {
+      Waiting: "Attente de joueur",
       Voting: "Vote",
       Playing: "Recherche",
       RoundFinish: "Résultat",
@@ -62,6 +63,7 @@ export default {
     },
     exitWarn: "Voulez-vous vraiment quitter le lobby?",
     noLobbyFound: "Aucun lobby trouvé avec l'id",
+    lobbyIDRequired: "Veuiller saisir un id de lobby à rejoindre",
     fetchError: "Une erreur a eu lieu lors de la communication avec le serveur",
     copySuccess: "Copié avec succès!",
     copyFail: "Erreur lors de la copie"

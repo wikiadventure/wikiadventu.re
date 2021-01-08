@@ -25,8 +25,8 @@
           </q-tab-panels>
 
           <q-tabs v-model="privateTab" dense class="connect-sub-tabs" align="justify" narrow-indicator>
-            <q-tab :label="$q.screen.lt.sm ? '' : 'Join' " name="PrivateJoin" icon="mdi-account-arrow-right"></q-tab>
-            <q-tab :label="$q.screen.lt.sm ? '' : 'Create' " name="PrivateCreate" icon="mdi-account-edit"></q-tab>
+            <q-tab :label="$q.screen.lt.sm ? '' : $t('join') " name="PrivateJoin" icon="mdi-account-arrow-right"></q-tab>
+            <q-tab :label="$q.screen.lt.sm ? '' : $t('create') " name="PrivateCreate" icon="mdi-account-edit"></q-tab>
           </q-tabs>
 
         </q-tab-panel>
@@ -46,8 +46,8 @@
           </q-tab-panels>
 
           <q-tabs v-model="twitchTab" dense class="connect-sub-tabs" align="justify" narrow-indicator>
-            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : 'Join' " name="TwitchJoin" icon="svguse:icons/twitch.svg#join"></q-tab>
-            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : 'Create' " name="TwitchCreate" icon="svguse:icons/twitch.svg#create"></q-tab>
+            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : $t('join') " name="TwitchJoin" icon="svguse:icons/twitch.svg#join"></q-tab>
+            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : $t('create') " name="TwitchCreate" icon="svguse:icons/twitch.svg#create"></q-tab>
           </q-tabs>
 
         </q-tab-panel>
@@ -152,6 +152,14 @@ export default defineComponent({
   methods: {
     login(event:ConnectEvent) {
       var vm = this;
+      if (event.type == ConnectType.PrivateJoin && vm.$store.state.globalForm.lobbyID == "") {
+        vm.$q.notify({
+          type: 'negative',
+          position: 'top',
+          message: vm.$t('lobbyIDRequired') as string
+        });
+        return;
+      }
       if(vm.connecting) return;
       vm.connecting = true;
       var store = this.$store;
@@ -161,6 +169,9 @@ export default defineComponent({
         type: event.type,
         lang: this.$store.state.globalForm.lang,
         pseudo: this.$store.state.globalForm.pseudo
+      }
+      if ((event.type == ConnectType.PrivateJoin || event.type == ConnectType.PublicJoin) &&vm.$store.state.globalForm.lobbyID != "") {
+        query.lobby = vm.$store.state.globalForm.lobbyID;
       }
       if (event.type != ConnectType.PublicJoin) {
         query.password = event.password;
@@ -265,7 +276,8 @@ interface loginQuery {
   lang:Lang;
   pseudo:string;
   password?:string;
-  uuid?:string;
+  lobby?:string;
+  uuid?:string;//for twitch
 }
 interface ConnectionResponse {
     status:ConnectionStatus,
