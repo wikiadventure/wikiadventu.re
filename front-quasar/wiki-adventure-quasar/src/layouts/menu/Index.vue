@@ -5,7 +5,7 @@
     <theme-switch class="topRight" />
     <div class="skewLineContainer first"><div class="skewLine"></div></div>
     <div class="row wrapper first">
-      <content-pannel id="HowToPlay" head="{{ $t('indexHowToPlay.title') }}">
+      <content-pannel id="HowToPlay" :head="$t('indexHowToPlay.title')">
         <div class="col">
           <p>
             {{ $t('indexHowToPlay.content') }}
