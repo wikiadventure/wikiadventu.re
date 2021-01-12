@@ -7,13 +7,13 @@ export default {
 };
 
 export enum Lang {
-  en = "EN",
-  fr = "FR",
-  de = "DE",
-  es = "ES",
-  it = "IT",
-  eo = "EO",
-  pt = "PT"
+  en = "en",
+  fr = "fr",
+  de = "de",
+  es = "es",
+  it = "it",
+  eo = "eo",
+  pt = "pt"
 }
 
 export function getLabel(lang:string):string {
