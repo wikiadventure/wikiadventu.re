@@ -7,7 +7,7 @@ export default {
     playSection: {
       core: "Need to write this"
     },
-    news: "news",
+    news: "Nouveautés",
     contribution: "Contribution",
     contributionSection: {
       discord: "Trouve des joueurs sur notre Discord",

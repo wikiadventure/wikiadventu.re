@@ -1,11 +1,11 @@
 <template>
   <div class="main-menu-index">
     <logo-show-in class="absolute" title="Wiki Adventure"></logo-show-in>
-    <compact-lang-switch class="topLeft" />
+    <compact-lang-switch class="topLeft text-uppercase" />
     <theme-switch class="topRight" />
     <div class="skewLineContainer first"><div class="skewLine"></div></div>
     <div class="row wrapper first">
-      <content-pannel id="HowToPlay" head="{{ $t('indexHowToPlay.title') }}">
+      <content-pannel id="HowToPlay" :head="$t('indexHowToPlay.title')">
         <div class="col">
           <p>
             {{ $t('indexHowToPlay.content') }}
@@ -14,7 +14,7 @@
       </content-pannel>
       <div class="skewLineContainer second"><div class="skewLine"></div></div>
       <div class="wrapper second">
-        <content-pannel id="News" head="News">
+        <content-pannel id="News" :head="$t('news')">
           <div class="col">
             <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consequatur veniam placeat qui facilis neque, beatae nihil unde aliquid ipsam incidunt itaque repudiandae nisi animi vel cupiditate nostrum impedit? Commodi, pariatur! Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus eum, magni optio, nihil ex sapiente distinctio reprehenderit nulla dolore repellendus saepe qui consequuntur nesciunt assumenda earum vitae repellat libero? Ratione!</p>
           </div>
