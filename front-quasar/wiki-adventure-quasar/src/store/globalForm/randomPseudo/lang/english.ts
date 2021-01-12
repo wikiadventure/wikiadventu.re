@@ -1,6 +1,5 @@
 const disheList:Array<string> = [
   "Cobbler",
-  "Faggots",
   "Scones",
   "Brownie",
   "Cookie",
