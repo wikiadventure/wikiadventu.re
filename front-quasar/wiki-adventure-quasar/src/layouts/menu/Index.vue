@@ -1,7 +1,7 @@
 <template>
   <div class="main-menu-index">
     <logo-show-in class="absolute" title="Wiki Adventure"></logo-show-in>
-    <compact-lang-switch class="topLeft" />
+    <compact-lang-switch class="topLeft text-uppercase" />
     <theme-switch class="topRight" />
     <div class="skewLineContainer first"><div class="skewLine"></div></div>
     <div class="row wrapper first">
