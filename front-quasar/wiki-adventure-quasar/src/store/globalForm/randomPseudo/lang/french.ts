@@ -27,7 +27,7 @@ const actionList:Array<string> = [
   "Chef",
   "Escargot",
   "Commis",
-  "Voleur_de",
+  "Voleur de",
   "Braconnier",
   "Oiseau",
   "Tortue",
@@ -40,11 +40,11 @@ const actionList:Array<string> = [
   "Maréchal",
   "Sergent",
   "Colonel",
-  "Dealer_de",
+  "Dealer de",
   "Président"
 ];
 export function getEnglish():string {
     var randomDisheID = Math.floor(Math.random() * Math.floor(disheList.length));
     var randomActionID = Math.floor(Math.random() * Math.floor(actionList.length));
-    return actionList[randomActionID] + "_" + disheList[randomDisheID];
+    return actionList[randomActionID] + disheList[randomDisheID];
 }
