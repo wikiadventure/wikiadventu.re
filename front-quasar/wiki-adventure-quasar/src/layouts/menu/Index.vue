@@ -5,21 +5,16 @@
     <theme-switch class="topRight" />
     <div class="skewLineContainer first"><div class="skewLine"></div></div>
     <div class="row wrapper first">
-      <content-pannel id="HowToPlay" head="Play">
+      <content-pannel id="HowToPlay" :head="$t('indexHowToPlay.title')">
         <div class="col">
           <p>
-            The goal is simple, you need to go as fast as 
-            possible from the start page to the end page, but you can only navigate 
-            with the link on the wikipedia page.
-            During the voting phase you can suggest your wikipedia page title in the swipe menu.
-            At the end of the voting phase the server will randomly pick a start page 
-            and an end page and the game will begin.
+            {{ $t('indexHowToPlay.content') }}
           </p>
         </div>
       </content-pannel>
       <div class="skewLineContainer second"><div class="skewLine"></div></div>
       <div class="wrapper second">
-        <content-pannel id="News" head="News">
+        <content-pannel id="News" :head="$t('news')">
           <div class="col">
             <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consequatur veniam placeat qui facilis neque, beatae nihil unde aliquid ipsam incidunt itaque repudiandae nisi animi vel cupiditate nostrum impedit? Commodi, pariatur! Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus eum, magni optio, nihil ex sapiente distinctio reprehenderit nulla dolore repellendus saepe qui consequuntur nesciunt assumenda earum vitae repellat libero? Ratione!</p>
           </div>

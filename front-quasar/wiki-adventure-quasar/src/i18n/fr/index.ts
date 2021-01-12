@@ -1,9 +1,13 @@
 export default {
     play: "Jouer",
+    indexHowToPlay: {
+      title: "Comment jouer?",
+      content: "Le jeu est simple, il faut aller le plus vite possible d'une page à l'autre, mais on ne peut naviguer qu'avec les liens sur la page Wikipédia de départ. Pendant la phase de vote, vous pouvez suggérer le titre de la page Wikipedia de départ ou d'arrivée. À la fin de la phase de vote, le jeu choisira au hasard une page de démarrage et une page de fin et le jeu commencera."
+    },
     playSection: {
       core: "Need to write this"
     },
-    news: "news",
+    news: "Nouveautés",
     contribution: "Contribution",
     contributionSection: {
       discord: "Trouve des joueurs sur notre Discord",
