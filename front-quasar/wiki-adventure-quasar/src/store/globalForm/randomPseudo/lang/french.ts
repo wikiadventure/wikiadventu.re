@@ -43,7 +43,7 @@ const actionList:Array<string> = [
   "Dealer de",
   "Président"
 ];
-export function getEnglish():string {
+export function getFrench():string {
     var randomDisheID = Math.floor(Math.random() * Math.floor(disheList.length));
     var randomActionID = Math.floor(Math.random() * Math.floor(actionList.length));
     return actionList[randomActionID] + disheList[randomDisheID];
