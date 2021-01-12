@@ -1,37 +1,37 @@
 export default {
-    play: "jouer",
+    play: "Jouer",
     playSection: {
       core: "Need to write this"
     },
     news: "news",
-    contribution: "contribution",
+    contribution: "Contribution",
     contributionSection: {
-      discord: "rejoins la commu sur Discord",
-      github: "contribue au jeu sur Github",
-      kofi: "offre moi un café",
-      nano: "fait don de quelque Nano"
+      discord: "Trouve des joueurs sur notre Discord",
+      github: "Apporte ta pierre à l'édifice grâce à Github",
+      kofi: "Offre moi un café",
+      nano: "Partage tes Nano avec moi"
     },
-    home: "accueil",
-    publicLobby: "lobby public",
-    privateLobby: "lobby privé",
-    twitchLobby: "lobby Twitch",
-    join: "rejoindre",
-    create: "créer",
+    home: "Accueil",
+    publicLobby: "Partie publique",
+    privateLobby: "Partie privée",
+    twitchLobby: "Partie sur Twitch",
+    join: "Rejoindre",
+    create: "Créer",
     input: {
-      langSelect: "sélectionne la langue du wiki",
-      lobbyID: "lobby id",
-      pseudo: "pseudo",
-      password: "mot de passe"
+      langSelect: "Sélectionner la langue du wiki",
+      lobbyID: "Identifiant de la Partie",
+      pseudo: "Pseudo",
+      password: "Mot de passe"
     },
     menu: {
-      joinPublicLobby: "rejoins un lobby public",
-      joinPrivateLobby: "rejoins un lobby privé",
-      joinTwitchLobby: "rejoins un lobby Twitch",
-      createPrivateLobby: "crée un lobby privé",
-      createTwitchLobby: "crée un lobby Twitch",
+      joinPublicLobby: "Rejoindre une partie publique",
+      joinPrivateLobby: "Rejoindre une partie privée",
+      joinTwitchLobby: "Rejoindre une partie sur Twitch",
+      createPrivateLobby: "Créer une partie privée",
+      createTwitchLobby: "Créer une partie sur Twitch",
       button: {
-        createWithTwitch: "crée avec Twitch",
-        joinWithTwitch: "rejoins avec Twitch",
+        createWithTwitch: "Créer la partie avec Twitch",
+        joinWithTwitch: "Rejoindre avec Twitch",
       }
     },
     gameTab: {
@@ -39,31 +39,31 @@ export default {
       phase: "Phase",
       timeLeft: "Temps restant",
       vote: "Ton vote",
-      submitVote: "envoie ton vote",
+      submitVote: "Envoyer ton vote",
       startPage: "Page de départ",
-      endPage: "page d'arrivée",
+      endPage: "Page d'arrivée",
       randomPage: "Page aléatoire ???"
     },
     chatTab: {
-      send: "Envoie un message"
+      send: "Envoyer un message"
     },
     settingTab: {
       settings: "Options"
     },
     phase: {
-      Waiting: "Attente de joueur",
+      Waiting: "En attente de joueurs",
       Voting: "Vote",
       Playing: "Recherche",
       RoundFinish: "Résultat",
       GameFinish: "Fin de partie",
       notify: {
-        Voting: "La phase de vote commence. Vous pouvez envoyer vos suggestion!",
-        Playing: "La phase de recherche commence. Soyez le premier à atteindre la page d'arrivé!"
+        Voting: "La phase de vote commence. Vous pouvez envoyer vos suggestions!",
+        Playing: "La phase de recherche commence. Soyez le premier à atteindre la page d'arrivée!"
       }
     },
-    exitWarn: "Voulez-vous vraiment quitter le lobby?",
-    noLobbyFound: "Aucun lobby trouvé avec l'id",
-    lobbyIDRequired: "Veuiller saisir un id de lobby à rejoindre",
+    exitWarn: "Voulez-vous vraiment quitter la partie?",
+    noLobbyFound: "Aucune partie trouvée avec l'identifiant",
+    lobbyIDRequired: "Veuiller saisir un identifiant de partie à rejoindre",
     fetchError: "Une erreur a eu lieu lors de la communication avec le serveur",
     copySuccess: "Copié avec succès!",
     copyFail: "Erreur lors de la copie"
