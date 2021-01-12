@@ -46,5 +46,5 @@ const actionList:Array<string> = [
 export function getFrench():string {
     var randomDisheID = Math.floor(Math.random() * Math.floor(disheList.length));
     var randomActionID = Math.floor(Math.random() * Math.floor(actionList.length));
-    return actionList[randomActionID] + disheList[randomDisheID];
+    return actionList[randomActionID] + " " + disheList[randomDisheID];
 }
