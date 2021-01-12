@@ -14,7 +14,7 @@
       </content-pannel>
       <div class="skewLineContainer second"><div class="skewLine"></div></div>
       <div class="wrapper second">
-        <content-pannel id="News" head="News">
+        <content-pannel id="News" :head="$t('news')">
           <div class="col">
             <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consequatur veniam placeat qui facilis neque, beatae nihil unde aliquid ipsam incidunt itaque repudiandae nisi animi vel cupiditate nostrum impedit? Commodi, pariatur! Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus eum, magni optio, nihil ex sapiente distinctio reprehenderit nulla dolore repellendus saepe qui consequuntur nesciunt assumenda earum vitae repellat libero? Ratione!</p>
           </div>
