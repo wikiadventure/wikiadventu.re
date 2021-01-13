@@ -1,5 +1,6 @@
 package lobby;
 
+import js.node.Querystring;
 import fileLog.Log;
 import js.node.Timers;
 import js.node.Timers.Timeout;
@@ -10,6 +11,8 @@ import js.node.Https;
 import haxe.io.Bytes;
 import config.Lang;
 import haxe.crypto.Base64;
+import lobby.wikiAPI.WikiRequest;
+import lobby.wikiAPI.WikiResponse;
 using lobby.player.Player;
 
 class Lobby {
@@ -312,72 +315,83 @@ class Lobby {
             });
         return format;
     }
-
     /**
      * check if the player jump is valid (when he click on a link to go to an another page)
      * we ask the wikipedia api to do so
-     * @param socket from which the data come from
+     * @param player from which the data come from
      * @param url 
      */
     public function validateJump(player:Player, url:String) {
-        if (wikiTitleFormat(player.currentPage) == wikiTitleFormat(url)) return;
-        var requestPath = untyped __js__(" encodeURI('/w/api.php?action=query&utf8=1&prop=links&format=json&redirects=1&formatversion=2&titles=')") + wikiTitleFormat(untyped __js__("encodeURIComponent(decodeURIComponent(player.currentPage))")) + untyped __js__(" encodeURI('&pltitles=')") + wikiTitleFormat(untyped __js__("encodeURIComponent(decodeURIComponent(url))"));
-        log(player.pseudo + " validation --> " + requestPath, PlayerData);
+        if (player.currentPage == url) return;
+        var param:WikiRequest = {
+            action: "query",
+            format: "json",
+            titles: player.currentPage,
+            generator: "links",
+            redirects: 1,
+            formatversion: "2",
+            gpltitles: url
+        };
+        var encodedParam = "/w/api.php?" + Querystring.encode(param);
+        log(player.pseudo + " validation --> " + encodedParam, PlayerData);
         var oldPage = player.currentPage;
         player.numberOfJump +=1;
         player.currentPage = url;
         var options:HttpsRequestOptions =  {
             hostname: LangTools.getURL(language),
-            path: requestPath,
+            path: encodedParam,
             method: 'POST',
             headers: {
-                "Api-User-Agent":"pediaFinder/1.1 (https://pedia-finder.herokuapp.com/; benjamin.gilloury@gmail.com)",
+                "Api-User-Agent":"wiki-adventure/1.1 (https://wiki-adventure.herokuapp.com/; benjamin.gilloury@gmail.com)",
                 'Accept': 'application/json',
                 'Content-type': "application/x-www-form-urlencoded"
-
-            }
-            
+            }  
         };
-        var validation:Promise<Bool>;
-        var validation = new Promise<Bool>(
+        var validation:Promise<String>;
+        validation = new Promise<String>(
             function(resolve, reject) {
                 var request = Https.request(options, function (response) {
                     var body = '';
-        
                     response.on('data', function (chunk) {
                         body = body + chunk;
                     });
                     response.on('end', function () {
                         try {
-                            var parsed:WikiResponse = Json.parse(body);
-                            if (parsed.query.pages[0].links == null) {
+                            var wiki:WikiResponse = Json.parse(body);
+                            if (wiki.query == null) {
                                 onCheat(player, url, body, oldPage);
                                 reject("player " + player.uuid + " for cheat");
                             } else {
-                                resolve(true);
+                                resolve(wiki.query.pages[0].title);
                                 player.validationBuffer.remove(validation);
-             
                             }
                         } catch(e:Dynamic) {
-                            //untyped __js__(" encodeURI(requestPath)")
-                            reject("Wiki request error during the anti cheat validation : " + e);
-                            log(requestPath, Error);
-                            log("Wiki request error during the anti cheat validation : " + e + " | \n" + body, Error);
+                            reject("Parsing error during the anti cheat validation --> " + e + " | \n" + encodedParam + " | \n" + body);
                         }
                     });
                 });
                 request.on('error', function (e) {
-                    reject("Wiki request error during the anti cheat validation : " + e);
-                    log("Wiki request error during the anti cheat validation : " + e, Error);
+                    reject("Wiki request error during the anti cheat validation --> " + e + " | \n" + encodedParam );
                 });
                 request.end();
             }
         );
         player.validationBuffer.push(validation);
-        if (StringTools.urlDecode(url) == endPage) {
+        validation.then(
+            function(actualPage) {
+                checkWin(player, actualPage);
+            },
+            function(e:Dynamic) {
+                log(e, Error);
+            }
+        );
+        
+    }
+
+    public function checkWin(player:Player, actualPage:String) {
+        if (Querystring.unescape(actualPage) == endPage) {
             Promise.all(player.validationBuffer).then(
                 function(value) {
-                    //player win
                     startPage = null;
                     endPage = null;
                     var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
@@ -386,11 +400,14 @@ class Lobby {
                     log("WinRound --> " +  player.id + "(" + player.pseudo + ")", PlayerData);
                     playerList.emitUpdateScore(player);
                     playerList.emitWinRound(player);
-                    currentRound++;
                     roundFinishPhase();
                 }, function(reason) {
                     log("player " + player.uuid + " cheat on final validation : ", PlayerData);     
-            });
+            }).catchError(
+                function(error) {
+                    log(error,Error);
+                }
+            );
         } 
     }
 
@@ -428,23 +445,34 @@ class Lobby {
      * PS: NOT OPTIMISED but we do like that so in the future we can do a little drawing animation client side
      */
     public function selectPage(suggestionList:Array<String>) {
-        function onFinish() {
-            log("Start page : " + startPage, Info);
-            log("End page : " + endPage, Info);
-            playPhase();
-        }
         var promiseList = new Array<Promise<Bool>>();
         var urlList = new Array<String>();
         log("Starting page selection", Info);
         for (i in 0...suggestionList.length) {
             var title = suggestionList[i];
             if (title != null) {
-                title = StringTools.urlEncode(title);
                 var promise = new Promise<Bool>(
                     function (resolve, reject) {
+                        var param:WikiRequest = {
+                            action: "query",
+                            format: "json",
+                            formatversion: "2",
+                            list: "search",
+                            srlimit: 1,
+                            srnamespace: 0,
+                            srsearch: "intitle:"+title,
+                            srprop: ""
+                        };
+                        var encodedParam = "/w/api.php?" + Querystring.encode(param);
                         var options:HttpsRequestOptions =  {
                             hostname: LangTools.getURL(language),
-                            path: "/w/api.php?action=query&list=search&srlimit=1&srnamespace=0&srsearch=intitle:" + title + "&format=json&srprop="
+                            path: encodedParam,
+                            method: 'POST',
+                            headers: {
+                                "Api-User-Agent":"wiki-adventure/1.1 (https://wiki-adventure.herokuapp.com/; benjamin.gilloury@gmail.com)",
+                                'Accept': 'application/json',
+                                'Content-type': "application/x-www-form-urlencoded"
+                            } 
                         };
                         var request = Https.request(options, function (response) {
                             response.on('data', function (data) {
@@ -453,9 +481,7 @@ class Lobby {
                                     if (parsed.query.searchinfo.totalhits == 0) {
                                         getRandomURL(urlList, resolve, reject);
                                     } else {
-                                        var spaceRegex = ~/ +/g;
-                                        var url =  spaceRegex.replace(parsed.query.search[0].title, "_");
-                                        urlList.push(url);
+                                        urlList.push(parsed.query.search[0].title);
                                         resolve(true);
                                     }
                                 } catch(e:Dynamic) {
@@ -504,15 +530,21 @@ class Lobby {
                             getRandomURL(urlList, resolve, reject);
                         }
                     ).then(function(value) {
-                        endPage = urlList[0];
-                        onFinish();
+                        startPage = urlList[0];
+                        onSelectPageFinish();
                     });
                 } else {
-                    onFinish();
+                    onSelectPageFinish();
                 }
             }, function(reason) {
                 log("SEVERE something wrong append during page selection : " + reason, Error);
         });
+    }
+
+    public function onSelectPageFinish() {
+        log("Start page : " + startPage, Info);
+        log("End page : " + endPage, Info);
+        playPhase();
     }
 
     /**
@@ -555,7 +587,7 @@ class Lobby {
     public function playPhase() {
         if (playerList.length == 0) return;
         for (player in playerList) {
-            player.currentPage = wikiTitleFormat(startPage);
+            player.currentPage = startPage;
         }
         playerList.emitVoteResult(startPage, endPage);
         state = Playing;
@@ -595,9 +627,9 @@ class Lobby {
         Timers.clearTimeout(loop);
         if (state == RoundFinish) return;
         if (playerList.length == 0) return;
-        currentRound++;
         state = RoundFinish;
         initNewPhase();
+        currentRound++;
         loop = Timers.setTimeout(function () {        
             if (currentRound > round) {
                 gameFinishPhase();
@@ -611,6 +643,7 @@ class Lobby {
      * and send the state time to the client
      */
     public function initNewPhase() {
+        Timers.clearTimeout(loop);
         timeStampStateBegin = Timer.stamp();
         playerList.emitGameState(state, currentRound, currentStateTimeOut());
         log("New phase init : " + state +"|" + currentRound + "|" + currentStateTimeOut(), Info);
@@ -623,18 +656,31 @@ class Lobby {
      * @param reject the promise reject
      */
     public function getRandomURL(urlList:Array<String>, resolve:(value:Bool) -> Void, reject:(reason:Dynamic) -> Void) {
+        var param:WikiRequest = {
+            action: "query",
+            format: "json",
+            formatversion: "2",
+            list: "random",
+            rnnamespace: 0,
+            rnlimit: 1,
+        };
+        var encodedParam = "/w/api.php?" + Querystring.encode(param);
         var options:HttpsRequestOptions =  {
             hostname: LangTools.getURL(language),
-            path: "/w/api.php?action=query&format=json&list=random&rnnamespace=0&rnlimit=1"
+            path: encodedParam,
+            method: 'POST',
+            headers: {
+                "Api-User-Agent":"wiki-adventure/1.1 (https://wiki-adventure.herokuapp.com/; benjamin.gilloury@gmail.com)",
+                'Accept': 'application/json',
+                'Content-type': "application/x-www-form-urlencoded"
+            } 
         };
         var request = Https.request(options, function (response) {
             response.on('data', function (data) {
                 try {
                     var parsed:WikiResponse = Json.parse(data);
-                    var spaceRegex = ~/ +/g;
-                    var url =  spaceRegex.replace(parsed.query.random[0].title, "_");
-                    urlList.push(url);
-                    log("success : random page " + url, Info);
+                    urlList.push(parsed.query.random[0].title);
+                    log("success : random page " + parsed.query.random[0].title, Info);
                     resolve(true);
 
                 } catch(e:Dynamic) {
@@ -758,22 +804,4 @@ enum abstract LobbyState(String) {
     var Playing;
     var RoundFinish;
     var GameFinish;
-}
-
-typedef WikiResponse = {
-    var query:WikiQuery;
-}
-typedef WikiQuery = {
-    var searchinfo:{
-        var totalhits:Int;
-    };
-    var search:Array<WikiResult>;
-    var random:Array<WikiResult>;
-    var pages:Array<WikiResult>;
-}
-typedef WikiResult = {
-    var ns:Int;
-    var title:String;
-    var pageid:Int;
-    var links:Array<WikiResult>;
 }
