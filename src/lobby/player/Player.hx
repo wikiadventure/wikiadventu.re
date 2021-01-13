@@ -3,7 +3,6 @@ package lobby.player;
 import js.lib.Promise;
 import lobby.Lobby.LobbyState;
 import config.Lang;
-import config.randomName.EnglishNameGenerator;
 import uuid.Uuid;
 import haxe.Json;
 using Lambda;
