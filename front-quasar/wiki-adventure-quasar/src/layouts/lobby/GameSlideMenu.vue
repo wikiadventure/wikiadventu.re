@@ -27,7 +27,7 @@
               indicator-color="primary"
               align="justify"
               narrow-indicator>
-        <q-tab name="chat" icon="mdi-android-messages"></q-tab><!-- or icon="mdi-chat" -->
+        <q-tab name="chat" icon="mdi-android-messages" @click="updateSeenMessage()"><q-badge color="teal" floating v-show="unseenMessagesNumber != '0'">{{ unseenMessagesNumber }}</q-badge></q-tab><!-- or icon="mdi-chat" -->
         <q-tab name="score" icon="mdi-crown"></q-tab>
         <q-tab name="game" icon="mdi-gamepad"></q-tab>
         <q-tab name="setting" icon="mdi-cog"></q-tab>
@@ -133,16 +133,32 @@ export default defineComponent({
   data():{
     tab:string,
     showMenu:boolean,
+    seenMessage: number,
     onDestroy:() => void,
     touchsurface?:HTMLElement
   } {
     return {
       tab: 'game',
+      seenMessage: 0,
       showMenu: false,
       onDestroy: () => {},
     }
   },
+  computed: {
+    unseenMessagesNumber():string {
+      var n:number = this.totalMessages - this.seenMessage;
+      var b = n > 9 ? "9+" : n.toString();
+      return b;
+    },
+    totalMessages():number {
+      if (this.tab == "chat" ) this.seenMessage = this.$store.state.gameData.messages.length;
+      return this.$store.state.gameData.messages.length;
+    },
+  },
   methods: {
+    updateSeenMessage() {
+      this.seenMessage = this.$store.state.gameData.messages.length;
+    },
     open(e:Event) {
       this.showMenu = true;
       document.getElementById("slideMenu")!.style.transform = "";
