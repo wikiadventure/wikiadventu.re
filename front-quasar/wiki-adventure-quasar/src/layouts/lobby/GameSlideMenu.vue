@@ -138,7 +138,7 @@ export default defineComponent({
   } {
     return {
       tab: 'game',
-      showMenu: true,
+      showMenu: false,
       onDestroy: () => {},
     }
   },

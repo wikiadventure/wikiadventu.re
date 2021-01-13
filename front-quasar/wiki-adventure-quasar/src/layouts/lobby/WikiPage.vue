@@ -221,6 +221,7 @@ export default defineComponent({
   },
   methods: {
     requestWikiPage(url:string) {
+      console.log(url);
       var vm:any = this;
       if (vm.loading) return;
       vm.loading = true;
