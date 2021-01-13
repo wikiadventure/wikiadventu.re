@@ -8,8 +8,10 @@
 -main App
 -js bin/App.js
 -debug
+#remove this tag # and replace the star to the app port
+#-D port=*
+#remove this tag # if you want an https app
 #-D https
-#remove this tag if you want an http app
 #to use https make sure you generate a certificate and key in bin/config/ssl
 
 --next
