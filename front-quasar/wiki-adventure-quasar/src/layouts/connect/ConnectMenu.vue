@@ -144,8 +144,8 @@ export default defineComponent({
   } {
     return {
       tab: 'Home',
-      privateTab: 'PrivateJoin',
-      twitchTab: 'TwitchJoin',
+      privateTab: 'PrivateCreate',
+      twitchTab: 'TwitchCreate',
       connecting: false
     }
   },
@@ -233,7 +233,7 @@ export default defineComponent({
   created() {
     //check if the lobby provided in the url exist
     var vm = this;
-    console.log(vm.$route.params);
+    vm.$store.commit('globalForm/defaultLang');
     if (vm.$route.params.id == undefined) return;
     var id = vm.$route.params.id;
     fetch('/api/info/'+ id)

@@ -2,6 +2,7 @@ import { MutationTree } from 'vuex';
 import { GlobalForm } from './state';
 import { getRandomPseudo } from './randomPseudo/generator';
 import { Lang } from 'src/i18n';
+import { Quasar } from 'quasar';
 
 const mutation: MutationTree<GlobalForm> = {
   setLang(state:GlobalForm, l:Lang) {
@@ -15,6 +16,12 @@ const mutation: MutationTree<GlobalForm> = {
   },
   randomizePseudo(state:GlobalForm) {
     state.pseudo = getRandomPseudo(state.lang);
+  },
+  defaultLang(state:GlobalForm) {
+    var localLang = Quasar.lang.getLocale() as string;
+    var computedLocalLang = localLang.split("-")[0] as Lang;
+    if (!Object.values(Lang).includes(computedLocalLang)) computedLocalLang = Lang.en;
+    state.lang = computedLocalLang;
   }
 };
 
