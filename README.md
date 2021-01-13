@@ -43,14 +43,10 @@ You can find a digram of the project structure [here](https://app.creately.com/d
     
 ## TODO
 
-- [x] Make a game layout in quasar
-- [x] Vuex store for game data
-- [x] Handle connection with the new front end
-- [x] Add round winner animation
-- [x] Add a leaderboard at the end of the game
-- [x] Add close button to the round winner animation and leaderboard
-- [x] Integrate theme switch, ui language select ( ui lange != game lang which define the wiki language )
 - [ ] Complete the i18n internalization
-- [x] Add sound in game
-- [x] Add a volume slider and a mute button
 - [ ] Add an celebration on the leaderboard screen
+- [ ] Add lose animation on end of round
+- [ ] Integrate page history
+- [ ] notification sound
+
+
