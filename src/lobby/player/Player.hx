@@ -45,19 +45,6 @@ class Player {
         return true;
     }
 
-    //suggest your own language random name generator
-    public static function randomNameGenerator(l:Lang):String {
-        switch l {
-            case en: return EnglishNameGenerator.getInstance().getRandomName();
-            case fr: return "anonymous";
-            case de: return "anonymous";
-            case es: return "anonymous";
-            case it: return "anonymous";
-            case eo: return "anonymous";
-            case pt: return "anonymous";
-        }
-    }
-
     public static function emitPlayerJoin(playerList:Array<Player>, player:Player) {
         var data:LobbyEvent<PlayerJoin> = {
             type: PlayerJoin,
