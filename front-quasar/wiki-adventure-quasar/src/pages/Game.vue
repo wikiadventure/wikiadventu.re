@@ -3,6 +3,7 @@
     <game-slide-menu/>
     <wait v-if="lobbyState == 'Waiting'" />
     <wiki-page ref="wikiPage" v-else />
+    <page-history v-if="lobbyState == 'RoundFinish'" :winner="winner ? winner.pseudo : ''"></page-history>
     <round-win id="roundWin" v-if="showRoundWin" :winner="winner ? winner.pseudo : ''"></round-win>
     <leaderboard v-if="showLeaderboard"></leaderboard>
     <audio id="winSound">
@@ -19,6 +20,7 @@ import WikiPage from "../layouts/lobby/WikiPage.vue";
 import RoundWin from "../layouts/lobby/screen/RoundWin.vue";
 import Leaderboard from "../layouts/lobby/screen/Leaderboard.vue";
 import Wait from "../layouts/lobby/screen/Wait.vue";
+import PageHistory from "../layouts/lobby/screen/PageHistory.vue";
 
 import { GameState, LobbyState, Player, VoteResult, WinRound } from "../store/gameData/state";
 
@@ -26,7 +28,7 @@ import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'Index',
-  components: { GameSlideMenu, WikiPage, RoundWin, Leaderboard, Wait },
+  components: { GameSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory },
   data(): {
     showRoundWin:boolean,
     showLeaderboard:Boolean,

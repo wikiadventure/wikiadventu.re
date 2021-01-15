@@ -16,11 +16,14 @@ const mutation: MutationTree<GameData> = {
   setLobbyType(state:GameData, type:LobbyType) {
     state.lobbyType = type;
   },
+  path(state:GameData, a:string[]) {
+    console.log("mutation : received !");
+    state.winnerPageHistory = a;
+  },
   setOwner(state:GameData, o:number) {
     state.owner = o;
   },
   pushMessage(state:GameData, m:WsMessage) {
-    console.log("push message");
     var message:Message = {
       playerID: m.id,
       content: m.mes,

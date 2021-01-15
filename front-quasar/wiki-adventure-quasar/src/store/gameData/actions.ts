@@ -1,7 +1,7 @@
 import { Lang } from 'src/i18n';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
-import { GameData, GameState, LobbyEvent, LobbyEventType, LobbyState, LobbyType, PlayerJoin, PlayerLeft, SetOwner, UpdateScore, VoteResult, WinRound, WsMessage } from './state';
+import { GameData, GameState, LobbyEvent, LobbyEventType, LobbyState, LobbyType, Path, PlayerJoin, PlayerLeft, SetOwner, UpdateScore, VoteResult, WinRound, WsMessage } from './state';
 
 const actions: ActionTree<GameData, StateInterface> = {
   connect({ commit, dispatch, state }) {
@@ -39,6 +39,9 @@ const actions: ActionTree<GameData, StateInterface> = {
         };
         case LobbyEventType.SetOwner: {
           return dispatch('onSetOwner', json.data);
+        };
+        case LobbyEventType.Path: {
+          return dispatch('onPath', json.data);
         };
         default: {
           return;
@@ -82,6 +85,10 @@ const actions: ActionTree<GameData, StateInterface> = {
   },
   onSetOwner({ commit }, data:SetOwner) {
     commit('setOwner', data.id);
+  },
+  onPath({ commit }, data:Path) {
+    console.log("action : received !");
+    commit('path', data.pages);
   },
   sendStart({ state }) {
     var json:WebsocketPackage = {

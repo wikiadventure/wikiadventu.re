@@ -42,7 +42,7 @@ class Lobby {
 
     public var playTimeOut:Int; //time in second before a round end automatically
     public var voteTimeOut:Int; //time of the Voting state
-    public var roundFinishTimeOut:Int = 5; //time between the end of the play state and the begin of the vote state
+    public var roundFinishTimeOut:Int = 15; //time between the end of the play state and the begin of the vote state
     public var gameFinishTimeOut:Int = 30;
 
     public static var lobbyLimit:Int = 10000;
@@ -392,15 +392,7 @@ class Lobby {
         if (Querystring.unescape(actualPage) == endPage) {
             Promise.all(player.validationBuffer).then(
                 function(value) {
-                    startPage = null;
-                    endPage = null;
-                    var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
-                    player.score += 500 + Std.int(timeLeft);
-                    log("updateScore --> " +  player.id + "(" + player.pseudo + ") :" + player.score, PlayerData);
-                    log("WinRound --> " +  player.id + "(" + player.pseudo + ")", PlayerData);
-                    playerList.emitUpdateScore(player);
-                    playerList.emitWinRound(player);
-                    roundFinishPhase();
+                    win(player);
                 }, function(reason) {
                     log("player " + player.uuid + " cheat on final validation : ", PlayerData);     
             }).catchError(
@@ -409,6 +401,19 @@ class Lobby {
                 }
             );
         } 
+    }
+
+    public function win(player:Player) {
+        startPage = null;
+        endPage = null;
+        var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
+        player.score += 500 + Std.int(timeLeft);
+        log("updateScore --> " +  player.id + "(" + player.pseudo + ") :" + player.score, PlayerData);
+        log("WinRound --> " +  player.id + "(" + player.pseudo + ")", PlayerData);
+        playerList.emitUpdateScore(player);
+        playerList.emitWinRound(player);
+        playerList.emitPath(player);
+        roundFinishPhase();
     }
 
     public function onCheat(player:Player, url:String, body:String, oldPage:String) {
@@ -564,9 +569,8 @@ class Lobby {
      public function votePhase() {
         if(playerList.length == 0) return;
         state = Voting;
-        for (player in playerList) {
-            player.vote = null;
-        }
+        playerList.pageHistoryReset();
+        playerList.voteReset();
         initNewPhase();
         loop = Timers.setTimeout(function () {
             var suggestionList = new Array<String>();

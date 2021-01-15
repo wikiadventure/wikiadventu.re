@@ -23,6 +23,7 @@ export interface GameData {
   self: number;//id the player
   players: Array<Player>;
   messages: Array<Message>;
+  winnerPageHistory: Array<string>,
   winnerId: number;
   volume:number;
   mute:boolean;
@@ -64,6 +65,7 @@ const state: GameData = {
   timeStamp: 0,
   startPage: "",
   endPage: "",
+  winnerPageHistory: [],
   self: -1,
   players: [],
   messages: [],
@@ -80,7 +82,8 @@ export enum LobbyEventType {
   GameState = "GameState",
   UpdateScore = "UpdateScore",
   WinRound = "WinRound",
-  Message = "Message"
+  Message = "Message",
+  Path = "Path"
 }
 
 export interface LobbyEvent<T> {
@@ -92,6 +95,10 @@ export interface PlayerJoin {
   id:number,//The player id
   score:number,
   self:boolean
+}
+export interface Path {
+  id:number,//The player id
+  pages:string[]
 }
 export interface SetOwner {
   id:number//The player id

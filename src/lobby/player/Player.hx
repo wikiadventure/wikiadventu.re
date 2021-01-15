@@ -14,19 +14,32 @@ class Player {
     public var language:Lang;
     public var score:Int=0;
     public var numberOfJump:Int=0;
-    public var currentPage:String;
+    public var pageList:Array<String>;
+    public var currentPage(get, set):String;
     public var validationBuffer:Array<Promise<String>>;//used to store validation of visited
     public var vote:String;
     public var id:Int;//for client identification
     public var alive:Bool;
 
+    public function get_currentPage() {
+        return pageList.length-1 < 0 ? "" : pageList[pageList.length-1];
+    }
+    public function set_currentPage(s:String) {
+        pageList.push(s);
+        return s;
+    }
+    public function pageListReset() {
+        pageList = [];
+    }
+
     public function new(pseudo:String, language:Lang) {
         this.language = language;
         this.uuid = Uuid.v4();
+        pageList = [];
         validationBuffer = [];
         var dangerRegex : EReg =  ~/[<>:|%$\/\\]/g;
         if ( pseudo == null || pseudo == "" || pseudo.length < 3 || pseudo.length > 26 || dangerRegex.match(pseudo) ) {
-            this.pseudo = randomNameGenerator(this.language);
+            throw "invalid player name";
         } else {
             this.pseudo = pseudo;
         }
@@ -43,7 +56,12 @@ class Player {
         alive = true;
         return true;
     }
-
+    public static function pageHistoryReset(playerList:Array<Player>) {
+        for (p in playerList) p.pageListReset();
+    }
+    public static function voteReset(playerList:Array<Player>) {
+        for (p in playerList) p.vote = null;
+    }
     public static function emitPlayerJoin(playerList:Array<Player>, player:Player) {
         var data:LobbyEvent<PlayerJoin> = {
             type: PlayerJoin,
@@ -176,7 +194,21 @@ class Player {
             }
         }
     }
-
+    public static function emitPath(playerList:Array<Player>, player:Player) {
+        var data:LobbyEvent<Path> = {
+            type: Path,
+            data: {
+                id: player.id,
+                pages: player.pageList
+            }
+        }
+        var textData = Json.stringify(data);
+        for (p in playerList) {
+            if (p.socket != null) {
+                p.socket.send(textData);
+            }
+        }
+    }
 }
 
 enum abstract LobbyEventType(String) {
@@ -188,6 +220,7 @@ enum abstract LobbyEventType(String) {
     var WinRound;
     var Message;
     var SetOwner;
+    var Path;
 }
 
 typedef LobbyEvent<T> = {
@@ -226,4 +259,9 @@ typedef Message = {
 
 typedef SetOwner = {
     id:Int
+}
+
+typedef Path = {
+    id:Int,
+    pages:Array<String>
 }

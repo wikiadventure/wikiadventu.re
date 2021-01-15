@@ -6,7 +6,6 @@ export interface GlobalForm {
   lobbyID: string;
 }
 
-
 const state: GlobalForm = {
   lang: Lang.en,
   pseudo: "",
