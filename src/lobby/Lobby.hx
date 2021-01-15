@@ -624,7 +624,6 @@ class Lobby {
      * and start the voting phase when the timer run out
      */
     public function roundFinishPhase() {
-        Timers.clearTimeout(loop);
         if (state == RoundFinish) return;
         if (playerList.length == 0) return;
         Timers.clearTimeout(loop);
