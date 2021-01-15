@@ -627,6 +627,7 @@ class Lobby {
         Timers.clearTimeout(loop);
         if (state == RoundFinish) return;
         if (playerList.length == 0) return;
+        Timers.clearTimeout(loop);
         state = RoundFinish;
         initNewPhase();
         currentRound++;
