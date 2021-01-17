@@ -1,11 +1,11 @@
 <template>
-  <div class="round-win">
+  <div id="round-win">
     <exit-btn target="round-win"/>
     <logo-show-in :title="winner" ></logo-show-in>
   </div>
 </template>
 <style lang="scss">
-.round-win {
+#round-win {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -22,13 +22,15 @@ import ExitBtn from '../../../components/ExitButton.vue'
 import LogoShowIn from '../../../components/art/LogoShowIn.vue';
 
 import { defineComponent } from '@vue/composition-api';
+import { Player } from '../../../store/gameData/state';
 
 export default defineComponent({
   name: 'RoundWin',
   components: { LogoShowIn, ExitBtn },
-  props: {
-    winner:String,
-    toggle:Boolean
+  computed: {
+    winner():Player {
+      return this.$store.getters.gameData.winner;
+    }
   }
 });
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <game-slide-menu/>
+    <game-slide-menu ref="gameMenu"/>
     <wait v-if="lobbyState == 'Waiting'" />
     <wiki-page ref="wikiPage" v-else />
     <page-history v-if="lobbyState == 'RoundFinish'" :winner="winner ? winner.pseudo : ''"></page-history>

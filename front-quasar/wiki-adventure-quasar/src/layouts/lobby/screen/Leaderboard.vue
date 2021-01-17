@@ -194,7 +194,7 @@
 }
 </style>
 <script lang="ts">
-import ExitBtn from '../../../components/ExitButton.vue'
+import ExitBtn from '../../../components/ExitButton.vue';
 
 import { defineComponent } from '@vue/composition-api';
 import { Player } from '../../../store/gameData/state';
@@ -204,12 +204,8 @@ export default defineComponent({
   components: { ExitBtn },
   computed: {
     playerByScore():Player[] {
-      var players = this.$store.state.gameData.players as Player[];
-      return players.sort((a:Player, b:Player) => {return b.score - a.score});
+      return this.$store.getters.gameData.playersByScore;
     }
-  },
-  props: {
-    toggle:Boolean
   }
 });
 </script>
