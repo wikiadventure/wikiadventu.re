@@ -54,9 +54,7 @@ export default defineComponent({
   },
   computed: {
     winner():Player {
-      var players = this.$store.state.gameData.players as Player[];
-      var winner = players.find(p => p.id == this.$store.state.gameData.winnerId );
-      return winner;
+      return this.$store.getters.gameData.winner;
     },
     lobbyState():LobbyState {
       return this.$store.state.gameData.lobbyState;
