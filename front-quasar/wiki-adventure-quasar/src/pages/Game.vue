@@ -3,9 +3,9 @@
     <game-slide-menu ref="gameMenu"/>
     <wait v-if="lobbyState == 'Waiting'" />
     <wiki-page ref="wikiPage" v-else />
-    <page-history v-if="lobbyState == 'RoundFinish'" :winner="winner ? winner.pseudo : ''"></page-history>
-    <round-win id="roundWin" v-if="showRoundWin" :winner="winner ? winner.pseudo : ''"></round-win>
-    <leaderboard v-if="showLeaderboard"></leaderboard>
+    <page-history v-if="showPageHistory" />
+    <round-win v-if="showRoundWin" />
+    <leaderboard v-if="showLeaderboard" />
     <audio id="winSound">
       <source src="sounds/win.ogg" type="audio/ogg">
       <source src="sounds/win.mp3" type="audio/mpeg">
@@ -24,14 +24,17 @@ import PageHistory from "../layouts/lobby/screen/PageHistory.vue";
 
 import { GameState, LobbyState, Player, VoteResult, WinRound } from "../store/gameData/state";
 
+import  { ManageScreenEvent } from "../mixins/manageScreen";
+
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
-  name: 'Index',
+  name: 'Game',
   components: { GameSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory },
   data(): {
     showRoundWin:boolean,
-    showLeaderboard:Boolean,
+    showLeaderboard:boolean,
+    showPageHistory:boolean,
     winAudio:HTMLAudioElement | null,
     unsubscribeAction:() => void,
     unsubscribeMutation:() => void
@@ -39,6 +42,7 @@ export default defineComponent({
     return {
       showRoundWin: false,
       showLeaderboard: false,
+      showPageHistory: false,
       winAudio: null,
       unsubscribeAction: () => {},
       unsubscribeMutation:() => {}
@@ -59,6 +63,16 @@ export default defineComponent({
     lobbyState():LobbyState {
       return this.$store.state.gameData.lobbyState;
     },
+    gameMenu: {
+      get: function ():Boolean {
+        var vm = this as any;
+        return vm.$refs.gameMenu.showMenu;
+      },
+      set: function (v:boolean) {
+        var vm = this as any;
+        vm.$refs.gameMenu.showMenu = v;
+      }
+    },
     roundWin: {
       get: function ():Boolean {
         return this.showRoundWin;
@@ -68,7 +82,7 @@ export default defineComponent({
         if (v) this.showRoundWin = v;
         else setTimeout(() => {this.showRoundWin  = v}, 200);
         Vue.nextTick().then(function () {
-          document.getElementById("roundWin").style.opacity = Number(v).toString(); 
+          document.getElementById("round-win").style.opacity = Number(v).toString(); 
         });
       }
     },
@@ -84,21 +98,37 @@ export default defineComponent({
           document.getElementById("leaderboard").style.opacity = Number(v).toString(); 
         });;
       }
+    },
+    pageHistory: {
+      get: function ():Boolean {
+        return this.showPageHistory;
+      },
+      set: function (v:boolean) {
+        var vm = this;
+        if (v) this.showPageHistory = v;
+        else setTimeout(() => {this.showPageHistory  = v}, 200);
+        Vue.nextTick().then(function () {
+          document.getElementById("page-history").style.opacity = Number(v).toString(); 
+        });;
+      }
     } 
   },
   mounted() {
     this.$store.dispatch('gameData/connect');
-    this.$root.$on('close-screen', this.close);
+    this.$root.$on('manage-screen', this.manageScreen);//for exit button
     this.winAudio = document.getElementById("winSound") as HTMLAudioElement;
   },
   methods: {
-    close(target:string) {
-      console.log(target);
-      switch (target) {
+    manageScreen(payload:ManageScreenEvent) {
+      switch (payload.target) {
+        case "game-menu":
+          return this.gameMenu = payload.state;
         case "round-win":
-          return this.roundWin = false;
+          return this.roundWin = payload.state;
+        case "page-history":
+          return this.pageHistory = payload.state;
         case "leaderboard":
-          return this.leaderboard = false;
+          return this.leaderboard = payload.state;
         default: return;
       }
     },
@@ -113,6 +143,8 @@ export default defineComponent({
           setTimeout(() => {vm.leaderboard = false}, payload.time*1000);
           return;
         case LobbyState.Voting:
+          vm.pageHistory = false;
+          return;
         case LobbyState.Playing:
           vm.$q.notify({
             type: 'annonce',
@@ -151,11 +183,13 @@ export default defineComponent({
     vm.unsubscribeAction = vm.$store.subscribeAction((action, state) => {
       switch (action.type) {
         case "gameData/onGameState":
-          return this.onGameState(action.payload);
+          return vm.onGameState(action.payload);
         case "gameData/onWinRound":
-          return this.onWinRound(action.payload);
+          return vm.onWinRound(action.payload);
+        case "gameData/onPath":
+          return vm.pageHistory = true;
         case "gameData/onVoteResult":
-          return this.onVoteResult(action.payload);
+          return vm.onVoteResult(action.payload);
       }
     });
     vm.unsubscribeMutation = vm.$store.subscribe((mutation, state) => {

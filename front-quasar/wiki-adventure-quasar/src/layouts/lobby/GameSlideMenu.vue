@@ -38,7 +38,7 @@
 <style lang="scss">
 .gameSlideMenu {
   pointer-events: none;
-  z-index: 2;
+  z-index: 6;
 }
 .gameSlideMenu > div {
   pointer-events: auto;

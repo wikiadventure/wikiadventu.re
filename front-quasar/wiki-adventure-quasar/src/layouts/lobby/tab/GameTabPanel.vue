@@ -85,6 +85,18 @@ export default defineComponent({
       var vm:any = this;
       vm.$store.dispatch('gameData/resetVote');
       vm.vote = this.$t('gameTab.randomPage');
+    },
+    openPageHistory(e:Event) {
+      var payload1:ManageScreenEvent = {
+        target: "page-history",
+        state: true
+      }
+      var payload2:ManageScreenEvent = {
+        target: "game-menu",
+        state: false
+      }
+      this.$root.$emit("manage-screen", payload1);
+      this.$root.$emit("manage-screen", payload2);
     }
   }
 });

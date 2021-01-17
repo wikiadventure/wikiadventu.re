@@ -22,6 +22,9 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
 
+import  { ManageScreenEvent } from "../mixins/manageScreen";
+
+
 export default defineComponent({
   name: 'ExitBtn',
   props: {
@@ -29,7 +32,11 @@ export default defineComponent({
   },
   methods: {
     close() {
-      this.$root.$emit("close-screen", this.target);
+      var payload:ManageScreenEvent = {
+        target: this.target,
+        state: false
+      }
+      this.$root.$emit("manage-screen", payload);
     }
   }
 });

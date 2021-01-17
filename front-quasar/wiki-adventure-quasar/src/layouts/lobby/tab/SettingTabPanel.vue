@@ -21,10 +21,6 @@ import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'SettingTabPanel',
-  components: { ThemeSwitch, LangSwitch, VolumeSlider, FullscreenSwitch },
-  data() {
-    return {
-    }
-  }
+  components: { ThemeSwitch, LangSwitch, VolumeSlider, FullscreenSwitch }
 });
 </script>

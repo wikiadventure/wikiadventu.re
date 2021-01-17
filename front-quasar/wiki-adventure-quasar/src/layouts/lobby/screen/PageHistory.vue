@@ -1,32 +1,24 @@
 <template>
-  <div class="wait-screen row justify-center absolute-full">
-    <div class="wait-container shadow-6">
-      <div class="wait-slot justify-center">
+  <div id="page-history" class="row justify-center absolute-full">
+    <div class="page-history-container shadow-6">
+      <exit-btn target="page-history"/>
+      <div class="page-history-title justify-center">
         {{ winner }}
       </div>
       <q-separator/>
-      <div class="wait-players">
+      <div class="page-history-page">
         <div v-for="page in pages" :key="page">
           <div>{{ page }}</div>
         </div>
       </div>
-      <q-separator/>
-      <div class="wait-action justify-center">
-        <div><!--Only to display tooltip over the disabled q btn -->
-          <q-btn :disable="self != owner" push class="wait-start" label="JaaJ" icon="mdi-check-bold"/>
-          <q-tooltip v-if="self != owner"  anchor="top middle" self="bottom middle" :offset="[10, 10]">
-            Only <q-icon size="xs" class="owner" name="mdi-crown"/> {{ ownerPseudo }} can choose to start
-          </q-tooltip>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 <style lang="scss">
-.wait-screen {
+#page-history {
   overflow: hidden;
+  z-index: 3;
 }
-.wait-container {
+.page-history-container {
   width: Max(50%, 500px);
   max-width: 100%;
   height: 95%;
@@ -41,7 +33,7 @@
     border-radius: 0;
   }
 }
-.wait-players {
+.page-history-page{
   overflow-x: auto;
   overflow-y: scroll;
   display: flex;
@@ -61,82 +53,62 @@
     }
   }
 }
-.wait-action, .wait-slot {
+.page-history-title {
   display: inline-flex;
   flex: 0 0 auto;
   margin: 4px;
-}
-.wait-slot {
   font-size: 2em;
 }
 .body--dark {
-  .wait-container {
+  .page-history-container {
     background: var(--w-color-almost-black);
   }
-  .wait-players {
+  .page-history-page {
     background: var(--w-color-almost-black);
     div {
       background: #191919;
       div {
         color: var(--w-color-blue-white);
       }
-      .self {
-        color: var(--w-color-dark-teal);
-      }
-      .owner {
-        color: var(--w-color-dark-teal);
-      }
     }
   }
-  .wait-slot {
-    color: var(--w-color-blue-white);
-  }
-  .wait-start {
-    background: var(--w-color-dark-teal);
+  .page-history-title {
     color: var(--w-color-blue-white);
   }
 }
 .body--light {
-  .wait-container {
+  .page-history-container {
     background: var(--w-color-light-teal);
   }
-  .wait-players {
+  .page-history-page {
     background: var(--w-color-light-teal);
     div {
       background: var(--w-color-blue-white);
       div {
         color: var(--w-color-almost-black);
       }
-      .self {
-        color: var(--w-color-dark-teal);
-      }
-      .owner {
-        color: var(--w-color-dark-teal);
-      }
     }
   }
-  .wait-slot {
-    color: var(--w-color-blue-white);
-  }
-  .wait-start {
-    background: var(--w-color-dark-teal);
+  .page-history-title {
     color: var(--w-color-blue-white);
   }
 }
 </style>
 <script lang="ts">
+import ExitBtn from '../../../components/ExitButton.vue';
+
 import { defineComponent } from '@vue/composition-api';
 import { Player } from '../../../store/gameData/state';
 
 export default defineComponent({
   name: 'Wait',
+  components: { ExitBtn },
   props: {
-    winner:String,
+    player:String,
     toggle:Boolean
   },
   computed: {
     pages():string[] {
-      console.log(this.$store.state.gameData.winnerPageHistory);
       return this.$store.state.gameData.winnerPageHistory as string[];
     }
   }
