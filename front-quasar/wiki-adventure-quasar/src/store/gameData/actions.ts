@@ -137,10 +137,12 @@ const actions: ActionTree<GameData, StateInterface> = {
     state.timeStamp = 0;
     state.startPage = "";
     state.endPage = "";
-    state.self = -1;
     state.players = [];
     state.messages = [];
-    state.winnerId = -1;
+    state.winnerPageHistory = [];
+    state.self = -1;
+    state.owner = -2;
+    state.winnerId = -3;
   }
 };
 

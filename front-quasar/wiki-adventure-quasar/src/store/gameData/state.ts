@@ -58,7 +58,6 @@ const state: GameData = {
   lobbyType: LobbyType.Public,
   lobbyID: "",
   lobbyState: LobbyState.Voting,
-  owner: -2,
   stateCounter: undefined,
   round: 0,
   timeLeft: 0,
@@ -66,10 +65,11 @@ const state: GameData = {
   startPage: "",
   endPage: "",
   winnerPageHistory: [],
-  self: -1,
   players: [],
   messages: [],
-  winnerId: -1,
+  self: -1,
+  owner: -2,
+  winnerId: -3,
   volume: 1,
   mute: false
 };
