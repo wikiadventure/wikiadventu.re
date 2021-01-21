@@ -3,7 +3,7 @@
     <div class="page-history-container shadow-6">
       <exit-btn target="page-history"/>
       <div class="page-history-title justify-center">
-        {{ winner }}
+        {{ winner != null ? winner : "No Winner yet!" }}
       </div>
       <q-separator/>
       <div class="page-history-page">
@@ -20,6 +20,7 @@
 }
 .page-history-container {
   width: Max(50%, 500px);
+  position: relative;
   max-width: 100%;
   height: 95%;
   margin: 1.25%;
