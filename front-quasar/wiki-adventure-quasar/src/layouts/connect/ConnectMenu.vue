@@ -119,7 +119,7 @@
 }
 </style>
 <script lang="ts">
-import { uuid } from 'vue-uuid'; 
+import uuid  from 'uuid'; 
 import PrivateCreate from "./tab/PrivateCreate.vue";
 import PrivateJoin from "./tab/PrivateJoin.vue";
 import PublicJoin from "./tab/PublicJoin.vue";
