@@ -23,6 +23,10 @@ class WS {
         switch route {
             case "/lobby":
                 new LobbyController(ws, im);
+            case "/twitchLobby":
+                new LobbyController(ws, im, true);
+            default:
+                ws.close(1008, "invalid connexion route");
                 
         }
     }

@@ -67,6 +67,10 @@ module.exports = configure(function (/* ctx */) {
       // https://quasar.dev/quasar-cli/handling-webpack
       extendWebpack (cfg) {
       },
+      env: {
+        TWITCH_CLIENT_ID: process.env.TWITCH_CLIENT_ID,
+        TWITCH_REDIRECT_URL: process.env.TWITCH_REDIRECT_URL
+      }
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer

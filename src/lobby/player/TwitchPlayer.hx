@@ -1,5 +1,6 @@
 package lobby.player;
 
+import js.node.Timers;
 import config.twitch.TwitchCredential;
 import twitch_chat_client.PrivateMessage;
 import twitch.AuthProvider;
@@ -17,10 +18,10 @@ class TwitchPlayer extends Player {
     public function new(twitchUser:HelixPrivilegedUser, authProvider:AuthProvider, language:Lang) {
         super(twitchUser.name, language);
         this.twitchUser = twitchUser;
-        twitchBot = new ChatClient(authProvider);
+        twitchBot = new ChatClient(authProvider, { channels: [twitchUser.name] });
+
         twitchBot.onMessage(chatMessageHandler);
         twitchBot.connect();
-        
 
     }
 
@@ -33,22 +34,13 @@ class TwitchPlayer extends Player {
             if (twitchLobby.suggestionList.length < TwitchLobby.suggestionLimit) {
                 var title = msg.substr(6);
                 twitchLobby.suggestionList.push(title);
-                if (twitchLobby.suggestionList.length == TwitchLobby.suggestionLimit) twitchBot.say(channel, "Maximun vote reached!");
+                twitchBot.say(twitchUser.name, "You voted " + title);
+                if (twitchLobby.suggestionList.length == TwitchLobby.suggestionLimit) twitchBot.say(channel, "Maximum vote reached!");
                 twitchLobby.log(title, Info);
             }
             return;
         } 
         
     }
-
-    /*twitchBot.onMessage(chatMessageHandler)
-        twitchBot.join(twitchPlayer.twitchUser.name).then(
-            function(v) {
-                twitchPlayerList.push(twitchPlayer);
-                addPlayer(twitchPlayer);
-                twitchBot.say(twitchPlayer.twitchUser.name, twitchPlayer.twitchUser.name + " just join a game of wiki adventure!");
-            }, function(reason) {
-                log("error during chat bot connection on channel " + twitchPlayer.twitchUser.name + " : " + reason, Error);
-        });*/
 
 }
