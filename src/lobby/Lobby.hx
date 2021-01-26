@@ -46,7 +46,7 @@ class Lobby {
     public var gameFinishTimeOut:Int = 30;
 
     public static var lobbyLimit:Int = 10000;
-    public static var privateLimit:Int = 200;
+    public static var privateLimit:Int = 2000;
     public static var lobbyList:Array<Lobby>;
 
     /**
@@ -186,7 +186,6 @@ class Lobby {
             if (player.assignSocket(ws) ) {
                 player.id = totalPlayer;
                 totalPlayer++;
-                trace(ws.OPEN);
                 return onPlayerConnection(player);
             }
             return ws.close(1008, 'Connection rejected because there already a client connected with this playerID');
@@ -278,43 +277,6 @@ class Lobby {
         }
     }
 
-    public function wikiTitleFormat(s:String):String {
-        return s;
-        
-        var regex = ~/["%&'+=?\\^`~]/g;
-            var format = regex.map(s, function(r) {
-                var match = r.matched(0);
-                switch (match) {
-                    case "\"":
-                        return "%22";
-                    case "%":
-                        return "%25";
-                    case "&":
-                        return "%26";
-                    case "'":
-                        return "%27";
-                    case "+":
-                        return "%2B";
-                    case "=":
-                        return "%3D";
-                    case "?":
-                        return "%3F";
-                    case "\\":
-                        return "%5C";
-                    case "^":
-                        return "%5E";
-                    case "`":
-                        return "%60";
-                    case "~":
-                        return "%7E";
-                    case "_":
-                        return " ";
-                    default:
-                        return '';
-                }
-            });
-        return format;
-    }
     /**
      * check if the player jump is valid (when he click on a link to go to an another page)
      * we ask the wikipedia api to do so

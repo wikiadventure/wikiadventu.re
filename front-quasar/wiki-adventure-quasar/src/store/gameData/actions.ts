@@ -9,7 +9,7 @@ const actions: ActionTree<GameData, StateInterface> = {
     console.log("try to connect");
     var loc = window.location;
     var protocol = loc.protocol == "https:" ? "wss://" : "ws://";
-    var lobbyType = state.lobbyType == LobbyType.Twitch ? "twitch" : "lobby"
+    var lobbyType = state.lobbyType == LobbyType.Twitch ? "twitchLobby" : "lobby"
     var wsURL = protocol + loc.host + "/" + lobbyType + "/" + state.lobbyID + "/" + state.uuid;
     state.ws  = new WebSocket(wsURL);
     function dataHandler(e:MessageEvent) {

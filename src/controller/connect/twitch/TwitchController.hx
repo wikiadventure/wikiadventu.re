@@ -1,5 +1,7 @@
 package controller.connect.twitch;
 
+import response.SuccessResponse;
+import lobby.player.Player;
 import controller.connect.twitch.TwitchConnectionRequest;
 import haxe.crypto.Sha256;
 import haxe.Timer;
@@ -27,7 +29,7 @@ class TwitchController {
     var form : TwitchConnectRequest;
     var authProvider : StaticAuthProvider;
     
-    public function new(im : IncomingMessage, sr : ServerResponse, body : String) {
+    public function new(im : IncomingMessage, sr : ServerResponse, body : String ) {
         this.im = im;
         this.sr = sr;
         this.body = body;
@@ -111,6 +113,7 @@ class TwitchController {
     public function connect() {
         try {
             form = Json.parse(body);
+            if (form.type == TwitchJoinWithout) return connectWithoutTwitch();
             if ( !( form.type == TwitchCreate || (form.type == TwitchJoinWith && form.lobby != null) ) ) throw "To connect with twitch use login type of TwitchCreate, or TwitchJoinWith with the lobby name";
             if (form.uuid == null) throw "The JSON provided does not have a uuid field";
             var loginStatus = searchLoginStatus(form.uuid);
@@ -150,18 +153,34 @@ class TwitchController {
             new ErrorResponse(im, sr, body, e,BadRequest);
             return;
         }
-        var res:ConnectionResponse = {
+        var json:ConnectionResponse = {
             status: Success,
             lobbyID: lobby.name,
             lobbyType: Twitch,
             playerID: player.uuid,
             lang: lobby.language
         };
-        sr.setHeader('Content-Type', 'application/json');
-        sr.writeHead(200);
-        sr.write(Json.stringify(res));
-        sr.end();
+        new SuccessResponse(im, sr, Json.stringify(json));
 
+    }
+
+    public function connectWithoutTwitch() {
+        var player = new Player(form.pseudo, form.lang);
+        var passwordHash = Sha256.encode(form.password);
+        try {
+            var lobby = TwitchLobby.find(form.lobby);
+            lobby.connect(player, passwordHash);
+            var json:ConnectionResponse = {
+                status: Success,
+                lobbyID: lobby.name,
+                lobbyType: Twitch,
+                playerID: player.uuid,
+                lang: lobby.language           
+            };
+            new SuccessResponse(im, sr, Json.stringify(json));
+        } catch (e:Dynamic) {
+            new ErrorResponse(im, sr, body, "internal error : "+e,400);
+        }
     }
 
     public function searchLoginStatus(uuid:String):TwitchLogin {
@@ -178,7 +197,7 @@ class TwitchController {
         var lobby = new TwitchLobby(player, passwordHash);
         lobby.giveID();// giveID method also add the lobby to the lobbylist
         lobby.join(player, passwordHash);
-        lobby.votePhase();
+        lobby.waitPhase();
         return lobby;
     }
 }

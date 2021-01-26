@@ -8,6 +8,6 @@ typedef TwitchConnectRequest = {
     lang:Lang,
     pseudo:String,
     password:String,
-    uuid:String,
+    ?uuid:String,
     ?lobby:String
 }

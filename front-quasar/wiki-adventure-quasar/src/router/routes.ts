@@ -21,7 +21,27 @@ const routes: RouteConfig[] = [
     }
   },
   {
+    path: '/twitch/:id',
+    beforeEnter: (to, from, next) => {
+      var store = Store as any;
+      if (store.state.gameData.uuid == "") {
+        next('/twitchConnect/'+to.params.id);
+      } else {
+        next();
+      }
+    },
+    component: () => {
+      return import('pages/Game.vue');
+    }
+  },
+  {
     path: '/connect/:id',
+    component: () => {
+      return import('pages/Connect.vue');
+    }
+  },
+  {
+    path: '/twitchConnect/:id',
     component: () => {
       return import('pages/Connect.vue');
     }

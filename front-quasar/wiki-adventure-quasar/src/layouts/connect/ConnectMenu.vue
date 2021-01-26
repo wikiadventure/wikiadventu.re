@@ -31,7 +31,7 @@
 
         </q-tab-panel>
 
-        <q-tab-panel name="twitch" class="q-pa-none tabContent">
+        <q-tab-panel name="Twitch" class="q-pa-none tabContent">
 
           <q-tab-panels class="tabContent" v-model="twitchTab" animated>
 
@@ -57,7 +57,7 @@
         <q-tab :label="$q.screen.lt.md ? '' : $t('home') " name="Home" icon="mdi-home"></q-tab>
         <q-tab :label="$q.screen.lt.md ? '' : $t('publicLobby') " name="PublicJoin" icon="mdi-earth"></q-tab>
         <q-tab :label="$q.screen.lt.md ? '' : $t('privateLobby') " name="Private" icon="mdi-lock"></q-tab>
-        <q-tab class="twitchTab" :label="$q.screen.lt.md ? '' : $t('twitchLobby')" name="twitch" icon="mdi-twitch"></q-tab>
+        <q-tab class="twitchTab" :label="$q.screen.lt.md ? '' : $t('twitchLobby')" name="Twitch" icon="mdi-twitch"></q-tab>
       </q-tabs>
     </div>
   </q-layout>
@@ -152,82 +152,78 @@ export default defineComponent({
   methods: {
     login(event:ConnectEvent) {
       var vm = this;
-      if (event.type == ConnectType.PrivateJoin && vm.$store.state.globalForm.lobbyID == "") {
-        vm.$q.notify({
-          type: 'negative',
-          position: 'top',
-          message: vm.$t('lobbyIDRequired') as string
-        });
-        return;
-      }
       if(vm.connecting) return;
       vm.connecting = true;
-      var store = this.$store;
-      var router = this.$router;
       this.$store.dispatch('globalForm/validatePseudo');
       var query:loginQuery = {
         type: event.type,
         lang: this.$store.state.globalForm.lang,
         pseudo: this.$store.state.globalForm.pseudo
       }
-      if ((event.type == ConnectType.PrivateJoin || event.type == ConnectType.PublicJoin) &&vm.$store.state.globalForm.lobbyID != "") {
-        query.lobby = vm.$store.state.globalForm.lobbyID;
+      var options:RequestInit = {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          };
+      if ([ConnectType.PrivateJoin, ConnectType.PublicJoin, ConnectType.TwitchJoinWith, ConnectType.TwitchJoinWithout].includes(event.type)) {
+        if (event.type != ConnectType.PublicJoin && vm.$store.state.globalForm.lobbyID != "") {
+          query.lobby = vm.$store.state.globalForm.lobbyID;
+        } else {
+          vm.$q.notify({
+            type: 'negative',
+            position: 'top',
+            message: vm.$t('lobbyIDRequired') as string
+          });
+          vm.connecting = false;
+          return;
+        }
       }
       if (event.type != ConnectType.PublicJoin) {
         query.password = event.password;
       }
-      if (event.type == ConnectType.TwitchJoinWith || event.type == ConnectType.TwitchCreate) {
-        console.log("twitch login");
+      if (event.type == ConnectType.TwitchJoinWith || event.type == ConnectType.TwitchCreate ) {
         query.uuid = uuid.v4();
-        var twitch = window.open("https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=qjfynifqiehclsandzhh3hvhaacqaa&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fapi%2Ftwitch&state=" + query.uuid + "&scope=chat%3Aread+chat%3Aedit");
+        var twitch = window.open("https://id.twitch.tv/oauth2/authorize?response_type=code&client_id="+process.env.TWITCH_CLIENT_ID+"&redirect_uri="+encodeURIComponent(process.env.TWITCH_REDIRECT_URL)+"&state=" + query.uuid + "&scope=chat%3Aread+chat%3Aedit");
         var loop = setInterval(function() { if (twitch && twitch.closed) {
           clearInterval(loop);
           console.log("twitch pop up login closed, proceed to fetch the session uuid");
           /* connect to the server send the login query
           and the uid to prove that you are auth
-          and retrieve an uuid to connect to the socket io lobby*/
-          var options = {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(query)
-          };
-          fetch('/api/twitch', options)
-            .then(function(response:Response):Promise<ConnectionResponse> {
-              return response.json();
-            }).then(function(json:ConnectionResponse) {
-              
-            }).catch(function(error) {
-              vm.connecting = false;
-              console.log('Fetch error during form submition : ' + error.message);
-          });
-        }}, 500);// the duration in ms between each call of loop
+          and retrieve an uuid to connect to the ws lobby*/
+          options.body = JSON.stringify(query);
+          vm.connect(options, true);
+        }}, 50);// the duration in ms between each call of loop
       } else {
-        var options = {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(query)
-        };
-        fetch('/api/connect', options)
-          .then(function(response:Response):Promise<ConnectionResponse> {
-            return response.json();
-          }).then(function(json) {
-            store.commit('gameData/setLang', json.lang);
-            store.commit('gameData/setLobbyID', json.lobbyID);
-            store.commit('gameData/setLobbyType', json.lobbyType);
-            store.commit('gameData/setUuid', json.playerID);
-            router.push('/play/'+json.lobbyID);
-            console.log(json);
-          }).catch(function(error) {
-            vm.connecting = false;
-            console.log('Fetch error during form submition : ' + error.message);
-        });
+        options.body = JSON.stringify(query);
+        vm.connect(options, event.type == ConnectType.TwitchJoinWithout);
       }
+    },
+    connect(options:RequestInit, twitch?:boolean) {
+      var vm = this;
+      fetch("/api/"+ (twitch ? "twitch" : "connect"), options)
+        .then(function(response:Response):Promise<ConnectionResponse> {
+          return response.json();
+        }).then(function(json:ConnectionResponse) {
+          vm.start(json);
+        }).catch(function(error) {
+          vm.connecting = false;
+          vm.$q.notify({
+          type: 'negative',
+          position: 'top',
+          message: 'Fetch error during form submition : ' + error.message
+        });
+          console.log('Fetch error during form submition : ' + error.message);
+      });
+    },
+    start(json:ConnectionResponse) {
+      var vm = this as any;
+      vm.$store.commit('gameData/setLang', json.lang);
+      vm.$store.commit('gameData/setLobbyID', json.lobbyID);
+      vm.$store.commit('gameData/setLobbyType', json.lobbyType);
+      vm.$store.commit('gameData/setUuid', json.playerID);
+      vm.$router.push('/'+(json.lobbyType == LobbyType.Twitch ? "twitch" : "play")+'/'+json.lobbyID);
     }
   },
   created() {
@@ -236,7 +232,9 @@ export default defineComponent({
     vm.$store.commit('globalForm/defaultLang');
     if (vm.$route.params.id == undefined) return;
     var id = vm.$route.params.id;
-    fetch('/api/info/'+ id)
+    var isTwitch = (vm.$route.path as string).startsWith("/twitchConnect/")
+    console.log(vm.$route);
+    fetch('/api/info/'+(isTwitch ? "twitch:":"")+ id)
     .then(function(response:Response):Promise<InfoResponse> {
       return response.json();
     }).then(function(json) {
@@ -248,6 +246,9 @@ export default defineComponent({
         } else if (json.lobbyType == LobbyType.Private) {
           vm.tab = "Private";
           vm.privateTab = "PrivateJoin";
+        } else if (json.lobbyType == LobbyType.Twitch) {
+          vm.tab = "Twitch";
+          vm.twitchTab = "TwitchJoin";
         }
       } else {
         if (json.status == InfoStatus.NotFound) {
