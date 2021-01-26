@@ -9,24 +9,24 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@quasar/extras": "^1.0.0",
-    "@vue/composition-api": "^0.6.4",
-    "core-js": "^3.6.5",
-    "quasar": "^1.0.0",
-    "uuid": "^8.3.1",
+    "@quasar/extras": "^1.9.14",
     "@types/uuid": "^8.3.0",
-    "vue-i18n": "^8.0.0",
+    "@vue/composition-api": "^0.6.4",
+    "core-js": "^3.8.3",
+    "quasar": "^1.15.1",
+    "uuid": "^8.3.2",
+    "vue-i18n": "^8.22.4",
     "vue-typed-mixins": "^0.2.0"
   },
   "devDependencies": {
-    "@quasar/app": "^2.0.0",
-    "@types/node": "^12.12.6",
+    "@quasar/app": "^2.1.14",
+    "@types/node": "^12.19.15",
     "devtron": "^1.4.0",
-    "electron": "^9.4.0",
+    "electron": "^9.4.1",
     "electron-builder": "^22.9.1",
-    "electron-debug": "^3.1.0",
+    "electron-debug": "^3.2.0",
     "electron-devtools-installer": "^3.1.1",
-    "electron-packager": "^15.2.0"
+    "electron-packager": "^14.2.1"
   },
   "browserslist": [
     "last 10 Chrome versions",
