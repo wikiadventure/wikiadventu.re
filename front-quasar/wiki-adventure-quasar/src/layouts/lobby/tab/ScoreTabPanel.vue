@@ -1,5 +1,9 @@
 <template>
   <div id="scoreTab">
+    <div class="row items-baseline q-ma-sm"><h4 class="q-ma-none flex-fix">{{ $t('scoreTab.title') }}</h4></div>
+    <q-separator  spaced="md"/>
+    <div class="row items-baseline q-ma-sm"><q-btn class="path-btn" push :label="$t('scoreTab.leaderboard')" icon="mdi-format-list-bulleted" @click="openLeaderBoard()"/></div>
+    <q-separator  spaced="md"/>
     <q-list separator>
       <q-item v-for="player in playersByScore" :key="player.id">
         <q-item-section avatar>
@@ -33,8 +37,8 @@ export default defineComponent({
     }
   },
   computed: {
-    playersByScore():Array<Player> {
-      return this.$store.getters.gameData.playersByScore;
+    playersByScore():Player[] {
+      return this.$store.getters['gameData/playersByScore'];
     }
   },
   methods: {

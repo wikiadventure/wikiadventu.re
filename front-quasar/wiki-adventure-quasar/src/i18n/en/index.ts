@@ -46,7 +46,9 @@ export default {
     submitVote: "Submit your vote",
     startPage: "Start Page",
     endPage: "End page",
-    randomPage: "Random page ???"
+    randomPage: "Random page ???",
+    noWinnerYet: "No winner yet!",
+    pageHistory: "History of the last winner"
   },
   chatTab: {
     send: "Send a message"

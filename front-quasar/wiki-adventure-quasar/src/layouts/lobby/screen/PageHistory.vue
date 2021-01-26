@@ -3,7 +3,7 @@
     <div class="page-history-container shadow-6">
       <exit-btn target="page-history"/>
       <div class="page-history-title justify-center">
-        {{ winner != null ? winner : "No Winner yet!" }}
+        {{ winner }}
       </div>
       <q-separator/>
       <div class="page-history-page">
@@ -104,13 +104,13 @@ import { Player } from '../../../store/gameData/state';
 export default defineComponent({
   name: 'Wait',
   components: { ExitBtn },
-  props: {
-    player:String,
-    toggle:Boolean
-  },
   computed: {
     pages():string[] {
       return this.$store.state.gameData.winnerPageHistory as string[];
+    },
+    winner():string {
+      var p = this.$store.getters['gameData/winner'] as Player;
+      return p ? p.pseudo : this.$t('gameTab.noWinnerYet') as any;
     }
   }
 });

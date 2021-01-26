@@ -28,8 +28,9 @@ export default defineComponent({
   name: 'RoundWin',
   components: { LogoShowIn, ExitBtn },
   computed: {
-    winner():Player {
-      return this.$store.getters.gameData.winner;
+    winner():string {
+      var p = this.$store.getters['gameData/winner'] as Player;
+      return p ? p.pseudo : "";
     }
   }
 });

@@ -204,7 +204,7 @@ export default defineComponent({
   components: { ExitBtn },
   computed: {
     playerByScore():Player[] {
-      return this.$store.getters.gameData.playersByScore;
+      return this.$store.getters['gameData/playersByScore'];
     }
   }
 });

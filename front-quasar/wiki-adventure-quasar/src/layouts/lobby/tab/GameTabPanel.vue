@@ -17,7 +17,8 @@
     <div class="row items-baseline q-ma-sm"><p class="q-ma-none flex-fix">{{ $t('gameTab.startPage') }} :</p><p class="q-ma-none q-ml-sm text-left flex-grow">{{ startPage }}</p></div>
     <div class="row items-baseline q-ma-sm"><p class="q-ma-none flex-fix">{{ $t('gameTab.endPage') }} :</p><p class="q-ma-none q-ml-sm text-left flex-grow">{{ endPage }}</p></div>
     <q-separator  spaced="lg"/>
-    <q-btn class="path-btn" push label="Show last winner's page history" icon="mdi-format-list-bulleted" @click="openPageHistory()"/>
+    <div class="row items-baseline q-ma-sm"><q-btn class="path-btn" push :label="$t('gameTab.pageHistory')" icon="mdi-format-list-bulleted" @click="openPageHistory()"/></div>
+    <q-separator  spaced="lg"/>
   </div>
 </template>
 <style lang="scss">
