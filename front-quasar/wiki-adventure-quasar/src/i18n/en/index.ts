@@ -56,6 +56,10 @@ export default {
   settingTab: {
     settings: "Settings"
   },
+  scoreTab: {
+    title: "Scoreboard",
+    leaderboard: "Leaderboard"
+  },
   phase: {
     Waiting: "Waiting player",
     Voting: "Voting",
