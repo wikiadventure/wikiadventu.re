@@ -1,7 +1,7 @@
 <template>
   <div id="round-win">
     <exit-btn target="round-win"/>
-    <logo-show-in :title="winner" ></logo-show-in>
+    <logo-show-in :title="winner" :class="{ lose: hasLose }" ></logo-show-in>
   </div>
 </template>
 <style lang="scss">
@@ -15,6 +15,9 @@
   z-index: 10;
   opacity: 0;
   transition: all ease-in-out 0.2s;
+}
+.lose {
+  filter: hue-rotate(180deg);
 }
 </style>
 <script lang="ts">
@@ -31,7 +34,11 @@ export default defineComponent({
     winner():string {
       var p = this.$store.getters['gameData/winner'] as Player;
       return p ? p.pseudo : "";
-    }
+    },
+    hasLose():boolean {
+      return this.$store.state.gameData.winnerId != this.$store.state.gameData.self;
+    },
+
   }
 });
 </script>

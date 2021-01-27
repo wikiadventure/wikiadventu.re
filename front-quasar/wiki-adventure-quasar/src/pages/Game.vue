@@ -10,6 +10,14 @@
       <source src="sounds/win.ogg" type="audio/ogg">
       <source src="sounds/win.mp3" type="audio/mpeg">
     </audio>
+    <audio id="loseSound">
+      <source src="sounds/lose.ogg" type="audio/ogg">
+      <source src="sounds/lose.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="countDownSound">
+      <source src="sounds/countDown.ogg" type="audio/ogg">
+      <source src="sounds/countDown.mp3" type="audio/mpeg">
+    </audio>
   </div>
 </template>
 <script lang="ts">
@@ -36,6 +44,8 @@ export default defineComponent({
     showLeaderboard:boolean,
     showPageHistory:boolean,
     winAudio:HTMLAudioElement | null,
+    loseAudio:HTMLAudioElement | null,
+    countDownAudio:HTMLAudioElement | null,
     unsubscribeAction:() => void,
     unsubscribeMutation:() => void
   } {
@@ -44,6 +54,8 @@ export default defineComponent({
       showLeaderboard: false,
       showPageHistory: false,
       winAudio: null,
+      loseAudio: null,
+      countDownAudio: null,
       unsubscribeAction: () => {},
       unsubscribeMutation:() => {}
     }
@@ -117,6 +129,8 @@ export default defineComponent({
     this.$store.dispatch('gameData/connect');
     this.$root.$on('manage-screen', this.manageScreen);//for exit button
     this.winAudio = document.getElementById("winSound") as HTMLAudioElement;
+    this.loseAudio = document.getElementById("loseSound") as HTMLAudioElement;
+    this.countDownAudio = document.getElementById("countDownSound") as HTMLAudioElement;
   },
   methods: {
     manageScreen(payload:ManageScreenEvent) {
@@ -144,6 +158,8 @@ export default defineComponent({
           return;
         case LobbyState.Voting:
           vm.pageHistory = false;
+          vm.gameMenu = true;
+          if (payload.time > 3) setTimeout(() => {vm.countDownAudio.play()}, payload.time*1000-3000);
           return;
         case LobbyState.Playing:
           vm.$q.notify({
@@ -156,12 +172,12 @@ export default defineComponent({
     },
     onWinRound(payload:WinRound) {
       var vm = this;
-      if (payload.id == vm.$store.state.gameData.self) {
-        this.winAudio.play();
-        vm.roundWin = true;
-        setTimeout(() => {vm.roundWin = false}, 5000);
-        return;
-      }
+      if (payload.id == vm.$store.state.gameData.self) this.winAudio.play();
+      else this.loseAudio.play();
+      vm.roundWin = true;
+      setTimeout(() => {vm.roundWin = false}, 5000);
+      return;
+
     },
     onVoteResult(payload:VoteResult) {
       var vm = this;
