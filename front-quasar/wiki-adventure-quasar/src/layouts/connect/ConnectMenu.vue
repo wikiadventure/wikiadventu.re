@@ -188,7 +188,6 @@ export default defineComponent({
         var twitch = window.open("https://id.twitch.tv/oauth2/authorize?response_type=code&client_id="+process.env.TWITCH_CLIENT_ID+"&redirect_uri="+encodeURIComponent(process.env.TWITCH_REDIRECT_URL)+"&state=" + query.uuid + "&scope=chat%3Aread+chat%3Aedit");
         var loop = setInterval(function() { if (twitch && twitch.closed) {
           clearInterval(loop);
-          console.log("twitch pop up login closed, proceed to fetch the session uuid");
           /* connect to the server send the login query
           and the uid to prove that you are auth
           and retrieve an uuid to connect to the ws lobby*/
@@ -212,9 +211,9 @@ export default defineComponent({
           vm.$q.notify({
           type: 'negative',
           position: 'top',
-          message: 'Fetch error during form submition : ' + error.message
+          message: vm.$t('fetchError') + ' : ' + error.message
         });
-          console.log('Fetch error during form submition : ' + error.message);
+          console.log(vm.$t('fetchError') + ' : ' + error.message);
       });
     },
     start(json:ConnectionResponse) {
@@ -265,7 +264,7 @@ export default defineComponent({
             position: 'top',
             message: vm.$t('fetchError') + ' : ' + error.message
           });
-      console.log('Fetch error during form submition : ' + error.message);
+      console.log(vm.$t('fetchError') + ' : ' + error.message);
     });
   },
   mounted() {
