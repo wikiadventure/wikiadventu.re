@@ -2,7 +2,7 @@
   <div id="scoreTab">
     <div class="row items-baseline q-ma-sm"><h4 class="q-ma-none flex-fix">{{ $t('scoreTab.title') }}</h4></div>
     <q-separator  spaced="md"/>
-    <div class="row items-baseline q-ma-sm"><q-btn class="path-btn" push :label="$t('scoreTab.leaderboard')" icon="mdi-format-list-bulleted" @click="openLeaderBoard()"/></div>
+    <div class="row items-baseline q-ma-sm"><q-btn class="action-btn" push :label="$t('scoreTab.leaderboard')" icon="mdi-format-list-bulleted" @click="openLeaderBoard()"/></div>
     <q-separator  spaced="md"/>
     <q-list separator>
       <q-item v-for="player in playersByScore" :key="player.id">
@@ -24,6 +24,14 @@
   </div>
 </template>
 <style lang="scss">
+.body--dark .action-btn {
+  background: var(--w-color-dark-teal);
+  color: var(--w-color-dark-blue);          
+}
+.body--light .action-btn {
+  background: var(--w-color-almost-black);
+  color: var(--w-color-blue-white);
+}
 </style>
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
