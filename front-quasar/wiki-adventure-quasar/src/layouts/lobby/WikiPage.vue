@@ -299,8 +299,8 @@ export default defineComponent({
         vm.$store.dispatch('gameData/validateJump', url);
         vm.requestWikiPage(url);
       } else if (link.getAttribute("href")!.startsWith("#")) {
-        var id = link.getAttribute("href")!.substring(1);
-        scrollToID(id, document.getElementById("wikiPage"));
+        var to = link.getAttribute("href")!.substring(1);
+        scrollToID(to, document.getElementById(vm.endPage ? "endPage" : "wikiPage"));
       }
     },
     async fetchArticle(url:string) {
