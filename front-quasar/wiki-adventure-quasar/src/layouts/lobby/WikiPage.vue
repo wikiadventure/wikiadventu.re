@@ -269,10 +269,10 @@ export default defineComponent({
         if (links[i].getAttribute("href") == undefined) continue;
         if (links[i].getAttribute("href")!.startsWith("#")) {
           links[i].classList.add("anchorLink");
-        } else if (links[i].getAttribute("href")!.startsWith("/wiki/")) {
-          links[i].classList.add("wikiLink");
         } else if (links[i].getAttribute("href")!.indexOf(":") != -1) {
           links[i].classList.add("portal");
+        } else if (links[i].getAttribute("href")!.startsWith("/wiki/")) {
+          links[i].classList.add("wikiLink");
         } else {
           links[i].classList.add("notWikiLink");
         }
