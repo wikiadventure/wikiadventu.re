@@ -32,8 +32,6 @@
 }
 </style>
 <script lang="ts">
-import Vue from 'vue';
-
 import GameSlideMenu from "../layouts/lobby/GameSlideMenu.vue";
 import WikiPage from "../layouts/lobby/WikiPage.vue";
 import RoundWin from "../layouts/lobby/screen/RoundWin.vue";
