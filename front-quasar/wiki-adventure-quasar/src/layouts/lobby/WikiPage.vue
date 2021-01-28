@@ -180,7 +180,7 @@
       filter: grayscale(0.75);
     }
     .portal {
-      filter: hue-rotate(-45deg);
+      filter: hue-rotate(-35deg);
     }
     .anchorLink {
       filter: hue-rotate(45deg);
