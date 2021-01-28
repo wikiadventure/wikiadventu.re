@@ -3,10 +3,12 @@
     <game-slide-menu ref="gameMenu"/>
     <wait v-if="lobbyState == 'Waiting'" />
     <wiki-page ref="wikiPage" v-else />
-    <wiki-page v-show="showEndPage" endPage/>
-    <page-history v-show="showPageHistory" />
-    <round-win v-show="showRoundWin" />
-    <leaderboard v-show="showLeaderboard" />
+    <transition name="fade">
+      <wiki-page v-show="showEndPage" endPage/>
+      <page-history v-show="showPageHistory" />
+      <round-win v-show="showRoundWin" />
+      <leaderboard v-show="showLeaderboard" />
+    </transition>
     <audio id="winSound">
       <source src="sounds/win.ogg" type="audio/ogg">
       <source src="sounds/win.mp3" type="audio/mpeg">
@@ -21,6 +23,14 @@
     </audio>
   </div>
 </template>
+<style lang="scss">
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .25s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+</style>
 <script lang="ts">
 import Vue from 'vue';
 
@@ -87,59 +97,7 @@ export default defineComponent({
         var vm = this as any;
         vm.$refs.gameMenu.showMenu = v;
       }
-    },
-    roundWin: {
-      get: function ():Boolean {
-        return this.showRoundWin;
-      },
-      set: function (v:boolean) {
-        var vm = this;
-        if (v) this.showRoundWin = v;
-        else setTimeout(() => {this.showRoundWin  = v}, 200);
-        Vue.nextTick().then(function () {
-          document.getElementById("round-win").style.opacity = Number(v).toString(); 
-        });
-      }
-    },
-    leaderboard: {
-      get: function ():Boolean {
-        return this.showLeaderboard;
-      },
-      set: function (v:boolean) {
-        var vm = this;
-        if (v) this.showLeaderboard = v;
-        else setTimeout(() => {this.showLeaderboard  = v}, 200);
-        Vue.nextTick().then(function () {
-          document.getElementById("leaderboard").style.opacity = Number(v).toString(); 
-        });;
-      }
-    },
-    pageHistory: {
-      get: function ():Boolean {
-        return this.showPageHistory;
-      },
-      set: function (v:boolean) {
-        var vm = this;
-        if (v) this.showPageHistory = v;
-        else setTimeout(() => {this.showPageHistory  = v}, 200);
-        Vue.nextTick().then(function () {
-          document.getElementById("page-history").style.opacity = Number(v).toString(); 
-        });;
-      }
-    },
-    endPage: {
-      get: function ():Boolean {
-        return this.showEndPage;
-      },
-      set: function (v:boolean) {
-        var vm = this;
-        if (v) this.showEndPage = v;
-        else setTimeout(() => {this.showEndPage  = v}, 200);
-        Vue.nextTick().then(function () {
-          document.getElementById("endPage").style.opacity = Number(v).toString(); 
-        });;
-      }
-    },
+    }
   },
   mounted() {
     this.$store.dispatch('gameData/connect');
@@ -154,13 +112,13 @@ export default defineComponent({
         case "game-menu":
           return this.gameMenu = payload.state;
         case "round-win":
-          return this.roundWin = payload.state;
+          return this.showRoundWin = payload.state;
         case "page-history":
-          return this.pageHistory = payload.state;
+          return this.showPageHistory = payload.state;
         case "leaderboard":
-          return this.leaderboard = payload.state;
+          return this.showLeaderboard = payload.state;
         case "wiki-end-page":
-          return this.endPage = payload.state;
+          return this.showEndPage = payload.state;
         default: return;
       }
     },
@@ -171,11 +129,11 @@ export default defineComponent({
           if (!vm.winner) return;
           return;
         case LobbyState.GameFinish:
-          vm.leaderboard = true;
-          setTimeout(() => {vm.leaderboard = false}, payload.time*1000);
+          vm.showLeaderboard = true;
+          setTimeout(() => {vm.showLeaderboard = false}, payload.time*1000);
           return;
         case LobbyState.Voting:
-          vm.pageHistory = false;
+          vm.showPageHistory = false;
           vm.gameMenu = true;
           if (payload.time > 3) setTimeout(() => {vm.countDownAudio.play()}, payload.time*1000-3000);
           return;
@@ -192,8 +150,8 @@ export default defineComponent({
       var vm = this;
       if (payload.id == vm.$store.state.gameData.self) this.winAudio.play();
       else this.loseAudio.play();
-      vm.roundWin = true;
-      setTimeout(() => {vm.roundWin = false}, 5000);
+      vm.showRoundWin = true;
+      setTimeout(() => {vm.showRoundWin = false}, 5000);
       return;
 
     },
@@ -221,7 +179,7 @@ export default defineComponent({
         case "gameData/onWinRound":
           return vm.onWinRound(action.payload);
         case "gameData/onPath":
-          return vm.pageHistory = true;
+          return vm.showPageHistory = true;
         case "gameData/onVoteResult":
           return vm.onVoteResult(action.payload);
       }
