@@ -217,7 +217,7 @@ export default defineComponent({
   } {
     return {
       unsubscribe: () => {},
-      title: "Welcome",
+      title: "",
       content: "",
       loading: false
     }
@@ -311,6 +311,8 @@ export default defineComponent({
   },
   created() {
     var vm = this;
+    vm.title = vm.endPage ? vm.$t("wikiPage.noEndPageYet") : vm.$t("wikiPage.tipsTitle");
+    vm.content = vm.endPage ? "" : vm.$t("wikiPage.tipsContent");
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
       if (mutation.type === 'gameData/voteResult') {
         this.requestWikiPage(vm.endPage ? state.gameData.endPage : state.gameData.startPage);
