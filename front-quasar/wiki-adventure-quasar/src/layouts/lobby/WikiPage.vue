@@ -1,6 +1,7 @@
 <template>
-  <section id="wikiPage" class="absolute-full">
+  <section class="wikiPage absolute-full" :id="endPage ? 'endPage' : 'wikiPage'">
     <div id="wikiCore">
+      <exit-btn v-if="endPage" target="wiki-end-page"/>
       <h1 id="wikiTitle">{{ title }}</h1>
       <div id="wikiMain">
         <div id="wikiContent" v-html="content"></div>
@@ -10,7 +11,7 @@
   </section>
 </template>
 <style lang="scss">
-#wikiPage {
+.wikiPage {
   overflow-x: hidden;
   overflow-y: scroll;
   padding: 15px;
@@ -169,7 +170,7 @@
   .infobox, .infobox_v2, .infobox_v3 {
     background: var(--w-color-dark-blue);
   }
-  #wikiPage {
+  .wikiPage {
     background: var(--w-color-almost-black);
     color: var(--w-color-blue-white);
     a {
@@ -177,6 +178,9 @@
     }
     .notWikiLink {
       filter: grayscale(0.75);
+    }
+    .portal {
+      filter: grayscale(-45deg);
     }
     .anchorLink {
       filter: hue-rotate(45deg);
@@ -192,6 +196,7 @@
 </style>
 <script lang="ts">
 import Vue from 'vue';
+import ExitBtn from '../../components/ExitButton.vue';
 import { defineComponent } from '@vue/composition-api';
 import WikiArticle from '../../mixins/wikiArticle';
 
@@ -199,6 +204,10 @@ import scrollToID from '../../mixins/scrollToID';
 
 export default defineComponent({
   name: 'WikiPage',
+  components: { ExitBtn },
+  props: {
+    endPage:Boolean
+  },
   data():{
     title:string,
     content:string,
@@ -221,28 +230,27 @@ export default defineComponent({
   },
   methods: {
     requestWikiPage(url:string) {
-      console.log(url);
       var vm:any = this;
       if (vm.loading) return;
       vm.loading = true;
-      vm.$store.dispatch('gameData/validateJump', url);
+      var id = vm.endPage ? "endPage" : "wikiPage";
       vm.fetchArticle(url).then(
         function(article:WikiArticle) {
-          document.getElementById("wikiPage").style.opacity = "0";
+          document.getElementById(id).style.opacity = "0";
           setTimeout(function() {
             vm.title = article.title;
             vm.content = article.content;
             Vue.nextTick().then(function () {
               vm.loading = false;
-              vm.redirectLinks(document.getElementById("wikiPage"));
+              vm.redirectLinks(document.getElementById(id));
             });
-            document.getElementById("wikiPage").scrollTo(0,0);
-            document.getElementById("wikiPage").style.opacity = "1";
+            document.getElementById(id).scrollTo(0,0);
+            document.getElementById(id).style.opacity = "1";
           }, 100);
         }
       ).catch((e:any) => {
         vm.loading = false;
-        document.getElementById("wikiPage").style.opacity = "1";
+        document.getElementById(id).style.opacity = "1";
         this.$q.notify({
           type: 'negative',
           position: 'bottom-right',
@@ -263,6 +271,8 @@ export default defineComponent({
           links[i].classList.add("anchorLink");
         } else if (links[i].getAttribute("href")!.startsWith("/wiki/")) {
           links[i].classList.add("wikiLink");
+        } else if (links[i].getAttribute("href")!.indexOf(":") != -1) {
+          links[i].classList.add("portal");
         } else {
           links[i].classList.add("notWikiLink");
         }
@@ -272,12 +282,21 @@ export default defineComponent({
       var vm = this;
       if (link.getAttribute("href") == undefined) return;
       //check if the link go to another wikipage and not info page or external
-      if (link.getAttribute("href")!.lastIndexOf(":") == -1 && !link.classList.contains("internal") && !link.classList.contains("external") && link.rel != "mw:ExtLink" && !link.classList.contains("new") && link.getAttribute("href")!.startsWith("/wiki/")) {
+
+      if (!vm.endPage &&
+          link.getAttribute("href")!.lastIndexOf(":") == -1 &&
+          !link.classList.contains("internal") &&
+          !link.classList.contains("external") &&
+          link.rel != "mw:ExtLink" &&
+          !link.classList.contains("new") &&
+          link.getAttribute("href")!.startsWith("/wiki/")) {
+
         var idx = link.getAttribute("href")!.lastIndexOf("/");
         var url = link.getAttribute("href")!.substring(idx+1);
         var anchor = url!.indexOf("#");
         if (anchor != -1) url = url!.substring(0, anchor);
         url = decodeURIComponent(url);
+        vm.$store.dispatch('gameData/validateJump', url);
         vm.requestWikiPage(url);
       } else if (link.getAttribute("href")!.startsWith("#")) {
         var id = link.getAttribute("href")!.substring(1);
@@ -291,9 +310,10 @@ export default defineComponent({
     },
   },
   created() {
+    var vm = this;
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
       if (mutation.type === 'gameData/voteResult') {
-        this.requestWikiPage(state.gameData.startPage);
+        this.requestWikiPage(vm.endPage ? state.gameData.endPage : state.gameData.startPage);
       }
     });
   },

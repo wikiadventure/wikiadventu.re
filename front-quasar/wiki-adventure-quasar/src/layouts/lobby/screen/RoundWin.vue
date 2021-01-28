@@ -21,7 +21,7 @@
 }
 </style>
 <script lang="ts">
-import ExitBtn from '../../../components/ExitButton.vue'
+import ExitBtn from '../../../components/ExitButton.vue';
 import LogoShowIn from '../../../components/art/LogoShowIn.vue';
 
 import { defineComponent } from '@vue/composition-api';

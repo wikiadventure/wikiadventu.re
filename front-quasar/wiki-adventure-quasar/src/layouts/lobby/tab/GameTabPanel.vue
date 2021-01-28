@@ -17,7 +17,7 @@
     <div class="row items-baseline q-ma-sm"><p class="q-ma-none flex-fix">{{ $t('gameTab.startPage') }} :</p><p class="q-ma-none q-ml-sm text-left flex-grow">{{ startPage }}</p></div>
     <div class="row items-baseline q-ma-sm"><p class="q-ma-none flex-fix">{{ $t('gameTab.endPage') }} :</p><p class="q-ma-none q-ml-sm text-left flex-grow">{{ endPage }}</p></div>
     <q-separator  spaced="lg"/>
-    <div class="row items-baseline q-ma-sm"><q-btn class="path-btn" push :label="$t('gameTab.pageHistory')" icon="mdi-format-list-bulleted" @click="openPageHistory()"/></div>
+    <div class="row items-baseline justify-evenly"><q-btn class="action-btn" push :label="$t('gameTab.pageHistory')" icon="mdi-format-list-bulleted" @click="open('page-history')"/><q-btn class="action-btn" push :label="$t('gameTab.wikiEndPage')" icon="mdi-page-next-outline" @click="open('wiki-end-page')"/></div>
     <q-separator  spaced="lg"/>
   </div>
 </template>
@@ -37,11 +37,11 @@
 .flex-fix {
   flex: 0 0 auto;
 }
-.body--dark .path-btn {
+.body--dark .action-btn {
   background: var(--w-color-dark-teal);
   color: var(--w-color-dark-blue);          
 }
-.body--light .path-btn {
+.body--light .action-btn {
   background: var(--w-color-almost-black);
   color: var(--w-color-blue-white);
 }
@@ -97,9 +97,9 @@ export default defineComponent({
       vm.$store.dispatch('gameData/resetVote');
       vm.vote = this.$t('gameTab.randomPage');
     },
-    openPageHistory(e:Event) {
+    open(target:string) {
       var payload1:ManageScreenEvent = {
-        target: "page-history",
+        target: target,
         state: true
       }
       var payload2:ManageScreenEvent = {

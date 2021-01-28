@@ -3,9 +3,10 @@
     <game-slide-menu ref="gameMenu"/>
     <wait v-if="lobbyState == 'Waiting'" />
     <wiki-page ref="wikiPage" v-else />
-    <page-history v-if="showPageHistory" />
-    <round-win v-if="showRoundWin" />
-    <leaderboard v-if="showLeaderboard" />
+    <wiki-page v-show="showEndPage" endPage/>
+    <page-history v-show="showPageHistory" />
+    <round-win v-show="showRoundWin" />
+    <leaderboard v-show="showLeaderboard" />
     <audio id="winSound">
       <source src="sounds/win.ogg" type="audio/ogg">
       <source src="sounds/win.mp3" type="audio/mpeg">
@@ -43,6 +44,7 @@ export default defineComponent({
     showRoundWin:boolean,
     showLeaderboard:boolean,
     showPageHistory:boolean,
+    showEndPage:boolean,
     winAudio:HTMLAudioElement | null,
     loseAudio:HTMLAudioElement | null,
     countDownAudio:HTMLAudioElement | null,
@@ -53,6 +55,7 @@ export default defineComponent({
       showRoundWin: false,
       showLeaderboard: false,
       showPageHistory: false,
+      showEndPage: false,
       winAudio: null,
       loseAudio: null,
       countDownAudio: null,
@@ -123,7 +126,20 @@ export default defineComponent({
           document.getElementById("page-history").style.opacity = Number(v).toString(); 
         });;
       }
-    } 
+    },
+    endPage: {
+      get: function ():Boolean {
+        return this.showEndPage;
+      },
+      set: function (v:boolean) {
+        var vm = this;
+        if (v) this.showEndPage = v;
+        else setTimeout(() => {this.showEndPage  = v}, 200);
+        Vue.nextTick().then(function () {
+          document.getElementById("endPage").style.opacity = Number(v).toString(); 
+        });;
+      }
+    },
   },
   mounted() {
     this.$store.dispatch('gameData/connect');
@@ -143,6 +159,8 @@ export default defineComponent({
           return this.pageHistory = payload.state;
         case "leaderboard":
           return this.leaderboard = payload.state;
+        case "wiki-end-page":
+          return this.endPage = payload.state;
         default: return;
       }
     },
