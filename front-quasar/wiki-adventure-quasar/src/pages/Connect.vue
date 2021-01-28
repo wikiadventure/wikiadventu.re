@@ -10,6 +10,9 @@ import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'Connect',
-  components: { ConnectMenu }
+  components: { ConnectMenu },
+  mounted() {
+    this.$store.dispatch('gameData/reset');
+  }
 });
 </script>
