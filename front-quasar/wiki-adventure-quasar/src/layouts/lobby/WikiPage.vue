@@ -311,8 +311,8 @@ export default defineComponent({
   },
   created() {
     var vm = this;
-    vm.title = vm.endPage ? vm.$t("wikiPage.noEndPageYet") : vm.$t("wikiPage.tipsTitle");
-    vm.content = vm.endPage ? "" : vm.$t("wikiPage.tipsContent");
+    vm.title = vm.endPage ? vm.$t("wikiPage.noEndPageYet") as string : vm.$t("wikiPage.tipsTitle") as string;
+    vm.content = vm.endPage ? "" : vm.$t("wikiPage.tipsContent") as string;
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
       if (mutation.type === 'gameData/voteResult') {
         this.requestWikiPage(vm.endPage ? state.gameData.endPage : state.gameData.startPage);
