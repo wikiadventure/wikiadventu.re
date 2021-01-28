@@ -192,7 +192,20 @@
       color: var(--w-color-teal);
     }
   }
-}      
+}
+.body--light {
+  .wikiPage {
+    .notWikiLink {
+      filter: grayscale(0.25);
+    }
+    .portal {
+      filter: hue-rotate(-90deg);
+    }
+    .anchorLink {
+      filter: hue-rotate(25deg);
+    }
+  }
+}    
 </style>
 <script lang="ts">
 import Vue from 'vue';
