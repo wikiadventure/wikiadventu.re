@@ -1,11 +1,5 @@
-export default function scrollToID(id:string, scrollContainer?:Element) {
-    var element = document.getElementById(id);
+export default function scrollToID(id:string, scrollContainer?:string) {
+    var element = document.querySelector('#'+scrollContainer+" #"+id);
     if (!element) return;
-    var top = element.offsetTop;
-    top = top+document.documentElement.clientHeight*0.88;
-    if (!scrollContainer) {
-        window.scrollTo(0, top);
-    } else {
-        scrollContainer.scrollTo(0, top);
-    }
+    element.scrollIntoView();
 }

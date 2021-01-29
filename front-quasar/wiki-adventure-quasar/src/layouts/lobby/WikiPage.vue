@@ -214,6 +214,7 @@ import { defineComponent } from '@vue/composition-api';
 import WikiArticle from '../../mixins/wikiArticle';
 
 import scrollToID from '../../mixins/scrollToID';
+import { resolve } from 'dns';
 
 export default defineComponent({
   name: 'WikiPage',
@@ -242,12 +243,12 @@ export default defineComponent({
     }
   },
   methods: {
-    requestWikiPage(url:string) {
+    async requestWikiPage(url:string) {
       var vm:any = this;
       if (vm.loading) return;
       vm.loading = true;
       var id = vm.endPage ? "endPage" : "wikiPage";
-      vm.fetchArticle(url).then(
+      await vm.fetchArticle(url).then(
         function(article:WikiArticle) {
           document.getElementById(id).style.opacity = "0";
           setTimeout(function() {
@@ -257,7 +258,6 @@ export default defineComponent({
               vm.loading = false;
               vm.redirectLinks(document.getElementById(id));
             });
-            document.getElementById(id).scrollTo(0,0);
             document.getElementById(id).style.opacity = "1";
           }, 100);
         }
@@ -268,8 +268,8 @@ export default defineComponent({
           type: 'negative',
           position: 'bottom-right',
           message: 'A problem occurs when fetching wikipedia article : ' + e
-        })
-      });
+        });
+      }); 
     },
     redirectLinks(doc:Document) {
       var vm = this;
@@ -293,33 +293,35 @@ export default defineComponent({
     },
     onLinkClick(link:HTMLAnchorElement) {
       var vm = this;
-      if (link.getAttribute("href") == undefined) return;
+      var linkHref = link.getAttribute("href");
+      if (linkHref == undefined) return;
       //check if the link go to another wikipage and not info page or external
-
       if (!vm.endPage &&
-          link.getAttribute("href")!.lastIndexOf(":") == -1 &&
+          linkHref.lastIndexOf(":") == -1 &&
           !link.classList.contains("internal") &&
           !link.classList.contains("external") &&
           link.rel != "mw:ExtLink" &&
           !link.classList.contains("new") &&
-          link.getAttribute("href")!.startsWith("/wiki/")) {
+          linkHref!.startsWith("/wiki/")) {
 
-        var idx = link.getAttribute("href")!.lastIndexOf("/");
-        var url = link.getAttribute("href")!.substring(idx+1);
-        var anchor = url!.indexOf("#");
-        if (anchor != -1) url = url!.substring(0, anchor);
+        var url = linkHref.substring(6);
+        var anchor = url.indexOf("#");
+        var anchorId = "";
+        if (anchor != -1) url = url.substring(0, anchor);
         url = decodeURIComponent(url);
         vm.$store.dispatch('gameData/validateJump', url);
-        vm.requestWikiPage(url);
-      } else if (link.getAttribute("href")!.startsWith("#")) {
-        var to = link.getAttribute("href")!.substring(1);
-        scrollToID(to, document.getElementById(vm.endPage ? "endPage" : "wikiPage"));
+        vm.requestWikiPage(url).then(() => vm.scrollToAnchor(url.substring(anchor+1)));
+      } else if (linkHref.startsWith("#")) {
+        vm.scrollToAnchor(linkHref.substring(1));
       }
     },
     async fetchArticle(url:string) {
       var vm = this;
       var article = new WikiArticle(url, this.$store.state.gameData.lang, this.$q.platform.is.mobile);
       return await article.fetch();
+    },
+    scrollToAnchor(id:string) {
+      scrollToID(id, this.endPage ? "endPage" : "wikiPage");
     },
   },
   created() {
