@@ -21,6 +21,10 @@
       <source src="sounds/countDown.ogg" type="audio/ogg">
       <source src="sounds/countDown.mp3" type="audio/mpeg">
     </audio>
+    <audio id="notifSound">
+      <source src="sounds/notif.ogg" type="audio/ogg">
+      <source src="sounds/notif.mp3" type="audio/mpeg">
+    </audio>
   </div>
 </template>
 <style lang="scss">
@@ -39,7 +43,7 @@ import Leaderboard from "../layouts/lobby/screen/Leaderboard.vue";
 import Wait from "../layouts/lobby/screen/Wait.vue";
 import PageHistory from "../layouts/lobby/screen/PageHistory.vue";
 
-import { GameState, LobbyState, Player, VoteResult, WinRound } from "../store/gameData/state";
+import { GameState, LobbyState, Player, VoteResult, WinRound, WsMessage } from "../store/gameData/state";
 
 import  { ManageScreenEvent } from "../mixins/manageScreen";
 
@@ -56,6 +60,7 @@ export default defineComponent({
     winAudio:HTMLAudioElement | null,
     loseAudio:HTMLAudioElement | null,
     countDownAudio:HTMLAudioElement | null,
+    notifAudio:HTMLAudioElement | null,
     unsubscribeAction:() => void,
     unsubscribeMutation:() => void
   } {
@@ -67,6 +72,7 @@ export default defineComponent({
       winAudio: null,
       loseAudio: null,
       countDownAudio: null,
+      notifAudio: null,
       unsubscribeAction: () => {},
       unsubscribeMutation:() => {}
     }
@@ -103,6 +109,7 @@ export default defineComponent({
     this.winAudio = document.getElementById("winSound") as HTMLAudioElement;
     this.loseAudio = document.getElementById("loseSound") as HTMLAudioElement;
     this.countDownAudio = document.getElementById("countDownSound") as HTMLAudioElement;
+    this.notifAudio = document.getElementById("notifSound") as HTMLAudioElement;
   },
   methods: {
     manageScreen(payload:ManageScreenEvent) {
@@ -161,6 +168,12 @@ export default defineComponent({
         message: vm.$t('gameTab.endPage') as string + " : " + payload.end
       });
     },
+    onMessage(payload:WsMessage) {
+      var vm = this as any;
+      if (!vm.$refs.gameMenu.showMenu || vm.$refs.gameMenu.tab != "chat") {
+        vm.notifAudio.play();
+      } 
+    },
     onVolume(payload:number) {
       this.winAudio.volume = payload;
     },
@@ -180,6 +193,8 @@ export default defineComponent({
           return vm.showPageHistory = true;
         case "gameData/onVoteResult":
           return vm.onVoteResult(action.payload);
+        case "gameData/onMessage":
+          return vm.onMessage(action.payload);
       }
     });
     vm.unsubscribeMutation = vm.$store.subscribe((mutation, state) => {
