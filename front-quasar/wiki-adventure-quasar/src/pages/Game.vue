@@ -3,12 +3,10 @@
     <game-slide-menu ref="gameMenu"/>
     <wait v-if="lobbyState == 'Waiting'" />
     <wiki-page ref="wikiPage" v-else />
-    <transition name="fade">
-      <wiki-page v-show="showEndPage" endPage/>
-      <page-history v-show="showPageHistory" />
-      <round-win v-show="showRoundWin" />
-      <leaderboard v-show="showLeaderboard" />
-    </transition>
+    <transition name="fade"><wiki-page v-show="showEndPage" endPage/></transition>
+    <transition name="fade"><page-history v-show="showPageHistory" /></transition>
+    <transition name="fade"><leaderboard v-show="showLeaderboard" /></transition>
+    <transition name="fade"><round-win v-show="showRoundWin" /></transition>
     <audio id="winSound">
       <source src="sounds/win.ogg" type="audio/ogg">
       <source src="sounds/win.mp3" type="audio/mpeg">
@@ -29,7 +27,7 @@
 </template>
 <style lang="scss">
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .25s;
+  transition: opacity 0.25s ease-in-out;
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;

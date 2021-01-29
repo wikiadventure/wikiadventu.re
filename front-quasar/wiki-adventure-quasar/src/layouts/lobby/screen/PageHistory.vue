@@ -16,7 +16,6 @@
 <style lang="scss">
 #page-history {
   overflow: hidden;
-  z-index: 3;
 }
 .page-history-container {
   width: Max(50%, 500px);

@@ -1,5 +1,5 @@
 <template>
-  <div id="leaderboard">
+  <div id="leaderboard" class="absolute-full">
     <exit-btn target="leaderboard"/>
     <div id="grid-leaderboard">
       <div class="grid-leaderboard-podium grid-leaderboard-2">
@@ -31,16 +31,8 @@
     color: rgb(220, 220, 220);
     background: #36393F;
     font-size: 13px;
-    position: fixed;
-    z-index: 5;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
     overflow-x: hidden;
     overflow-y: scroll;
-    opacity: 0;
-    transition: opacity ease-in-out 0.5s;
 
     #grid-leaderboard {
         display: grid;
