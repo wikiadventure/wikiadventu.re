@@ -76,5 +76,8 @@ export default {
   lobbyIDRequired: "Please enter a Party ID to connect to",
   fetchError: "An error occurred while communicating with server",
   copySuccess: "Copied successfully!",
-  copyFail: "Error during the copy"
+  copyFail: "Error during the copy",
+  wikiPage: {
+    noEndPageYet: "No End Page yet"
+  }
 };
