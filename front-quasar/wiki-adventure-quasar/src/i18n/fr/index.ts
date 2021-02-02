@@ -48,7 +48,8 @@ export default {
       endPage: "Page d'arrivée",
       randomPage: "Page aléatoire ???",
       noWinnerYet: "Pas encore de gagnant!",
-      pageHistory: "Historique du dernier gagnant"
+      pageHistory: "Historique du dernier gagnant",
+      showEndPage: "Afficher la page de fin",
     },
     chatTab: {
       send: "Envoyer un message"

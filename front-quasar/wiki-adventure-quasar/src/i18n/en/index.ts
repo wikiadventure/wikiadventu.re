@@ -48,7 +48,8 @@ export default {
     endPage: "End page",
     randomPage: "Random page ???",
     noWinnerYet: "No winner yet!",
-    pageHistory: "History of the last winner"
+    pageHistory: "History of the last winner",
+    showEndPage: "Show end page",
   },
   chatTab: {
     send: "Send a message"
