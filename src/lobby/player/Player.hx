@@ -209,6 +209,13 @@ class Player {
             }
         }
     }
+    public static function resetScore(playerList:Array<Player>) {
+        for (p in playerList) {
+            p.score = 0;
+            emitUpdateScore(playerList,p);
+            
+        }
+    }
 }
 
 enum abstract LobbyEventType(String) {

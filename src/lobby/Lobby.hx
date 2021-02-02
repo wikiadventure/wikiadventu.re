@@ -576,6 +576,7 @@ class Lobby {
         state = GameFinish;
         initNewPhase();
         loop = Timers.setTimeout(function () {
+            playerList.resetScore();
             if (type == Public) {
                 votePhase();
             } else {
