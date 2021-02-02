@@ -76,5 +76,8 @@ export default {
     lobbyIDRequired: "Veuiller saisir un identifiant de partie à rejoindre",
     fetchError: "Une erreur a eu lieu lors de la communication avec le serveur",
     copySuccess: "Copié avec succès!",
-    copyFail: "Erreur lors de la copie"
+    copyFail: "Erreur lors de la copie",
+    wikiPage: {
+      noEndPageYet: "Pas encore de page d'arrivée"
+    }
   };
