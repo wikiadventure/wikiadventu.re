@@ -79,6 +79,9 @@ export default {
   copySuccess: "Copied successfully!",
   copyFail: "Error during the copy",
   wikiPage: {
-    noEndPageYet: "No End Page yet"
+    noEndPageYet: "No End Page yet",
+    tipsTitle: "Tips",
+    tipsContent: "You can open the game menu with top left button or with ctrl + shift.",
+    tipsContentMobile: "You can open the game menu with top left button or by swiping to the left.",
   }
 };
