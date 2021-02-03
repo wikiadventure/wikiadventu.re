@@ -306,11 +306,13 @@ export default defineComponent({
 
         var url = linkHref.substring(6);
         var anchor = url.indexOf("#");
-        var anchorId = "";
         if (anchor != -1) url = url.substring(0, anchor);
         url = decodeURIComponent(url);
         vm.$store.dispatch('gameData/validateJump', url);
-        vm.requestWikiPage(url).then(() => vm.scrollToAnchor(url.substring(anchor+1)));
+        vm.requestWikiPage(url).then(() => {
+          if (anchor != -1) vm.scrollToAnchor(url.substring(anchor+1));
+          else document.getElementById(this.endPage ? "endPage" : "wikiPage").scrollTo(0,0);
+        });
       } else if (linkHref.startsWith("#")) {
         vm.scrollToAnchor(linkHref.substring(1));
       }
