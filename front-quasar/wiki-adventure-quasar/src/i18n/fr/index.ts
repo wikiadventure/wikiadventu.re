@@ -73,7 +73,6 @@ export default {
       }
     },
     exitWarn: "Voulez-vous vraiment quitter la partie?",
-    noLobbyFound: "Aucune partie trouvée avec l'identifiant",
     lobbyIDRequired: "Veuiller saisir un identifiant de partie à rejoindre",
     fetchError: "Une erreur a eu lieu lors de la communication avec le serveur",
     copySuccess: "Copié avec succès!",
@@ -83,5 +82,13 @@ export default {
       tipsTitle: "Astuce",
       tipsContent: "Vous pouvez ouvrir le menu du jeu avec le bouton en haut à gauche ou avec ctrl + shift.",
       tipsContentMobile: "Vous pouvez ouvrir le menu du jeu avec le bouton en haut à gauche ou en faisant glisser vers la gauche.",
+    },
+    connectError: {
+      invalidID: "L'dentifiant de partie est invalide",
+      noLobbyFoundWithID: "Aucune partie trouvée avec l'identifiant",
+      lobbyFull: "La partie que vous voulez rejoindre est remplie",
+      invalidPassword: "Mot de passe invalide",
+      lobbyLimitReached: "La limite de partie a été atteinte!",
+      privateLobbyLimitReached: "La limite de partie privé a été atteinte!"
     }
   };

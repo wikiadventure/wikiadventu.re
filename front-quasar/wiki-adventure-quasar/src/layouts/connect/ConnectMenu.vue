@@ -119,7 +119,9 @@
 }
 </style>
 <script lang="ts">
-import uuid  from 'uuid'; 
+import uuid  from 'uuid';
+import { translate } from "../../i18n/translateErrorCode";
+
 import PrivateCreate from "./tab/PrivateCreate.vue";
 import PrivateJoin from "./tab/PrivateJoin.vue";
 import PublicJoin from "./tab/PublicJoin.vue";
@@ -209,15 +211,23 @@ export default defineComponent({
         }).catch(function(error) {
           vm.connecting = false;
           vm.$q.notify({
-          type: 'negative',
-          position: 'top',
-          message: vm.$t('fetchError') + ' : ' + error.message
-        });
+            type: 'negative',
+            position: 'top',
+            message: vm.$t('fetchError') + ' : ' + error.message
+          });
           console.log(vm.$t('fetchError') + ' : ' + error.message);
       });
     },
     start(json:ConnectionResponse) {
       var vm = this as any;
+      if (json.status == ConnectionStatus.Error) {
+        vm.$q.notify({
+          type: 'negative',
+          position: 'top',
+          message: vm.$t(translate(json.errorCode)) 
+        });
+        return;
+      }
       vm.$store.commit('gameData/setLang', json.lang);
       vm.$store.commit('gameData/setLobbyID', json.lobbyID);
       vm.$store.commit('gameData/setLobbyType', json.lobbyType);
@@ -254,7 +264,7 @@ export default defineComponent({
           vm.$q.notify({
             type: 'negative',
             position: 'top',
-            message: vm.$t('noLobbyFound') + ' ' + id
+            message: vm.$t('connectError.noLobbyFoundWithID') + ' ' + id
           });
         }
       }
@@ -271,6 +281,8 @@ export default defineComponent({
     this.$root.$on('submit-form', this.login);
   }
 });
+import { ErrorCode } from "../../i18n/translateErrorCode";
+
 interface loginQuery {
   type: string;
   lang:Lang;
@@ -285,12 +297,11 @@ interface ConnectionResponse {
     lobbyType:LobbyType,
     playerID:string,
     lang:Lang,
-    error?:string
+    errorCode?:ErrorCode
 }
 enum ConnectionStatus {
     Success = 'Success',
-    ClientError = 'ClientError',
-    ServerError = 'ServerError'
+    Error = 'Error'
 }
 interface InfoResponse {
     status:InfoStatus,

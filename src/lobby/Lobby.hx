@@ -1,5 +1,6 @@
 package lobby;
 
+import controller.connect.error.ConnectError;
 import js.node.Querystring;
 import fileLog.Log;
 import js.node.Timers;
@@ -58,9 +59,9 @@ class Lobby {
 
     public function new(language : Lang, type:LobbyType, ?passwordHash:String, slot:Int=25, round:Int=5, playTimeOut:Int=600, voteTimeOut:Int=30) {
         if (lobbyList.length >= lobbyLimit) {
-            throw "Lobby limit has been reached!";
+            throw ConnectError.LobbyLimitReached;
         } else if (getPrivateLobbyLength() >= privateLimit) {
-            throw "Private lobby limit has been reached!";
+            throw ConnectError.PrivateLobbyLimitReached;
         }
         playerList = new Array<Player>();
         this.language = language;
@@ -120,7 +121,7 @@ class Lobby {
             if (l.id > id) break;
             if (l.id == id) return l;
         }
-        throw "no lobby with id " + id + " found";
+        throw ConnectError.NoLobbyFoundWithID;
     }
 
 
@@ -129,7 +130,7 @@ class Lobby {
      * @param player to add
      */
     public function addPlayer(player:Player) {
-        if (playerList.length >= slot) throw "the lobby is full";
+        if (playerList.length >= slot) throw ConnectError.LobbyFull;
         if (playerList.lastIndexOf(player) == -1) {
             playerList.push(player);
             kickOnTimeout(player);
@@ -148,7 +149,7 @@ class Lobby {
     public function connect(player:Player, ?passwordHash:String) {
         if (this.type == Public || this.passwordHash == passwordHash) return addPlayer(player);
         log("connection rejected : " + player.uuid + " --> " + player.pseudo + "provide a wrong password", PlayerData);
-        throw "Invalid password";
+        throw ConnectError.InvalidPassword;
     }
     /**
      * remove a player from the lobby,
@@ -715,7 +716,7 @@ class Lobby {
         var stringValue = bytesValue.getString(0,bytesValue.length);
         var intValue = Std.parseInt(stringValue);
         if(intValue == null) {
-            throw "invalid ID";
+            throw ConnectError.InvalidID;
         }
         return intValue;
     }

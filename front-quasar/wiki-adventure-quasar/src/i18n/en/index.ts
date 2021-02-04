@@ -73,7 +73,6 @@ export default {
     }
   },
   exitWarn: "Do you really want to leave the party?",
-  noLobbyFound: "No game found with this Party ID",
   lobbyIDRequired: "Please enter a Party ID to connect to",
   fetchError: "An error occurred while communicating with server",
   copySuccess: "Copied successfully!",
@@ -83,5 +82,13 @@ export default {
     tipsTitle: "Tips",
     tipsContent: "You can open the game menu with top left button or with ctrl + shift.",
     tipsContentMobile: "You can open the game menu with top left button or by swiping to the left.",
+  },
+  connectError: {
+    invalidID: "The Party ID provided is invalid",
+    noLobbyFoundWithID: "No game found with this Party ID",
+    lobbyFull: "The party you want to join is full",
+    invalidPassword: "Invalid Password",
+    lobbyLimitReached: "The party limit has been reached!",
+    privateLobbyLimitReached: "The private party limit has been reached!"
   }
 };

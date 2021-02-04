@@ -31,11 +31,15 @@ class PrivateJoinController {
                 lobbyID: Lobby.encodeID(lobby.id),
                 lobbyType: Private,
                 playerID: player.uuid,
-                lang: lobby.language           
+                lang: lobby.language
             };
             new SuccessResponse(im, sr, Json.stringify(json));
         } catch (e:Dynamic) {
-            new ErrorResponse(im, sr, body, "internal error : "+e,400);
+            var json:ConnectionResponse = {
+                status: Error,
+                errorCode: e
+            };
+            new ErrorResponse(im, sr, body, Json.stringify(json),400);
         }
     }
 

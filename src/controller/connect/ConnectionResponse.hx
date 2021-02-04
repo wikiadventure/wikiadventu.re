@@ -5,15 +5,14 @@ import config.Lang;
 
 typedef ConnectionResponse = {
     status:ConnectionStatus,
-    lobbyID:String,
-    lobbyType:LobbyType,
-    playerID:String,
-    lang:Lang,
-    ?error:String
+    ?lobbyID:String,
+    ?lobbyType:LobbyType,
+    ?playerID:String,
+    ?lang:Lang,
+    ?errorCode:Int
 }
 
 enum abstract ConnectionStatus(String) {
     var Success;
-    var ClientError;
-    var ServerError;
+    var Error;
 }
