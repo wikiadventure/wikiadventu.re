@@ -5,9 +5,7 @@
 ## Setup
 
 ### Haxe
-<p align="center">
-  <a href="https://haxe.org/" title="haxe.org"><img src="../../HaxeFoundation/haxe/extra/images/Readme.png" /></a>
-</p>
+
 First you need to install haxe > 4.0.0 [here](https://haxe.org/download/)
 
 Then install all needed haxe librairies with command :
