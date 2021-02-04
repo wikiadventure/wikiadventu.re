@@ -1,7 +1,7 @@
 # WikiAdventure
 
 <p align="center">
-  <a href="http://wiki-adventure.herokuapp.com/" title="Wiki Adventure"><img width=294 height=256 src="front-quasar/wiki-adventure-quasar/public/svg/logoV1.svg" /></a>
+  <a href="http://wiki-adventure.herokuapp.com/" title="Wiki Adventure"><img width=1608 height=1000 src="front-quasar/wiki-adventure-quasar/public/svg/openGraph.svg" /></a>
 </p>
 
 ## Setup
