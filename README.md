@@ -40,7 +40,7 @@ now you can hit debug > start debugging ( or f5 ), haxe will transpile the proje
 
 ## Structure ( WIP )
 
-You can find a digram of the project structure [here](https://app.creately.com/diagram/c3k6MCT7yss).
+You can find a daigram of the project structure [here](https://lucid.app/lucidchart/invitations/accept/dca36f9b-f3a1-4547-a113-c6a8adb6ab82).
     
 ## TODO
 
