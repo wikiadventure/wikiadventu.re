@@ -23,9 +23,10 @@ then install the corresponding npm modules with command :
 cd bin
 npm install
 ```
-### Quasar
+### librairies
 
-Check the README.md in front-quasar/wiki-adventure-quasar
+launch the setup script to install all the librairies.
+It will install haxe lib, then backend npm lib and finally quasar and frontend lib! 
 
  ### Visual Studio Code   
 
@@ -43,10 +44,6 @@ You can find a digram of the project structure [here](https://app.creately.com/d
     
 ## TODO
 
-- [ ] Complete the i18n internalization
 - [ ] Add an celebration on the leaderboard screen
-- [ ] Add lose animation on end of round
-- [ ] Integrate page history
-- [ ] notification sound
 
 
