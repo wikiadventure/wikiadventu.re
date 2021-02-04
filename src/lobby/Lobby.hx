@@ -117,7 +117,7 @@ class Lobby {
 
     public static function find(id:Int):Lobby {
         for (l in lobbyList) {
-            if (l.id > id) throw "no lobby with id " + id + " found";
+            if (l.id > id) break;
             if (l.id == id) return l;
         }
         throw "no lobby with id " + id + " found";
