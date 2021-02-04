@@ -8,6 +8,7 @@ export default {
       core: "Need to write this"
     },
     news: "Nouveautés",
+    newsContent: "La version beta est maintenant ouverte!",
     contribution: "Contribution",
     contributionSection: {
       discord: "Trouve des joueurs sur notre Discord",
