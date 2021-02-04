@@ -95,7 +95,7 @@ export default defineComponent({
     resetVote(e:Event) {
       var vm:any = this;
       vm.$store.dispatch('gameData/resetVote');
-      vm.vote = this.$t('gameTab.randomPage');
+      vm.vote = vm.$t('gameTab.randomPage');
     },
     open(target:string) {
       var payload1:ManageScreenEvent = {

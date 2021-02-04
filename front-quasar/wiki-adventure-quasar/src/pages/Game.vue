@@ -126,7 +126,7 @@ export default defineComponent({
       }
     },
     onGameState(payload:GameState) {
-      var vm = this;
+      var vm = this as any;
       switch (payload.state) {
         case LobbyState.RoundFinish:
           if (!vm.winner) return;
@@ -136,6 +136,7 @@ export default defineComponent({
           setTimeout(() => {vm.showLeaderboard = false}, payload.time*1000);
           return;
         case LobbyState.Voting:
+          vm.$refs.gameMenu.$refs.gameTab.vote = vm.$t('gameTab.randomPage');
           vm.showPageHistory = false;
           vm.gameMenu = true;
           if (payload.time > 3) setTimeout(() => {vm.countDownAudio.play()}, payload.time*1000-3000);

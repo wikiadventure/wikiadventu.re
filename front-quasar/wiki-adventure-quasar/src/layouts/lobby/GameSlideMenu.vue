@@ -5,19 +5,19 @@
       <label @click.stop="showMenu = !showMenu" id="labelShowMenu"><q-icon size="md" name="mdi-play"/></label>
       <q-tab-panels class="content" v-model="tab" animated>
         <q-tab-panel name="chat" class="q-pa-none">
-          <chat-tab-panel></chat-tab-panel>
+          <chat-tab-panel ref="chatTab"></chat-tab-panel>
         </q-tab-panel>
 
         <q-tab-panel name="score" class="q-pa-none">
-          <score-tab-panel></score-tab-panel>
+          <score-tab-panel ref="scoreTab"></score-tab-panel>
         </q-tab-panel>
 
         <q-tab-panel name="game" class="q-pa-none">
-          <game-tab-panel></game-tab-panel>
+          <game-tab-panel ref="gameTab"></game-tab-panel>
         </q-tab-panel>
 
         <q-tab-panel name="setting" class="q-pa-none">
-          <setting-tab-panel></setting-tab-panel>
+          <setting-tab-panel ref="settingTab"></setting-tab-panel>
         </q-tab-panel>
       </q-tab-panels>
       <q-tabs v-model="tab"
