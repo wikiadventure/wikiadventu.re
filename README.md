@@ -1,9 +1,7 @@
 # WikiAdventure
-
 <p align="center">
-  <a href="http://wiki-adventure.herokuapp.com/" title="Wiki Adventure"><img width=294 height=256 src="front-quasar/wiki-adventure-quasar/public/svg/logoV1.svg" /></a>
+  <a href="http://wiki-adventure.herokuapp.com/" title="Wiki Adventure"><img width=402 height=250 src="front-quasar/wiki-adventure-quasar/public/svg/openGraph.svg" /></a>
 </p>
-
 ## Setup
 
 ### Haxe
@@ -23,9 +21,10 @@ then install the corresponding npm modules with command :
 cd bin
 npm install
 ```
-### Quasar
+### librairies
 
-Check the README.md in front-quasar/wiki-adventure-quasar
+launch the setup script to install all the librairies.
+It will install haxe lib, then backend npm lib and finally quasar and frontend lib! 
 
  ### Visual Studio Code   
 
@@ -39,14 +38,10 @@ now you can hit debug > start debugging ( or f5 ), haxe will transpile the proje
 
 ## Structure ( WIP )
 
-You can find a digram of the project structure [here](https://app.creately.com/diagram/c3k6MCT7yss).
+You can find a daigram of the project structure [here](https://lucid.app/lucidchart/invitations/accept/dca36f9b-f3a1-4547-a113-c6a8adb6ab82).
     
 ## TODO
 
-- [ ] Complete the i18n internalization
 - [ ] Add an celebration on the leaderboard screen
-- [ ] Add lose animation on end of round
-- [ ] Integrate page history
-- [ ] notification sound
 
 
