@@ -124,7 +124,7 @@ const actions: ActionTree<GameData, StateInterface> = {
     state.ws?.send(JSON.stringify(json));
   },
   reset({ state }) {
-    if (state.ws != null) state.ws.close(1001);
+    if (state.ws != null) state.ws.close(1000);
     state.ws = undefined;
     state.uuid = "";
     state.lang = Lang.en;
