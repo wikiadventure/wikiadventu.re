@@ -3,7 +3,6 @@
     <lang-select class="col-12 col-sm-6 q-pa-sm"/>
     <id-input class="col-12 col-sm-6 q-pa-sm"/>
     <pseudo-input class="col-12 col-sm-6 q-pa-sm"/>
-    <password-input v-model="password" class="col-12 col-sm-6 q-pa-sm"/>
     <template v-slot:button>
       <connect-btn @click="submit" :label="$t('join')"/>
     </template>
