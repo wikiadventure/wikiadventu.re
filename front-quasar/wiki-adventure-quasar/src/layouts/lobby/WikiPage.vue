@@ -203,6 +203,7 @@
 }
 .body--light {
   .wikiPage {
+    background: white;
     .notWikiLink {
       filter: grayscale(0.25);
     }
