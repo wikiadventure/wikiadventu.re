@@ -4,8 +4,7 @@
       <exit-btn v-if="endPage" target="wiki-end-page"/>
       <h1 id="wikiTitle">{{ title }}</h1>
       <div id="wikiMain">
-        <div id="wikiContent" v-html="content"></div>
-        <!--<aside id="wikiInfobox" v-if="infobox" v-html="infobox"></aside>-->
+        <div id="wikiContent" v-html="content" :class="{ safeMode: safeMode }"></div>
       </div>
     </div>
   </section>
@@ -58,6 +57,15 @@
     list-style-type: disc;
     padding-left: 2.5em;
     margin: 1em 0;
+  }
+  .safeMode {
+    img {
+      filter: blur(20px);
+      transition: filter 2s ease-in-out;
+    }
+    img:hover {
+      filter: blur(0px);
+    }
   }
 }   
 .infobox, .infobox_v2, .infobox_v3 {
@@ -226,14 +234,15 @@ export default defineComponent({
     title:string,
     content:string,
     loading:boolean,
-    //infobox?:string,
+    safeModeActive:boolean,
     unsubscribe:() => void
   } {
     return {
       unsubscribe: () => {},
       title: "",
       content: "",
-      loading: false
+      loading: false,
+      safeModeActive: false//use to temporarily disable safemode ( for one page )
     }
   },
   meta () {
@@ -242,11 +251,23 @@ export default defineComponent({
       title: "Wiki Adventure : " + vm.title
     }
   },
+  computed: {
+    safeMode: {
+    get():boolean {
+      return this.$store.state.gameData.safeMode && this.safeModeActive;
+    },
+    set(b:boolean) {
+      this.$store.commit('gameData/volume', b);
+      this.safeModeActive = b;
+    }
+  }
+  },
   methods: {
     async requestWikiPage(url:string) {
       var vm:any = this;
       if (vm.loading) return;
       vm.loading = true;
+      vm.safeModeActive = true;
       var id = vm.endPage ? "endPage" : "wikiPage";
       await vm.fetchArticle(url).then(
         function(article:WikiArticle) {
@@ -335,6 +356,16 @@ export default defineComponent({
         this.requestWikiPage(vm.endPage ? state.gameData.endPage : state.gameData.startPage);
       }
     });
+  },
+  mounted() {
+    var vm = this;
+    function keyDown(e:KeyboardEvent) {
+      if (e.defaultPrevented) return;
+      if (e.key == "q" && e.ctrlKey) {
+        vm.safeModeActive = false;
+      }
+    }
+    document.addEventListener("keydown", keyDown, false);
   },
   beforeDestroy() {
     this.unsubscribe!();

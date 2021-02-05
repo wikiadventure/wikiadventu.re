@@ -86,6 +86,9 @@ const mutation: MutationTree<GameData> = {
   },
   volume(state:GameData, v:number) {
     state.volume = v;
+  },
+  safeMode(state:GameData, b:boolean) {
+    state.safeMode = b;
   }
   
 };

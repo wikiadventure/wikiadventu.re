@@ -220,9 +220,7 @@ export default defineComponent({
     }
 
     function keyDown(e:KeyboardEvent) {
-      if (event.defaultPrevented) {
-        return;
-      }
+      if (e.defaultPrevented) return;
       if (e.key == "Shift" && e.ctrlKey) {
         vm.showMenu = !vm.showMenu;
       }

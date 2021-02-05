@@ -27,6 +27,7 @@ export interface GameData {
   winnerId: number;
   volume:number;
   mute:boolean;
+  safeMode:boolean;
 }
 
 export interface Player {
@@ -71,7 +72,8 @@ const state: GameData = {
   owner: -2,
   winnerId: -3,
   volume: 1,
-  mute: false
+  mute: false,
+  safeMode: true
 };
 
 export enum LobbyEventType {
