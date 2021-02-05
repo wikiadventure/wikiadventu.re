@@ -73,7 +73,7 @@ const state: GameData = {
   winnerId: -3,
   volume: 1,
   mute: false,
-  safeMode: true
+  safeMode: false
 };
 
 export enum LobbyEventType {
