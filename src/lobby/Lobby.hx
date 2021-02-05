@@ -297,6 +297,7 @@ class Lobby {
         };
         var encodedParam = "/w/api.php?" + Querystring.encode(param);
         log(player.pseudo + " validation --> " + encodedParam, PlayerData);
+        log(player.pseudo + " --> url : " + url + " , pageList : " + player.pageList + " , currentPage : " + player.currentPage, PlayerData);
         var oldPage = player.currentPage;
         player.numberOfJump +=1;
         player.currentPage = url;
@@ -383,6 +384,7 @@ class Lobby {
         log(body, PlayerData);
         log(player.pseudo + " is cheating!", PlayerData);
         log(oldPage + " --> " + url, PlayerData);
+        log(player.pageList, PlayerData);
         playerList.emitMessage("it seems that " + player.pseudo + " is cheating! (or the anticheat system is broken)");
         playerList.emitMessage(player.pseudo + "jump from " + player.currentPage + " to " + StringTools.urlDecode(url));
     }
