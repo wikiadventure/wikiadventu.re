@@ -285,7 +285,7 @@ class Lobby {
      * @param url 
      */
     public function validateJump(player:Player, url:String) {
-        if (player.currentPage == url) return;
+        if (player.currentPage == url || state != LobbyState.Playing) return;
         var param:WikiRequest = {
             action: "query",
             format: "json",
