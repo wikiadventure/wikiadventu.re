@@ -57,7 +57,7 @@ class Lobby {
         lobbyList = new Array<Lobby>();
     }
 
-    public function new(language : Lang, type:LobbyType, ?passwordHash:String, slot:Int=25, round:Int=5, playTimeOut:Int=600, voteTimeOut:Int=30) {
+    public function new(language : Lang, type:LobbyType, ?passwordHash:String, slot:Int=25, round:Int=5, playTimeOut:Int=600, voteTimeOut:Int=80) {
         if (lobbyList.length >= lobbyLimit) {
             throw ConnectError.LobbyLimitReached;
         } else if (getPrivateLobbyLength() >= privateLimit) {
