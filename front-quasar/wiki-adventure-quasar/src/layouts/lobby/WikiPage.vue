@@ -223,7 +223,6 @@ import { defineComponent } from '@vue/composition-api';
 import WikiArticle from '../../mixins/wikiArticle';
 
 import scrollToID from '../../mixins/scrollToID';
-import { resolve } from 'dns';
 
 export default defineComponent({
   name: 'WikiPage',
@@ -248,6 +247,7 @@ export default defineComponent({
   },
   meta () {
     var vm = this as any;
+    if (!vm.endPage) return;
     return {
       title: "Wiki Adventure : " + vm.title
     }
