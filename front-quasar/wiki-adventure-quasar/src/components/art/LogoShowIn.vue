@@ -5,7 +5,8 @@
         <img src="svg/logoV1.svg" alt="wikipedia logo"/>
       </div>
     </div>
-    <div id="logoShowInTitle"><p>{{ title }}</p></div>
+    <img id="logoShowInTitle" src="svg/title.svg" alt="wikipedia adventure"/>
+    <!--<div id="logoShowInTitle"><p>{{ title }}</p></div>-->
   </div>
 </template>
 <style lang="scss">
@@ -49,48 +50,27 @@
   #logoShowInTitle {
     will-change: transform;
     position: absolute;
-    /*background: rgba(255, 0, 0, 0.1);*/
-    text-align: center;
-    margin-top: .5em;
-    font-size: 7vw;
-    transform: translate3d(0px, 0px, 0px);
+    top: 2em;
+    width: 75vmin;
+    transform: scale3d(1,1,1);
     animation: 6s ease-out 0.31s logoShowInBlurFadeIn;
     
   }
-  .body--dark {
-    #logoShowInTitle {
-      color: #cce7f8;
-      text-shadow: 0 0 6px rgba(182, 211, 207, 0.9),
-        0 0 30px rgba(182, 211, 207, 0.3), 0 0 12px rgba(18, 230, 238, 0.5),
-        0 0 21px rgba(18, 230, 238, 0.8), 0 0 34px rgba(18, 230, 238, 0.75),
-        0 0 54px rgba(18, 230, 238, 0.8);
-    }
-  }
-  .body--light {
-    #logoShowInTitle {
-      color: #ebf7ff;
-      text-shadow: 0 0 6px rgba(72, 84, 82, 0.9),
-        0 0 30px rgba(182, 211, 207, 0.3), 0 0 12px rgba(18, 230, 238, 0.5),
-        0 0 21px rgba(18, 230, 238, 0.8), 0 0 34px rgba(18, 230, 238, 0.75),
-        0 0 54px rgba(18, 230, 238, 0.8);
-    }
-  }
-
 
   @keyframes logoShowInBlurFadeIn {
     0% {
-      opacity: 0;
-      transform: scale(3);
+      opacity: 0.001;
+      transform: scale3d(1,1,1);
     }
     12% {
-      opacity: 0;
-      transform: scale(3);
+      opacity: 0.001;
+      transform: scale3d(3,3,1);
     }
     17% {
     }
     20% {
       opacity: 1;
-      transform: scale(1);
+      transform: scale3d(1,1,1);
     }
   }
   @keyframes logoShowInSpin {
