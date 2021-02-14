@@ -9,6 +9,11 @@
             "command": "cd front-quasar/wiki-adventure-quasar; quasar build"
         },
         {
+            "label": "Build debug Quasar front-end",
+            "type": "shell",
+            "command": "cd front-quasar/wiki-adventure-quasar; quasar build -d"
+        },
+        {
             "label": "Quasar dev",
             "type": "shell",
             "command": "cd front-quasar/wiki-adventure-quasar; quasar dev",
@@ -30,7 +35,7 @@
             "label": "Complete build",
             "dependsOn": [
                 "haxe: node.hxml",
-                "Build Quasar front-end"
+                "Build debug Quasar front-end"
             ]
         }
     ]
