@@ -185,13 +185,13 @@
       color: var(--w-color-dark-teal);
     }
     .notWikiLink {
-      filter: grayscale(0.75);
+      color: rgb(77, 104, 104);
     }
     .portal {
-      filter: hue-rotate(-35deg);
+      color: rgb(22, 130, 67);
     }
     .anchorLink {
-      filter: hue-rotate(45deg);
+      color: rgb(38, 72, 143);
     }
   }
   #wikiContent {
@@ -205,13 +205,13 @@
   .wikiPage {
     background: white;
     .notWikiLink {
-      filter: grayscale(0.25);
+      color: rgb(77, 104, 104);
     }
     .portal {
-      filter: hue-rotate(-90deg);
+      color: rgb(22, 130, 67);
     }
     .anchorLink {
-      filter: hue-rotate(25deg);
+      color: rgb(38, 72, 143);
     }
   }
 }    
