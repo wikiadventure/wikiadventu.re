@@ -1,5 +1,6 @@
 package controller.connect;
 
+import lobby.gameLoop.Classic;
 import response.SuccessResponse;
 import haxe.crypto.Sha256;
 import response.ErrorResponse;
@@ -27,7 +28,8 @@ class PrivateCreateController {
             var lobby = new Lobby(player.language, Private, passwordHash);
             lobby.giveID();// giveID method also add the lobby to the lobbylist
             lobby.connect(player, passwordHash);
-            lobby.waitPhase();
+            lobby.gameLoop = new Classic(lobby, 5);
+            lobby.gameLoop.start();
             var json:ConnectionResponse = {
                 status: Success,
                 lobbyID: Lobby.encodeID(lobby.id),

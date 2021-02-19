@@ -1,5 +1,6 @@
 package controller.connect.twitch;
 
+import lobby.gameLoop.Classic;
 import response.SuccessResponse;
 import lobby.player.Player;
 import controller.connect.twitch.TwitchConnectionRequest;
@@ -197,7 +198,7 @@ class TwitchController {
         var lobby = new TwitchLobby(player, passwordHash);
         lobby.giveID();// giveID method also add the lobby to the lobbylist
         lobby.join(player, passwordHash);
-        lobby.waitPhase();
+        lobby.gameLoop = new Classic(lobby, 5);
         return lobby;
     }
 }

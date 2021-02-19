@@ -6,7 +6,6 @@ import response.SuccessResponse;
 import lobby.Lobby;
 import js.node.http.ServerResponse;
 import js.node.http.IncomingMessage;
-
 using StringTools;
 
 class InfoController {
@@ -31,7 +30,7 @@ class InfoController {
                 lobbyLang: lobby.language,
                 slot: lobby.slot,
                 players: lobby.playerList.length,
-                state: lobby.state
+                state: lobby.gameLoop.currentPhase.type
 
             };
             new SuccessResponse(im, sr, Json.stringify(json));

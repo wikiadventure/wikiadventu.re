@@ -1,50 +1,33 @@
 package lobby;
 
+import lobby.player.Player;
+import lobby.gameLoop.Phase.PhaseType;
+import lobby.GameLoop;
 import controller.connect.error.ConnectError;
-import js.node.Querystring;
 import fileLog.Log;
 import js.node.Timers;
 import js.node.Timers.Timeout;
 import haxe.Timer;
-import haxe.Json;
-import js.lib.Promise;
-import js.node.Https;
 import haxe.io.Bytes;
 import config.Lang;
 import haxe.crypto.Base64;
-import lobby.wikiAPI.WikiRequest;
-import lobby.wikiAPI.WikiResponse;
-using lobby.player.Player;
-
+import lobby.gameLoop.Classic;
+using lobby.player.PlayersExtension;
+using Lambda;
 class Lobby {
     
     public var type:LobbyType;
-    public var state:LobbyState;
-    public var timeStampStateBegin:Float;
-    public var loop:Timeout;
+    public var gameLoop:GameLoop;
     public var heartbeat:Timeout;
 
-    public var startPage:String;
-    public var endPage:String;
     public var totalPlayer:Int = 0; //use to give an id to player when sending info with socket io
-
     public var slot:Int;
     public var id:Int;
     public var passwordHash:String;
     public var language:Lang;
     public var playerList:Array<Player>;
     public var owner(get, never):Player;
-    public function get_owner() {
-        return playerList[0];
-    }
-    
-    public var round:Int;
-    public var currentRound:Int;
-
-    public var playTimeOut:Int; //time in second before a round end automatically
-    public var voteTimeOut:Int; //time of the Voting state
-    public var roundFinishTimeOut:Int = 15; //time between the end of the play state and the begin of the vote state
-    public var gameFinishTimeOut:Int = 30;
+    public function get_owner() return playerList[0];
 
     public static var lobbyLimit:Int = 10000;
     public static var privateLimit:Int = 2000;
@@ -57,20 +40,13 @@ class Lobby {
         lobbyList = new Array<Lobby>();
     }
 
-    public function new(language : Lang, type:LobbyType, ?passwordHash:String, slot:Int=25, round:Int=5, playTimeOut:Int=600, voteTimeOut:Int=80) {
-        if (lobbyList.length >= lobbyLimit) {
-            throw ConnectError.LobbyLimitReached;
-        } else if (getPrivateLobbyLength() >= privateLimit) {
-            throw ConnectError.PrivateLobbyLimitReached;
-        }
+    public function new(language:Lang, type:LobbyType, ?passwordHash:String, slot:Int=25) {
+        if (lobbyList.length >= lobbyLimit) throw ConnectError.LobbyLimitReached;
+        else if (getPrivateLobbyLength() >= privateLimit) throw ConnectError.PrivateLobbyLimitReached;
         playerList = new Array<Player>();
         this.language = language;
         this.type = type;
         this.slot = slot;
-        this.round = round;
-        currentRound = 1;
-        this.playTimeOut = playTimeOut;
-        this.voteTimeOut = voteTimeOut;
         this.passwordHash = passwordHash;
         heartbeat = Timers.setInterval(function() {
             for (p in playerList) {
@@ -164,11 +140,11 @@ class Lobby {
         log("player left : " + player.uuid + " --> " + player.pseudo, PlayerData);
         if (playerList.length == 0) {
             log("No player left, closing the lobby", Info);
-            deleteLobby();
+            delete();
         }
     }
 
-    public function deleteLobby() {
+    public function delete() {
         log("delete the lobby", Info);
         Lobby.lobbyList.remove(this);
     }
@@ -215,21 +191,23 @@ class Lobby {
                 case Message:
                     playerList.emitMessage(player, sanitizeMessage(json.value));
                 case Validate:
-                    validateJump(player, json.value);
                 case Vote:
                     vote(player, json.value);
                 case ResetVote:
                     resetVote(player);
+                case VoteSkip:
+                    voteSkip(player);
             }
+            gameLoop.currentPhase.controller(player, json);
         } catch(e:Dynamic) {
             trace(e);
         }
     }
 
     public function start(player:Player) {
-        if (state != Waiting) return log("Game already start --> "  + player.uuid, LogType.Error);
+        if (gameLoop.currentPhase.type != Waiting) return log("Game already start --> "  + player.uuid, LogType.Error);
         if (player==owner) {
-            votePhase();
+            gameLoop.currentPhase.end();
         } else {
             log("Someone who is not owner tried to start --> " + player.uuid, LogType.Error);
         }
@@ -246,152 +224,18 @@ class Lobby {
     }
 
     public function sendCurrentState(player:Player) {
-        var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
-        if (state == Playing) {
-            player.currentPage = startPage;
-            [player].emitVoteResult(startPage, endPage);
-        }
+        var timeLeft = gameLoop.currentPhase.duration - (Timer.stamp() - gameLoop.timeStampStateBegin);
+        [player].emitGameState(gameLoop.currentPhase.type, gameLoop.currentRound, timeLeft);
         for (p in playerList) {
             if (p!=player) {
                 [player].emitPlayerJoin(p);
             }
         }
-        [player].emitGameState(state, currentRound, timeLeft);
+
     }
 
     /**
-     * get the current state duration
-     * @return Int current state duration in seconde
-     */
-    public function currentStateTimeOut():Int {
-        switch state {
-            case Waiting:
-                return 0;
-            case Playing:
-                return playTimeOut;
-            case Voting:
-                return voteTimeOut;
-            case RoundFinish:
-                return roundFinishTimeOut;
-            case GameFinish:
-                return gameFinishTimeOut;
-        }
-    }
-
-    /**
-     * check if the player jump is valid (when he click on a link to go to an another page)
-     * we ask the wikipedia api to do so
-     * @param player from which the data come from
-     * @param url 
-     */
-    public function validateJump(player:Player, url:String) {
-        if (player.currentPage == url || state != LobbyState.Playing) return;
-        var param:WikiRequest = {
-            action: "query",
-            format: "json",
-            titles: player.currentPage,
-            generator: "links",
-            redirects: 1,
-            formatversion: "2",
-            gpltitles: url
-        };
-        var encodedParam = "/w/api.php?" + Querystring.encode(param);
-        log(player.pseudo + " validation --> " + encodedParam, PlayerData);
-        log(player.pseudo + " --> url : " + url + " , pageList : " + player.pageList + " , currentPage : " + player.currentPage, PlayerData);
-        var oldPage = player.currentPage;
-        player.numberOfJump +=1;
-        player.currentPage = url;
-        var options:HttpsRequestOptions =  {
-            hostname: LangTools.getURL(language),
-            path: encodedParam,
-            method: 'POST',
-            headers: {
-                "Api-User-Agent":"wiki-adventure/1.1 (https://wiki-adventure.herokuapp.com/; benjamin.gilloury@gmail.com)",
-                'Accept': 'application/json',
-                'Content-type': "application/x-www-form-urlencoded"
-            }  
-        };
-        var validation:Promise<String>;
-        validation = new Promise<String>(
-            function(resolve, reject) {
-                var request = Https.request(options, function (response) {
-                    var body = '';
-                    response.on('data', function (chunk) {
-                        body = body + chunk;
-                    });
-                    response.on('end', function () {
-                        try {
-                            var wiki:WikiResponse = Json.parse(body);
-                            if (wiki.query == null) {
-                                onCheat(player, url, body, oldPage);
-                                reject("player " + player.uuid + " for cheat");
-                            } else {
-                                resolve(wiki.query.pages[0].title);
-                                player.validationBuffer.remove(validation);
-                            }
-                        } catch(e:Dynamic) {
-                            reject("Parsing error during the anti cheat validation --> " + e + " | \n" + encodedParam + " | \n" + body);
-                        }
-                    });
-                });
-                request.on('error', function (e) {
-                    reject("Wiki request error during the anti cheat validation --> " + e + " | \n" + encodedParam );
-                });
-                request.end();
-            }
-        );
-        player.validationBuffer.push(validation);
-        validation.then(
-            function(actualPage) {
-                checkWin(player, actualPage);
-            },
-            function(e:Dynamic) {
-                log(e, Error);
-            }
-        );
-        
-    }
-
-    public function checkWin(player:Player, actualPage:String) {
-        if (Querystring.unescape(actualPage) == endPage) {
-            Promise.all(player.validationBuffer).then(
-                function(value) {
-                    win(player);
-                }, function(reason) {
-                    log("player " + player.uuid + " cheat on final validation : ", PlayerData);     
-            }).catchError(
-                function(error) {
-                    log(error,Error);
-                }
-            );
-        } 
-    }
-
-    public function win(player:Player) {
-        startPage = null;
-        endPage = null;
-        var timeLeft = currentStateTimeOut() - (Timer.stamp() - timeStampStateBegin);
-        player.score += 500 + Std.int(timeLeft);
-        log("updateScore --> " +  player.id + "(" + player.pseudo + ") :" + player.score, PlayerData);
-        log("WinRound --> " +  player.id + "(" + player.pseudo + ")", PlayerData);
-        playerList.emitUpdateScore(player);
-        playerList.emitWinRound(player);
-        playerList.emitPath(player);
-        roundFinishPhase();
-    }
-
-    public function onCheat(player:Player, url:String, body:String, oldPage:String) {
-        log(body, PlayerData);
-        log(player.pseudo + " is cheating!", PlayerData);
-        log(oldPage + " --> " + url, PlayerData);
-        log(player.pageList, PlayerData);
-        playerList.emitMessage("it seems that " + player.pseudo + " is cheating! (or the anticheat system is broken)");
-        playerList.emitMessage(player.pseudo + "jump from " + player.currentPage + " to " + StringTools.urlDecode(url));
-    }
-
-    /**
-     * find the player from his socket
-     * and assign his vote to the [vote] variable of the player
+     * assign the vote to the [vote] variable of the player
      * PS: we don't verify if the title lead to something, we will in the [selectPage()] method
      * the client also do the verification so they are aware if there title lead to something
      * @param player from which the data come from
@@ -399,279 +243,16 @@ class Lobby {
      */
     public function vote(player:Player, content:String) {
         log("player vote : " + player.uuid + " --> " + player.pseudo + " | " + content, PlayerData);
+        if (content.length > 255) return;
         player.vote = content;
     }
 
     public function resetVote(player:Player) {
         player.vote = null;
     }
-
-    /**
-     * randomly pick a start page and a end page from each player vote
-     * if an player did not vote, we picked random page to replace his vote
-     * if there is only 1 player we picked an another random page
-     * start the play phase when the selection is completed
-     * TODO : pick a random page if start and end page are the same
-     * PS: NOT OPTIMISED but we do like that so in the future we can do a little drawing animation client side
-     */
-    public function selectPage(suggestionList:Array<String>) {
-        var promiseList = new Array<Promise<Bool>>();
-        var urlList = new Array<String>();
-        log("Starting page selection", Info);
-        for (i in 0...suggestionList.length) {
-            var title = suggestionList[i];
-            if (title != null) {
-                var promise = new Promise<Bool>(
-                    function (resolve, reject) {
-                        var param:WikiRequest = {
-                            action: "query",
-                            format: "json",
-                            formatversion: "2",
-                            list: "search",
-                            srlimit: 1,
-                            srnamespace: 0,
-                            srsearch: "intitle:"+title,
-                            srprop: ""
-                        };
-                        var encodedParam = "/w/api.php?" + Querystring.encode(param);
-                        var options:HttpsRequestOptions =  {
-                            hostname: LangTools.getURL(language),
-                            path: encodedParam,
-                            method: 'POST',
-                            headers: {
-                                "Api-User-Agent":"wiki-adventure/1.1 (https://wiki-adventure.herokuapp.com/; benjamin.gilloury@gmail.com)",
-                                'Accept': 'application/json',
-                                'Content-type': "application/x-www-form-urlencoded"
-                            } 
-                        };
-                        var request = Https.request(options, function (response) {
-                            response.on('data', function (data) {
-                                try {
-                                    var parsed:WikiResponse = Json.parse(data);
-                                    if (parsed.query.searchinfo.totalhits == 0) {
-                                        getRandomURL(urlList, resolve, reject);
-                                    } else {
-                                        urlList.push(parsed.query.search[0].title);
-                                        resolve(true);
-                                    }
-                                } catch(e:Dynamic) {
-                                    reject("SEVERE server Error : " + e);
-                                }
-                            });
-                        });
-                        request.on('error', function (e) {
-                            log("page selection : " + e, Error);
-                        });
-                        request.end();
-                    }
-                );
-                promiseList.push(promise);
-            } else {
-                var promise = new Promise<Bool>(
-                    function (resolve, reject) {
-                        getRandomURL(urlList, resolve, reject);
-                    }
-                );
-                promiseList.push(promise);
-            }
-        }
-        if (suggestionList.length < 2) {
-            var promise = new Promise<Bool>(
-                function (resolve, reject) {
-                    getRandomURL(urlList, resolve, reject);
-                }
-            );
-            promiseList.push(promise);
-        }
-        Promise.all(promiseList).then(
-            function(value) {
-                var randomStart = Std.random(urlList.length);
-                startPage = urlList[randomStart];
-                urlList.remove(startPage);
-                var randomEnd:Int;
-                do {
-                    randomEnd = Std.random(urlList.length);
-                    endPage = urlList[randomEnd];
-                    urlList.remove(endPage);
-                } while (endPage == startPage && urlList.length > 0);
-                if (endPage == startPage) {
-                    var promise = new Promise<Bool>(
-                        function (resolve, reject) {
-                            getRandomURL(urlList, resolve, reject);
-                        }
-                    ).then(function(value) {
-                        startPage = urlList[0];
-                        onSelectPageFinish();
-                    });
-                } else {
-                    onSelectPageFinish();
-                }
-            }, function(reason) {
-                log("SEVERE something wrong append during page selection : " + reason, Error);
-        });
-    }
-
-    public function onSelectPageFinish() {
-        log("Start page : " + startPage, Info);
-        log("End page : " + endPage, Info);
-        playPhase();
-    }
-
-    /**
-     * start the voting phase
-     * and call selectPage when the timer run out
-     */
-     public function waitPhase() {
-        if(playerList.length == 0) return;
-        state = Waiting;
-        initNewPhase();
-        playerList.emitSetOwner();
-    }
-    /**
-     * start the voting phase
-     * and call selectPage when the timer run out
-     */
-     public function votePhase() {
-        if(playerList.length == 0) return;
-        state = Voting;
-        playerList.pageHistoryReset();
-        playerList.voteReset();
-        initNewPhase();
-        loop = Timers.setTimeout(function () {
-            var suggestionList = new Array<String>();
-            for (player in playerList) {
-                suggestionList.push(player.vote);
-            }
-            selectPage(suggestionList);
-        },currentStateTimeOut()*1000);
-    }
-
-
-    /**
-     * set the current page of each player to the starting one who get the picked in the voting phase
-     * send the starting and ending page to the client
-     * start the playing phase
-     * and start the interlude phase when the timer run out
-     */
-    public function playPhase() {
-        if (playerList.length == 0) return;
-        for (player in playerList) {
-            player.currentPage = startPage;
-        }
-        playerList.emitVoteResult(startPage, endPage);
-        state = Playing;
-        initNewPhase();
-        loop = Timers.setTimeout(function () {
-            playPhaseEnd();
-        },currentStateTimeOut()*1000);
-    }
-
-    public function playPhaseEnd() {
-        for (player in playerList) {
-            player.vote = null;
-        }
-        roundFinishPhase();
-    }
-
-    public function gameFinishPhase() {
-        if (playerList.length == 0) return;
-        currentRound = 1;
-        state = GameFinish;
-        initNewPhase();
-        loop = Timers.setTimeout(function () {
-            playerList.resetScore();
-            if (type == Public) {
-                votePhase();
-            } else {
-                waitPhase();
-            }
-        },currentStateTimeOut()*1000);
-
-    }
-
-    /**
-     * start the interlude phase between the voting and playing phase
-     * and start the voting phase when the timer run out
-     */
-    public function roundFinishPhase() {
-        if (state == RoundFinish) return;
-        if (playerList.length == 0) return;
-        Timers.clearTimeout(loop);
-        state = RoundFinish;
-        initNewPhase();
-        currentRound++;
-        loop = Timers.setTimeout(function () {        
-            if (currentRound > round) {
-                gameFinishPhase();
-                return;
-            }
-            votePhase();
-        },currentStateTimeOut()*1000);
-    }
-    /**
-     * refresh the [timeStampBegin] variable
-     * and send the state time to the client
-     */
-    public function initNewPhase() {
-        Timers.clearTimeout(loop);
-        timeStampStateBegin = Timer.stamp();
-        playerList.emitGameState(state, currentRound, currentStateTimeOut());
-        log("New phase init : " + state +"|" + currentRound + "|" + currentStateTimeOut(), Info);
-    }
-
-    /**
-     * request the wikipedia api and get a random page
-     * @param urlList the list on wich we will add the random url if nothing go wrong
-     * @param resolve the promise resolve
-     * @param reject the promise reject
-     */
-    public function getRandomURL(urlList:Array<String>, resolve:(value:Bool) -> Void, reject:(reason:Dynamic) -> Void) {
-        var param:WikiRequest = {
-            action: "query",
-            format: "json",
-            formatversion: "2",
-            list: "random",
-            rnnamespace: 0,
-            rnlimit: 1,
-        };
-        var encodedParam = "/w/api.php?" + Querystring.encode(param);
-        var options:HttpsRequestOptions =  {
-            hostname: LangTools.getURL(language),
-            path: encodedParam,
-            method: 'POST',
-            headers: {
-                "Api-User-Agent":"wiki-adventure/1.1 (https://wiki-adventure.herokuapp.com/; benjamin.gilloury@gmail.com)",
-                'Accept': 'application/json',
-                'Content-type': "application/x-www-form-urlencoded"
-            } 
-        };
-        var request = Https.request(options, function (response) {
-            response.on('data', function (data) {
-                try {
-                    var parsed:WikiResponse = Json.parse(data);
-                    urlList.push(parsed.query.random[0].title);
-                    log("success : random page " + parsed.query.random[0].title, Info);
-                    resolve(true);
-
-                } catch(e:Dynamic) {
-                    log("random page request fail : " + e, Error);
-                    reject("SEVERE server Error : " + e);
-                }   
-            });
-        });
-        request.on('error', function (e) {
-            log("Wiki request error : " + e, Error);
-        });
-        request.end();
-
-    }
-    public var encodedID(get, never):String;
-    /**
-     * get the lobbyId to string
-     * @return Int
-     */
-     public function get_encodedID():String {
-        return Lobby.encodeID(id);
+    public function voteSkip(player:Player) {
+        playerList.emitVoteSkip(player);
+        if (playerList.foreach((p) -> p.voteSkip)) gameLoop.currentPhase.end();
     }
 
     /**
@@ -692,7 +273,7 @@ class Lobby {
         var lobby = new Lobby(player.language, Public);
         lobby.giveID();// giveID method also add the lobby to the lobbylist
         lobby.connect(player);
-        lobby.votePhase();
+        lobby.gameLoop = new Classic(lobby, 5);
         return lobby;
     }
 
@@ -753,6 +334,7 @@ enum abstract WebsocketPackageType(String) {
     var Vote;
     var ResetVote;
     var Validate;
+    var VoteSkip;
 }
 
 enum abstract LogType(String) {
@@ -766,12 +348,4 @@ enum abstract LobbyType(String) {
     var Public;
     var Private;
     var Twitch;
-}
-
-enum abstract LobbyState(String) {
-    var Waiting;
-    var Voting;
-    var Playing;
-    var RoundFinish;
-    var GameFinish;
 }

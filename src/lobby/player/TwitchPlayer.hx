@@ -7,6 +7,7 @@ import twitch.AuthProvider;
 import twitch_chat_client.ChatClient;
 import config.Lang;
 import twitch.HelixPrivilegedUser;
+import lobby.gameLoop.Phase.PhaseType;
 
 class TwitchPlayer extends Player {
     
@@ -29,7 +30,7 @@ class TwitchPlayer extends Player {
         if (twitchLobby == null || user == TwitchCredential.botUsername) return;
         if (msg.length > 231) return;
         msg = StringTools.trim(msg);
-        if (StringTools.startsWith(msg, "!vote ") && twitchLobby.state == Voting) {
+        if (StringTools.startsWith(msg, "!vote ") && twitchLobby.gameLoop.currentPhase.type  == Voting) {
             twitchLobby.log(user + " from " + channel + " submitted this vote :", Info);
             if (twitchLobby.suggestionList.length < TwitchLobby.suggestionLimit) {
                 var title = msg.substr(6);

@@ -22,8 +22,8 @@ class TwitchLobby extends Lobby {
     public var twitchPlayerList:Array<TwitchPlayer>;
     public var suggestionList:Array<String>;
 
-    public function new(player:TwitchPlayer, passwordHash:String, slot:Int=15, round:Int=3, playTimeOut:Int=600, voteTimeOut:Int=30) {
-        super(player.language, Twitch, passwordHash, slot, round, playTimeOut, voteTimeOut);
+    public function new(player:TwitchPlayer, passwordHash:String, slot:Int=15) {
+        super(player.language, Twitch, passwordHash, slot);
         twitchPlayerList = new Array<TwitchPlayer>();
         suggestionList = new Array<String>();
         name = player.twitchUser.name;
@@ -44,26 +44,7 @@ class TwitchLobby extends Lobby {
         lobbyList.insert(pos,this);
         log("create the lobby", Info);
     }
-
-    public override function playPhaseEnd() {
-        suggestionList = new Array<String>();
-        super.playPhaseEnd();
-    }
-
-    /**
-     * start the voting phase
-     * and call selectPage when the timer run out
-     */
-    public override function votePhase() {
-        twitchPlayerList.sayAll("Vote phase open! You can vote for a wiki page with command !vote YourVote");
-        super.votePhase();
-    }
-
-    public override function playPhase() {
-        twitchPlayerList.sayAll("Vote phase closed !");
-        super.playPhase();
-    }
-
+    
     public function join(twitchPlayer:TwitchPlayer, passwordHash:String) {
         if (this.passwordHash != passwordHash) throw "invalid Password";
         twitchPlayer.twitchLobby = this;

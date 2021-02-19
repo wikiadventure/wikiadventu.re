@@ -1,6 +1,6 @@
 package controller.info;
 
-import lobby.Lobby.LobbyState;
+import lobby.gameLoop.Phase.PhaseType;
 import lobby.Lobby.LobbyType;
 import config.Lang;
 
@@ -11,7 +11,7 @@ typedef InfoResponse = {
     ?lobbyLang:Lang,
     ?slot:Int,
     ?players:Int,
-    ?state:LobbyState,
+    ?state:PhaseType,
     ?error:String
 }
 
