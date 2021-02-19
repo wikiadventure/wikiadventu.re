@@ -1,7 +1,7 @@
 <template>
   <div>
     <game-slide-menu ref="gameMenu"/>
-    <wait v-if="lobbyState == 'Waiting'" />
+    <wait v-if="lobbyState == 0" />
     <wiki-page ref="wikiPage" v-else />
     <transition name="fade"><wiki-page v-show="showEndPage" endPage/></transition>
     <transition name="fade"><page-history v-show="showPageHistory" /></transition>
@@ -59,6 +59,7 @@ export default defineComponent({
     loseAudio:HTMLAudioElement | null,
     countDownAudio:HTMLAudioElement | null,
     notifAudio:HTMLAudioElement | null,
+    onDestroy:() => void,
     unsubscribeAction:() => void,
     unsubscribeMutation:() => void
   } {
@@ -71,6 +72,7 @@ export default defineComponent({
       loseAudio: null,
       countDownAudio: null,
       notifAudio: null,
+      onDestroy: () => {},
       unsubscribeAction: () => {},
       unsubscribeMutation:() => {}
     }
@@ -113,15 +115,15 @@ export default defineComponent({
     manageScreen(payload:ManageScreenEvent) {
       switch (payload.target) {
         case "game-menu":
-          return this.gameMenu = payload.state;
+          return this.gameMenu = payload.state != null ? payload.state : !this.gameMenu;
         case "round-win":
-          return this.showRoundWin = payload.state;
+          return this.showRoundWin = payload.state != null ? payload.state : !this.showRoundWin;
         case "page-history":
-          return this.showPageHistory = payload.state;
+          return this.showPageHistory = payload.state != null ? payload.state : !this.showPageHistory;
         case "leaderboard":
-          return this.showLeaderboard = payload.state;
+          return this.showLeaderboard = payload.state != null ? payload.state : !this.showLeaderboard;
         case "wiki-end-page":
-          return this.showEndPage = payload.state;
+          return this.showEndPage = payload.state != null ? payload.state : !this.showEndPage;
         default: return;
       }
     },
@@ -204,8 +206,19 @@ export default defineComponent({
           return this.onMute(mutation.payload);
       }
     });
+    function keyDown(e:KeyboardEvent) {
+      if (e.defaultPrevented) return;
+      if (e.key == "Space" && e.ctrlKey) {
+        vm.showEndPage = !vm.showEndPage;
+      }
+    }
+    document.body!.addEventListener("keydown", keyDown, false);
+    this.onDestroy = function () {
+      document.body!.removeEventListener("keydown", keyDown, false);
+    }
   },
   beforeDestroy() {
+    this.onDestroy();
     this.$store.dispatch('gameData/reset');
     this.unsubscribeAction!();
     this.unsubscribeMutation!();

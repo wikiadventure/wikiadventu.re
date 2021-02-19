@@ -1,7 +1,7 @@
 <template>
   <section class="wikiPage absolute-full" :id="endPage ? 'endPage' : 'wikiPage'">
+    <exit-btn class="q-ma-md" v-if="endPage" target="wiki-end-page"/>
     <div id="wikiCore">
-      <exit-btn v-if="endPage" target="wiki-end-page"/>
       <h1 id="wikiTitle">{{ title }}</h1>
       <div id="wikiMain">
         <div id="wikiContent" v-html="content" :class="{ safeMode: safeMode }"></div>
@@ -11,9 +11,6 @@
 </template>
 <style lang="scss">
 .wikiPage {
-  overflow-x: hidden;
-  overflow-y: scroll;
-  padding: 15px;
   overflow-wrap: break-word;
   opacity: 1;
   transition: opacity ease-in-out 0.1s;
@@ -22,7 +19,10 @@
   text-align: center;
 }
 #wikiCore {
+  overflow-y: scroll;
   width: 100%;
+  height: 100%;
+  padding: 15px;
   h1 {
     font-size: 4rem;
     margin: 20px auto;

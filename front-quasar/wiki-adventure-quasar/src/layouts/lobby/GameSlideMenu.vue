@@ -81,7 +81,7 @@
   transform: rotate(0deg);
   cursor: pointer;
   @media(max-width: 720px) {
-    display: none;
+    //display: none;
   }
 }
 #showMenu:checked + #slideMenu #labelShowMenu {
@@ -126,6 +126,7 @@ import ScoreTabPanel from "./tab/ScoreTabPanel.vue";
 import SettingTabPanel from "./tab/SettingTabPanel.vue";
 
 import { defineComponent } from '@vue/composition-api';
+import { ManageScreenEvent } from "../../mixins/manageScreen";
 
 export default defineComponent({
   name: 'GameSlideMenu',

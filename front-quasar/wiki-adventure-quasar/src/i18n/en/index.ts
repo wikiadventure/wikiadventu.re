@@ -63,11 +63,11 @@ export default {
     leaderboard: "Leaderboard"
   },
   phase: {
-    Waiting: "Waiting player",
-    Voting: "Voting",
-    Playing: "Searching",
-    RoundFinish: "Result",
-    GameFinish: "Game end",
+    0: "Waiting player",
+    1: "Voting",
+    2: "Searching",
+    3: "Result",
+    4: "Game end",
     notify: {
       Voting: "Voting phase started. You can now submit your suggestions!",
       Playing: "Searching phase started. Be the first to reach the end page!"

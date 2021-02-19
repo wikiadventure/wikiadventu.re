@@ -35,6 +35,7 @@ export interface Player {
   id: number;
   score: number;
   winStreak: number;
+  voteSkip:boolean;
   isConnected:boolean;
 }
 
@@ -45,11 +46,11 @@ export interface Message {
 }
 
 export enum LobbyState {
-  Waiting = "Waiting",
-  Voting = "Voting",
-  Playing = "Playing",
-  RoundFinish = "RoundFinish",
-  GameFinish = "GameFinish"
+  Waiting,
+  Voting,
+  Playing,
+  RoundFinish,
+  GameFinish
 }
 
 const state: GameData = {
@@ -85,7 +86,8 @@ export enum LobbyEventType {
   UpdateScore = "UpdateScore",
   WinRound = "WinRound",
   Message = "Message",
-  Path = "Path"
+  Path = "Path",
+  VoteSkip = "VoteSkip"
 }
 
 export interface LobbyEvent<T> {
@@ -96,6 +98,7 @@ export interface PlayerJoin {
   pseudo:string,
   id:number,//The player id
   score:number,
+  voteSkip:boolean,
   self:boolean
 }
 export interface Path {
@@ -111,6 +114,10 @@ export interface PlayerLeft {
 export interface VoteResult {
   start:string,
   end:string
+}
+export interface VoteSkip {
+  id:number, //The player id who skip
+  state:boolean
 }
 export interface GameState {
   state:LobbyState,

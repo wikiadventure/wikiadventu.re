@@ -1,7 +1,7 @@
 import { store } from 'quasar/wrappers';
 import { Lang } from 'src/i18n';
 import { MutationTree } from 'vuex';
-import { GameData, GameState, LobbyType, Message, Player, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, WinRound, WsMessage } from './state';
+import { GameData, GameState, LobbyType, Message, Player, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, VoteSkip, WinRound, WsMessage } from './state';
 
 const mutation: MutationTree<GameData> = {
   setLang(state:GameData, l:Lang) {
@@ -17,8 +17,15 @@ const mutation: MutationTree<GameData> = {
     state.lobbyType = type;
   },
   path(state:GameData, a:string[]) {
-    console.log("mutation : received !");
     state.winnerPageHistory = a;
+  },
+  voteSkip(state:GameData, p:VoteSkip) {
+    for(var player of state.players) {
+      if (player.id == p.id) {
+        player.voteSkip = p.state;
+        return;
+      }
+    }
   },
   setOwner(state:GameData, o:number) {
     state.owner = o;
@@ -37,6 +44,7 @@ const mutation: MutationTree<GameData> = {
       id: p.id,
       score: p.score,
       winStreak: 0,
+      voteSkip: p.voteSkip,
       isConnected: true
     }
     if (p.self) state.self = p.id;
@@ -63,6 +71,7 @@ const mutation: MutationTree<GameData> = {
     }
   },
   gameState(state:GameData, g:GameState) {
+    state.players.forEach(p => p.voteSkip = false);
     state.lobbyState = g.state;
     state.round = g.round;
     state.timeLeft = g.time;

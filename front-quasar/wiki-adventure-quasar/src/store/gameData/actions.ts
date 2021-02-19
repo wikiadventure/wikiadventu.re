@@ -1,7 +1,7 @@
 import { Lang } from 'src/i18n';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
-import { GameData, GameState, LobbyEvent, LobbyEventType, LobbyState, LobbyType, Path, PlayerJoin, PlayerLeft, SetOwner, UpdateScore, VoteResult, WinRound, WsMessage } from './state';
+import { GameData, GameState, LobbyEvent, LobbyEventType, LobbyState, LobbyType, Path, PlayerJoin, PlayerLeft, SetOwner, UpdateScore, VoteResult, VoteSkip, WinRound, WsMessage } from './state';
 
 const actions: ActionTree<GameData, StateInterface> = {
   connect({ commit, dispatch, state }) {
@@ -42,6 +42,9 @@ const actions: ActionTree<GameData, StateInterface> = {
         };
         case LobbyEventType.Path: {
           return dispatch('onPath', json.data);
+        };
+        case LobbyEventType.VoteSkip: {
+          return dispatch('onVoteSkip', json.data);
         };
         default: {
           return;
@@ -87,8 +90,10 @@ const actions: ActionTree<GameData, StateInterface> = {
     commit('setOwner', data.id);
   },
   onPath({ commit }, data:Path) {
-    console.log("action : received !");
     commit('path', data.pages);
+  },
+  onVoteSkip({ commit }, data:VoteSkip) {
+    commit('voteSkip', data);
   },
   sendStart({ state }) {
     var json:WebsocketPackage = {
@@ -113,6 +118,12 @@ const actions: ActionTree<GameData, StateInterface> = {
   resetVote({ state }) {
     var json:WebsocketPackage = {
       type: WebsocketPackageType.ResetVote
+    };
+    state.ws?.send(JSON.stringify(json));
+  },
+  voteSkip({ state }) {
+    var json:WebsocketPackage = {
+      type: WebsocketPackageType.VoteSkip
     };
     state.ws?.send(JSON.stringify(json));
   },
@@ -155,7 +166,8 @@ enum WebsocketPackageType {
   Message = "Message",
   Vote = "Vote",
   ResetVote = "ResetVote",
-  Validate = "Validate"
+  Validate = "Validate",
+  VoteSkip = "VoteSkip"
 }
 
 export default actions;

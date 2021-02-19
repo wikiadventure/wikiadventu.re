@@ -1,7 +1,7 @@
 <template>
   <div id="settingTab" class="col">
     <div class="row justify-evenly q-ma-none"><h3>{{ $t('settingTab.settings') }}</h3></div>
-    <div class="row justify-evenly"><fullscreen-switch/><theme-switch/></div>
+    <div class="row justify-evenly"><fullscreen-switch class="action-btn"/><theme-switch/></div>
     <div class="row justify-evenly items-end"><p>SafeMode : </p><safe-mode-switch/></div>
     <lang-switch/>
     <volume-slider/>
