@@ -2,7 +2,7 @@
   <q-layout class="gameSlideMenu">
     <input id="showMenu" type="checkbox" v-model="showMenu"/>
     <div id="slideMenu">
-      <label @click.stop="showMenu = !showMenu" id="labelShowMenu"><q-icon size="md" name="mdi-play"/></label>
+      <label @click.stop="showMenu = !showMenu" id="labelShowMenu"><q-icon size="md" name="mdi-play"/><q-badge color="teal" transparent :label="unseenMessagesNumber" floating v-show="unseenMessagesNumber != '0'" /></label>
       <q-tab-panels class="content" v-model="tab" animated>
         <q-tab-panel name="chat" class="q-pa-none">
           <chat-tab-panel ref="chatTab"></chat-tab-panel>
@@ -27,7 +27,7 @@
               indicator-color="primary"
               align="justify"
               narrow-indicator>
-        <q-tab name="chat" icon="mdi-android-messages" @click="updateSeenMessage()"><q-badge color="teal" floating v-show="unseenMessagesNumber != '0'">{{ unseenMessagesNumber }}</q-badge></q-tab><!-- or icon="mdi-chat" -->
+        <q-tab name="chat" icon="mdi-android-messages" @click="updateSeenMessage()"><q-badge color="teal" transparent :label="unseenMessagesNumber" floating v-show="unseenMessagesNumber != '0'" /></q-tab><!-- or icon="mdi-chat" -->
         <q-tab name="score" icon="mdi-crown"></q-tab>
         <q-tab name="game" icon="mdi-gamepad"></q-tab>
         <q-tab name="setting" icon="mdi-cog"></q-tab>
@@ -78,13 +78,20 @@
 	position: absolute;
 	left: 100%;
 	transition: all ease-in-out 0.2s;
-  transform: rotate(0deg);
+  .q-icon {
+    transform: rotate(0deg);
+    transition: inherit;
+  }
+  .q-badge {
+    bottom: -4px;
+    top: unset;
+  }
   cursor: pointer;
   @media(max-width: 720px) {
     //display: none;
   }
 }
-#showMenu:checked + #slideMenu #labelShowMenu {
+#showMenu:checked + #slideMenu #labelShowMenu .q-icon {
   transform: rotate(180deg);
 }
 .body--dark {
