@@ -108,14 +108,23 @@ const actions: ActionTree<GameData, StateInterface> = {
     };
     state.ws?.send(JSON.stringify(json));
   },
-  sendVote({ state }, data) {
+  sendVote({ state }, vote) {
+    fetch("https://" + state.lang + ".wikipedia.org/w/api.php?action=query&origin=*&list=search&srlimit=1&srnamespace=0&srsearch=intitle:" + encodeURIComponent(vote) + "&format=json&srprop=")
+      .then(function(response){return response.json();})
+      .then(function(response) {
+        var trueTitle;
+        if (typeof response.query.search[0] === 'undefined') trueTitle = "no page found";
+        else trueTitle = response.query.search[0].title;
+        state.vote = vote + " → " + trueTitle;
+    });
     var json:WebsocketPackage = {
       type: WebsocketPackageType.Vote,
-      value: data
+      value: vote
     };
     state.ws?.send(JSON.stringify(json));
   },
-  resetVote({ state }) {
+  resetVote({ commit, state }) {
+    commit('deleteVote');
     var json:WebsocketPackage = {
       type: WebsocketPackageType.ResetVote
     };

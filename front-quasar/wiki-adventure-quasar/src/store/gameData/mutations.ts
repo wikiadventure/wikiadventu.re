@@ -87,6 +87,9 @@ const mutation: MutationTree<GameData> = {
       }
     }, 100);
   },
+  deleteVote(state:GameData) {
+    state.vote = null;
+  },
   winRound(state:GameData, w:WinRound) {
     state.winnerId = w.id;
   },

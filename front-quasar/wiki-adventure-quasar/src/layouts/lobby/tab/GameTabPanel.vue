@@ -44,11 +44,14 @@ export default defineComponent({
   data() {
     var vm = this as any;
     return {
-      vote: vm.$t('gameTab.randomPage'),
       voteInput: ""
     }
   },
   computed: {
+    vote():string {
+      var v = this.$store.state.gameData.vote != null ? this.$store.state.gameData.vote : this.$t('gameTab.randomPage');  
+      return v;
+    },
     startPage():string {
       return this.$store.state.gameData.startPage;
     },
@@ -75,21 +78,10 @@ export default defineComponent({
     submitVote(e:Event) {
       var vm:any = this;
       vm.$store.dispatch('gameData/sendVote', vm.voteInput);
-      fetch("https://" + vm.$store.state.gameData.lang + ".wikipedia.org/w/api.php?action=query&origin=*&list=search&srlimit=1&srnamespace=0&srsearch=intitle:" + encodeURIComponent(vm.voteInput) + "&format=json&srprop=")
-        .then(function(response){return response.json();})
-        .then(function(response) {
-          var trueTitle;
-          if (typeof response.query.search[0] === 'undefined') trueTitle = "no page found";
-          else trueTitle = response.query.search[0].title;
-          vm.vote = vm.voteInput + " → " + trueTitle;
-          vm.voteInput = "";
-        });
-        return;
     },
     resetVote(e:Event) {
       var vm:any = this;
       vm.$store.dispatch('gameData/resetVote');
-      vm.vote = vm.$t('gameTab.randomPage');
     },
     voteSkip(e:Event) {
       var vm:any = this;

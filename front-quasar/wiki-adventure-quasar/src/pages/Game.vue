@@ -138,7 +138,7 @@ export default defineComponent({
           setTimeout(() => {vm.showLeaderboard = false}, payload.time*1000);
           return;
         case LobbyPhase.Voting:
-          vm.$refs.gameMenu.$refs.gameTab.vote = vm.$t('gameTab.randomPage');
+          vm.$store.commit('gameData/deleteVote');
           vm.showPageHistory = false;
           vm.gameMenu = true;
           if (payload.time > 3) setTimeout(() => {vm.countDownAudio.play()}, payload.time*1000-3000);

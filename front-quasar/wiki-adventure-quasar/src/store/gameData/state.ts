@@ -11,13 +11,14 @@ export interface GameData {
   uuid: string;
   lang: Lang;
   lobbyType: LobbyType;
-  startPage: string;
   lobbyPhase: LobbyPhase;
   stateCounter: NodeJS.Timeout;
   round: number;
   timeLeft: number;
   timeStamp: number;
+  startPage: string;
   endPage: string;
+  vote: string,
   lobbyID: string;
   owner:number;//id the owner player
   self: number;//id the player
@@ -66,6 +67,7 @@ const state: GameData = {
   timeStamp: 0,
   startPage: "",
   endPage: "",
+  vote: null,
   winnerPageHistory: [],
   players: [],
   messages: [],
