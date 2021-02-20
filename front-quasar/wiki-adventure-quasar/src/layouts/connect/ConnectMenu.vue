@@ -132,7 +132,7 @@ import Index from "../../layouts/menu/Index.vue";
 
 import { defineComponent } from '@vue/composition-api';
 import { ConnectEvent, ConnectType } from "../../mixins/connectEvent";
-import { LobbyState, LobbyType } from "../../store/gameData/state";
+import { LobbyPhase, LobbyType } from "../../store/gameData/state";
 import { Lang } from '../../i18n';
 
 export default defineComponent({
@@ -310,7 +310,7 @@ interface InfoResponse {
     lobbyLang?:Lang,
     slot?:number,
     players?:number,
-    state?:LobbyState,
+    state?:LobbyPhase,
     error?:String
 }
 enum InfoStatus {

@@ -1,7 +1,7 @@
 import { Lang } from 'src/i18n';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
-import { GameData, GameState, LobbyEvent, LobbyEventType, LobbyState, LobbyType, Path, PlayerJoin, PlayerLeft, SetOwner, UpdateScore, VoteResult, VoteSkip, WinRound, WsMessage } from './state';
+import { GameData, GameState, LobbyEvent, LobbyEventType, LobbyPhase, LobbyType, Path, PlayerJoin, PlayerLeft, SetOwner, UpdateScore, VoteResult, VoteSkip, WinRound, WsMessage } from './state';
 
 const actions: ActionTree<GameData, StateInterface> = {
   connect({ commit, dispatch, state }) {
@@ -141,7 +141,7 @@ const actions: ActionTree<GameData, StateInterface> = {
     state.lang = Lang.en;
     state.lobbyType = LobbyType.Public;
     state.lobbyID = "";
-    state.lobbyState = LobbyState.Voting;
+    state.lobbyPhase = LobbyPhase.Voting;
     state.stateCounter = undefined;
     state.round = 0;
     state.timeLeft = 0;

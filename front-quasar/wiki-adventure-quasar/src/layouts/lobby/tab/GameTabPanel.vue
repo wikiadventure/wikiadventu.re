@@ -1,7 +1,7 @@
 <template>
   <div id="gameTab">
     <div class="row q-ma-md"><h3 class="q-ma-none col-grow text-center">{{ $t('gameTab.round') }} {{ round }}</h3></div>
-    <div class="row items-baseline q-ma-sm"><h4 class="q-ma-none col-strech">{{ $t('gameTab.phase') }}</h4><h5 class="q-ma-none q-ml-sm text-center col-grow">{{ $t('phase.'+lobbyState) }}</h5></div>
+    <div class="row items-baseline q-ma-sm"><h4 class="q-ma-none col-strech">{{ $t('gameTab.phase') }}</h4><h5 class="q-ma-none q-ml-sm text-center col-grow">{{ $t('phase.'+lobbyPhase) }}</h5></div>
     <q-separator spaced="lg"/>
     <div class="row items-baseline q-ma-sm"><h4 class="q-ma-none col-strech">{{ $t('gameTab.timeLeft') }}</h4><h5 class="q-ma-none q-ml-sm text-center col-grow">{{ timeLeft }}</h5></div>
     <q-separator  spaced="lg"/>
@@ -55,8 +55,8 @@ export default defineComponent({
     endPage():string {
       return this.$store.state.gameData.endPage;
     },
-    lobbyState():string {
-      return this.$store.state.gameData.lobbyState;
+    lobbyPhase():string {
+      return this.$store.state.gameData.lobbyPhase;
     },
     round():string {
       return this.$store.state.gameData.round;

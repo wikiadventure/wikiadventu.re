@@ -1,7 +1,7 @@
 <template>
   <div>
     <game-slide-menu ref="gameMenu"/>
-    <wait v-if="lobbyState == 0" />
+    <wait v-if="lobbyPhase == 0" />
     <wiki-page ref="wikiPage" v-else />
     <transition name="fade"><wiki-page v-show="showEndPage" endPage/></transition>
     <transition name="fade"><page-history v-show="showPageHistory" /></transition>
@@ -41,7 +41,7 @@ import Leaderboard from "../layouts/lobby/screen/Leaderboard.vue";
 import Wait from "../layouts/lobby/screen/Wait.vue";
 import PageHistory from "../layouts/lobby/screen/PageHistory.vue";
 
-import { GameState, LobbyState, Player, VoteResult, WinRound, WsMessage } from "../store/gameData/state";
+import { GameState, LobbyPhase, Player, VoteResult, WinRound, WsMessage } from "../store/gameData/state";
 
 import  { ManageScreenEvent } from "../mixins/manageScreen";
 
@@ -89,8 +89,8 @@ export default defineComponent({
     winner():Player {
       return this.$store.getters.gameData.winner;
     },
-    lobbyState():LobbyState {
-      return this.$store.state.gameData.lobbyState;
+    lobbyPhase():LobbyPhase {
+      return this.$store.state.gameData.lobbyPhase;
     },
     gameMenu: {
       get: function ():Boolean {
@@ -129,25 +129,25 @@ export default defineComponent({
     },
     onGameState(payload:GameState) {
       var vm = this as any;
-      switch (payload.state) {
-        case LobbyState.RoundFinish:
+      switch (payload.phase) {
+        case LobbyPhase.RoundFinish:
           if (!vm.winner) return;
           return;
-        case LobbyState.GameFinish:
+        case LobbyPhase.GameFinish:
           vm.showLeaderboard = true;
           setTimeout(() => {vm.showLeaderboard = false}, payload.time*1000);
           return;
-        case LobbyState.Voting:
+        case LobbyPhase.Voting:
           vm.$refs.gameMenu.$refs.gameTab.vote = vm.$t('gameTab.randomPage');
           vm.showPageHistory = false;
           vm.gameMenu = true;
           if (payload.time > 3) setTimeout(() => {vm.countDownAudio.play()}, payload.time*1000-3000);
           return;
-        case LobbyState.Playing:
+        case LobbyPhase.Playing:
           vm.$q.notify({
             type: 'annonce',
             position: 'bottom-right',
-            message: vm.$t('phase.notify.'+payload.state) as string
+            message: vm.$t('phase.notify.'+payload.phase) as string
           });
           return;
       }

@@ -72,7 +72,7 @@ const mutation: MutationTree<GameData> = {
   },
   gameState(state:GameData, g:GameState) {
     state.players.forEach(p => p.voteSkip = false);
-    state.lobbyState = g.state;
+    state.lobbyPhase = g.phase;
     state.round = g.round;
     state.timeLeft = g.time;
     state.timeStamp = Date.now();

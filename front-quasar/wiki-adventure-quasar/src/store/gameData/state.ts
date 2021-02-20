@@ -12,7 +12,7 @@ export interface GameData {
   lang: Lang;
   lobbyType: LobbyType;
   startPage: string;
-  lobbyState: LobbyState;
+  lobbyPhase: LobbyPhase;
   stateCounter: NodeJS.Timeout;
   round: number;
   timeLeft: number;
@@ -45,7 +45,7 @@ export interface Message {
   timeStamp: number;
 }
 
-export enum LobbyState {
+export enum LobbyPhase {
   Waiting,
   Voting,
   Playing,
@@ -59,7 +59,7 @@ const state: GameData = {
   lang: Lang.en,
   lobbyType: LobbyType.Public,
   lobbyID: "",
-  lobbyState: LobbyState.Voting,
+  lobbyPhase: LobbyPhase.Waiting,
   stateCounter: undefined,
   round: 0,
   timeLeft: 0,
@@ -120,7 +120,7 @@ export interface VoteSkip {
   state:boolean
 }
 export interface GameState {
-  state:LobbyState,
+  phase:LobbyPhase,
   round:number,
   time:number
 }
