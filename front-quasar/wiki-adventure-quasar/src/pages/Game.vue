@@ -86,6 +86,12 @@ export default defineComponent({
     }
   },
   computed: {
+    volume():number {
+      return this.$store.state.gameData.volume;
+    },
+    mute():boolean {
+      return this.$store.state.gameData.mute;
+    },
     winner():Player {
       return this.$store.getters.gameData.winner;
     },
@@ -110,6 +116,8 @@ export default defineComponent({
     this.loseAudio = document.getElementById("loseSound") as HTMLAudioElement;
     this.countDownAudio = document.getElementById("countDownSound") as HTMLAudioElement;
     this.notifAudio = document.getElementById("notifSound") as HTMLAudioElement;
+    this.onVolume(this.$store.state.gameData.volume);
+    this.onMute(this.$store.state.gameData.mute);
   },
   methods: {
     manageScreen(payload:ManageScreenEvent) {
@@ -177,9 +185,15 @@ export default defineComponent({
     },
     onVolume(payload:number) {
       this.winAudio.volume = payload;
+      this.loseAudio.volume = payload;
+      this.countDownAudio.volume = payload;
+      this.notifAudio.volume = payload;
     },
     onMute(payload:boolean) {
       this.winAudio.muted = payload;
+      this.loseAudio.muted = payload;
+      this.countDownAudio.muted = payload;
+      this.notifAudio.muted = payload;
     }
   },
   created() {
@@ -208,7 +222,7 @@ export default defineComponent({
     });
     function keyDown(e:KeyboardEvent) {
       if (e.defaultPrevented) return;
-      if (e.key == "Space" && e.ctrlKey) {
+      if (e.key == " " && e.ctrlKey) {
         vm.showEndPage = !vm.showEndPage;
       }
     }
