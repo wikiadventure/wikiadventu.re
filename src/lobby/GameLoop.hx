@@ -1,6 +1,6 @@
 package lobby;
 
-import lobby.Lobby.LobbyType;
+import lobby.player.Player;
 import lobby.gameLoop.Phase;
 import js.node.Timers.Timeout;
 
@@ -29,6 +29,9 @@ class GameLoop {
     }
 
     public function next(?data:Any) {
+        
+    }
+    public function sendCurrentState(player:Player) {
         
     }
 

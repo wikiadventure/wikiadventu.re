@@ -48,19 +48,7 @@ class Lobby {
         this.type = type;
         this.slot = slot;
         this.passwordHash = passwordHash;
-        heartbeat = Timers.setInterval(function() {
-            for (p in playerList) {
-                if (p.socket != null) {
-                    if (p.alive == false) {
-                        p.socket.terminate();
-                        kickOnTimeout(p);
-                    } else {
-                        p.alive = false;
-                        p.socket.ping();
-                    }
-                }
-            }
-        }, 30000);
+        heartbeat = Timers.setInterval(checkAlive, 30000);
     }
     /**
      * give the lobby a valid id, loop until it found a unused one
@@ -115,11 +103,7 @@ class Lobby {
     }
 
     public function kickOnTimeout(player:Player):Timeout {
-        return Timers.setTimeout(function () {
-            if (player.socket == null) {
-                removePlayer(player);
-            }
-        },30000);
+        return Timers.setTimeout(() -> if (player.socket == null) removePlayer(player),30000);
     }
 
     public function connect(player:Player, ?passwordHash:String) {
@@ -174,12 +158,8 @@ class Lobby {
         playerList.emitPlayerJoin(player);
         playerList.emitSetOwner(player);
         sendCurrentState(player);
-        player.socket.on('message', function (data:String) {
-            websocketHandler(player, data);
-        });
-        player.socket.on('close', function (data) {
-            websocketDisconnect(player);
-        });
+        player.socket.on('message', (data:String) -> websocketHandler(player, data));
+        player.socket.on('close', (data) -> websocketDisconnect(player));
     }
 
     public function websocketHandler(player:Player, data:String) {
@@ -200,7 +180,7 @@ class Lobby {
             }
             gameLoop.currentPhase.controller(player, json);
         } catch(e:Dynamic) {
-            trace(e);
+            log("Websocket package error : "+e, Error);
         }
     }
 
@@ -226,12 +206,8 @@ class Lobby {
     public function sendCurrentState(player:Player) {
         var timeLeft = gameLoop.currentPhase.duration - (Timer.stamp() - gameLoop.timeStampStateBegin);
         [player].emitGameState(gameLoop.currentPhase.type, gameLoop.currentRound, timeLeft);
-        for (p in playerList) {
-            if (p!=player) {
-                [player].emitPlayerJoin(p);
-            }
-        }
-
+        playerList.iter((p) -> if (p!=player) [player].emitPlayerJoin(p));
+        gameLoop.sendCurrentState(player);
     }
 
     /**
@@ -253,6 +229,20 @@ class Lobby {
     public function voteSkip(player:Player) {
         playerList.emitVoteSkip(player);
         if (playerList.foreach((p) -> p.voteSkip)) gameLoop.currentPhase.end();
+    }
+
+    public function checkAlive() {
+        playerList.iter((p) -> 
+            if(p.socket != null) {
+                if (!p.alive) {
+                    p.socket.terminate();
+                    kickOnTimeout(p);
+                } else {
+                    p.alive = false;
+                    p.socket.ping();
+                }
+            }
+        );
     }
 
     /**
@@ -282,11 +272,7 @@ class Lobby {
      * @return Int
      */
      public static function getPrivateLobbyLength():Int {
-        var n = 0;
-        for (l in lobbyList) {
-            if (l.type == Private) n++;
-        }
-        return n;
+        return lobbyList.count((l) -> l.type == Private);
     }
 
     /**

@@ -101,6 +101,10 @@ class Playing extends Phase {
         log(player.pseudo + " Request fail on url: " + url, Error);
         lobby.playerList.emitMessage("Server verification error for " + player.pseudo);
     }
+
+    public override function sendCurrentState(player:Player) {
+        [player].emitVoteResult(startPage, endPage);
+    }
     
     public function new(start:String, end:String, lobby:Lobby, duration:Int = 600) {
         super(lobby, duration);

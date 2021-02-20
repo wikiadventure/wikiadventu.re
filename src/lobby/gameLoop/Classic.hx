@@ -1,5 +1,6 @@
 package lobby.gameLoop;
 
+import lobby.player.Player;
 import lobby.gameLoop.phase.Waiting;
 import lobby.gameLoop.phase.GameFinish;
 import lobby.gameLoop.phase.RoundFinish;
@@ -36,7 +37,7 @@ class Classic extends GameLoop {
                     currentPhase = new Voting(lobby);
                 }
             case GameFinish:
-                end();
+                return end();
         }
         if (currentPhase != null) currentPhase.start();
     }
@@ -46,5 +47,8 @@ class Classic extends GameLoop {
         this.round = round;
     }
 
+    public override function sendCurrentState(player:Player) {
+        currentPhase.sendCurrentState(player);
+    }
 
 }

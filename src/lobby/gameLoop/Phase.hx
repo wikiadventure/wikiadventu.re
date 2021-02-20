@@ -41,6 +41,10 @@ class Phase {
         
     }
 
+    public function sendCurrentState(player:Player) {
+        
+    }
+
     public function new(lobby:Lobby, duration:Int) {
         this.lobby = lobby;
         this.duration = duration;
