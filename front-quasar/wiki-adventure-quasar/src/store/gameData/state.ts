@@ -74,7 +74,7 @@ const state: GameData = {
   self: -1,
   owner: -2,
   winnerId: -3,
-  volume: 1,
+  volume: 0.3,
   mute: false,
   safeMode: false
 };
