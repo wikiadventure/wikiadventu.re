@@ -7,22 +7,7 @@
     <transition name="fade"><page-history v-show="showPageHistory" /></transition>
     <transition name="fade"><leaderboard v-show="showLeaderboard" /></transition>
     <transition name="fade"><round-win v-show="showRoundWin" /></transition>
-    <audio id="winSound">
-      <source src="sounds/win.ogg" type="audio/ogg">
-      <source src="sounds/win.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="loseSound">
-      <source src="sounds/lose.ogg" type="audio/ogg">
-      <source src="sounds/lose.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="countDownSound">
-      <source src="sounds/countDown.ogg" type="audio/ogg">
-      <source src="sounds/countDown.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="notifSound">
-      <source src="sounds/notif.ogg" type="audio/ogg">
-      <source src="sounds/notif.mp3" type="audio/mpeg">
-    </audio>
+    <game-audio ref="gameAudio" />
   </div>
 </template>
 <style lang="scss">
@@ -40,6 +25,7 @@ import RoundWin from "../layouts/lobby/screen/RoundWin.vue";
 import Leaderboard from "../layouts/lobby/screen/Leaderboard.vue";
 import Wait from "../layouts/lobby/screen/Wait.vue";
 import PageHistory from "../layouts/lobby/screen/PageHistory.vue";
+import GameAudio from "../components/audio/GameAudio.vue";
 
 import { GameState, LobbyPhase, Player, VoteResult, WinRound, WsMessage } from "../store/gameData/state";
 
@@ -49,16 +35,12 @@ import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'Game',
-  components: { GameSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory },
+  components: { GameSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory, GameAudio },
   data(): {
     showRoundWin:boolean,
     showLeaderboard:boolean,
     showPageHistory:boolean,
     showEndPage:boolean,
-    winAudio:HTMLAudioElement | null,
-    loseAudio:HTMLAudioElement | null,
-    countDownAudio:HTMLAudioElement | null,
-    notifAudio:HTMLAudioElement | null,
     onDestroy:() => void,
     unsubscribeAction:() => void,
     unsubscribeMutation:() => void
@@ -68,10 +50,6 @@ export default defineComponent({
       showLeaderboard: false,
       showPageHistory: false,
       showEndPage: false,
-      winAudio: null,
-      loseAudio: null,
-      countDownAudio: null,
-      notifAudio: null,
       onDestroy: () => {},
       unsubscribeAction: () => {},
       unsubscribeMutation:() => {}
@@ -86,12 +64,6 @@ export default defineComponent({
     }
   },
   computed: {
-    volume():number {
-      return this.$store.state.gameData.volume;
-    },
-    mute():boolean {
-      return this.$store.state.gameData.mute;
-    },
     winner():Player {
       return this.$store.getters.gameData.winner;
     },
@@ -112,12 +84,6 @@ export default defineComponent({
   mounted() {
     this.$store.dispatch('gameData/connect');
     this.$root.$on('manage-screen', this.manageScreen);//for exit button
-    this.winAudio = document.getElementById("winSound") as HTMLAudioElement;
-    this.loseAudio = document.getElementById("loseSound") as HTMLAudioElement;
-    this.countDownAudio = document.getElementById("countDownSound") as HTMLAudioElement;
-    this.notifAudio = document.getElementById("notifSound") as HTMLAudioElement;
-    this.onVolume(this.$store.state.gameData.volume);
-    this.onMute(this.$store.state.gameData.mute);
   },
   methods: {
     manageScreen(payload:ManageScreenEvent) {
@@ -149,7 +115,7 @@ export default defineComponent({
           vm.$store.commit('gameData/deleteVote');
           vm.showPageHistory = false;
           vm.gameMenu = true;
-          if (payload.time > 3) setTimeout(() => {vm.countDownAudio.play()}, payload.time*1000-3000);
+          if (payload.time > 3) setTimeout(() => {vm.$refs.gameAudio.countDownAudio.play()}, payload.time*1000-3000);
           return;
         case LobbyPhase.Playing:
           vm.$q.notify({
@@ -161,16 +127,16 @@ export default defineComponent({
       }
     },
     onWinRound(payload:WinRound) {
-      var vm = this;
-      if (payload.id == vm.$store.state.gameData.self) this.winAudio.play();
-      else this.loseAudio.play();
+      var vm = this as any;
+      if (payload.id == vm.$store.state.gameData.self) vm.$refs.gameAudio.winAudio.play();
+      else vm.$refs.gameAudio.loseAudios.play();
       vm.showRoundWin = true;
       setTimeout(() => {vm.showRoundWin = false}, 5000);
       return;
 
     },
     onVoteResult(payload:VoteResult) {
-      var vm = this;
+      var vm = this as any;
       vm.$q.notify({
         type: 'annonce',
         position: 'top',
@@ -180,20 +146,8 @@ export default defineComponent({
     onMessage(payload:WsMessage) {
       var vm = this as any;
       if (!vm.$refs.gameMenu.showMenu || vm.$refs.gameMenu.tab != "chat") {
-        vm.notifAudio.play();
+        vm.$refs.gameAudio.notifAudio.play();
       } 
-    },
-    onVolume(payload:number) {
-      this.winAudio.volume = payload;
-      this.loseAudio.volume = payload;
-      this.countDownAudio.volume = payload;
-      this.notifAudio.volume = payload;
-    },
-    onMute(payload:boolean) {
-      this.winAudio.muted = payload;
-      this.loseAudio.muted = payload;
-      this.countDownAudio.muted = payload;
-      this.notifAudio.muted = payload;
     }
   },
   created() {
@@ -214,10 +168,6 @@ export default defineComponent({
     });
     vm.unsubscribeMutation = vm.$store.subscribe((mutation, state) => {
       switch (mutation.type) {
-        case "gameData/volume":
-          return this.onVolume(mutation.payload);
-        case "gameData/mute":
-          return this.onMute(mutation.payload);
       }
     });
     function keyDown(e:KeyboardEvent) {
