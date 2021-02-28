@@ -36,7 +36,7 @@ class Playing extends Phase {
         player.numberOfJump +=1;
         player.currentPage = json.value;
         var validation:Promise<String>;
-        validation = WikiTools.validateJump(lobby.language, player.currentPage, json.value);
+        validation = WikiTools.validateJump(lobby.language, oldPage, json.value);
         validation.then(
             (landPage) -> {
                 player.validationBuffer.remove(validation);
