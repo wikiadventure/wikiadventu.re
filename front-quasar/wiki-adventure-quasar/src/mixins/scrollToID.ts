@@ -1,5 +1,5 @@
-export default function scrollToID(id:string, scrollContainer?:string) {
-    var element = document.querySelector('#'+scrollContainer+" #"+id);
+export default function scrollToID(id:string, scrollContainer?:HTMLElement) {
+    var element = scrollContainer.querySelector("#"+id);
     if (!element) return;
     element.scrollIntoView();
 }
