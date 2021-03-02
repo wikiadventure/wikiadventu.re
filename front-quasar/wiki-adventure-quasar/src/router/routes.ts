@@ -1,5 +1,6 @@
-import { Store } from '../store'
+import store, { Store } from '../store'
 import { RouteConfig } from 'vue-router';
+import { GameLoopType } from 'src/store/gameData/type/gameLoop';
 
 const routes: RouteConfig[] = [
   {
@@ -17,7 +18,12 @@ const routes: RouteConfig[] = [
       }
     },
     component: () => {
-      return import('pages/Game.vue');
+      var store = Store as any;
+      switch(store.state.gameData.gameLoop as number) {
+        case GameLoopType.Classic:
+          return import('pages/gameMode/Classic.vue');
+      }
+      return import('pages/gameMode/Classic.vue');
     }
   },
   {
@@ -31,7 +37,7 @@ const routes: RouteConfig[] = [
       }
     },
     component: () => {
-      return import('pages/Game.vue');
+      return import('pages/gameMode/Classic.vue');
     }
   },
   {
@@ -49,7 +55,7 @@ const routes: RouteConfig[] = [
   {
     path: '/test',
     component: () => {
-      return import('pages/Game.vue');
+      return import('pages/gameMode/Classic.vue');
     }
   },
   // Always leave this as last one,
