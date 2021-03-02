@@ -1,5 +1,6 @@
 package controller.connect;
 
+import lobby.GameLoop.GameLoopType;
 import haxe.Json;
 import response.SuccessResponse;
 import haxe.crypto.Sha256;
@@ -30,6 +31,7 @@ class PrivateJoinController {
                 status: Success,
                 lobbyID: Lobby.encodeID(lobby.id),
                 lobbyType: Private,
+                gameMode: lobby.gameLoop.type,
                 playerID: player.uuid,
                 lang: lobby.language
             };

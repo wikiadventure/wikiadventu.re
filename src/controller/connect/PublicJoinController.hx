@@ -1,5 +1,6 @@
 package controller.connect;
 
+import lobby.GameLoop.GameLoopType;
 import haxe.Json;
 import response.ErrorResponse;
 import lobby.Lobby;
@@ -27,6 +28,7 @@ class PublicJoinController {
                 status: Success,
                 lobbyID: Lobby.encodeID(lobby.id),
                 lobbyType: Public,
+                gameMode: lobby.gameLoop.type,
                 playerID: player.uuid,
                 lang: lobby.language           
             }
