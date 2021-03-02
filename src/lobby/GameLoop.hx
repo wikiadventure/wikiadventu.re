@@ -7,6 +7,7 @@ import js.node.Timers.Timeout;
 class GameLoop {
     
     public var lobby:Lobby;
+    public var type:Int;
     public var loop:Timeout;
     public var currentPhase:Phase;
     public var timeStampStateBegin:Float;
@@ -35,4 +36,12 @@ class GameLoop {
         
     }
 
+}
+
+enum abstract GameLoopType(Int) from Int to Int {
+    var Classic;
+}
+
+enum abstract ModGameLoopType(Int) from Int to Int {
+    var Default = 1000;
 }
