@@ -9,14 +9,14 @@ using Lambda;
 class Voting extends Phase {
     
     public override function onStart() {
-        lobby.playerList.voteReset();
-        lobby.playerList.pageHistoryReset();
+        lobby.players.voteReset();
+        lobby.players.pageHistoryReset();
         
     }
     //call the next phase with an end and start page picked from player vote
     public override function end() {
         Timers.clearTimeout(lobby.gameLoop.loop);
-        WikiTools.selectPage(lobby.playerList.map((p) -> p.vote), lobby.language).then(
+        WikiTools.selectPage(lobby.players.map((p) -> p.vote), lobby.language).then(
             (result) -> lobby.gameLoop.next(result)
         );
     }

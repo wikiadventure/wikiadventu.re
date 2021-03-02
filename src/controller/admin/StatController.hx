@@ -53,7 +53,7 @@ class StatController {
                             <tr><th>Round : ::currentRound:: / ::round::</th></tr>
                             <tr><th>Start page : ::startPage::</th></tr>
                             <tr><th>End page : ::endPage::</th></tr>
-                            <tr><th>Player : ::playerList.length:: / ::slot::</th></tr>
+                            <tr><th>Player : ::players.length:: / ::slot::</th></tr>
                             <tr><th>Total player : ::totalPlayer::</th></tr>
                         ::end::
                     </tbody>

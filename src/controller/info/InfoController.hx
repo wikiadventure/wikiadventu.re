@@ -29,7 +29,7 @@ class InfoController {
                 lobbyType: lobby.type,
                 lobbyLang: lobby.language,
                 slot: lobby.slot,
-                players: lobby.playerList.length,
+                players: lobby.players.length,
                 gameMode: lobby.gameLoop.type,
                 gamePhase: lobby.gameLoop.currentPhase.type
                 

@@ -22,7 +22,7 @@ class Classic extends GameLoop {
     }
 
     public override function next(?data:Any) {
-        if (lobby.playerList.length == 0) return;
+        if (lobby.players.length == 0) return;
         switch currentPhase.type {
             case Waiting:
                 currentPhase = new Voting(lobby);

@@ -25,9 +25,9 @@ class Lobby {
     public var id:Int;
     public var passwordHash:String;
     public var language:Lang;
-    public var playerList:Array<Player>;
+    public var players:Array<Player>;
     public var owner(get, never):Player;
-    public function get_owner() return playerList[0];
+    public function get_owner() return players[0];
 
     public static var lobbyLimit:Int = 10000;
     public static var privateLimit:Int = 2000;
@@ -43,7 +43,7 @@ class Lobby {
     public function new(language:Lang, type:LobbyType, ?passwordHash:String, slot:Int=25) {
         if (lobbyList.length >= lobbyLimit) throw ConnectError.LobbyLimitReached;
         else if (getPrivateLobbyLength() >= privateLimit) throw ConnectError.PrivateLobbyLimitReached;
-        playerList = new Array<Player>();
+        players = new Array<Player>();
         this.language = language;
         this.type = type;
         this.slot = slot;
@@ -94,9 +94,9 @@ class Lobby {
      * @param player to add
      */
     public function addPlayer(player:Player) {
-        if (playerList.length >= slot) throw ConnectError.LobbyFull;
-        if (playerList.lastIndexOf(player) == -1) {
-            playerList.push(player);
+        if (players.length >= slot) throw ConnectError.LobbyFull;
+        if (players.lastIndexOf(player) == -1) {
+            players.push(player);
             kickOnTimeout(player);
             log("new player registered : " + player.uuid + " --> " + player.pseudo, PlayerData);
         }
@@ -119,10 +119,10 @@ class Lobby {
      */
     public function removePlayer(player:Player) {
         var doOwnerChange = owner == player;
-        playerList.remove(player);
-        if (doOwnerChange && playerList.length>0) playerList.emitSetOwner();
+        players.remove(player);
+        if (doOwnerChange && players.length>0) players.emitSetOwner();
         log("player left : " + player.uuid + " --> " + player.pseudo, PlayerData);
-        if (playerList.length == 0) {
+        if (players.length == 0) {
             log("No player left, closing the lobby", Info);
             delete();
         }
@@ -134,7 +134,7 @@ class Lobby {
     }
 
     public function getPlayerFromUUID(uuid:String):Player {
-        for (p in playerList) {
+        for (p in players) {
             if (p.uuid == uuid) {
                 return p;
             }
@@ -155,8 +155,8 @@ class Lobby {
     }
 
     public function onPlayerConnection(player:Player) {
-        playerList.emitPlayerJoin(player);
-        playerList.emitSetOwner(player);
+        players.emitPlayerJoin(player);
+        players.emitSetOwner(player);
         sendCurrentState(player);
         player.socket.on('message', (data:String) -> websocketHandler(player, data));
         player.socket.on('close', (data) -> websocketDisconnect(player));
@@ -169,7 +169,7 @@ class Lobby {
                 case Start:
                     start(player);
                 case Message:
-                    playerList.emitMessage(player, sanitizeMessage(json.value));
+                    players.emitMessage(player, sanitizeMessage(json.value));
                 case Validate:
                 case Vote:
                     vote(player, json.value);
@@ -200,13 +200,13 @@ class Lobby {
     public function websocketDisconnect(player:Player) {
         player.socket = null;
         kickOnTimeout(player);
-        playerList.emitPlayerLeft(player);
+        players.emitPlayerLeft(player);
     }
 
     public function sendCurrentState(player:Player) {
         var timeLeft = gameLoop.currentPhase.duration - (Timer.stamp() - gameLoop.timeStampStateBegin);
         [player].emitGameState(gameLoop.currentPhase.type, gameLoop.currentRound, timeLeft);
-        playerList.iter((p) -> if (p!=player) [player].emitPlayerJoin(p));
+        players.iter((p) -> if (p!=player) [player].emitPlayerJoin(p));
         gameLoop.sendCurrentState(player);
     }
 
@@ -227,12 +227,12 @@ class Lobby {
         player.vote = null;
     }
     public function voteSkip(player:Player) {
-        playerList.emitVoteSkip(player);
-        if (playerList.foreach((p) -> p.voteSkip)) gameLoop.currentPhase.end();
+        players.emitVoteSkip(player);
+        if (players.foreach((p) -> p.voteSkip)) gameLoop.currentPhase.end();
     }
 
     public function checkAlive() {
-        playerList.iter((p) -> 
+        players.iter((p) -> 
             if(p.socket != null) {
                 if (!p.alive) {
                     p.socket.terminate();
@@ -252,7 +252,7 @@ class Lobby {
      */
      public static function joinPublicFree(player:Player):Lobby {
         for (l in lobbyList) {
-            if (l.type == Public && (l.slot > l.playerList.length)) {
+            if (l.type == Public && (l.slot > l.players.length)) {
                 if ( l.language == player.language ) {
                     l.connect(player);
                     return l;

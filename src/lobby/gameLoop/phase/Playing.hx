@@ -5,10 +5,10 @@ import js.node.Querystring;
 import js.lib.Promise;
 import lobby.wikiAPI.WikiTools;
 import lobby.Lobby.WebsocketPackage;
-import lobby.Lobby.WebsocketPackageType;
 import lobby.gameLoop.Phase.PhaseType;
 import lobby.player.Player;
 using lobby.player.PlayersExtension;
+using Lambda;
 
 class Playing extends Phase {
 
@@ -16,7 +16,9 @@ class Playing extends Phase {
     public var endPage:String;
     
     public override function onStart() {
-        lobby.playerList.emitVoteResult(startPage, endPage);
+        lobby.players.pageHistoryReset();
+        lobby.players.setStartPage(startPage);
+        lobby.players.emitVoteResult(startPage, endPage);
     }
 
     public override function onEnd() {
@@ -74,9 +76,9 @@ class Playing extends Phase {
         player.score += 500 + Std.int(timeLeft*0.5);
         log("updateScore --> " +  player.id + "(" + player.pseudo + ") :" + player.score, PlayerData);
         log("WinRound --> " +  player.id + "(" + player.pseudo + ")", PlayerData);
-        lobby.playerList.emitUpdateScore(player);
-        lobby.playerList.emitWinRound(player);
-        lobby.playerList.emitPath(player);
+        lobby.players.emitUpdateScore(player);
+        lobby.players.emitWinRound(player);
+        lobby.players.emitPath(player);
         end();
     }
 
@@ -85,21 +87,21 @@ class Playing extends Phase {
         log(player.pseudo + " is cheating!", PlayerData);
         log(oldPage + " --> " + url, PlayerData);
         log(player.pageList, PlayerData);
-        lobby.playerList.emitMessage("it seems that " + player.pseudo + " is cheating! (or the anticheat system is broken)");
-        lobby.playerList.emitMessage(player.pseudo + "jump from " + player.currentPage + " to " + StringTools.urlDecode(url));
+        lobby.players.emitMessage("it seems that " + player.pseudo + " is cheating! (or the anticheat system is broken)");
+        lobby.players.emitMessage(player.pseudo + "jump from " + player.currentPage + " to " + StringTools.urlDecode(url));
     }
 
     public function onWikiError(player:Player, oldPage:String, newPage:String, url:String, body:String) {
         log(body, Error);
         log(player.pseudo + " WikiError on url: " + url, Error);
-        lobby.playerList.emitMessage("Wiki verification error " + player.pseudo);
-        lobby.playerList.emitMessage(player.pseudo + "jump from " + player.currentPage + " to " + StringTools.urlDecode(url));
+        lobby.players.emitMessage("Wiki verification error " + player.pseudo);
+        lobby.players.emitMessage(player.pseudo + "jump from " + player.currentPage + " to " + StringTools.urlDecode(url));
     }
 
     public function onRequestFailed(player:Player, oldPage:String, newPage:String, url:String, error:String) {
         log(error, Error);
         log(player.pseudo + " Request fail on url: " + url, Error);
-        lobby.playerList.emitMessage("Server verification error for " + player.pseudo);
+        lobby.players.emitMessage("Server verification error for " + player.pseudo);
     }
 
     public override function sendCurrentState(player:Player) {

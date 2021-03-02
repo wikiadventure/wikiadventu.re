@@ -5,13 +5,16 @@ import haxe.Json;
 using Lambda;
 
 class PlayersExtension {
-    public static function pageHistoryReset(playerList:Array<Player>) {
-        for (p in playerList) p.pageListReset();
+    public static function pageHistoryReset(players:Array<Player>) {
+        players.iter(p -> p.pageListReset());
     }
-    public static function voteReset(playerList:Array<Player>) {
-        for (p in playerList) p.vote = null;
+    public static function voteReset(players:Array<Player>) {
+        players.iter(p -> p.vote = null);
     }
-    public static function emitPlayerJoin(playerList:Array<Player>, player:Player) {
+    public static function setStartPage(players:Array<Player>, startPage:String) {
+        players.iter(p -> p.currentPage = startPage);
+    }
+    public static function emitPlayerJoin(players:Array<Player>, player:Player) {
         var data:LobbyEvent<PlayerJoin> = {
             type: PlayerJoin,
             data: {
@@ -23,7 +26,7 @@ class PlayersExtension {
             }
         }
         var textData = Json.stringify(data);
-        playerList.iter((p) -> 
+        players.iter((p) -> 
             if(p.socket != null) {
                 if (p != player) p.socket.send(textData);
                 else {
@@ -35,7 +38,7 @@ class PlayersExtension {
         );
     }
 
-    public static function emitPlayerLeft(playerList:Array<Player>, player:Player) {
+    public static function emitPlayerLeft(players:Array<Player>, player:Player) {
         var data:LobbyEvent<PlayerLeft> = {
             type: PlayerLeft,
             data: {
@@ -43,10 +46,10 @@ class PlayersExtension {
             }
         }
         var textData = Json.stringify(data);
-        playerList.iter((p) -> if(p.socket != null) p.socket.send(textData));
+        players.iter((p) -> if(p.socket != null) p.socket.send(textData));
     }
 
-    public static function emitVoteResult(playerList:Array<Player>, startPage:String, endPage:String) {
+    public static function emitVoteResult(players:Array<Player>, startPage:String, endPage:String) {
         var data:LobbyEvent<VoteResult> = {
             type: VoteResult,
             data: {
@@ -55,10 +58,10 @@ class PlayersExtension {
             }
         }
         var textData = Json.stringify(data);
-        playerList.iter((p) -> if(p.socket != null) p.socket.send(textData));
+        players.iter((p) -> if(p.socket != null) p.socket.send(textData));
     }
 
-    public static function emitGameState(playerList:Array<Player>, state:Int, currentRound:Int, timeleft:Float) {
+    public static function emitGameState(players:Array<Player>, state:Int, currentRound:Int, timeleft:Float) {
         var data:LobbyEvent<GameState> = {
             type: GameState,
             data: {
@@ -68,10 +71,10 @@ class PlayersExtension {
             }
         }
         var textData = Json.stringify(data);
-        playerList.iter((p) -> if(p.socket != null) p.socket.send(textData));
+        players.iter((p) -> if(p.socket != null) p.socket.send(textData));
     }
 
-    public static function emitUpdateScore(playerList:Array<Player>, player:Player) {
+    public static function emitUpdateScore(players:Array<Player>, player:Player) {
         var data:LobbyEvent<UpdateScore> = {
             type: UpdateScore,
             data: {
@@ -80,14 +83,14 @@ class PlayersExtension {
             }
         }
         var textData = Json.stringify(data);
-        for (p in playerList) {
+        for (p in players) {
             if (p.socket != null) {
                 p.socket.send(textData);
             }
         }
     }
 
-    public static function emitWinRound(playerList:Array<Player>, player:Player) {
+    public static function emitWinRound(players:Array<Player>, player:Player) {
         var data:LobbyEvent<WinRound> = {
             type: WinRound,
             data: {
@@ -95,10 +98,10 @@ class PlayersExtension {
             }
         }
         var textData = Json.stringify(data);
-        playerList.iter((p) -> if(p.socket != null) p.socket.send(textData));
+        players.iter((p) -> if(p.socket != null) p.socket.send(textData));
     }
 
-    public static function emitMessage(playerList:Array<Player>, ?player:Player, message:String) {
+    public static function emitMessage(players:Array<Player>, ?player:Player, message:String) {
         var data:LobbyEvent<Message> = {
             type: Message,
             data: {
@@ -107,22 +110,22 @@ class PlayersExtension {
             }
         }
         var textData = Json.stringify(data);
-        playerList.iter((p) -> if(p.socket != null) p.socket.send(textData));
+        players.iter((p) -> if(p.socket != null) p.socket.send(textData));
     }
 
-    public static function emitSetOwner(playerList:Array<Player>, ?to:Player) {
+    public static function emitSetOwner(players:Array<Player>, ?to:Player) {
         var data:LobbyEvent<SetOwner> = {
             type: SetOwner,
             data: {
-                id: playerList[0].id,
+                id: players[0].id,
             }
         }
         var textData = Json.stringify(data);
         if (to != null && to.socket != null) return to.socket.send(textData);
-        playerList.iter((p) -> if(p.socket != null) p.socket.send(textData));
+        players.iter((p) -> if(p.socket != null) p.socket.send(textData));
     }
 
-    public static function emitPath(playerList:Array<Player>, player:Player) {
+    public static function emitPath(players:Array<Player>, player:Player) {
         var data:LobbyEvent<Path> = {
             type: Path,
             data: {
@@ -131,10 +134,10 @@ class PlayersExtension {
             }
         }
         var textData = Json.stringify(data);
-        playerList.iter((p) -> if(p.socket != null) p.socket.send(textData));
+        players.iter((p) -> if(p.socket != null) p.socket.send(textData));
     }
 
-    public static function emitVoteSkip(playerList:Array<Player>, player:Player) {
+    public static function emitVoteSkip(players:Array<Player>, player:Player) {
         player.voteSkip = !player.voteSkip;
         var data:LobbyEvent<VoteSkip> = {
             type: VoteSkip,
@@ -144,13 +147,13 @@ class PlayersExtension {
             }
         }
         var textData = Json.stringify(data);
-        playerList.iter((p) -> if(p.socket != null) p.socket.send(textData));
+        players.iter((p) -> if(p.socket != null) p.socket.send(textData));
     }
 
-    public static function resetScore(playerList:Array<Player>) {
-        playerList.iter((p) ->  {
+    public static function resetScore(players:Array<Player>) {
+        players.iter((p) ->  {
             p.score = 0;
-            emitUpdateScore(playerList,p);
+            emitUpdateScore(players,p);
         });
     }
 }
