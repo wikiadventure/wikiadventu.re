@@ -1,6 +1,6 @@
 <template>
-  <div id="settingTab" class="col">
-    <div class="row justify-evenly q-ma-none"><h3>{{ $t('settingTab.settings') }}</h3></div>
+  <div id="settingTab">
+    <div class="row justify-evenly text-h3">{{ $t('settingTab.settings') }}</div>
     <div class="row justify-evenly"><fullscreen-switch class="action-btn"/><theme-switch/></div>
     <div class="row justify-evenly items-end"><p>SafeMode : </p><safe-mode-switch/></div>
     <lang-switch/>
@@ -9,7 +9,7 @@
 </template>
 <style lang="scss">
 #settingTab>* {
-  margin: 15px 5px;
+  margin: 25px 5px;
 }
 </style>
 <script lang="ts">
