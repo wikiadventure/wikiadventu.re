@@ -46,7 +46,7 @@ class Classic extends GameLoop {
     public function new(lobby:Lobby, round:Int) {
         this.lobby = lobby;
         this.round = round;
-        this.type = Classic;
+        this.type = Classic
         
     }
 
