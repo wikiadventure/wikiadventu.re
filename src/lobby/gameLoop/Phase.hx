@@ -55,11 +55,15 @@ class Phase {
     }
 
 }
-//register mod phase here
+
 enum abstract PhaseType(Int) from Int to Int {
     var Waiting;
     var Voting;
     var Playing;
     var RoundFinish;
     var GameFinish;
+}
+// Register your mod phase here and on the front.
+enum abstract ModPhaseType(Int) from Int to Int {
+    var Default = 1000;
 }
