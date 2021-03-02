@@ -7,6 +7,7 @@ typedef ConnectionResponse = {
     status:ConnectionStatus,
     ?lobbyID:String,
     ?lobbyType:LobbyType,
+    ?gameMode:Int,
     ?playerID:String,
     ?lang:Lang,
     ?errorCode:Int

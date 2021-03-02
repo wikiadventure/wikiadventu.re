@@ -30,7 +30,9 @@ class InfoController {
                 lobbyLang: lobby.language,
                 slot: lobby.slot,
                 players: lobby.playerList.length,
-                state: lobby.gameLoop.currentPhase.type
+                gameMode: lobby.gameLoop.type,
+                gamePhase: lobby.gameLoop.currentPhase.type
+                
 
             };
             new SuccessResponse(im, sr, Json.stringify(json));

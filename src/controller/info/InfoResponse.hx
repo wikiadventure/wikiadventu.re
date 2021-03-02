@@ -8,10 +8,11 @@ typedef InfoResponse = {
     status:InfoStatus,
     ?lobbyID:String,
     ?lobbyType:LobbyType,
+    ?gameMode:Int,
+    ?gamePhase:Int,
     ?lobbyLang:Lang,
     ?slot:Int,
     ?players:Int,
-    ?state:PhaseType,
     ?error:String
 }
 
