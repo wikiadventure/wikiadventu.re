@@ -132,7 +132,7 @@ import Index from "../../layouts/menu/Index.vue";
 
 import { defineComponent } from '@vue/composition-api';
 import { ConnectEvent, ConnectType } from "../../mixins/connectEvent";
-import { LobbyPhase, LobbyType } from "../../store/gameData/state";
+import { LobbyType } from "../../store/gameData/state";
 import { Lang } from '../../i18n';
 
 export default defineComponent({
@@ -232,6 +232,7 @@ export default defineComponent({
       vm.$store.commit('gameData/setLobbyID', json.lobbyID);
       vm.$store.commit('gameData/setLobbyType', json.lobbyType);
       vm.$store.commit('gameData/setUuid', json.playerID);
+      vm.$store.commit('gameData/setGameLoop', json.gameMode);
       vm.$router.push('/'+(json.lobbyType == LobbyType.Twitch ? "twitch" : "play")+'/'+json.lobbyID);
     }
   },
@@ -295,6 +296,7 @@ interface ConnectionResponse {
     status:ConnectionStatus,
     lobbyID:string,
     lobbyType:LobbyType,
+    gameMode:number,
     playerID:string,
     lang:Lang,
     errorCode?:ErrorCode
@@ -308,9 +310,10 @@ interface InfoResponse {
     lobbyID?:String,
     lobbyType?:LobbyType,
     lobbyLang?:Lang,
+    gameMode?:number,
+    gamePhase?:number,
     slot?:number,
     players?:number,
-    state?:LobbyPhase,
     error?:String
 }
 enum InfoStatus {
