@@ -35,7 +35,6 @@
   }
 }
 .page-history-page{
-  overflow-x: auto;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
