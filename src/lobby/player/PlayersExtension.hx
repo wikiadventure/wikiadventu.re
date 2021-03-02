@@ -190,7 +190,7 @@ typedef VoteResult = {
 }
 
 typedef GameState = {
-    phase:PhaseType,
+    phase:Int,
     round:Int,
     time:Float
 }
