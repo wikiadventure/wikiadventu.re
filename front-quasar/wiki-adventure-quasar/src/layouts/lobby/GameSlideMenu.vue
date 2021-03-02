@@ -1,24 +1,24 @@
 <template>
-  <q-layout class="gameSlideMenu">
-    <input id="showMenu" type="checkbox" v-model="showMenu"/>
-    <div id="slideMenu">
+    <div id="slideMenu" :class="{ 'checked': showMenu }">
       <label @click.stop="showMenu = !showMenu" id="labelShowMenu"><q-icon size="md" name="mdi-play"/><q-badge color="teal" transparent :label="unseenMessagesNumber" floating v-show="unseenMessagesNumber != '0'" /></label>
       <q-tab-panels class="content" v-model="tab" animated>
+
         <q-tab-panel name="chat" class="q-pa-none">
-          <chat-tab-panel ref="chatTab"></chat-tab-panel>
+          <chat-tab-panel ref="chatTab" />
         </q-tab-panel>
 
         <q-tab-panel name="score" class="q-pa-none">
-          <score-tab-panel ref="scoreTab"></score-tab-panel>
+          <score-tab-panel ref="scoreTab" />
         </q-tab-panel>
 
         <q-tab-panel name="game" class="q-pa-none">
-          <game-tab-panel ref="gameTab"></game-tab-panel>
+          <game-tab-panel ref="gameTab" />
         </q-tab-panel>
 
         <q-tab-panel name="setting" class="q-pa-none">
-          <setting-tab-panel ref="settingTab"></setting-tab-panel>
+          <setting-tab-panel ref="settingTab" />
         </q-tab-panel>
+
       </q-tab-panels>
       <q-tabs v-model="tab"
               dense
@@ -33,7 +33,10 @@
         <q-tab name="setting" icon="mdi-cog"></q-tab>
       </q-tabs>
     </div>
-  </q-layout>
+  <!--<q-layout class="gameSlideMenu">
+    <input id="showMenu" type="checkbox" v-model="showMenu"/>
+
+  </q-layout>-->
 </template>
 <style lang="scss">
 .gameSlideMenu {
@@ -44,6 +47,7 @@
   pointer-events: auto;
 }
 #slideMenu {
+  z-index: 6;
   transition: all ease-in-out 0.2s;
 	background: var(--w-color-almost-black);
 	width: 50%;
@@ -52,7 +56,7 @@
   display: flex;
   flex-flow: column;
 	bottom: 0;
-	transform: translateX(-100%);
+	transform: translate3d(-100%,0,0);
   will-change: transform;
   @media(max-width: 720px) {
     width: 100%;
@@ -91,7 +95,7 @@
     //display: none;
   }
 }
-#showMenu:checked + #slideMenu #labelShowMenu .q-icon {
+ #slideMenu.checked #labelShowMenu .q-icon {
   transform: rotate(180deg);
 }
 .body--dark {
@@ -99,7 +103,7 @@
     color: var(--w-color-dark-blue);
     background: var(--w-color-blue-white);
   }
-  #showMenu:checked + #slideMenu #labelShowMenu {
+  #slideMenu.checked #labelShowMenu {
     background: var(--w-color-dark-blue);
     color: var(--w-color-blue-white);
   }
@@ -112,7 +116,7 @@
     color: var(--w-color-blue-white);
     background: var(--w-color-dark-blue);
   }
-  #showMenu:checked + #slideMenu #labelShowMenu {
+  #slideMenu.checked #labelShowMenu {
     background: var(--w-color-blue-white);
     color: var(--w-color-dark-blue);
   }
@@ -122,8 +126,8 @@
   }
 }
 
-#showMenu:checked + #slideMenu {
-  transform: translateX(0);
+#slideMenu.checked {
+  transform: translate3d(0,0,0);
 }
 </style>
 <script lang="ts">
@@ -140,7 +144,7 @@ export default defineComponent({
   components: { ChatTabPanel, GameTabPanel, ScoreTabPanel, SettingTabPanel },
   data():{
     tab:string,
-    showMenu:boolean,
+    showMenu:Boolean,
     seenMessage: number,
     onDestroy:() => void,
     touchsurface?:HTMLElement
@@ -179,7 +183,7 @@ export default defineComponent({
   mounted() {
     var vm = this;
     this.touchsurface = document.documentElement;
-    var slideMenu = document.getElementById("slideMenu"),
+    /*var slideMenu = document.getElementById("slideMenu"),
         startX:number,
         startY:number,
         dist:number,
@@ -227,25 +231,25 @@ export default defineComponent({
       //startTime = new Date().getTime(); // record time when finger first makes contact with surface
     }
 
-    function keyDown(e:KeyboardEvent) {
+    */function keyDown(e:KeyboardEvent) {
       if (e.defaultPrevented) return;
       if (e.key == "Shift" && e.ctrlKey) {
         vm.showMenu = !vm.showMenu;
       }
-    }
+    }/*
 
     this.touchsurface!.addEventListener('touchstart', touchStart, false);
 
     this.touchsurface!.addEventListener('touchmove', touchMove, false);
 
-    this.touchsurface!.addEventListener('touchend', touchEnd, false);
+    this.touchsurface!.addEventListener('touchend', touchEnd, false);*/
 
     this.touchsurface!.addEventListener("keydown", keyDown, false);
 
     this.onDestroy = function () {
-      this.touchsurface!.removeEventListener('touchstart', touchStart, false);
+      /*this.touchsurface!.removeEventListener('touchstart', touchStart, false);
       this.touchsurface!.removeEventListener('touchmove', touchMove, false);
-      this.touchsurface!.removeEventListener('touchend', touchEnd, false);
+      this.touchsurface!.removeEventListener('touchend', touchEnd, false);*/
       this.touchsurface!.addEventListener("keydown", keyDown, false);
     };
   },
