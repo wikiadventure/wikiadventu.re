@@ -63,14 +63,14 @@ export default {
       leaderboard: "Classement"
     },
     phase: {
-      Waiting: "En attente de joueurs",
-      Voting: "Vote",
-      Playing: "Recherche",
-      RoundFinish: "Résultat",
-      GameFinish: "Fin de partie",
+      0: "En attente de joueurs",
+      1: "Vote",
+      2: "Recherche",
+      3: "Résultat",
+      4: "Fin de partie",
       notify: {
-        Voting: "La phase de vote commence. Vous pouvez envoyer vos suggestions!",
-        Playing: "La phase de recherche commence. Soyez le premier à atteindre la page d'arrivée!"
+        1: "La phase de vote commence. Vous pouvez envoyer vos suggestions!",
+        2: "La phase de recherche commence. Soyez le premier à atteindre la page d'arrivée!"
       }
     },
     exitWarn: "Voulez-vous vraiment quitter la partie?",

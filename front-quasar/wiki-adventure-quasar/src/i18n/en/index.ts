@@ -69,8 +69,8 @@ export default {
     3: "Result",
     4: "Game end",
     notify: {
-      Voting: "Voting phase started. You can now submit your suggestions!",
-      Playing: "Searching phase started. Be the first to reach the end page!"
+      1: "Voting phase started. You can now submit your suggestions!",
+      2: "Searching phase started. Be the first to reach the end page!"
     }
   },
   exitWarn: "Do you really want to leave the party?",
