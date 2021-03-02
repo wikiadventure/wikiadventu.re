@@ -1,5 +1,6 @@
 package lobby.gameLoop;
 
+import lobby.GameLoop.GameLoopType;
 import lobby.player.Player;
 import lobby.gameLoop.phase.Waiting;
 import lobby.gameLoop.phase.GameFinish;
@@ -45,6 +46,8 @@ class Classic extends GameLoop {
     public function new(lobby:Lobby, round:Int) {
         this.lobby = lobby;
         this.round = round;
+        this.type = Classic;
+        
     }
 
     public override function sendCurrentState(player:Player) {
