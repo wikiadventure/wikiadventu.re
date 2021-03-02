@@ -1,4 +1,6 @@
 import { Lang } from "src/i18n";
+import { GameLoopType } from "./type/gameLoop";
+import { PhaseType } from "./type/phase";
 
 export enum LobbyType {
   Public = "Public",
@@ -11,7 +13,8 @@ export interface GameData {
   uuid: string;
   lang: Lang;
   lobbyType: LobbyType;
-  lobbyPhase: LobbyPhase;
+  gameLoop: number;
+  gamePhase: number;
   stateCounter: NodeJS.Timeout;
   round: number;
   timeLeft: number;
@@ -46,21 +49,14 @@ export interface Message {
   timeStamp: number;
 }
 
-export enum LobbyPhase {
-  Waiting,
-  Voting,
-  Playing,
-  RoundFinish,
-  GameFinish
-}
-
 const state: GameData = {
   ws: undefined,
   uuid: "",
   lang: Lang.en,
   lobbyType: LobbyType.Public,
   lobbyID: "",
-  lobbyPhase: LobbyPhase.Waiting,
+  gameLoop: GameLoopType.Classic,
+  gamePhase: PhaseType.Waiting,
   stateCounter: undefined,
   round: 0,
   timeLeft: 0,
@@ -122,7 +118,7 @@ export interface VoteSkip {
   state:boolean
 }
 export interface GameState {
-  phase:LobbyPhase,
+  phase:number,
   round:number,
   time:number
 }

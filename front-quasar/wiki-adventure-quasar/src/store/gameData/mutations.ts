@@ -16,6 +16,9 @@ const mutation: MutationTree<GameData> = {
   setLobbyType(state:GameData, type:LobbyType) {
     state.lobbyType = type;
   },
+  setGameLoop(state:GameData, type:number) {
+    state.gameLoop = type;
+  },
   path(state:GameData, a:string[]) {
     state.winnerPageHistory = a;
   },
@@ -72,7 +75,7 @@ const mutation: MutationTree<GameData> = {
   },
   gameState(state:GameData, g:GameState) {
     state.players.forEach(p => p.voteSkip = false);
-    state.lobbyPhase = g.phase;
+    state.gamePhase = g.phase;
     state.round = g.round;
     state.timeLeft = g.time;
     state.timeStamp = Date.now();
