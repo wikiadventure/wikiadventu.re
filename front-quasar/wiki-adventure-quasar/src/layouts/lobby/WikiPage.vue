@@ -1,5 +1,5 @@
 <template>
-  <section class="wikiPage absolute-full" :id="endPage ? 'endPage' : 'wikiPage'">
+  <section ref="wiki" class="wikiPage absolute-full" :class="{ 'wikifade': fade }" :id="endPage ? 'endPage' : 'wikiPage'">
     <exit-btn class="q-ma-md" v-if="endPage" target="wiki-end-page"/>
     <div id="wikiCore">
       <h1 id="wikiTitle">{{ title }}</h1>
@@ -10,6 +10,9 @@
   </section>
 </template>
 <style lang="scss">
+.wikiFade {
+  opacity: 0;
+}
 .wikiPage {
   overflow-wrap: break-word;
   opacity: 1;
@@ -234,6 +237,7 @@ export default defineComponent({
     title:string,
     content:string,
     loading:boolean,
+    fade:boolean,
     safeModeActive:boolean,
     unsubscribe:() => void
   } {
@@ -242,6 +246,7 @@ export default defineComponent({
       title: "",
       content: "",
       loading: false,
+      fade: false,
       safeModeActive: false//use to temporarily disable safemode ( for one page )
     }
   },
@@ -272,20 +277,20 @@ export default defineComponent({
       var id = vm.endPage ? "endPage" : "wikiPage";
       await vm.fetchArticle(url).then(
         function(article:WikiArticle) {
-          document.getElementById(id).style.opacity = "0";
+          vm.fade = true;
           setTimeout(function() {
             vm.title = article.title;
             vm.content = article.content;
             Vue.nextTick().then(function () {
               vm.loading = false;
-              vm.redirectLinks(document.getElementById(id));
+              vm.redirectLinks(vm.$refs.wiki);
             });
-            document.getElementById(id).style.opacity = "1";
+            vm.fade = false;
           }, 100);
         }
       ).catch((e:any) => {
         vm.loading = false;
-        document.getElementById(id).style.opacity = "1";
+        vm.fade = false;
         this.$q.notify({
           type: 'negative',
           position: 'bottom-right',
@@ -293,8 +298,8 @@ export default defineComponent({
         });
       }); 
     },
-    redirectLinks(doc:Document) {
-      var vm = this;
+    redirectLinks(doc:HTMLElement) {
+      var vm = this as any;
       var links = doc.getElementsByTagName("a");
       for (var i=0;i<links.length;i++) {
         links[i].addEventListener("click",function(e){
@@ -314,7 +319,7 @@ export default defineComponent({
       }
     },
     onLinkClick(link:HTMLAnchorElement) {
-      var vm = this;
+      var vm = this as any;
       var linkHref = link.getAttribute("href");
       if (linkHref == undefined) return;
       //check if the link go to another wikipage and not info page or external
@@ -333,23 +338,24 @@ export default defineComponent({
         vm.$store.dispatch('gameData/validateJump', url);
         vm.requestWikiPage(url).then(() => {
           if (anchor != -1) vm.scrollToAnchor(url.substring(anchor+1));
-          else document.getElementById(this.endPage ? "endPage" : "wikiPage").scrollTo(0,0);
+          else vm.$refs.wiki.scrollTo(0,0);
         });
       } else if (linkHref.startsWith("#")) {
         vm.scrollToAnchor(linkHref.substring(1));
       }
     },
     async fetchArticle(url:string) {
-      var vm = this;
+      var vm = this as any;
       var article = new WikiArticle(url, this.$store.state.gameData.lang, this.$q.platform.is.mobile);
       return await article.fetch();
     },
     scrollToAnchor(id:string) {
-      scrollToID(id, this.endPage ? "endPage" : "wikiPage");
+      var vm = this as any;
+      scrollToID(id, vm.$refs.wiki);
     },
   },
   created() {
-    var vm = this;
+    var vm = this as any;
     vm.title = vm.endPage ? vm.$t("wikiPage.noEndPageYet") as string : vm.$t("wikiPage.tipsTitle") as string;
     vm.content = vm.endPage ? "" : vm.$t("wikiPage.tipsContent"+ (vm.$q.platform.is.mobile ? "Mobile" : "")) as string;
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
@@ -359,7 +365,7 @@ export default defineComponent({
     });
   },
   mounted() {
-    var vm = this;
+    var vm = this as any;
     function keyDown(e:KeyboardEvent) {
       if (e.defaultPrevented) return;
       if (e.key == "q" && e.ctrlKey) {
