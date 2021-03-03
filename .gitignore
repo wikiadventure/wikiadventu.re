@@ -8,5 +8,5 @@ bin/log
 bin/front
 bin/config/twitch
 #ignore folder dedicated to local testing
-localTesting
+local
 dump
