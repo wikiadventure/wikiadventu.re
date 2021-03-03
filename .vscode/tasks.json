@@ -27,13 +27,11 @@
             "label": "Quasar dev",
             "type": "shell",
             "command": "cd front; quasar dev",
-            "problemMatcher": []
         },
         {
             "label": "Quasar dev PWA",
             "type": "shell",
             "command": "cd front; quasar dev -m pwa",
-            "problemMatcher": []
         },
         {
             "type": "hxml",
