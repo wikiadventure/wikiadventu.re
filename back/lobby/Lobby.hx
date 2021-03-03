@@ -118,6 +118,7 @@ class Lobby {
      * @param player to remove
      */
     public function removePlayer(player:Player) {
+        players.emitPlayerLeft(player);
         var doOwnerChange = owner == player;
         players.remove(player);
         if (doOwnerChange && players.length>0) players.emitSetOwner();
@@ -200,7 +201,6 @@ class Lobby {
     public function websocketDisconnect(player:Player) {
         player.socket = null;
         kickOnTimeout(player);
-        players.emitPlayerLeft(player);
     }
 
     public function sendCurrentState(player:Player) {
