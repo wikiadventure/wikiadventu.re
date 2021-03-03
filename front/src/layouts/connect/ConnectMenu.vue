@@ -119,7 +119,7 @@
 }
 </style>
 <script lang="ts">
-import uuid  from 'uuid';
+import { v4 as uuid }  from 'uuid';
 import { translate } from "../../i18n/translateErrorCode";
 
 import PrivateCreate from "./tab/PrivateCreate.vue";
@@ -186,7 +186,7 @@ export default defineComponent({
         query.password = event.password;
       }
       if (event.type == ConnectType.TwitchJoinWith || event.type == ConnectType.TwitchCreate ) {
-        query.uuid = uuid.v4();
+        query.uuid = uuid();
         var twitch = window.open("https://id.twitch.tv/oauth2/authorize?response_type=code&client_id="+process.env.TWITCH_CLIENT_ID+"&redirect_uri="+encodeURIComponent(process.env.TWITCH_REDIRECT_URL)+"&state=" + query.uuid + "&scope=chat%3Aread+chat%3Aedit");
         var loop = setInterval(function() { if (twitch && twitch.closed) {
           clearInterval(loop);

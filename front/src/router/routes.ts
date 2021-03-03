@@ -53,6 +53,12 @@ const routes: RouteConfig[] = [
     }
   },
   {
+    path: '/api/:data',
+    beforeEnter: (to, from, next) => {
+      fetch(window.location.origin+to.fullPath).then(() => window.close());
+    },
+  },
+  {
     path: '/test',
     component: () => {
       return import('pages/gameMode/Classic.vue');
