@@ -1,46 +1,38 @@
 # WikiAdventure
 
 <p align="center">
-  <a href="http://wiki-adventure.herokuapp.com/" title="Wiki Adventure"><img width=402 height=250 src="front-quasar/wiki-adventure-quasar/public/svg/openGraph.svg" /></a>
+  <a href="http://wiki-adventure.herokuapp.com/" title="Wiki Adventure"><img width=402 height=250 src="front/public/svg/openGraph.svg" /></a>
 </p>
 
 ## Setup
 
 ### Haxe
 
-First you need to install haxe > 4.0.0 [here](https://haxe.org/download/)
+First you need to install [Haxe > 4.0.0 here](https://haxe.org/download/)
 
-Then install all needed haxe librairies with command :
-```
-haxelib install node.hxml
-```
 ### NodeJS
 
-then you need to install nodeJS > 12.16.0 [here](https://nodejs.org/en/download/)
+Then you need to install [NodeJS > 12.16.0 here](https://nodejs.org/en/download/)
 
-then install the corresponding npm modules with command :
-```
-cd bin
-npm install
-```
-### librairies
+### Librairies
 
-launch the setup script to install all the librairies.
-It will install haxe lib, then backend npm lib and finally quasar and frontend lib! 
+Launch the setup script to install all the librairies.
+It will install Haxe lib, then backend NPM lib and finally Quasar and frontend lib! 
 
  ### Visual Studio Code   
 
-make sure to install the haxe extension pack
+Make sure to install the Haxe extension pack and the Quasar extension pack!
 
 ## Debug
 
 ### Visual Studio Code
 
-now you can hit debug > start debugging ( or f5 ), haxe will transpile the project to JavaScript in the bin/App.js file with the node.hxml config, quasar will build the front end and you can start debugging the node app with the Visual studio code debugger attach
+Now you can hit debug > start debugging ( or the f5 key ).
+The back and front will be built and the Visual Studio Code debugger will be attach.
 
 ## Structure ( WIP )
 
-You can find a daigram of the project structure [here](https://lucid.app/lucidchart/invitations/accept/dca36f9b-f3a1-4547-a113-c6a8adb6ab82).
+You can find a Lucidchart diagram of the project structure [here](https://lucid.app/lucidchart/invitations/accept/dca36f9b-f3a1-4547-a113-c6a8adb6ab82).
     
 ## TODO
 
