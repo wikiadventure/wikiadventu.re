@@ -17,7 +17,7 @@ Then you need to install [NodeJS > 12.16.0 here](https://nodejs.org/en/download/
 ### Librairies
 
 Launch the setup script to install all the librairies.
-It will install Haxe lib, then backend npm lib and finally quasar and frontend lib! 
+It will install Haxe lib, then backend NPM lib and finally Quasar and frontend lib! 
 
  ### Visual Studio Code   
 
@@ -32,7 +32,7 @@ The back and front will be built and the Visual Studio Code debugger will be att
 
 ## Structure ( WIP )
 
-You can find a diagram of the project structure [here](https://lucid.app/lucidchart/invitations/accept/dca36f9b-f3a1-4547-a113-c6a8adb6ab82).
+You can find a Lucidchart diagram of the project structure [here](https://lucid.app/lucidchart/invitations/accept/dca36f9b-f3a1-4547-a113-c6a8adb6ab82).
     
 ## TODO
 
