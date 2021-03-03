@@ -11,8 +11,6 @@ class LobbyController {
         var idx = im.url.indexOf("/", p);
         var id = im.url.substring(p, idx);
         var uuid =  im.url.substring(idx+1);
-        trace(id);
-        trace(uuid);
         try {
             var lobby =  isTwitch ? TwitchLobby.find(id) : Lobby.find(Lobby.decodeID(id));
             lobby.onWsAuth(ws, uuid);
