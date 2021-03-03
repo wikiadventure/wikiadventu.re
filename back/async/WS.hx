@@ -17,7 +17,6 @@ class WS {
         
     }
     static function onConnection(ws:Ws, im:IncomingMessage) {
-        trace(im.url);
         var idx = im.url.indexOf("/", 1);
         var route : String = idx == -1 ? im.url : im.url.substring(0, idx);
         switch route {
