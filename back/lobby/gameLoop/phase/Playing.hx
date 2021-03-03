@@ -34,6 +34,7 @@ class Playing extends Phase {
     }
 
     public function validate(player:Player, json:WebsocketPackage) {
+        if (player.currentPage == json.value) return;
         var oldPage = player.currentPage;
         player.numberOfJump +=1;
         player.currentPage = json.value;
