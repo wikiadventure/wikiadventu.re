@@ -107,6 +107,7 @@ class Playing extends Phase {
     }
 
     public override function sendCurrentState(player:Player) {
+        player.currentPage = startPage;
         [player].emitVoteResult(startPage, endPage);
     }
     
