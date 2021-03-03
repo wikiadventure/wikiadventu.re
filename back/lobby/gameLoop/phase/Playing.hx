@@ -73,6 +73,7 @@ class Playing extends Phase {
     }
 
     public function win(player:Player) {
+        if (lobby.gameLoop.currentPhase.type != Playing) return;
         var timeLeft = duration - (Timer.stamp() - lobby.gameLoop.timeStampStateBegin);
         player.score += 500 + Std.int(timeLeft*0.5);
         log("updateScore --> " +  player.id + "(" + player.pseudo + ") :" + player.score, PlayerData);
