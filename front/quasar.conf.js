@@ -57,7 +57,7 @@ module.exports = configure(function (/* ctx */) {
       // rtl: false, // https://quasar.dev/options/rtl-support
       // preloadChunks: true,
       // showProgress: false,
-      distDir: "../../bin/front",
+      distDir: "../bin/front",
       gzip: true,
       // analyze: true,
 
