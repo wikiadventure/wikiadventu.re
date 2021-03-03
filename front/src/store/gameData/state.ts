@@ -15,7 +15,7 @@ export interface GameData {
   lobbyType: LobbyType;
   gameLoop: number;
   gamePhase: number;
-  stateCounter: NodeJS.Timeout;
+  timeController: AbortController;
   round: number;
   timeLeft: number;
   timeStamp: number;
@@ -57,7 +57,7 @@ const state: GameData = {
   lobbyID: "",
   gameLoop: GameLoopType.Classic,
   gamePhase: PhaseType.Waiting,
-  stateCounter: undefined,
+  timeController: new AbortController(),
   round: 0,
   timeLeft: 0,
   timeStamp: 0,

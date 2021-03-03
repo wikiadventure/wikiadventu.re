@@ -1,4 +1,4 @@
-import { store } from 'quasar/wrappers';
+import counter from './script/countdown';
 import { Lang } from 'src/i18n';
 import { MutationTree } from 'vuex';
 import { GameData, GameState, LobbyType, Message, Player, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, VoteSkip, WinRound, WsMessage } from './state';
@@ -77,18 +77,17 @@ const mutation: MutationTree<GameData> = {
     state.players.forEach(p => p.voteSkip = false);
     state.gamePhase = g.phase;
     state.round = g.round;
-    state.timeLeft = g.time;
-    state.timeStamp = Date.now();
-    state.stateCounter = setInterval(function() {
-      var time = Date.now();
-      var dt = time - state.timeStamp;
-      state.timeStamp = time;
-      state.timeLeft = state.timeLeft - dt*0.001;
+    state.timeController.abort();
+    state.timeController = new AbortController();
+    state.timeLeft = g.time*1000;
+    state.timeStamp = document.timeline ? document.timeline.currentTime : performance.now();
+    counter(1000, state.timeStamp, state.timeController.signal, time => {
+      state.timeLeft = g.time*1000 - (time - state.timeStamp);
       if (state.timeLeft <= 0) {
-        clearInterval(state.stateCounter);
+        state.timeController.abort();
         state.timeLeft = 0;
       }
-    }, 100);
+    });
   },
   deleteVote(state:GameData) {
     state.vote = null;

@@ -103,7 +103,7 @@ export default defineComponent({
       return this.$store.state.gameData.round;
     },
     timeLeft():string {
-      return Math.ceil(this.$store.state.gameData.timeLeft).toString();
+      return Math.floor(this.$store.state.gameData.timeLeft/1000).toString();
     },
     connectedPlayers():number {
       return (this.$store.state.gameData.players as Player[]).filter(p => p.isConnected).length;
