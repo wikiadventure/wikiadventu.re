@@ -22,6 +22,7 @@
 }
 #endPage {
   transition: transform 0.15s ease-in-out;
+  filter: drop-shadow(3px 3px 15px black);
 }
 .hideEndPage {
   transform: translate3d(100%,0,0);
