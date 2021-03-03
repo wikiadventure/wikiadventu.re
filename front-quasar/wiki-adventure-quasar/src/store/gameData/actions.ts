@@ -6,15 +6,16 @@ import { PhaseType } from './type/phase';
 
 const actions: ActionTree<GameData, StateInterface> = {
   connect({ commit, dispatch, state }) {
-    
-    console.log("try to connect");
     var loc = window.location;
     var protocol = loc.protocol == "https:" ? "wss://" : "ws://";
-    var lobbyType = state.lobbyType == LobbyType.Twitch ? "twitchLobby" : "lobby"
-    var wsURL = protocol + loc.host + "/" + lobbyType + "/" + state.lobbyID + "/" + state.uuid;
+    var lobbyType = state.lobbyType == LobbyType.Twitch ? "twitchLobby" : "lobby";
+    if(process.env.DEV) {
+      var wsURL = protocol + "localhost:5000" + "/" + lobbyType + "/" + state.lobbyID + "/" + state.uuid;
+    } else {
+      var wsURL = protocol + loc.host + "/" + lobbyType + "/" + state.lobbyID + "/" + state.uuid;
+    }
     state.ws  = new WebSocket(wsURL);
     function dataHandler(e:MessageEvent) {
-      console.log(e);
       var json:LobbyEvent<any> = JSON.parse(e.data);
       switch (json.type) {
         case LobbyEventType.Message: {

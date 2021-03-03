@@ -4,14 +4,24 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build Quasar front-end",
+            "label": "Build Quasar SPA",
             "type": "shell",
             "command": "cd front-quasar/wiki-adventure-quasar; quasar build"
         },
         {
-            "label": "Build debug Quasar front-end",
+            "label": "Build Quasar PWA",
+            "type": "shell",
+            "command": "cd front-quasar/wiki-adventure-quasar; quasar build -m pwa"
+        },
+        {
+            "label": "Debug Quasar SPA",
             "type": "shell",
             "command": "cd front-quasar/wiki-adventure-quasar; quasar build -d"
+        },
+        {
+            "label": "Debug Quasar PWA",
+            "type": "shell",
+            "command": "cd front-quasar/wiki-adventure-quasar; quasar build -d -m pwa"
         },
         {
             "label": "Quasar dev",
@@ -32,10 +42,31 @@
             "label": "haxe: node.hxml"
         },
         {
-            "label": "Complete build",
+            "label": "Complete SPA build",
             "dependsOn": [
                 "haxe: node.hxml",
-                "Build debug Quasar front-end"
+                "Build Quasar SPA"
+            ]
+        },
+        {
+            "label": "Complete PWA build",
+            "dependsOn": [
+                "haxe: node.hxml",
+                "Build Quasar PWA"
+            ]
+        },
+        {
+            "label": "Complete SPA debug",
+            "dependsOn": [
+                "haxe: node.hxml",
+                "Debug Quasar SPA"
+            ]
+        },
+        {
+            "label": "Complete PWA debug",
+            "dependsOn": [
+                "haxe: node.hxml",
+                "Debug Quasar PWA"
             ]
         }
     ]

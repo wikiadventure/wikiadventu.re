@@ -77,7 +77,12 @@ module.exports = configure(function (/* ctx */) {
     devServer: {
       https: false,
       port: 5001,
-      open: false // opens browser window automatically
+      open: false, // opens browser window automatically
+      proxy: {
+        '/api': {
+          target: 'http://localhost:5000'
+        }
+      }
     },
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
@@ -121,8 +126,8 @@ module.exports = configure(function (/* ctx */) {
         description: `A wikipedia exploration game`,
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#ffffff',
-        theme_color: '#027be3',
+        background_color: '#222222',
+        theme_color: '#29a19c',
         icons: [
           {
             src: 'icons/icon-128x128.png',
