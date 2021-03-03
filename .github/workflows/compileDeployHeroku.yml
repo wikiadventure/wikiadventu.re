@@ -54,16 +54,17 @@ jobs:
         uses: actions/setup-node@v2.1.4
       - name: Install frontend lib
         run: |
-          cd front-quasar/wiki-adventure-quasar; npm i;
+          cd front
+          npm i
       - name: GitHub Action for npx
         # You may pin to the exact commit or the version.
         # uses: mikeal/npx@e7aaefed7c9f2e83d493ff810f17fa5ccd7ed437
         uses: mikeal/npx@1.0.0
       - name: Build frontend
         run: |
-          cd front-quasar/wiki-adventure-quasar
+          cd front
           npm i @quasar/cli
-          npx quasar build
+          npx quasar build -m pwa
       - name: Deploy to heroku
         uses: Sacramentix/heroku-deploy@30f0b7e30306900d74c1d7fd5414e1f8421652ba
         with:
