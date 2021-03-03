@@ -3,8 +3,10 @@
     "configurations": [
         {
             "name": "Launch Program",
+            "cwd": "${workspaceFolder}/bin",
             "program": "${workspaceFolder}/bin/app.js",
             "request": "launch",
+            "preLaunchTask": "Complete PWA debug",
             "skipFiles": [
                 "<node_internals>/**"
             ],
@@ -14,6 +16,7 @@
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "name": "Nodemon",
+            "cwd": "${workspaceFolder}/bin",
             "program": "${workspaceFolder}/bin/App.js",
             "request": "launch",
             "restart": true,
