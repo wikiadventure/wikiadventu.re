@@ -140,7 +140,7 @@ export default defineComponent({
           vm.$store.commit('gameData/deleteVote');
           vm.showPageHistory = false;
           vm.gameMenu = true;
-          if (payload.time > 3) setTimeout(() => {vm.$refs.gameAudio.countDownAudio.play()}, payload.time*1000-3000);
+          if (payload.time > 3) setTimeout(() => {if(vm.$store.state.gameData.gamePhase == PhaseType.Voting) vm.$refs.gameAudio.countDownAudio.play()}, payload.time*1000-3000);
           return;
         case PhaseType.Playing:
           vm.$q.notify({
