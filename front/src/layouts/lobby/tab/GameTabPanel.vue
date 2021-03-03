@@ -19,9 +19,9 @@
 
     <q-separator  spaced="lg"/>
 
-    <div id="vote" class="row items-baseline q-ma-sm">
+    <div id="vote" class="row items-center q-ma-sm">
       <p class="q-ma-none col-strech">{{ $t('gameTab.vote') }} :</p>
-      <p class="q-ma-none q-ml-sm text-left col-grow">{{ vote }}</p>
+      <p class="q-ma-none q-ml-sm text-left col">{{ vote }}</p>
       <q-btn round dense flat icon="mdi-delete" class="voteDelete" @click="resetVote()"></q-btn>
     </div>
     <q-form class="voteForm q-ma-sm">
@@ -36,24 +36,24 @@
 
     <div class="row items-baseline q-ma-sm">
       <p class="q-ma-none col-strech">{{ $t('gameTab.startPage') }} :</p>
-      <p class="q-ma-none q-ml-sm text-left col-grow">{{ startPage }}</p>
+      <p class="q-ma-none q-ml-sm text-left col">{{ startPage }}</p>
     </div>
     <div class="row items-baseline q-ma-sm">
       <p class="q-ma-none col-strech">{{ $t('gameTab.endPage') }} :</p>
-      <p class="q-ma-none q-ml-sm text-left col-grow">{{ endPage }}</p>
+      <p class="q-ma-none q-ml-sm text-left col">{{ endPage }}</p>
     </div>
 
     <q-separator  spaced="lg"/>
 
-    <div class="row items-baseline justify-evenly">
+    <div class="row items-center justify-evenly">
       <q-btn class="action-btn q-ma-sm" push :label="$t('gameTab.pageHistory')" icon="mdi-format-list-bulleted" @click="open('page-history')"/>
       <q-btn class="action-btn q-ma-sm" push :label="$t('gameTab.showEndPage')" icon="mdi-page-next-outline" @click="open('wiki-end-page')"/>
     </div>
 
     <q-separator  spaced="lg"/>
 
-    <div class="row items-baseline justify-evenly">
-      <p>{{ totalVoteSkip }} / {{ connectedPlayers }}</p>
+    <div class="row items-center justify-evenly">
+      <p class="q-my-none" :class="{ 'self': hasVoteSkip }">{{ totalVoteSkip }} / {{ connectedPlayers }}</p>
       <q-btn class="action-btn q-ma-sm" push label="skip" icon="mdi-skip-forward" @click="voteSkip()"/>
     </div>
     
@@ -70,6 +70,9 @@
 }
 .voteDelete:active {
   transform: rotate(145deg);
+}
+.self {
+  color: var(--w-color-dark-teal);
 }
 </style>
 <script lang="ts">
@@ -110,6 +113,9 @@ export default defineComponent({
     },
     totalVoteSkip():number {
       return (this.$store.state.gameData.players as Player[]).filter(p => p.isConnected && p.voteSkip).length;
+    },
+    hasVoteSkip():Player {
+      return this.$store.getters['gameData/selfPlayer'].voteSkip;
     }
   },
   methods: {

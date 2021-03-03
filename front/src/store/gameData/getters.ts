@@ -8,8 +8,11 @@ const getters: GetterTree<GameData, StateInterface> = {
   },
   playersByScore: (state) => {
     return state.players.sort((a:Player, b:Player) => {return b.score - a.score});
+  },
+  selfPlayer: (state) => {
+    return state.players.find(p => p.id == state.self);
   }
-
+  
 };
 
 export default getters;

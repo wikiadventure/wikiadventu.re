@@ -54,12 +54,7 @@ const mutation: MutationTree<GameData> = {
     state.players.push(player);
   },
   playerLeft(state:GameData, p:PlayerLeft) {
-    for(var i=0;i<state.players.length; ++i) {
-      if (state.players[i].id == p.id) {
-        state.players[i].isConnected = false;
-        return;
-      }
-    }
+    state.players.find(s => s.id == p.id).isConnected = false;
   },
   voteResult(state:GameData, v:VoteResult) {
     state.startPage = v.start;
