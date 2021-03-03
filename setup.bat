@@ -12,6 +12,6 @@ haxelib git ircv3 https://github.com/Sacramentix/hx-ircv3.git --always
 haxelib git twitch-chat-client https://github.com/Sacramentix/hx-twitch-chat-client.git --always
 cd bin
 npm install
-cd ../front-quasar/wiki-adventure-quasar
+cd ../front
 npm install
 npm install -g @quasar/cli
