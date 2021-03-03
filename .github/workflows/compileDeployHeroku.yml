@@ -7,6 +7,13 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+    env:
+      ADMIN_PASSWORD: ${{secrets.ADMIN_PASSWORD}}
+      TWITCH_BOT_USERNAME: ${{secrets.TWITCH_BOT_USERNAME}}
+      TWITCH_BOT_PASSWORD: ${{secrets.TWITCH_BOT_PASSWORD}}
+      TWITCH_CLIENT_ID: ${{secrets.TWITCH_CLIENT_ID}}
+      TWITCH_CLIENT_SECRET: ${{secrets.TWITCH_CLIENT_SECRET}}
+      TWITCH_REDIRECT_URL: ${{secrets.TWITCH_REDIRECT_URL}}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
