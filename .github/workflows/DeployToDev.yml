@@ -1,4 +1,4 @@
-name: Compile and deploy to heroku
+name: Deploy to dev 
 
 on:
   workflow_dispatch:
