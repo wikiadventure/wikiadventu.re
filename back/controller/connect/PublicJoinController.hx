@@ -1,13 +1,13 @@
 package controller.connect;
 
-import lobby.GameLoop.GameLoopType;
+import controller.connect.error.ConnectError;
 import haxe.Json;
-import response.ErrorResponse;
 import lobby.Lobby;
 import lobby.player.Player;
 import js.node.http.ServerResponse;
 import js.node.http.IncomingMessage;
 import response.SuccessResponse;
+import response.connect.ConnectionError;
 
 class PublicJoinController {
     
@@ -23,7 +23,11 @@ class PublicJoinController {
         this.form = form;
         var player = new Player(form.pseudo, form.lang);
         try {
-            var lobby = Lobby.joinPublicFree(player);
+            var lobby:Lobby;
+            if (form.lobby != null && form.lobby != "") {
+                lobby = Lobby.find(Lobby.decodeID(form.lobby));
+            } else lobby = Lobby.joinPublicFree(player);
+            lobby.connect(player);
             var json:ConnectionResponse = {
                 status: Success,
                 lobbyID: Lobby.encodeID(lobby.id),
@@ -33,9 +37,8 @@ class PublicJoinController {
                 lang: lobby.language           
             }
             new SuccessResponse(im, sr, Json.stringify(json));
-        } catch (e:Dynamic) {
-            new ErrorResponse(im, sr, body, "server full"+e,400);
-            
+        } catch (e:ConnectError) {
+            new ConnectionError(im, sr, e);
         }
     }
 

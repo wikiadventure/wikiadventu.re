@@ -114,8 +114,8 @@ export default defineComponent({
     totalVoteSkip():number {
       return (this.$store.state.gameData.players as Player[]).filter(p => p.isConnected && p.voteSkip).length;
     },
-    hasVoteSkip():Player {
-      return this.$store.getters['gameData/selfPlayer'].voteSkip;
+    hasVoteSkip():boolean {
+      return this.$store.getters['gameData/selfPlayer'] != null ? this.$store.getters['gameData/selfPlayer'].voteSkip : false;
     }
   },
   methods: {

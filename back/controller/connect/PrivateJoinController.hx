@@ -1,10 +1,10 @@
 package controller.connect;
 
-import lobby.GameLoop.GameLoopType;
+import controller.connect.error.ConnectError;
+import response.connect.ConnectionError;
 import haxe.Json;
 import response.SuccessResponse;
 import haxe.crypto.Sha256;
-import response.ErrorResponse;
 import lobby.Lobby;
 import lobby.player.Player;
 import js.node.http.ServerResponse;
@@ -36,12 +36,8 @@ class PrivateJoinController {
                 lang: lobby.language
             };
             new SuccessResponse(im, sr, Json.stringify(json));
-        } catch (e:Dynamic) {
-            var json:ConnectionResponse = {
-                status: Error,
-                errorCode: e
-            };
-            new ErrorResponse(im, sr, body, Json.stringify(json),400);
+        } catch (e:ConnectError) {
+            new ConnectionError(im, sr, e);
         }
     }
 

@@ -250,7 +250,7 @@ class Lobby {
      * @param player who want to join
      * @return the lobby
      */
-     public static function joinPublicFree(player:Player):Lobby {
+    public static function joinPublicFree(player:Player):Lobby {
         for (l in lobbyList) {
             if (l.type == Public && (l.slot > l.players.length)) {
                 if ( l.language == player.language ) {
@@ -262,8 +262,8 @@ class Lobby {
         // if no free slot are find create a new public lobby
         var lobby = new Lobby(player.language, Public);
         lobby.giveID();// giveID method also add the lobby to the lobbylist
-        lobby.connect(player);
         lobby.gameLoop = new Classic(lobby, 5);
+        lobby.gameLoop.start();
         return lobby;
     }
 
@@ -271,7 +271,7 @@ class Lobby {
      * get the number of private lobby in the lobby list
      * @return Int
      */
-     public static function getPrivateLobbyLength():Int {
+    public static function getPrivateLobbyLength():Int {
         return lobbyList.count((l) -> l.type == Private);
     }
 
@@ -280,7 +280,7 @@ class Lobby {
      * @param id in url string format
      * @return Int The lobby id
      */
-     public static function decodeID(id:String):Int {
+    public static function decodeID(id:String):Int {
         var bytesValue = Base64.urlDecode(id);
         var stringValue = bytesValue.getString(0,bytesValue.length);
         var intValue = Std.parseInt(stringValue);

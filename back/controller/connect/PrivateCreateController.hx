@@ -1,10 +1,11 @@
 package controller.connect;
 
+import controller.connect.error.ConnectError;
+import response.connect.ConnectionError;
 import lobby.GameLoop.GameLoopType;
 import lobby.gameLoop.Classic;
 import response.SuccessResponse;
 import haxe.crypto.Sha256;
-import response.ErrorResponse;
 import lobby.Lobby;
 import lobby.player.Player;
 import js.node.http.ServerResponse;
@@ -40,8 +41,8 @@ class PrivateCreateController {
                 lang: lobby.language           
             };
             new SuccessResponse(im, sr, Json.stringify(json));
-        } catch (e:Dynamic) {
-            new ErrorResponse(im, sr, body, "internal error : "+e,400);
+        } catch (e:ConnectError) {
+            new ConnectionError(im, sr, e);
         }
     }                   
 

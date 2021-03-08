@@ -170,9 +170,9 @@ export default defineComponent({
             }
           };
       if ([ConnectType.PrivateJoin, ConnectType.PublicJoin, ConnectType.TwitchJoinWith, ConnectType.TwitchJoinWithout].includes(event.type)) {
-        if (event.type != ConnectType.PublicJoin && vm.$store.state.globalForm.lobbyID != "") {
+        if (vm.$store.state.globalForm.lobbyID != "") {
           query.lobby = vm.$store.state.globalForm.lobbyID;
-        } else {
+        } else if (event.type != ConnectType.PublicJoin) {
           vm.$q.notify({
             type: 'negative',
             position: 'top',

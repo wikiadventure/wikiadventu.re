@@ -13,7 +13,7 @@ import lobby.gameLoop.phase.Playing;
 class Classic extends GameLoop {
 
     public override function onStart(?data:Any) {
-        currentPhase = new Waiting(lobby);
+        currentPhase = lobby.type != Public ? new Waiting(lobby) : new Voting(lobby);
         currentPhase.start();
     }
 
