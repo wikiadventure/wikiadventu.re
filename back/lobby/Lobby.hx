@@ -252,9 +252,8 @@ class Lobby {
      */
     public static function joinPublicFree(player:Player):Lobby {
         for (l in lobbyList) {
-            if (l.type == Public && (l.slot > l.players.length)) {
+            if (l.type == Public && (l.players.length < l.slot)) {
                 if ( l.language == player.language ) {
-                    l.connect(player);
                     return l;
                 }
             }
