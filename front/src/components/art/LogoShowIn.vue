@@ -5,8 +5,8 @@
         <img src="svg/logoV1.svg" alt="wikipedia logo"/>
       </div>
     </div>
-    <img id="logoShowInTitle" src="svg/title.svg" alt="wikipedia adventure"/>
-    <!--<div id="logoShowInTitle"><p>{{ title }}</p></div>-->
+    <img v-if="title == null" id="logoShowInTitle" src="svg/title.svg" alt="wikipedia adventure"/>
+    <div v-else id="logoShowInTitle"><p>{{ title }}</p></div>
   </div>
 </template>
 <style lang="scss">
@@ -55,6 +55,29 @@
     transform: scale3d(1,1,1);
     animation: 6s ease-out 0.31s logoShowInBlurFadeIn;
     
+  }
+
+  #logoShowInTitle p {
+    font-size: 7vw;
+    text-align: center;
+  }
+  .body--dark {
+    #logoShowInTitle p {
+      color: #cce7f8;
+      text-shadow: 0 0 6px rgba(182, 211, 207, 0.9),
+        0 0 30px rgba(182, 211, 207, 0.3), 0 0 12px rgba(18, 230, 238, 0.5),
+        0 0 21px rgba(18, 230, 238, 0.8), 0 0 34px rgba(18, 230, 238, 0.75),
+        0 0 54px rgba(18, 230, 238, 0.8);
+    }
+  }
+  .body--light {
+    #logoShowInTitle p {
+      color: #ebf7ff;
+      text-shadow: 0 0 6px rgba(72, 84, 82, 0.9),
+        0 0 30px rgba(182, 211, 207, 0.3), 0 0 12px rgba(18, 230, 238, 0.5),
+        0 0 21px rgba(18, 230, 238, 0.8), 0 0 34px rgba(18, 230, 238, 0.75),
+        0 0 54px rgba(18, 230, 238, 0.8);
+    }
   }
 
   @keyframes logoShowInBlurFadeIn {

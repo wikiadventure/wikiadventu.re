@@ -1,6 +1,6 @@
 <template>
   <div class="main-menu-index">
-    <logo-show-in class="absolute" title="Wiki Adventure"></logo-show-in>
+    <logo-show-in class="absolute" ></logo-show-in>
     <compact-lang-switch class="topLeft text-uppercase" />
     <theme-switch class="topRight" />
     <div class="skewLineContainer first"><div class="skewLine"></div></div>
