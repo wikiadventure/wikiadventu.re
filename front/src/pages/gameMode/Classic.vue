@@ -155,7 +155,7 @@ export default defineComponent({
     onWinRound(payload:WinRound) {
       var vm = this as any;
       if (payload.id == vm.$store.state.gameData.self) vm.$refs.gameAudio.winAudio.play();
-      else vm.$refs.gameAudio.loseAudios.play();
+      else vm.$refs.gameAudio.loseAudio.play();
       vm.showRoundWin = true;
       setTimeout(() => {vm.showRoundWin = false}, 5000);
       return;
