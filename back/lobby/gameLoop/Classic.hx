@@ -18,7 +18,6 @@ class Classic extends GameLoop {
     }
 
     public override function onEnd(?data:Any) {
-        onStart();
     }
 
     public override function next(?data:Any) {

@@ -24,6 +24,7 @@ class GameLoop {
     }
     public function end(?data:Any) {
         onEnd(data);
+        start();
     }
     public function onEnd(?data:Any) {
         
