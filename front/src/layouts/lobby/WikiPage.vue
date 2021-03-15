@@ -10,6 +10,8 @@
   </section>
 </template>
 <style lang="scss">
+@use '../../css/wiki' as *;
+
 .wikiFade {
   opacity: 0;
 }
@@ -42,6 +44,10 @@
     font-size: 1.5rem;
     margin: 5px auto;
   }
+  ul {
+    margin: 0.3em 0 0 1.6em;
+    padding: 0;
+  }
   img {
     max-width: 100%;
     height: auto;
@@ -61,163 +67,59 @@
     padding-left: 2.5em;
     margin: 1em 0;
   }
+  *[style*="background"], *[bgcolor] {
+    color: black;
+  }
   .safeMode {
     img {
-      filter: blur(20px);
+      filter: blur(5px);
       transition: filter 2s ease-in-out;
     }
     img:hover {
       filter: blur(0px);
     }
   }
-}   
-.infobox, .infobox_v2, .infobox_v3 {
-    display: table;
-    font-size: 0.9em;
-    line-height: 1.4;
-    max-width: 16em;
-    min-width: 30%;
-    float: right;
-    clear: right;
-    margin: 15px 0 15px 15px;
-    border: 1px solid grey;
-    border-radius: 5px;
-    border-collapse: collapse;
-    @media(max-width: 720px) {
-      display: flex;
-      flex: 1 1 100%;
-      flex-flow: column nowrap;
-      width: 100% !important;
-      max-width: 100% !important;
-      th {
-        padding: 7px 10px;
-      }
-      > tbody, > caption {
-        display: flex;
-        flex-flow: column nowrap;
-      }
-      > tbody > tr {
-        min-width: 100%;
-        display: flex;
-        flex-flow: row nowrap;
-      }
-      td:only-child, th:only-child {
-        width: 100%;
-      }
-      tbody > tr > td, tbody > tr > th {
-        flex: 1 0;
-      }
-    }
-    caption, tr {
-      border-bottom: 1px solid grey;
-    }
-    th {
-      text-align: left;
-    }
-    caption, tr, th, td {
-      border: 1px solid grey;
-    }
-  }
-#wikiContent {
-  .hatnote {
-    padding: .5em 1.5em;
-    display: inline-block;
-    font-size: .85em;
-    line-height: 1.4;
-    margin-bottom: 1em;
-    border-radius: 2em;
-  }
-  .tleft, .floatleft {
-    float: left;
-    clear: left;
-    margin: 0 1.2em 1.2em;
-  }
-  .tright, .floatright {
-    float: right;
-    clear: right;
-    margin: 0 1.2em 1.2em;
-  }
-  .tleft {
-    margin-left: -.95 * 4em;
-    @media screen and (max-width: 1220px) {
-      margin-left: -.95 * 2em;
-    }
-  }
-  .tright {
-    margin-right: -.95 * 4em;
-    @media screen and (max-width: 1220px) {
-      margin-right: -.95 * 2em;
-    }
-  }
-  .thumbcaption {
-    font-size: .8em;
-    padding-right: .5em;
-  }
-  .thumbinner {
-    max-width: 100%;
-  }
-  .gallerycaption {
-    text-align: center;
-    font-weight: bold;
-  }
-  .gallerybox {
-    display: inline-block;
-    vertical-align: top;
-    img {
-      display: block;
-    }
-  }
-  .gallerytext {
-    font-size: .8em;
-    p {
-      margin-top: .3em;
-    }
-  } 
-  .reflist {
-    font-size: .8em;
-  }
 }
 .body--dark {
-  .infobox, .infobox_v2, .infobox_v3 {
-    background: var(--w-color-dark-blue);
-  }
-  .wikiPage {
-    background: var(--w-color-almost-black);
-    color: var(--w-color-blue-white);
-    a {
-      color: var(--w-color-dark-teal);
-    }
-    .notWikiLink {
-      color: rgb(77, 104, 104);
-    }
-    .portal {
-      color: rgb(22, 130, 67);
-    }
-    .anchorLink {
-      color: rgb(38, 72, 143);
-    }
-  }
-  #wikiContent {
-    .hatnote {
-      background-color: var(--w-color-dark-blue);
-      color: var(--w-color-teal);
-    }
-  }
+  --wiki-page-bg: var(--w-color-almost-black);
+  --wiki-page-color: var(--w-color-blue-white);
+
+  --wiki-link-color: var(--w-color-dark-teal);
+  --not-wiki-link-color: #8e3a45;
+  --portal-link-color: #168243;
+  --anchor-link-color: #26488f;
 }
 .body--light {
-  .wikiPage {
-    background: white;
-    .notWikiLink {
-      color: rgb(77, 104, 104);
-    }
-    .portal {
-      color: rgb(22, 130, 67);
-    }
-    .anchorLink {
-      color: rgb(38, 72, 143);
-    }
+  --wiki-page-bg: white;
+  --wiki-page-color: black;
+
+  --wiki-link-color: #2b2bc7;
+  --not-wiki-link-color: #8e3a45;
+  --portal-link-color: #168243;
+  --anchor-link-color: #2593ce;
+}
+.wikiPage {
+  background: var(--wiki-page-bg);
+  color: var(--wiki-page-color);
+}
+#wikiContent {
+  .hatnote {
+    background-color: var(--hatnote-bg);
+    color: var(--hatnote-color);
   }
-}    
+  .wikiLink {
+    color: var(--wiki-link-color);
+  }
+  .notWikiLink {
+    color: var(--not-wiki-link-color);
+  }
+  .portalLink {
+    color: var(--portal-link-color);
+  }
+  .anchorLink {
+    color: var(--anchor-link-color);
+  }
+}
 </style>
 <script lang="ts">
 import Vue from 'vue';
@@ -310,7 +212,7 @@ export default defineComponent({
         if (links[i].getAttribute("href")!.startsWith("#")) {
           links[i].classList.add("anchorLink");
         } else if (links[i].getAttribute("href")!.indexOf(":") != -1) {
-          links[i].classList.add("portal");
+          links[i].classList.add("portalLink");
         } else if (links[i].getAttribute("href")!.startsWith("/wiki/")) {
           links[i].classList.add("wikiLink");
         } else {

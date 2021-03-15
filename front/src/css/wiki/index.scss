@@ -1,0 +1,185 @@
+@forward './fr';
+#wikiContent {
+  .infobox,
+  .infobox_v2,
+  .infobox_v3 {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-flow: column nowrap;
+    place-items: stretch;
+    font-size: 0.9em;
+    line-height: 1.7em;
+    max-width: 30%;
+    min-width: 25em;
+    float: right;
+    clear: right;
+    margin: 15px 0 15px 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    border-collapse: collapse;
+    table {
+      display: flex;
+      flex-flow: column nowrap;
+      place-items: stretch;
+    }
+    tr,
+    td {
+      flex: 1 1 auto;
+      border: none;
+      place-items: stretch;
+      justify-content: center;
+      display: flex;
+      flex-flow: row wrap;
+      margin: 0;
+      div {
+        width: 100%;
+      }
+      br {
+        width: 100%;
+        content: "";
+      }
+    }
+    th {
+      flex: 1 1 auto;
+      display: block;
+      padding: 3px 5px;
+      text-align: left;
+    }
+    > tbody,
+    > caption {
+      display: flex;
+      flex-flow: column nowrap;
+    }
+    > tbody > tr {
+      min-width: 100%;
+      display: flex;
+      flex-flow: row nowrap;
+    }
+    td:only-child,
+    th:only-child {
+      width: 100%;
+    }
+    tbody > tr > td,
+    tbody > tr > th {
+      flex: 1 0;
+    }
+    caption,
+    tr {
+      border-bottom: 1px solid grey;
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+    img {
+      margin: 5px 0;
+      vertical-align: middle;
+    }
+    audio {
+      height: 2em;
+    }
+    .navigation-only,
+    .noprint:not(.mw-cite-backlink) {
+      display: none;
+    }
+    .legend {
+      text-align: center;
+      padding: 3px 5px;
+    }
+    .image,
+    .images {
+      text-align: center;
+      display: inline-flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+    @media (max-width: 720px) {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
+  .hatnote {
+    padding: 0.5em 1.5em;
+    display: inline-block;
+    font-size: 0.85em;
+    line-height: 1.4;
+    margin-bottom: 1em;
+    border-radius: 2em;
+  }
+  .tleft,
+  .floatleft {
+    float: left;
+    clear: left;
+    margin: 0 1.2em 1.2em;
+  }
+  .tright,
+  .floatright {
+    float: right;
+    clear: right;
+    margin: 0 1.2em 1.2em;
+  }
+  .tleft {
+    margin-left: -3.75em;
+    @media screen and (max-width: 1220px) {
+      margin-left: -1.75em;
+    }
+  }
+  .tright {
+    margin-right: -3.75em;
+    @media screen and (max-width: 1220px) {
+      margin-right: -1.75em;
+    }
+  }
+  .thumbcaption {
+    font-size: 0.8em;
+    padding: 0.5em;
+  }
+  .thumbinner {
+    max-width: 100%;
+    margin: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    img {
+      width: 100%;
+    }
+  }
+  .wikitable {
+    border-collapse: collapse;
+    tr, th, td {
+      border: 1px solid grey;
+    }
+  }
+  table.centre,
+  table.center {
+    margin: 1em auto;
+  }
+  .center, .centre {
+    text-align: center;
+  }
+  ul.gallery {
+    margin: 2px auto;
+    text-align: center;
+  }
+  .gallerycaption {
+    text-align: center;
+    font-weight: bold;
+  }
+  .gallerybox {
+    display: inline-block;
+    vertical-align: top;
+    img {
+      display: block;
+      margin: auto;
+    }
+  }
+  .gallerytext {
+    font-size: 0.8em;
+    text-align: center;
+    p {
+      margin-top: 0.3em;
+    }
+  }
+  .reflist {
+    font-size: 0.8em;
+  }
+}
