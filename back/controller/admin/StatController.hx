@@ -18,12 +18,7 @@ class StatController {
 		this.im = im;
         this.sr = sr;
         this.body = body;
-        if (!Guard.checkPassword(body)) {
-            this.sr.writeHead(Unauthorized);
-            this.sr.write("Access denied, please provide the correct password!");
-            this.sr.end();
-            return;
-        }
+        if (!Guard.auth(im, sr, body)) return;
         var responseData = 
         '
         <html>

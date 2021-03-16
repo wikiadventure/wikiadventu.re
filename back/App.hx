@@ -14,6 +14,7 @@ import controller.connect.ConnectController;
 import controller.connect.twitch.TwitchController;
 import controller.admin.LogController;
 import controller.admin.StatController;
+import controller.admin.AnnounceController;
 import lobby.Lobby;
 import js.Node.console;
 import js.Node.process;
@@ -70,6 +71,7 @@ class App {
                     case "twitch": new TwitchController(im, sr, body);
                     case "log": new LogController(im, sr, body);
                     case "stat": new StatController(im, sr, body);
+                    case "announce": new AnnounceController(im, sr, body);
                     //case "help" to help dev
                     default: new ErrorResponse(im, sr, body, "Sorry, you are looking for something that doesn't exist!", 404);
                 }
