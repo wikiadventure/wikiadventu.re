@@ -1,7 +1,7 @@
 <template>
-  <section ref="wiki" class="wikiPage absolute-full" :class="{ 'wikifade': fade }" :id="endPage ? 'endPage' : 'wikiPage'">
+  <section class="wikiPage absolute-full" :class="{ 'wikifade': fade }" :id="endPage ? 'endPage' : 'wikiPage'">
     <exit-btn class="q-ma-md" v-if="endPage" target="wiki-end-page"/>
-    <div id="wikiCore">
+    <div id="wikiCore" ref="wiki">
       <h1 id="wikiTitle">{{ title }}</h1>
       <div id="wikiMain">
         <div id="wikiContent" v-html="content" :class="{ safeMode: safeMode }"></div>
