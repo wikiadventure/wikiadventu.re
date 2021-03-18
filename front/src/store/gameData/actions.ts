@@ -1,7 +1,7 @@
 import { Lang } from 'src/i18n';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
-import { GameData, GameState, LobbyEvent, LobbyEventType, LobbyType, Path, PlayerJoin, PlayerLeft, SetOwner, UpdateScore, VoteResult, VoteSkip, WinRound, WsMessage } from './state';
+import { GameData, LobbyType } from './state';
 import { PhaseType } from './type/phase';
 
 const actions: ActionTree<GameData, StateInterface> = {
@@ -47,6 +47,9 @@ const actions: ActionTree<GameData, StateInterface> = {
         };
         case LobbyEventType.VoteSkip: {
           return dispatch('onVoteSkip', json.data);
+        };
+        case LobbyEventType.VoteSkip: {
+          return dispatch('onRollback', json.data);
         };
         default: {
           return;
@@ -95,6 +98,9 @@ const actions: ActionTree<GameData, StateInterface> = {
     commit('path', data.pages);
   },
   onVoteSkip({ commit }, data:VoteSkip) {
+    commit('voteSkip', data);
+  },
+  onRollback({ commit }, data:Rollback) {
     commit('voteSkip', data);
   },
   sendStart({ state }) {
@@ -179,6 +185,70 @@ enum WebsocketPackageType {
   ResetVote = "ResetVote",
   Validate = "Validate",
   VoteSkip = "VoteSkip"
+}
+
+
+export enum LobbyEventType {
+  SetOwner = "SetOwner",
+  PlayerJoin = "PlayerJoin",
+  PlayerLeft = "PlayerLeft",
+  VoteResult = "VoteResult",
+  GameState = "GameState",
+  UpdateScore = "UpdateScore",
+  WinRound = "WinRound",
+  Message = "Message",
+  Path = "Path",
+  VoteSkip = "VoteSkip",
+  Rollback = "Rollback"
+}
+
+export interface LobbyEvent<T> {
+  type:LobbyEventType,
+  data:T
+}
+export interface PlayerJoin {
+  pseudo:string,
+  id:number,//The player id
+  score:number,
+  voteSkip:boolean,
+  self:boolean
+}
+export interface Path {
+  id:number,//The player id
+  pages:string[]
+}
+export interface SetOwner {
+  id:number//The player id
+}
+export interface PlayerLeft {
+  id:number//The player id
+}
+export interface VoteResult {
+  start:string,
+  end:string
+}
+export interface VoteSkip {
+  id:number, //The player id who skip
+  state:boolean
+}
+export interface Rollback {
+  page:string
+}
+export interface GameState {
+  phase:number,
+  round:number,
+  time:number
+}
+export interface UpdateScore {
+  id:number,//The player id
+  score:number
+}
+export interface WinRound {
+  id:number//The player id
+}
+export interface WsMessage {
+  id:number,//The player id
+  mes:string
 }
 
 export default actions;

@@ -1,7 +1,8 @@
 import counter from './script/countdown';
 import { Lang } from 'src/i18n';
 import { MutationTree } from 'vuex';
-import { GameData, GameState, LobbyType, Message, Player, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, VoteSkip, WinRound, WsMessage } from './state';
+import { GameData, LobbyType, Message, Player } from './state';
+import { GameState, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, VoteSkip, WinRound, WsMessage } from './actions';
 
 const mutation: MutationTree<GameData> = {
   setLang(state:GameData, l:Lang) {

@@ -7,6 +7,7 @@ import lobby.wikiAPI.WikiTools;
 import lobby.Lobby.WebsocketPackage;
 import lobby.gameLoop.Phase.PhaseType;
 import lobby.player.Player;
+using utils.ReverseArrayIterator;
 using lobby.player.PlayersExtension;
 using Lambda;
 
@@ -38,14 +39,23 @@ class Playing extends Phase {
         var oldPage = player.currentPage;
         player.numberOfJump +=1;
         player.currentPage = json.value;
+        var currentValidation = player.currentValidation;
         var validation:Promise<String>;
         validation = WikiTools.validateJump(lobby.language, oldPage, json.value);
         validation.then(
             (landPage) -> {
+                currentValidation.page = landPage;
+                currentValidation.validated = true;
                 player.validationBuffer.remove(validation);
             }
         ).catchError(
             (reason) -> {
+                var pos = player.validationList.indexOf(currentValidation);
+                if ( pos != -1) {
+                    player.validationList.splice(pos,player.validationList.length);
+                    player.rollback(player.currentPage);
+                }
+                player.validationBuffer.remove(validation);
                 switch reason.type {
                     case Cheat:
                         onCheat(player, oldPage, json.value, reason.url, reason.body);
@@ -54,7 +64,6 @@ class Playing extends Phase {
                     case RequestFailed:
                         onRequestFailed(player, oldPage, json.value, reason.url, reason.e);
                     default:
-                        
                 }
             }
         );
@@ -67,9 +76,16 @@ class Playing extends Phase {
     public function checkWin(player:Player, actualPage:String) {
         if (Querystring.unescape(actualPage) == endPage)
             Promise.all(player.validationBuffer).then(
-                (v) -> win(player),
+                (v) -> {
+                    if (player.validationList.reversedIterable().find((v) -> v.page == endPage && v.validated) == null) {
+                        log("player " + player.uuid + " cheat on final validation : ", PlayerData);
+                        return;
+                    }
+                    win(player);
+                }
+            ).catchError(
                 (reason) -> log("player " + player.uuid + " cheat on final validation : ", PlayerData)
-            ); 
+            );
     }
 
     public function win(player:Player) {
@@ -88,9 +104,11 @@ class Playing extends Phase {
         log(body, PlayerData);
         log(player.pseudo + " is cheating!", PlayerData);
         log(oldPage + " --> " + url, PlayerData);
-        log(player.pageList, PlayerData);
-        lobby.players.emitMessage("it seems that " + player.pseudo + " is cheating! (or the anticheat system is broken)");
-        lobby.players.emitMessage(player.pseudo + "jump from " + player.currentPage + " to " + StringTools.urlDecode(url));
+        log(player.validationList, PlayerData);
+        lobby.players.emitMessage("Unvalidated jump from " + player.pseudo + " ! 
+        He might have tried to cheat!");
+        lobby.players.emitMessage(player.pseudo + "jump from " + player.currentPage + " to " + newPage);
+        
     }
 
     public function onWikiError(player:Player, oldPage:String, newPage:String, url:String, body:String) {

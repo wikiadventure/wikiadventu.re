@@ -38,7 +38,8 @@ import PageHistory from "../../layouts/lobby/screen/PageHistory.vue";
 import GameAudio from "../../components/audio/GameAudio.vue";
 import TouchSurfaceHandler from '../../mixins/touchSurfaceHandler';
 
-import { GameState, Player, VoteResult, WinRound, WsMessage } from "../../store/gameData/state";
+import { Player } from "../../store/gameData/state";
+import { GameState, WinRound, VoteResult, WsMessage, Rollback } from "../../store/gameData/actions";
 
 import  { ManageScreenEvent } from "../../mixins/manageScreen";
 
@@ -163,6 +164,8 @@ export default defineComponent({
     },
     onVoteResult(payload:VoteResult) {
       var vm = this as any;
+      vm.$refs.wikiPage.requestWikiPage(payload.start);
+      vm.$refs.rightPanel.requestWikiPage(payload.end);
       vm.$q.notify({
         type: 'annonce',
         position: 'top',
@@ -174,6 +177,10 @@ export default defineComponent({
       if (!vm.$refs.gameMenu.showMenu || vm.$refs.gameMenu.tab != "chat") {
         vm.$refs.gameAudio.notifAudio.play();
       } 
+    },
+    onRollback(payload:Rollback) {
+      var vm = this as any;
+      vm.$refs.wikiPage.requestWikiPage(payload.page);
     }
   },
   created() {
@@ -190,6 +197,8 @@ export default defineComponent({
           return vm.onVoteResult(action.payload);
         case "gameData/onMessage":
           return vm.onMessage(action.payload);
+        case "gameData/onRollback":
+          return vm.onRollback(action.payload);
       }
     });
     vm.unsubscribeMutation = vm.$store.subscribe((mutation, state) => {

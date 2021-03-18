@@ -5,14 +5,24 @@ import haxe.Json;
 using Lambda;
 
 class PlayersExtension {
+    public static function rollback(player:Player, oldPage:String) {
+        player.currentPage = oldPage;
+        var data:LobbyEvent<Rollback> = {
+            type: Rollback,
+            data: {
+                page: oldPage
+            }
+        }
+        if(player.socket != null) player.socket.send(Json.stringify(data));
+    }
     public static function pageHistoryReset(players:Array<Player>) {
-        players.iter(p -> p.pageListReset());
+        players.iter(p -> p.validationListReset());
     }
     public static function voteReset(players:Array<Player>) {
         players.iter(p -> p.vote = null);
     }
     public static function setStartPage(players:Array<Player>, startPage:String) {
-        players.iter(p -> p.currentPage = startPage);
+        players.iter(p -> p.validationList.push({page: startPage, validated: true}));
     }
     public static function emitPlayerJoin(players:Array<Player>, player:Player) {
         var data:LobbyEvent<PlayerJoin> = {
@@ -168,6 +178,7 @@ enum abstract LobbyEventType(String) {
     var SetOwner;
     var Path;
     var VoteSkip;
+    var Rollback;
 }
 
 typedef LobbyEvent<T> = {
@@ -224,4 +235,8 @@ typedef Path = {
 typedef VoteSkip = {
     id:Int,
     state:Bool
+}
+
+typedef Rollback = {
+    page:String
 }

@@ -1,5 +1,5 @@
 <template>
-  <section class="wikiPage absolute-full" :class="{ 'wikifade': fade }" :id="endPage ? 'endPage' : 'wikiPage'">
+  <section class="wikiPage absolute-full" :class="{ 'wikifade': fade, 'endPage': endPage }">
     <exit-btn class="q-ma-md" v-if="endPage" target="wiki-end-page"/>
     <div id="wikiCore" ref="wiki">
       <h1 id="wikiTitle">{{ title }}</h1>
@@ -14,6 +14,9 @@
 
 .wikiFade {
   opacity: 0;
+}
+.endPage a {
+  cursor: not-allowed;
 }
 .wikiPage {
   overflow-wrap: break-word;
@@ -176,7 +179,6 @@ export default defineComponent({
       if (vm.loading) return;
       vm.loading = true;
       vm.safeModeActive = true;
-      var id = vm.endPage ? "endPage" : "wikiPage";
       await vm.fetchArticle(url).then(
         function(article:WikiArticle) {
           vm.fade = true;
@@ -260,11 +262,6 @@ export default defineComponent({
     var vm = this as any;
     vm.title = vm.endPage ? vm.$t("wikiPage.noEndPageYet") as string : vm.$t("wikiPage.tipsTitle") as string;
     vm.content = vm.endPage ? "" : vm.$t("wikiPage.tipsContent"+ (vm.$q.platform.is.mobile ? "Mobile" : "")) as string;
-    this.unsubscribe = this.$store.subscribe((mutation, state) => {
-      if (mutation.type === 'gameData/voteResult') {
-        this.requestWikiPage(vm.endPage ? state.gameData.endPage : state.gameData.startPage);
-      }
-    });
   },
   mounted() {
     var vm = this as any;
@@ -275,9 +272,6 @@ export default defineComponent({
       }
     }
     document.addEventListener("keydown", keyDown, false);
-  },
-  beforeDestroy() {
-    this.unsubscribe!();
   }
 });
 </script>
