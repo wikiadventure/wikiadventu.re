@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Tell the player of incoming update
+        run: curl -u ":${{secrets.ADMIN_SECRET}}" https://wiki-adventure-dev.herokuapp.com/api/announce --data "New update is coming your party will be interrupted in few minute."
       - uses: actions/checkout@v2
       - name: Setup Haxe environment
         # You may pin to the exact commit or the version.
