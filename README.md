@@ -1,6 +1,15 @@
 # WikiAdventure
 
 <p align="center">
+    <a href="https://discord.gg/wRN6Dam">
+        <img src="https://img.shields.io/discord/724622557554147348?logo=discord"
+            alt="join me on Discord"></a>
+    <a href="https://sacramentix.fr">
+        <img src="https://img.shields.io/website?label=sacramentix.fr&style=flat&logo=Heroku&url=https%3A%2F%2Fwiki-adventure.herokuapp.com"
+            alt="check my website"></a>
+</p>
+
+<p align="center">
   <a href="http://wiki-adventure.herokuapp.com/" title="Wiki Adventure"><img width=402 height=250 src="front/public/svg/openGraph.svg" /></a>
 </p>
 
