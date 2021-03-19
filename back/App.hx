@@ -1,7 +1,6 @@
 import config.admin.Guard;
 import controller.info.InfoController;
 import macros.Env;
-import lobby.player.Player;
 import lobby.TwitchLobby;
 import config.twitch.TwitchCredential;
 import controller.FrontController;
@@ -18,6 +17,7 @@ import controller.admin.AnnounceController;
 import lobby.Lobby;
 import js.Node.console;
 import js.Node.process;
+import response.Security;
 #if https
 import js.node.Https;
 #end
@@ -58,6 +58,7 @@ class App {
     }
 
     function new(im : IncomingMessage, sr : ServerResponse, body : String) {
+        if (!Security.pass()) return;
         var idx1 = im.url.indexOf("/", 1);
         var route1 : String = idx1 == -1 ? im.url : im.url.substring(1, idx1);
         switch (route1) {
