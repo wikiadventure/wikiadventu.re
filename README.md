@@ -5,7 +5,7 @@
         <img src="https://img.shields.io/discord/724622557554147348?logo=discord"
             alt="join me on Discord"></a>
     <a href="https://wiki-adventure.herokuapp.com">
-        <img src="https://img.shields.io/website?label=sacramentix.fr&style=flat&logo=Heroku&url=https%3A%2F%2Fwiki-adventure.herokuapp.com"
+        <img src="https://img.shields.io/website?label=Wiki adventure&style=flat&logo=Heroku&url=https%3A%2F%2Fwiki-adventure.herokuapp.com"
             alt="check the game"></a>
 </p>
 
