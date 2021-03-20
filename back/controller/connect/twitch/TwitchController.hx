@@ -95,6 +95,9 @@ class TwitchController {
         }, function(reject) {
             loginStatus.error = "promise failed : " + reject;
             loginStatus.status = Error;
+        })
+        .catchError((r) -> {
+            trace(r);
         });
     }
 
@@ -199,6 +202,7 @@ class TwitchController {
         lobby.giveID();// giveID method also add the lobby to the lobbylist
         lobby.join(player, passwordHash);
         lobby.gameLoop = new Classic(lobby, 5);
+        lobby.gameLoop.start();
         return lobby;
     }
 }
