@@ -36,7 +36,7 @@ class TwitchPlayer extends Player {
                 var title = msg.substr(6);
                 twitchLobby.suggestionList.push(title);
                 twitchBot.say(twitchUser.name, "You voted " + title);
-                if (twitchLobby.suggestionList.length == TwitchLobby.suggestionLimit) twitchBot.say(channel, "Maximum vote reached!");
+                if (twitchLobby.suggestionList.length == TwitchLobby.suggestionLimit) twitchBot.say(channel, LangTools.getTwitchVoteCap(twitchLobby.language));
                 twitchLobby.log(title, Info);
             }
             return;
