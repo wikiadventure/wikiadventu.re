@@ -132,6 +132,7 @@ class Lobby {
     public function delete() {
         log("delete the lobby", Info);
         Lobby.lobbyList.remove(this);
+        this.id = null;
     }
 
     public function getPlayerFromUUID(uuid:String):Player {

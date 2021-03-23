@@ -28,7 +28,7 @@ class Phase {
     public function end() {
         Timers.clearTimeout(lobby.gameLoop.loop);
         onEnd();
-        lobby.gameLoop.next();
+        if (lobby.id != null) lobby.gameLoop.next();
     }
     public function onStart() {
 

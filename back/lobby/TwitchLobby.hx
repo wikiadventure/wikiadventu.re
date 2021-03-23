@@ -1,5 +1,6 @@
 package lobby;
 
+import lobby.player.Player;
 import js.node.Timers;
 import lobby.Lobby.LogType;
 import haxe.Timer;
@@ -48,8 +49,24 @@ class TwitchLobby extends Lobby {
     public function join(twitchPlayer:TwitchPlayer, passwordHash:String) {
         if (this.passwordHash != passwordHash) throw "invalid Password";
         twitchPlayer.twitchLobby = this;
+        twitchPlayer.twitchBot.quit();
         if (twitchPlayerList.indexOf(twitchPlayer) == -1) twitchPlayerList.push(twitchPlayer);
         addPlayer(twitchPlayer);
+    }
+
+    public override function removePlayer(player:Player) {
+        super.removePlayer(player);
+        try {
+            var t = cast(player, TwitchPlayer);
+            if (twitchPlayerList.remove(t)) {
+                t.twitchBot.quit();
+                if (t.twitchUser.name == name) {
+                    delete();
+                }
+            }
+        } catch(e:Dynamic) {
+            trace(e);
+        }
     }
 
     public static function find(channelName:String):TwitchLobby {
