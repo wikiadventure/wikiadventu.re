@@ -85,8 +85,9 @@ export default {
       tipsContentMobile: "Vous pouvez ouvrir le menu du jeu avec le bouton en haut à gauche ou en faisant glisser vers la droite. Vous pouvez aussi ouvrir la page de fin en faisant glisser la gauche.",
     },
     connectError: {
-      invalidID: "L'dentifiant de partie est invalide",
+      invalidID: "L'identifiant de partie est invalide",
       noLobbyFoundWithID: "Aucune partie trouvée avec l'identifiant",
+      noLobbyFoundWithChannelName: "Aucune partie trouvée avec Le nom de chaîne",
       lobbyFull: "La partie que vous voulez rejoindre est remplie",
       invalidPassword: "Mot de passe invalide",
       lobbyLimitReached: "La limite de partie a été atteinte!",

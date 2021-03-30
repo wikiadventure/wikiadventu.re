@@ -87,6 +87,7 @@ export default {
   connectError: {
     invalidID: "The Party ID provided is invalid",
     noLobbyFoundWithID: "No game found with this Party ID",
+    noLobbyFoundWithChannelName: "No game found with this channel name",
     lobbyFull: "The party you want to join is full",
     invalidPassword: "Invalid Password",
     lobbyLimitReached: "The party limit has been reached!",

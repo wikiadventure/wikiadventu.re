@@ -1,5 +1,6 @@
 package lobby;
 
+import controller.connect.error.ConnectError;
 import lobby.player.Player;
 import js.node.Timers;
 import lobby.Lobby.LogType;
@@ -46,8 +47,8 @@ class TwitchLobby extends Lobby {
         log("create the lobby", Info);
     }
     
-    public function join(twitchPlayer:TwitchPlayer, passwordHash:String) {
-        if (this.passwordHash != passwordHash) throw "invalid Password";
+    public function join(twitchPlayer:TwitchPlayer, passwordHash:String) { 
+        if (this.passwordHash != passwordHash) throw ConnectError.InvalidPassword;
         twitchPlayer.twitchLobby = this;
         twitchPlayer.twitchBot.quit();
         if (twitchPlayerList.indexOf(twitchPlayer) == -1) twitchPlayerList.push(twitchPlayer);
@@ -65,16 +66,15 @@ class TwitchLobby extends Lobby {
                 }
             }
         } catch(e:Dynamic) {
-            trace(e);
         }
     }
 
     public static function find(channelName:String):TwitchLobby {
         for (l in lobbyList) {
-            if (l.name > channelName) throw "no lobby with channelName " + channelName + " found";
+            if (l.name > channelName) break;
             if (l.name == channelName) return l;
         }
-        throw "no lobby with channelName " + channelName + " found";
+        throw ConnectError.NoLobbyFoundWithID;
     }
 
     public override function log( data : Dynamic, logType:LogType, ?pos : haxe.PosInfos ) {

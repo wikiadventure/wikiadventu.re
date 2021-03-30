@@ -16,7 +16,7 @@ class TwitchPlayer extends Player {
     public var authProvider:AuthProvider;
     public var twitchLobby:TwitchLobby;
     
-    public function new(twitchUser:HelixPrivilegedUser, authProvider:AuthProvider, language:Lang) {
+    public function new(pseudo:String, twitchUser:HelixPrivilegedUser, authProvider:AuthProvider, language:Lang) {
         super(twitchUser.name, language);
         this.twitchUser = twitchUser;
         twitchBot = new ChatClient(authProvider, { channels: [twitchUser.name] });

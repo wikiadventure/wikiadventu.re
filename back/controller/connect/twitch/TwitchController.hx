@@ -1,5 +1,6 @@
 package controller.connect.twitch;
 
+import response.connect.ConnectionError;
 import lobby.gameLoop.Classic;
 import response.SuccessResponse;
 import lobby.player.Player;
@@ -21,6 +22,7 @@ import haxe.http.HttpStatus;
 import js.node.Querystring;
 import uuid.Uuid;
 import tink.Json;
+using Lambda;
 
 class TwitchController {
     
@@ -143,7 +145,7 @@ class TwitchController {
             new ErrorResponse(im, sr, body, loginStatus.error, BadRequest);
             return;
         }
-        var player = new TwitchPlayer(loginStatus.user, loginStatus.authProvider, form.lang);
+        var player = new TwitchPlayer(form.pseudo, loginStatus.user, loginStatus.authProvider, form.lang);
         var passwordHash = Sha256.encode(form.password);
         var lobby:TwitchLobby;
         try {
@@ -154,7 +156,7 @@ class TwitchController {
                 lobby.join(player,passwordHash);    
             }
         } catch(e:Dynamic) {
-            new ErrorResponse(im, sr, body, e,BadRequest);
+            new ConnectionError(im, sr, e);
             return;
         }
         var json:ConnectionResponse = {
@@ -183,13 +185,15 @@ class TwitchController {
             };
             new SuccessResponse(im, sr, Json.stringify(json));
         } catch (e:Dynamic) {
-            new ErrorResponse(im, sr, body, "internal error : "+e,400);
+            new ConnectionError(im, sr, e);
         }
     }
 
     public function searchLoginStatus(uuid:String):TwitchLogin {
-        for (l in TwitchCredential.loginStatusList) {
+        for (i in 0...TwitchCredential.loginStatusList.length) {
+            var l = TwitchCredential.loginStatusList[i];
             if (l.uuid == uuid) {
+                TwitchCredential.loginStatusList.splice(i,1);
                 return l;
             }
         }

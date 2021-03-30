@@ -201,9 +201,9 @@ export default defineComponent({
         vm.connect(options, event.type == ConnectType.TwitchJoinWithout);
       }
     },
-    connect(options:RequestInit, twitch?:boolean) {
+    async connect(options:RequestInit, twitch?:boolean) {
       var vm = this;
-      fetch("/api/"+ (twitch ? "twitch" : "connect"), options)
+     return fetch("/api/"+ (twitch ? "twitch" : "connect"), options)
         .then(function(response:Response):Promise<ConnectionResponse> {
           return response.json();
         }).then(function(json:ConnectionResponse) {
@@ -220,6 +220,7 @@ export default defineComponent({
     },
     start(json:ConnectionResponse) {
       var vm = this as any;
+      vm.connecting = false;
       if (json.status == ConnectionStatus.Error) {
         vm.$q.notify({
           type: 'negative',
@@ -265,7 +266,7 @@ export default defineComponent({
           vm.$q.notify({
             type: 'negative',
             position: 'top',
-            message: vm.$t('connectError.noLobbyFoundWithID') + ' ' + id
+            message: vm.$t('connectError.'+(isTwitch ? 'noLobbyFoundWithChannelName' : 'noLobbyFoundWithID')) + ' ' + id
           });
         }
       }
