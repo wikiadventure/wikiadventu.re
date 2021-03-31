@@ -11,6 +11,7 @@ enum abstract Lang(String) {
     var eo;//esperanto
     var pt;//portugues
     var el;//Greek
+    var sv;//Swedish
   }
 
 class LangTools {
@@ -25,6 +26,7 @@ class LangTools {
             case eo: "Esperanto";
             case pt: "Português";
             case el: "Eλληνικά";
+            case sv: "Svenska";
             default: "Unknown";
         }
     }
