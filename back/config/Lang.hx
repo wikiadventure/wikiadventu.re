@@ -25,6 +25,7 @@ class LangTools {
             case eo: "Esperanto";
             case pt: "Português";
             case el: "Eλληνικά";
+            default: "Unknown";
         }
     }
 
