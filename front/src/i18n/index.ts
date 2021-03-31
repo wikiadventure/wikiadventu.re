@@ -6,16 +6,22 @@ export default {
   "fr": fr
 };
 
+/* The wikipedia lang extension used
+  it's en for english wikipedia which
+  result to the en.wikipedia.org */
 export enum Lang {
-  en = "en",
-  fr = "fr",
-  de = "de",
-  es = "es",
-  it = "it",
-  eo = "eo",
-  pt = "pt"
+  en = "en",//English
+  fr = "fr",//French
+  de = "de",//German
+  es = "es",//Spanish
+  it = "it",//Italian
+  eo = "eo",//Esperanto
+  pt = "pt",//Portugues
+  el = "el",//Greek
+  sv = "sv",//Swedish
 }
 
+// Denomination in original language
 export function getLabel(lang:string):string {
   switch (lang) {
     case Lang.en:
@@ -31,7 +37,11 @@ export function getLabel(lang:string):string {
     case Lang.eo:
       return "Esperanto";
     case Lang.pt:
-      return "Português"; 
+      return "Português";
+    case Lang.el:
+      return "Eλληνικά";
+    case Lang.sv:
+      return "Svenska";
     default:
       return "";
   }
