@@ -1,3 +1,4 @@
+import utils.crypto.RandomBase32;
 import config.admin.Guard;
 import controller.info.InfoController;
 import macros.Env;
@@ -28,6 +29,7 @@ class App {
         Lobby.init();
         TwitchLobby.init();
         Guard.init();
+        RandomBase32.init();
         #if https
             var options = {
                 key: Fs.readFileSync('config/ssl/key.pem', 'utf8'),

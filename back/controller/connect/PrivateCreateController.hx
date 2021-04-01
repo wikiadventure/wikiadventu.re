@@ -34,7 +34,7 @@ class PrivateCreateController {
             lobby.gameLoop.start();
             var json:ConnectionResponse = {
                 status: Success,
-                lobbyID: Lobby.encodeID(lobby.id),
+                lobbyID: lobby.formatID,
                 lobbyType: Private,
                 gameMode: Classic,
                 playerID: player.uuid,

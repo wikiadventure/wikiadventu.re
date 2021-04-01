@@ -30,7 +30,7 @@ class PublicJoinController {
             lobby.connect(player);
             var json:ConnectionResponse = {
                 status: Success,
-                lobbyID: Lobby.encodeID(lobby.id),
+                lobbyID: lobby.formatID,
                 lobbyType: Public,
                 gameMode: lobby.gameLoop.type,
                 playerID: player.uuid,

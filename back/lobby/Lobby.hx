@@ -1,5 +1,6 @@
 package lobby;
 
+import haxe.macro.Expr.Catch;
 import lobby.player.Player;
 import lobby.gameLoop.Phase.PhaseType;
 import lobby.GameLoop;
@@ -10,7 +11,7 @@ import js.node.Timers.Timeout;
 import haxe.Timer;
 import haxe.io.Bytes;
 import config.Lang;
-import haxe.crypto.Base64;
+import utils.crypto.RandomBase32;
 import lobby.gameLoop.Classic;
 using lobby.player.PlayersExtension;
 using Lambda;
@@ -23,6 +24,12 @@ class Lobby {
     public var totalPlayer:Int = 0; //use to give an id to player when sending info with socket io
     public var slot:Int;
     public var id:Int;
+
+    public var formatID(get,never):String;
+    public function get_formatID():String {
+        return RandomBase32.encode(id);
+    }
+
     public var passwordHash:String;
     public var language:Lang;
     public var players:Array<Player>;
@@ -275,35 +282,20 @@ class Lobby {
         return lobbyList.count((l) -> l.type == Private);
     }
 
-    /**
-     * transform the url string into the lobby id
-     * @param id in url string format
-     * @return Int The lobby id
-     */
-    public static function decodeID(id:String):Int {
-        var bytesValue = Base64.urlDecode(id);
-        var stringValue = bytesValue.getString(0,bytesValue.length);
-        var intValue = Std.parseInt(stringValue);
-        if(intValue == null) {
+    public static function decodeID(s:String):Int {
+        try {
+            return RandomBase32.decode(s);
+        } catch (e:Dynamic) {
             throw ConnectError.InvalidID;
         }
-        return intValue;
     }
-    /**
-     * tranform the lobby id into url string
-     * @param id in Int format
-     * @return the url String
-     */
-    public static function encodeID(id:Int):String {
-        var bytesValue = Bytes.ofString(Std.string(id));
-        var result = Base64.urlEncode(bytesValue);
-        return result;
-    }
+
     public function log( data : Dynamic, logType:LogType, ?pos : haxe.PosInfos ) {
         var time = "[" + Date.now().toString() + "]";
-		pos.fileName = time + " lobby " + Lobby.encodeID(id) + " " + logType + " -> " + pos.fileName;
+        var f = formatID;
+		pos.fileName = time + " lobby " + f + " " + logType + " -> " + pos.fileName;
         haxe.Log.trace(data, pos);
-        var fileName = "lobby/" + Lobby.encodeID(id) + "/" + logType + ".log";
+        var fileName = "lobby/" + f + "/" + logType + ".log";
         var content = haxe.Log.formatOutput(data, pos);
         fileLog.Log.inFile(fileName, content);
 	}
