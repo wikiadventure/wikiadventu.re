@@ -41,15 +41,18 @@ class StatController {
                             <th><h2>Lobby Info</h2></th>
                         </tr>
                         ::foreach lobby::
-                            <tr><th><h3>Lobby ::encodedID::</h3></th></tr>
+                            <tr><th><h3>Lobby ::formatID::</h3></th></tr>
                             <tr><th>type : ::type::</th></tr>
                             <tr><th>Language : ::language::</th></tr>
-                            <tr><th>State : ::state::</th></tr>
-                            <tr><th>Round : ::currentRound:: / ::round::</th></tr>
-                            <tr><th>Start page : ::startPage::</th></tr>
-                            <tr><th>End page : ::endPage::</th></tr>
+                            <tr><th>gamemode : ::gameLoop.type::</th></tr>
+                            <tr><th>gamephase : ::gameLoop.currentPhase.type::</th></tr>
+                            <tr><th>Round : ::gameLoop.currentRound:: / ::gameLoop.round::</th></tr>
                             <tr><th>Player : ::players.length:: / ::slot::</th></tr>
                             <tr><th>Total player : ::totalPlayer::</th></tr>
+                            <tr><th><a href="/api/log/lobby/::formatID::/PlayerData.log">PlayerData</a></th></tr>
+                            <tr><th><a href="/api/log/lobby/::formatID::/Info.log">Info</a></th></tr>
+                            <tr><th><a href="/api/log/lobby/::formatID::/Warning.log">Warning</a></th></tr>
+                            <tr><th><a href="/api/log/lobby/::formatID::/Error.log">Error</a></th></tr>
                         ::end::
                     </tbody>
                 </table>
