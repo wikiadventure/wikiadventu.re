@@ -174,7 +174,7 @@ export default defineComponent({
     },
     onMessage(payload:WsMessage) {
       var vm = this as any;
-      if (!vm.$refs.gameMenu.showMenu || vm.$refs.gameMenu.tab != "chat") {
+      if (!(vm.$refs.gameMenu.showMenu && vm.$refs.gameMenu.tab == "chat")) {
         vm.$refs.gameAudio.notifAudio.play();
       } 
     },

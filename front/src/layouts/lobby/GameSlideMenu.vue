@@ -163,7 +163,7 @@ export default defineComponent({
       return b;
     },
     totalMessages():number {
-      if (this.tab == "chat" ) this.seenMessage = this.$store.state.gameData.messages.length;
+      if (this.tab == "chat" && this.showMenu ) this.seenMessage = this.$store.state.gameData.messages.length;
       return this.$store.state.gameData.messages.length;
     },
   },
@@ -183,73 +183,14 @@ export default defineComponent({
   mounted() {
     var vm = this;
     this.touchsurface = document.documentElement;
-    /*var slideMenu = document.getElementById("slideMenu"),
-        startX:number,
-        startY:number,
-        dist:number,
-        threshold = 0.45,
-        min = 0.2;
-    function handleswipe(isRightSwipe:boolean, isLeftSwipe:boolean){
-        if (isRightSwipe) {
-          vm.showMenu = true;
-        } else if (isLeftSwipe){
-          vm.showMenu = false;
-        }
-    }
-    function touchEnd(e:TouchEvent) {
-      var touchobj = e.changedTouches[0];
-      slideMenu!.style.transition = "all ease-in-out 0.2s";
-      slideMenu!.style.transform = "";
-      dist = touchobj.pageX - startX; // get total dist traveled by finger while in contact with surface
-      //elapsedTime = new Date().getTime() - startTime; // get time elapsed
-      // check that elapsed time is within specified, horizontal dist traveled >= threshold, and vertical dist traveled <= 100
-      var swipeRightBol = ( dist >= threshold*slideMenu!.clientWidth );
-      var swipeLeftBol = ( dist <= -threshold*slideMenu!.clientWidth )
-      handleswipe(swipeRightBol, swipeLeftBol);
-    }
-    function touchMove(e:TouchEvent) {
-      var touchobj = e.changedTouches[0];
-      dist = touchobj.pageX - startX;
-      if ( dist > slideMenu!.clientWidth*min && !vm.showMenu) {
-        dist -= slideMenu!.clientWidth*min;
-        if ( dist > slideMenu!.clientWidth ) dist = slideMenu!.clientWidth;
-        slideMenu!.style.transform = "translateX(" + (-slideMenu!.clientWidth+dist) + "px)";
-      }
-      else if ( dist < -slideMenu!.clientWidth*min && vm.showMenu) {
-        dist += slideMenu!.clientWidth*min;
-        if ( dist < -slideMenu!.clientWidth ) dist = -slideMenu!.clientWidth;
-        slideMenu!.style.transform = "translateX(" + (dist) + "px)";
-      }
-    }
-    function touchStart(e:TouchEvent) {
-      e.preventDefault();
-      var touchobj = e.changedTouches[0];
-      dist = 0;
-      startX = touchobj.pageX;
-      startY = touchobj.pageY;
-      slideMenu!.style.transition = "";
-      //startTime = new Date().getTime(); // record time when finger first makes contact with surface
-    }
-
-    */function keyDown(e:KeyboardEvent) {
+    function keyDown(e:KeyboardEvent) {
       if (e.defaultPrevented) return;
       if (e.key == "Shift" && e.ctrlKey) {
         vm.showMenu = !vm.showMenu;
       }
-    }/*
-
-    this.touchsurface!.addEventListener('touchstart', touchStart, false);
-
-    this.touchsurface!.addEventListener('touchmove', touchMove, false);
-
-    this.touchsurface!.addEventListener('touchend', touchEnd, false);*/
-
+    }
     this.touchsurface!.addEventListener("keydown", keyDown, false);
-
     this.onDestroy = function () {
-      /*this.touchsurface!.removeEventListener('touchstart', touchStart, false);
-      this.touchsurface!.removeEventListener('touchmove', touchMove, false);
-      this.touchsurface!.removeEventListener('touchend', touchEnd, false);*/
       this.touchsurface!.addEventListener("keydown", keyDown, false);
     };
   },
