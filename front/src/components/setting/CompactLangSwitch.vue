@@ -18,20 +18,11 @@
     background: transparent!important;
   }
 }
-.body--dark {
   .compact-lang-switch {
     .q-field__control div {
-      color: var(--w-color-blue-white)!important;
+      color: var(--wa-color-blue-white)!important;
     }
   }
-}
-.body--light {
-  .compact-lang-switch {
-    .q-field__control div {
-      color: var(--w-color-almost-black)!important;
-    }
-  }
-}
 </style>
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
