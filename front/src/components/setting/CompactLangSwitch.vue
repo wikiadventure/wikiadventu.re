@@ -18,9 +18,18 @@
     background: transparent!important;
   }
 }
-.compact-lang-switch {
-  .q-field__control div {
-    color: var(--wa-color-2)!important;
+.body--dark {
+  .compact-lang-switch {
+    .q-field__control div {
+      color: var(--wa-color-blue-white)!important;
+    }
+  }
+}
+.body--light {
+  .compact-lang-switch {
+    .q-field__control div {
+      color: var(--wa-color-almost-black)!important;
+    }
   }
 }
 </style>
