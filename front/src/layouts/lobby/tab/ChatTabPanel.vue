@@ -33,6 +33,7 @@
   display: flex;
   flex: 1;
 	flex-direction: column-reverse;
+  border: none;
   .q-item {
     flex: 0 0 auto;
   }

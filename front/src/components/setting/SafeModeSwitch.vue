@@ -14,10 +14,10 @@
 .body--light {
   .safeModeToggle {
     .q-toggle__thumb:after {
-      background: var(--w-color-almost-black);
+      background: var(--wa-color-almost-black);
     }
     .q-icon {
-      color: var(--w-color-blue-white);
+      color: var(--wa-color-blue-white);
       opacity: 1;
     }
   }
@@ -25,10 +25,10 @@
 .body--dark {
   .safeModeToggle {
     .q-toggle__thumb:after {
-      background: var(--w-color-almost-black);
+      background: var(--wa-color-almost-black);
     }
     .q-icon {
-      color: var(--w-color-dark-teal);
+      color: var(--wa-color-dark-teal);
       opacity: 1;
     }
   }

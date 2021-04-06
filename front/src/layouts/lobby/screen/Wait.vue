@@ -16,7 +16,7 @@
       <q-separator/>
       <div class="wait-action justify-center">
         <div><!--Only to display tooltip over the disabled q btn -->
-          <q-btn :disable="self != owner" push class="wait-start" label="start" @click="start()" icon="mdi-check-bold"/>
+          <q-btn :disable="self != owner" push class="action-btn" label="start" @click="start()" icon="mdi-check-bold"/>
           <q-tooltip v-if="self != owner"  anchor="top middle" self="bottom middle" :offset="[10, 10]">
             Only <q-icon size="xs" class="owner" name="mdi-crown"/> {{ ownerPseudo }} can choose to start
           </q-tooltip>
@@ -72,58 +72,45 @@
 .wait-slot {
   font-size: 2em;
 }
+.self {
+  color: var(--wa-color-dark-teal);
+}
+.owner {
+  color: var(--wa-color-dark-teal);
+}
 .body--dark {
   .wait-container {
-    background: var(--w-color-almost-black);
+    background: var(--wa-color-almost-black);
   }
   .wait-players {
-    background: var(--w-color-almost-black);
+    background: var(--wa-color-almost-black);
     div {
       background: #191919;
       div {
-        color: var(--w-color-blue-white);
-      }
-      .self {
-        color: var(--w-color-dark-teal);
-      }
-      .owner {
-        color: var(--w-color-dark-teal);
+        color: var(--wa-color-blue-white);
       }
     }
   }
   .wait-slot {
-    color: var(--w-color-blue-white);
-  }
-  .wait-start {
-    background: var(--w-color-dark-teal);
-    color: var(--w-color-blue-white);
+    color: var(--wa-color-blue-white);
   }
 }
 .body--light {
   .wait-container {
-    background: var(--w-color-light-teal);
+    background: var(--wa-color-light-teal);
   }
   .wait-players {
-    background: var(--w-color-light-teal);
+    background: var(--wa-color-light-teal);
     div {
-      background: var(--w-color-blue-white);
+      background: var(--wa-color-blue-white);
       div {
-        color: var(--w-color-almost-black);
+        color: var(--wa-color-almost-black);
       }
-      .self {
-        color: var(--w-color-dark-teal);
-      }
-      .owner {
-        color: var(--w-color-dark-teal);
-      }
+
     }
   }
   .wait-slot {
-    color: var(--w-color-blue-white);
-  }
-  .wait-start {
-    background: var(--w-color-dark-teal);
-    color: var(--w-color-blue-white);
+    color: var(--wa-color-blue-white);
   }
 }
 </style>

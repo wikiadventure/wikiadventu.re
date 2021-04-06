@@ -48,15 +48,15 @@
   </div>
 </template>
 <style lang="scss">
-.topLeft {
+.topLeft, .topRight {
   position: absolute;
-  left: 2px;
   top: 2px;
 }
+.topLeft {
+  left: 2px;
+}
 .topRight {
-  position: absolute;
   right: 2px;
-  top: 2px;
 }
 .main-menu-index {
   --w-angle: -5deg;
@@ -100,7 +100,7 @@
 .skewLine {
   position: absolute;
   transform-origin: top left;
-  border-top: 1px solid var(--w-color-blue-white);
+  border-top: 1px solid var(--wa-color-blue-white);
   left: -2%;
   width: 104%;
   height: 50em;
@@ -120,94 +120,61 @@
   }
 }
 #HowToPlay, #Contribution{
-  color: var(--w-color-dark-teal);
+  color: $wa-4;
 }
 #News {
-  color: var(--w-color-blue-white);
+  color: $wa-3;
 }
 #Contribution {
   pointer-events: all;
 }
 .github {
   background: #000;
-  color: var(--w-color-blue-white);
+  color: var(--wa-color-blue-white);
 }
 .discord {
   background: #7289DA;
-  color: var(--w-color-blue-white);
+  color: var(--wa-color-blue-white);
 }
 .kofi {
   background: #29abe0;
-  color: var(--w-color-blue-white);
+  color: var(--wa-color-blue-white);
 }
 .nano {
-  background: var(--w-color-blue-white);
+  background: var(--wa-color-blue-white);
   color: #4a90e2;
 }
 .github, .discord, .nano, .kofi {
   border-radius: 5px;
   margin: 0 15px 5px;
 }
+.skewLineContainer.first {
+  .skewLine {
+    background: $wa-1;
+  }
+}
+.skewLineContainer.second {
+  .skewLine {
+    background: $wa-2;
+  }
+}
+.skewLineContainer.third {
+  .skewLine {
+    background: $wa-1;
+  }
+}
+.wrapper.first, .wrapper.third {
+  background: $wa-1;
+}
+.wrapper.second {
+  background: $wa-2;
+}
 .body--dark {
-  #HowToPlay, #Contribution{
-    color: var(--w-color-dark-teal);
-  }
-  #News {
-    color: var(--w-color-blue-white);
-  }
-  .skewLineContainer.first {
-    .skewLine {
-      background: var(--w-color-dark-blue);
-    }
-  }
-  .skewLineContainer.second {
-    .skewLine {
-      background: var(--w-color-almost-black);
-    }
-  }
-  .skewLineContainer.third {
-    .skewLine {
-      background: var(--w-color-dark-blue);
-    }
-  }
-  .wrapper.first, .wrapper.third {
-    background: var(--w-color-dark-blue);
-  }
-  .wrapper.second {
-    background: var(--w-color-almost-black);
-  }
   .skewLine {
     box-shadow: 0 0 50px rgba(18, 230, 238, 1);
   }
 }
 .body--light {
-  #HowToPlay, #Contribution{
-    color: var(--w-color-dark-blue);
-  }
-  #News {
-    color: var(--w-color-almost-black);
-  }
-  .skewLineContainer.first {
-    .skewLine {
-      background: var(--w-color-light-teal);
-    }
-  }
-  .skewLineContainer.second {
-    .skewLine {
-      background: var(--w-color-blue-white);
-    }
-  }
-  .skewLineContainer.third {
-    .skewLine {
-      background: var(--w-color-light-teal);
-    }
-  }
-  .wrapper.first, .wrapper.third {
-    background: var(--w-color-light-teal);
-  }
-  .wrapper.second {
-    background: var(--w-color-blue-white);
-  }
   .skewLine {
     box-shadow: 0 0 50px rgb(3, 151, 157);
   }

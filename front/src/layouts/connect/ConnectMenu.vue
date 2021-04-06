@@ -88,7 +88,7 @@
   }
 }
 .q-tab--active, .q-tab__indicator {
-  color: var(--w-color-dark-teal)!important;
+  color: var(--wa-color-dark-teal)!important;
 }
 .q-tab--active.twitchTab, .twitchTab .q-tab__indicator {
   color: #6441A4!important;
@@ -96,7 +96,7 @@
 .body--dark {
   .connect-tabs {
     background: rgb(17,17,17);
-    color: darkgray;
+    color: #ddd;
     border-top: solid 1px grey;
   }
   .connect-sub-tabs {
@@ -108,12 +108,12 @@
 .body--light {
   .connect-tabs {
     background: rgb(200,200,200);
-    color: dimgray;
+    color: #333;
     border-top: solid 1px grey;
   }
   .connect-sub-tabs {
     background: rgb(230,230,230);
-    color: dimgray;
+    color: #333;
     border-top: solid 1px grey;
   }
 }

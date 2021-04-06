@@ -61,36 +61,36 @@
 }
 .body--dark {
   .page-history-container {
-    background: var(--w-color-almost-black);
+    background: var(--wa-color-almost-black);
   }
   .page-history-page {
-    background: var(--w-color-almost-black);
+    background: var(--wa-color-almost-black);
     div {
       background: #191919;
       div {
-        color: var(--w-color-blue-white);
+        color: var(--wa-color-blue-white);
       }
     }
   }
   .page-history-title {
-    color: var(--w-color-blue-white);
+    color: var(--wa-color-blue-white);
   }
 }
 .body--light {
   .page-history-container {
-    background: var(--w-color-light-teal);
+    background: var(--wa-color-light-teal);
   }
   .page-history-page {
-    background: var(--w-color-light-teal);
+    background: var(--wa-color-light-teal);
     div {
-      background: var(--w-color-blue-white);
+      background: var(--wa-color-blue-white);
       div {
-        color: var(--w-color-almost-black);
+        color: var(--wa-color-almost-black);
       }
     }
   }
   .page-history-title {
-    color: var(--w-color-blue-white);
+    color: var(--wa-color-blue-white);
   }
 }
 </style>

@@ -20,14 +20,6 @@
 .self {
   color: var(--w-color-dark-teal);
 }
-.body--dark .action-btn {
-  background: var(--w-color-dark-teal);
-  color: var(--w-color-dark-blue);          
-}
-.body--light .action-btn {
-  background: var(--w-color-almost-black);
-  color: var(--w-color-blue-white);
-}
 </style>
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
