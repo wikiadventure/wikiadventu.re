@@ -18,11 +18,11 @@
     background: transparent!important;
   }
 }
-  .compact-lang-switch {
-    .q-field__control div {
-      color: var(--wa-color-blue-white)!important;
-    }
+.compact-lang-switch {
+  .q-field__control div {
+    color: var(--wa-color-2)!important;
   }
+}
 </style>
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
