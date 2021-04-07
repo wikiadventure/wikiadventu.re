@@ -18,7 +18,7 @@
 </template>
 <style lang="scss">
 .self {
-  color: var(--w-color-dark-teal);
+  color: var(--wa-color-dark-teal);
 }
 </style>
 <script lang="ts">

@@ -49,7 +49,7 @@
 #slideMenu {
   z-index: 6;
   transition: all ease-in-out 0.2s;
-	background: var(--w-color-almost-black);
+	background: var(--wa-color-almost-black);
 	width: 50%;
   height: 100%;
   position: absolute;

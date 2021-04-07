@@ -10,12 +10,12 @@
   filter: drop-shadow(2px 2px 3px black);
 }
 .body--dark .exit-btn {
-  border: 2px solid var(--w-color-blue-white);
-  color: var(--w-color-blue-white);
+  border: 2px solid var(--wa-color-blue-white);
+  color: var(--wa-color-blue-white);
 }
 .body--light .exit-btn {
-  border: 2px solid var(--w-color-almost-black);
-  color: var(--w-color-almost-black);
+  border: 2px solid var(--wa-color-almost-black);
+  color: var(--wa-color-almost-black);
 }
 
 </style>

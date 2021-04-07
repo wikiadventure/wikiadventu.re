@@ -4,7 +4,7 @@
 <style lang="scss">
 .twitch-btn {
   background: #6441A4;
-  color: var(--w-color-blue-white);
+  color: var(--wa-color-blue-white);
   font-size: 1.5em;
   @media screen and (max-width: 720px) {
     font-size: 1em;
@@ -12,7 +12,6 @@
   }
 }
 </style>
-
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
 

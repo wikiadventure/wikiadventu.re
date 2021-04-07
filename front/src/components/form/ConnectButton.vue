@@ -1,5 +1,5 @@
 <template>
-  <q-btn push class="connect-btn q-px-md" v-bind="$attrs" v-on="$listeners"/>
+  <q-btn push class="connect-btn action-btn q-px-md" v-bind="$attrs" v-on="$listeners"/>
 </template>
 <style lang="scss">
 .connect-btn {
@@ -9,16 +9,7 @@
     padding: 0.2em 0.5em;
   }
 }
-.body--dark .connect-btn {
-  background: var(--w-color-dark-teal);
-  color: var(--w-color-dark-blue);          
-}
-.body--light .connect-btn {
-  background: var(--w-color-almost-black);
-  color: var(--w-color-blue-white);
-}
 </style>
-
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
 
