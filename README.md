@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="http://wiki-adventure.herokuapp.com/" title="Wiki Adventure"><img width=402 height=250 src="front/public/svg/openGraph.svg" /></a>
+  <a href="http://wiki-adventure.sacramentix.fr" title="Wiki Adventure"><img width=402 height=250 src="front/public/svg/openGraph.svg" /></a>
 </p>
 
 ## Setup
