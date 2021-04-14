@@ -1,33 +1,50 @@
 <template>
-    <div class="connect-form">
-      <h3 class="formTitle">{{ title }}</h3>
-        <q-form>
-          <div class="input-grid">
-            <slot></slot>
-          </div>
-          <div class="row justify-evenly q-my-lg">
-            <slot name="button"></slot>
-          </div>
-        </q-form>
-      </div>
+  <q-form class="connect-form">
+    <div class="inputGrid">
+      <div class="formTitle"><h3>{{ title }}</h3></div>
+      <slot></slot>
+    </div>
+    <div class="buttonContainer"><slot name="button"></slot></div>
+  </q-form>
 </template>
 <style lang="scss">
-.formTitle {
-  text-align: center;
-  @media(max-width: 720px) {
-    margin: 2px;
-    font-size: 2.5em;
+.connect-form {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.inputGrid {
+  display: grid;
+  gap: 5px 20px;
+  flex: 0;
+  padding: 0 20px;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: min-content;
+  justify-content: space-evenly;
+  @media(max-width: $breakpoint-xs-max) {
+    > * {
+      grid-column: span 2;
+    }
   }
 }
-.input-grid {
-  display: grid;
-  grid-gap: 20px;
-  padding: 20px;
-  grid-template-columns: 1fr 1fr;
-  justify-content: space-evenly;
-  @media(max-width: $breakpoint-sm-max) {
-    grid-template-columns: 1fr;
+.formTitle {
+  grid-column: span 2;
+  text-align: center;
+  @media(max-width: $breakpoint-xs-max) {
+    h3 {
+      font-size: 2.5em;
+      margin: 20px 0;
+    }
   }
+}
+.buttonContainer {
+  flex: 1;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+
 }
 </style>
 <script lang="ts">

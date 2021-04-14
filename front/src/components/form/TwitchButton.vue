@@ -1,5 +1,5 @@
 <template>
-  <q-btn push class="twitch-btn q-px-md shadow-3" v-bind="$attrs" v-on="$listeners" icon-right="mdi-twitch"/>
+  <q-btn push class="twitch-btn shadow-3" v-bind="$attrs" v-on="$listeners" icon-right="mdi-twitch"/>
 </template>
 <style lang="scss">
 .twitch-btn {

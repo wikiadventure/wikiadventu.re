@@ -1,5 +1,5 @@
 <template>
-  <q-btn push class="connect-btn action-btn q-px-md" v-bind="$attrs" v-on="$listeners"/>
+  <q-btn push class="connect-btn action-btn" v-bind="$attrs" v-on="$listeners"/>
 </template>
 <style lang="scss">
 .connect-btn {
