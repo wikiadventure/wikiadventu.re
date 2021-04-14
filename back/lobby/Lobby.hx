@@ -128,6 +128,7 @@ class Lobby {
         players.emitPlayerLeft(player);
         var doOwnerChange = owner == player;
         players.remove(player);
+        checkVoteSkip();
         if (doOwnerChange && players.length>0) players.emitSetOwner();
         log("player left : " + player.uuid + " --> " + player.pseudo, PlayerData);
         if (players.length == 0) {
@@ -236,6 +237,9 @@ class Lobby {
     }
     public function voteSkip(player:Player) {
         players.emitVoteSkip(player);
+        checkVoteSkip();
+    }
+    public function checkVoteSkip() {
         if (players.foreach((p) -> p.voteSkip)) gameLoop.currentPhase.end();
     }
 
