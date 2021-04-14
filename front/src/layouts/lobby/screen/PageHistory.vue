@@ -46,7 +46,7 @@
     margin: 1px;
     display: flex;
     flex-direction: row;
-    align-items: end;
+    align-items: flex-end;
     padding: 3px 6px;
     div {
       padding: 1px 4px;

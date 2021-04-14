@@ -4,6 +4,8 @@ import Vuex from 'vuex';
 
 import globalForm from './globalForm'
 import gameData from './gameData'
+import { GlobalForm } from './globalForm/state';
+import { GameData } from './gameData/state';
 // import example from './module-example';
 // import { ExampleStateInterface } from './module-example/state';
 
@@ -13,6 +15,8 @@ import gameData from './gameData'
  */
 
 export interface StateInterface {
+  globalForm: GlobalForm,
+  gameData: GameData
   // Define your own store structure, using submodules if needed
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
 }

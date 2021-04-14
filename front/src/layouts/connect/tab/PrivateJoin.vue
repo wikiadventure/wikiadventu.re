@@ -1,8 +1,8 @@
 <template>
   <connect-form :title="$t('menu.joinPrivateLobby')">
-    <id-input class="col-12 col-sm-6 q-pa-sm"/>
-    <password-input v-model="password" class="col-12 col-sm-6 q-pa-sm"/>   
-    <pseudo-input class="col-12 col-sm-6 q-pa-sm"/>
+    <id-input/>
+    <password-input v-model="password"/>   
+    <pseudo-input/>
     <template v-slot:button>
       <connect-btn @click="submit" :label="$t('join')"/>
     </template>
@@ -14,13 +14,12 @@
 <script lang="ts">
 import ConnectBtn from "../../../components/form/ConnectButton.vue";
 import ConnectForm from "../../../components/form/ConnectForm.vue";
-import LangSelect from "../../../components/form/LanguageSelect.vue";
 import PasswordInput from "../../../components/form/PasswordInput.vue";
 import PseudoInput from "../../../components/form/PseudoInput.vue";
 import IdInput from "../../../components/form/IdInput.vue";
+import { login, ConnectEvent, ConnectType } from "../../../mixins/connect";
 
 import { defineComponent } from '@vue/composition-api';
-import { ConnectEvent, ConnectType } from "../../../mixins/connectEvent";
 
 export default defineComponent({
   name: 'PrivateJoin',
@@ -37,7 +36,7 @@ export default defineComponent({
         type: ConnectType.PrivateJoin,
         password: vm.password
       }
-      this.$root.$emit("submit-form", connectEvent);
+      login(connectEvent);
     }
   }
 });

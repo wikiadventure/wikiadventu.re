@@ -13,6 +13,7 @@ export interface GameData {
   uuid: string;
   lang: Lang;
   lobbyType: LobbyType;
+  slot: number;
   gameLoop: number;
   gamePhase: number;
   timeController: AbortController;
@@ -55,6 +56,7 @@ const state: GameData = {
   lang: Lang.en,
   lobbyType: LobbyType.Public,
   lobbyID: "",
+  slot: 15,
   gameLoop: GameLoopType.Classic,
   gamePhase: PhaseType.Waiting,
   timeController: new AbortController(),

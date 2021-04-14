@@ -1,7 +1,7 @@
 <template>
   <q-select
     @input="onSelect($event)" name="lang" outlined hint=""
-    v-model="model" :options="options" :label="$t('input.langSelect')" 
+    :options="options" :label="$t('input.langSelect')" 
     :value="getLang" :display-value="getLangLabel"
     v-bind="$attrs" v-on="$listeners"
   >
@@ -13,11 +13,6 @@ import { getLabel, Lang } from '../../i18n';
 
 export default defineComponent({
   name: 'LangSelect',
-  data() {
-    return {
-      model: null
-    }
-  },
   methods: {
     onSelect(event:any) {
       this.$store.commit('globalForm/setLang', event.value);

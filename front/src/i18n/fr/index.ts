@@ -23,7 +23,15 @@ export default {
       langSelect: "Sélectionner la langue du wiki",
       lobbyID: "Identifiant de la Partie",
       pseudo: "Pseudo",
-      password: "Mot de passe"
+      password: "Mot de passe",
+      gameLoop: "Sélectionner un mode de jeu",
+      slot: "Places",
+      error: {
+        minChars3: "3 caractères minimum",
+        maxChars25: "25 caractères maximum",
+        restrictedChars: "N'utilisé pas un de ses caractères < > : | % $ / \\",
+
+      }
     },
     menu: {
       joinPublicLobby: "Rejoindre une partie publique",
@@ -58,6 +66,9 @@ export default {
     scoreTab: {
       title: "Scores",
       leaderboard: "Classement"
+    },
+    gameLoop: {
+      0: "Classique"
     },
     phase: {
       0: "En attente de joueurs",

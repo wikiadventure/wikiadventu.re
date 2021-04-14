@@ -1,9 +1,9 @@
 <template>
   <q-input outlined v-model="pseudo" :label="$t('input.pseudo')"
           name="pseudo" spellcheck="false" v-bind="$attrs" v-on="$listeners"
-          :rules="[ val => val && val.length >= 3 || '3 character minimum',
-                    val => val && val.length <= 25 || '25 character maximum',
-                    val => val && !val.match(/[<>:|%$\/\\]/g) || 'Don\'t use any of this character < > : | % $ / \\']">
+          :rules="[ v => v.length >= 3 || $t('input.hint.minChars3'),
+                    v => v.length <= 25 || $t('input.hint.maxChars25'),
+                    v => !v.match(/[<>:|%$\/\\]/g) || $t('input.hint.restrictedChars')]">
     <template v-slot:append>
       <q-icon class="iconButton" name="mdi-dice-5" @click="randomizePseudo()"></q-icon>
     </template>

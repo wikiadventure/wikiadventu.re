@@ -14,6 +14,17 @@ const mutation: MutationTree<GlobalForm> = {
   setLobbyID(state:GlobalForm, id:string) {
     state.lobbyID = id;
   },
+  setGameLoop(state:GlobalForm, g:number) {
+    state.gameLoop = g;
+  },
+  setSlot(state:GlobalForm, s:number) {
+    if (s < 2) state.slot = 2;
+    else if (s > 50) state.slot = 50;
+    else state.slot = s;
+  },
+  setConnecting(state:GlobalForm, b:boolean) {
+    state.connecting = b;
+  },
   randomizePseudo(state:GlobalForm) {
     state.pseudo = getRandomPseudo(state.lang);
   },

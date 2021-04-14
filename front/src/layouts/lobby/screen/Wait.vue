@@ -2,7 +2,7 @@
   <div class="wait-screen row justify-center absolute-full">
     <div class="wait-container shadow-6">
       <div class="wait-slot justify-center">
-        {{ players.length }} / 25
+        {{ players.length }} / {{ slot }}
       </div>
       <q-separator/>
       <div class="wait-players">
@@ -57,7 +57,7 @@
     margin: 1px;
     display: flex;
     flex-direction: row;
-    align-items: end;
+    align-items: flex-end;
     padding: 3px 6px;
     div {
       padding: 1px 4px;
@@ -136,7 +136,10 @@ export default defineComponent({
     },
     self():number {
       return this.$store.state.gameData.self;
-    }
+    },
+    slot():number {
+      return this.$store.state.gameData.slot;
+    }   
   },
   methods: {
     start() {

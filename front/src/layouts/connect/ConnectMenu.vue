@@ -127,13 +127,11 @@ import PrivateJoin from "./tab/PrivateJoin.vue";
 import PublicJoin from "./tab/PublicJoin.vue";
 import TwitchCreate from "./tab/TwitchCreate.vue";
 import TwitchJoin from "./tab/TwitchJoin.vue";
-
-import Index from "../../layouts/menu/Index.vue";
-
-import { defineComponent } from '@vue/composition-api';
-import { ConnectEvent, ConnectType } from "../../mixins/connectEvent";
+import Index from "./tab/Index.vue";
 import { LobbyType } from "../../store/gameData/state";
 import { Lang } from '../../i18n';
+
+import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'ConnectMenu',
@@ -142,99 +140,11 @@ export default defineComponent({
     tab:string,
     privateTab:string,
     twitchTab:string,
-    connecting:boolean
   } {
     return {
       tab: 'Home',
       privateTab: 'PrivateCreate',
-      twitchTab: 'TwitchCreate',
-      connecting: false
-    }
-  },
-  methods: {
-    login(event:ConnectEvent) {
-      var vm = this;
-      if(vm.connecting) return;
-      vm.connecting = true;
-      this.$store.dispatch('globalForm/validatePseudo');
-      var query:loginQuery = {
-        type: event.type,
-        lang: this.$store.state.globalForm.lang,
-        pseudo: this.$store.state.globalForm.pseudo
-      }
-      var options:RequestInit = {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
-          };
-      if ([ConnectType.PrivateJoin, ConnectType.PublicJoin, ConnectType.TwitchJoinWith, ConnectType.TwitchJoinWithout].includes(event.type)) {
-        if (vm.$store.state.globalForm.lobbyID != "") {
-          query.lobby = vm.$store.state.globalForm.lobbyID;
-        } else if (event.type != ConnectType.PublicJoin) {
-          vm.$q.notify({
-            type: 'negative',
-            position: 'top',
-            message: vm.$t('lobbyIDRequired') as string
-          });
-          vm.connecting = false;
-          return;
-        }
-      }
-      if (event.type != ConnectType.PublicJoin) {
-        query.password = event.password;
-      }
-      if (event.type == ConnectType.TwitchJoinWith || event.type == ConnectType.TwitchCreate ) {
-        query.uuid = uuid();
-        var twitch = window.open("https://id.twitch.tv/oauth2/authorize?response_type=code&client_id="+process.env.TWITCH_CLIENT_ID+"&redirect_uri="+encodeURIComponent(process.env.TWITCH_REDIRECT_URL)+"&state=" + query.uuid + "&scope=chat%3Aread+chat%3Aedit");
-        var loop = setInterval(function() { if (twitch && twitch.closed) {
-          clearInterval(loop);
-          /* connect to the server send the login query
-          and the uid to prove that you are auth
-          and retrieve an uuid to connect to the ws lobby*/
-          options.body = JSON.stringify(query);
-          vm.connect(options, true);
-        }}, 50);// the duration in ms between each call of loop
-      } else {
-        options.body = JSON.stringify(query);
-        vm.connect(options, event.type == ConnectType.TwitchJoinWithout);
-      }
-    },
-    async connect(options:RequestInit, twitch?:boolean) {
-      var vm = this;
-     return fetch("/api/"+ (twitch ? "twitch" : "connect"), options)
-        .then(function(response:Response):Promise<ConnectionResponse> {
-          return response.json();
-        }).then(function(json:ConnectionResponse) {
-          vm.start(json);
-        }).catch(function(error) {
-          vm.connecting = false;
-          vm.$q.notify({
-            type: 'negative',
-            position: 'top',
-            message: vm.$t('fetchError') + ' : ' + error.message
-          });
-          console.log(vm.$t('fetchError') + ' : ' + error.message);
-      });
-    },
-    start(json:ConnectionResponse) {
-      var vm = this as any;
-      vm.connecting = false;
-      if (json.status == ConnectionStatus.Error) {
-        vm.$q.notify({
-          type: 'negative',
-          position: 'top',
-          message: vm.$t(translate(json.errorCode)) 
-        });
-        return;
-      }
-      vm.$store.commit('gameData/setLang', json.lang);
-      vm.$store.commit('gameData/setLobbyID', json.lobbyID);
-      vm.$store.commit('gameData/setLobbyType', json.lobbyType);
-      vm.$store.commit('gameData/setUuid', json.playerID);
-      vm.$store.commit('gameData/setGameLoop', json.gameMode);
-      vm.$router.push('/'+(json.lobbyType == LobbyType.Twitch ? "twitch" : "play")+'/'+json.lobbyID);
+      twitchTab: 'TwitchCreate'
     }
   },
   created() {
@@ -278,34 +188,10 @@ export default defineComponent({
           });
       console.log(vm.$t('fetchError') + ' : ' + error.message);
     });
-  },
-  mounted() {
-    this.$root.$on('submit-form', this.login);
   }
 });
 import { ErrorCode } from "../../i18n/translateErrorCode";
 
-interface loginQuery {
-  type: string;
-  lang:Lang;
-  pseudo:string;
-  password?:string;
-  lobby?:string;
-  uuid?:string;//for twitch
-}
-interface ConnectionResponse {
-    status:ConnectionStatus,
-    lobbyID:string,
-    lobbyType:LobbyType,
-    gameMode:number,
-    playerID:string,
-    lang:Lang,
-    errorCode?:ErrorCode
-}
-enum ConnectionStatus {
-    Success = 'Success',
-    Error = 'Error'
-}
 interface InfoResponse {
     status:InfoStatus,
     lobbyID?:String,

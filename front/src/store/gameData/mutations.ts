@@ -17,6 +17,9 @@ const mutation: MutationTree<GameData> = {
   setLobbyType(state:GameData, type:LobbyType) {
     state.lobbyType = type;
   },
+  setSlot(state:GameData, s:number) {
+    state.slot = s;
+  },
   setGameLoop(state:GameData, type:number) {
     state.gameLoop = type;
   },

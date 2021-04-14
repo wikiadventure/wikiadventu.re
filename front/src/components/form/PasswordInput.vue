@@ -1,5 +1,5 @@
 <template>
-  <q-input outlined v-model="password" name="password" :label="$t('input.password')" spellcheck="false"
+  <q-input outlined v-model="password" hint="" name="password" :label="$t('input.password')" spellcheck="false"
           :type="isPwd ? 'password' : 'text'" v-bind="$attrs" v-on="$listeners">
     <template v-slot:append>
       <q-icon :name="isPwd ? 'visibility_off' : 'visibility'"

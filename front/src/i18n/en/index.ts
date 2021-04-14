@@ -23,7 +23,15 @@ export default {
     langSelect: "Select Wikipedia language",
     lobbyID: "Party ID",
     pseudo: "Username",
-    password: "Password"
+    password: "Password",
+    gameLoop: "Select a game mode",
+    slot: "Slots",
+    hint: {
+      minChars3: '3 character minimum',
+      maxChars25: '25 character maximum',
+      restrictedChars: 'Don\'t use any of this character < > : | % $ / \\',
+
+    }
   },
   menu: {
     joinPublicLobby: "Join a Public Party",
@@ -58,6 +66,9 @@ export default {
   scoreTab: {
     title: "Scoreboard",
     leaderboard: "Leaderboard"
+  },
+  gameLoop: {
+    0: "Classic"
   },
   phase: {
     0: "Waiting player",

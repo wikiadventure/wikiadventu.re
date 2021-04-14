@@ -1,4 +1,4 @@
-import store, { Store } from '../store'
+import { Store } from '../store';
 import { RouteConfig } from 'vue-router';
 import { GameLoopType } from 'src/store/gameData/type/gameLoop';
 

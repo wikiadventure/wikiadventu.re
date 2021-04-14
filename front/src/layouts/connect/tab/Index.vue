@@ -183,11 +183,11 @@
 <script lang="ts">
 import { openURL } from 'quasar';
 
-import ContentPannel from '../../components/ContentPannel.vue';
-import CompactLangSwitch from '../../components/setting/CompactLangSwitch.vue';
-import ThemeSwitch from '../../components/setting/ThemeSwitch.vue'
-import LogoShowIn from '../../components/art/LogoShowIn.vue';
-import WalletDialog from '../../components/nano/WalletDialog.vue'
+import ContentPannel from '../../../components/ContentPannel.vue';
+import CompactLangSwitch from '../../../components/setting/CompactLangSwitch.vue';
+import ThemeSwitch from '../../../components/setting/ThemeSwitch.vue'
+import LogoShowIn from '../../../components/art/LogoShowIn.vue';
+import WalletDialog from '../../../components/nano/WalletDialog.vue'
 
 import { defineComponent } from '@vue/composition-api';
 
