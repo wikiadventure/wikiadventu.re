@@ -4,13 +4,13 @@
     <a href="https://discord.gg/wRN6Dam">
         <img src="https://img.shields.io/discord/724622557554147348?logo=discord"
             alt="join me on Discord"></a>
-    <a href="https://wiki-adventure.herokuapp.com">
-        <img src="https://img.shields.io/website?label=Wiki%20Adventure&style=flat&logo=Heroku&url=https%3A%2F%2Fwiki-adventure.herokuapp.com"
+    <a href="https://wiki-adventure.sacramentix.fr">
+        <img src="https://img.shields.io/website?label=Wiki%20Adventure&style=flat&logo=Heroku&url=https%3A%2F%2Fwiki-adventure.sacramentix.fr"
             alt="check the game"></a>
 </p>
 
 <p align="center">
-  <a href="http://wiki-adventure.herokuapp.com/" title="Wiki Adventure"><img width=402 height=250 src="front/public/svg/openGraph.svg" /></a>
+  <a href="http://wiki-adventure.sacramentix.fr" title="Wiki Adventure"><img width=402 height=250 src="front/public/svg/openGraph.svg" /></a>
 </p>
 
 ## Setup
