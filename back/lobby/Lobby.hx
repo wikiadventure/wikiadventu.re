@@ -47,7 +47,7 @@ class Lobby {
         lobbyList = new Array<Lobby>();
     }
 
-    public function new(language:Lang, type:LobbyType, ?passwordHash:String, slot:Int=25) {
+    public function new(language:Lang, type:LobbyType, ?passwordHash:String, slot:Int=15) {
         if (lobbyList.length >= lobbyLimit) throw ConnectError.LobbyLimitReached;
         else if (getPrivateLobbyLength() >= privateLimit) throw ConnectError.PrivateLobbyLimitReached;
         players = new Array<Player>();

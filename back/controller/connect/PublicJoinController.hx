@@ -32,6 +32,7 @@ class PublicJoinController {
                 status: Success,
                 lobbyID: lobby.formatID,
                 lobbyType: Public,
+                slot: lobby.slot,
                 gameMode: lobby.gameLoop.type,
                 playerID: player.uuid,
                 lang: lobby.language           

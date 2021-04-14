@@ -146,13 +146,13 @@ class TwitchController {
             return;
         }
         var player = new TwitchPlayer(form.pseudo, loginStatus.user, loginStatus.authProvider, form.lang);
-        var passwordHash = Sha256.encode(form.password);
         var lobby:TwitchLobby;
         try {
             if (form.type == TwitchCreate) {
-                lobby = twitchCreate(player, passwordHash);
+                lobby = twitchCreate(player, form);
             } else {
                 lobby = TwitchLobby.find(form.lobby);
+                var passwordHash = Sha256.encode(form.password);
                 lobby.join(player,passwordHash);    
             }
         } catch(e:Dynamic) {
@@ -163,6 +163,8 @@ class TwitchController {
             status: Success,
             lobbyID: lobby.name,
             lobbyType: Twitch,
+            slot: lobby.slot,
+            gameMode: lobby.gameLoop.type,
             playerID: player.uuid,
             lang: lobby.language
         };
@@ -180,6 +182,8 @@ class TwitchController {
                 status: Success,
                 lobbyID: lobby.name,
                 lobbyType: Twitch,
+                slot: lobby.slot,
+                gameMode: lobby.gameLoop.type,
                 playerID: player.uuid,
                 lang: lobby.language           
             };
@@ -200,9 +204,9 @@ class TwitchController {
         throw "The uuid provided is not registered or has time out after 30 sec of inactivity";
     }
 
-    public function twitchCreate(player:TwitchPlayer, passwordHash:String):TwitchLobby {
-        trace("create the twitch lobby");
-        var lobby = new TwitchLobby(player, passwordHash);
+    public function twitchCreate(player:TwitchPlayer, form:TwitchConnectRequest):TwitchLobby {
+        var passwordHash = Sha256.encode(form.password);
+        var lobby = new TwitchLobby(player, passwordHash, form.slot);
         lobby.giveID();// giveID method also add the lobby to the lobbylist
         lobby.join(player, passwordHash);
         lobby.gameLoop = new Classic(lobby, 5);

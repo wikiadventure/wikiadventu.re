@@ -7,6 +7,7 @@ typedef ConnectionRequest = {
     type:LoginType,
     lang:Lang,
     pseudo:String,
+    ?slot:Int,
     ?gameMode:Int,
     ?password:String,
     ?lobby:String
