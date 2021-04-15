@@ -93,6 +93,10 @@
       width: 100% !important;
       max-width: 100% !important;
     }
+    .infobox-caption {
+      flex-basis: 100%;
+      text-align: center;
+    }
   }
   .hatnote {
     padding: 0.5em 1.5em;
