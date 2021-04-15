@@ -15,7 +15,7 @@
 .wikiFade {
   opacity: 0;
 }
-.endPage a {
+.endPage a:not(.anchorLink) {
   cursor: not-allowed;
 }
 .wikiPage {
