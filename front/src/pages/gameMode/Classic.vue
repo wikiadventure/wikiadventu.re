@@ -6,7 +6,7 @@
     <transition name="fade"><page-history v-show="showPageHistory" /></transition>
     <transition name="fade"><leaderboard v-show="showLeaderboard" /></transition>
     <transition name="fade"><round-win v-show="showRoundWin" /></transition>
-    <wiki-page ref="rightPanel" :class="{ 'hideEndPage': !showRightPanel }" endPage/>
+    <wiki-page ref="rightPanel" class="right-panel" :class="{ 'hideEndPage': !showRightPanel }" endPage/>
     <game-slide-menu ref="gameMenu"/>
   </div>
 </template>
@@ -20,7 +20,7 @@
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-#endPage {
+.right-panel {
   transition: transform 0.15s ease-in-out;
   filter: drop-shadow(3px 3px 15px black);
 }
