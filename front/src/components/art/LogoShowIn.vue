@@ -121,13 +121,13 @@
 
   @keyframes logoShowInShowUp {
     0%{
-      transform: translate3d(-1500px, 1500px, -1500px);
+      transform: translate3d(-225vmin, 225vmin, -225vmin);
     }
     10% {
-      transform: translate3d(-300px, 300px, -1200px);
+      transform: translate3d(-45vmin, 45vmin, -180vmin);
     }
     15%, 100% {
-      transform: translate3d(0px, 0px, 0px);
+      transform: translate3d(0vmin, 0vmin, 0vmin);
     }
 
   }
