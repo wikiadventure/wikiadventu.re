@@ -18,6 +18,7 @@ const mutation: MutationTree<GlobalForm> = {
     state.gameLoop = g;
   },
   setSlot(state:GlobalForm, s:number) {
+    var s = Number(s);
     if (s < 2) state.slot = 2;
     else if (s > 50) state.slot = 50;
     else state.slot = s;
