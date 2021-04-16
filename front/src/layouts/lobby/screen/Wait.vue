@@ -26,6 +26,41 @@
   </div>
 </template>
 <style lang="scss">
+.body--dark {
+  .wait-container {
+    background: var(--wa-color-almost-black);
+  }
+  .wait-players {
+    background: var(--wa-color-almost-black);
+    div {
+      background: #191919;
+      div {
+        color: var(--wa-color-blue-white);
+      }
+    }
+  }
+  .wait-slot {
+    color: var(--wa-color-blue-white);
+  }
+}
+.body--light {
+  .wait-container {
+    background: var(--wa-color-light-teal);
+  }
+  .wait-players {
+    background: var(--wa-color-light-teal);
+    div {
+      background: var(--wa-color-blue-white);
+      div {
+        color: var(--wa-color-almost-black);
+      }
+
+    }
+  }
+  .wait-slot {
+    color: var(--wa-color-blue-white);
+  }
+}
 .wait-screen {
   overflow: hidden;
 }
@@ -73,45 +108,10 @@
   font-size: 2em;
 }
 .self {
-  color: var(--wa-color-dark-teal);
+  color: var(--wa-color-dark-teal)!important;
 }
 .owner {
   color: var(--wa-color-dark-teal);
-}
-.body--dark {
-  .wait-container {
-    background: var(--wa-color-almost-black);
-  }
-  .wait-players {
-    background: var(--wa-color-almost-black);
-    div {
-      background: #191919;
-      div {
-        color: var(--wa-color-blue-white);
-      }
-    }
-  }
-  .wait-slot {
-    color: var(--wa-color-blue-white);
-  }
-}
-.body--light {
-  .wait-container {
-    background: var(--wa-color-light-teal);
-  }
-  .wait-players {
-    background: var(--wa-color-light-teal);
-    div {
-      background: var(--wa-color-blue-white);
-      div {
-        color: var(--wa-color-almost-black);
-      }
-
-    }
-  }
-  .wait-slot {
-    color: var(--wa-color-blue-white);
-  }
 }
 </style>
 <script lang="ts">
