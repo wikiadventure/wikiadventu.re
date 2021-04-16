@@ -15,7 +15,7 @@
   width: 100%;
   height: calc(75vmin + 2em);
   justify-content: center;
-  perspective: 500px;
+  perspective: 75vmin;
   transform: translate3d(0px, 0px, 0px);
   opacity: 0;
   animation: 0.3105s steps(1, end) forwards logoShowInVisible;
