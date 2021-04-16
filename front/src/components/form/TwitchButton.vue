@@ -1,21 +1,19 @@
 <template>
-  <q-btn push class="twitch-btn shadow-3" v-bind="$attrs" v-on="$listeners" icon-right="mdi-twitch"/>
+  <connect-btn push class="twitch-btn" v-bind="$attrs" v-on="$listeners" icon-right="mdi-twitch"/>
 </template>
 <style lang="scss">
 .twitch-btn {
   background: #6441A4;
   color: var(--wa-color-blue-white);
-  font-size: 1.5em;
-  @media screen and (max-width: 720px) {
-    font-size: 1em;
-    padding: 0.2 0.5em;
-  }
 }
 </style>
 <script lang="ts">
+import ConnectBtn from "./ConnectButton.vue";
+
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'TwitchBtn',
+  components: { ConnectBtn }
 });
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <q-btn push class="connect-btn action-btn" v-bind="$attrs" v-on="$listeners"/>
+  <q-btn :disable="connecting" push class="connect-btn action-btn" v-bind="$attrs" v-on="$listeners">
 </template>
 <style lang="scss">
 .connect-btn {
@@ -15,5 +15,10 @@ import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'ConnectBtn',
+  computed: {
+    connecting():boolean {
+      return this.$store.state.globalForm.connecting;
+    },
+  }
 });
 </script>
