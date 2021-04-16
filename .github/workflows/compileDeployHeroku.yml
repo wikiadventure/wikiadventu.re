@@ -19,6 +19,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
+      - name: Tell the player of incoming update
+        run: curl -u ":${{secrets.ADMIN_SECRET}}" https://wiki-adventure.herokuapp.com/api/announce --data "New update is coming your party will be interrupted in few minute."
       - name: Setup Haxe environment
         # You may pin to the exact commit or the version.
         # uses: krdlab/setup-haxe@aab4595a86d3a14ec1b51b9dabad6b6e7810313e
