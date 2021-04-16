@@ -73,6 +73,7 @@ const mutation: MutationTree<GameData> = {
     }
   },
   gameState(state:GameData, g:GameState) {
+    if (g.round == 1) state.players = state.players.filter(p => p.isConnected);
     state.players.forEach(p => p.voteSkip = false);
     state.gamePhase = g.phase;
     state.round = g.round;
