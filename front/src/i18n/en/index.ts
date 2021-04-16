@@ -1,5 +1,9 @@
 export default {
   play: "play",
+  worker: {
+    updateFound: "New update! The game will restart after downloading.",
+    updated: "New update installed! Restarting..."
+  },
   indexHowToPlay: {
     title: "How to play?",
     content: "The game is really simple, you need to go as fast as possible from one page to another one, but you can only navigate with the link on the Wikipedia page. During the voting phase you can suggest Wikipedia page title. At the end of the voting phase the game will randomly pick a start page and an end page and the game will begin."

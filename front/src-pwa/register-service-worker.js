@@ -1,5 +1,6 @@
 import { register } from 'register-service-worker'
 import { Notify } from "quasar";
+import { i18n } from '../src/boot/i18n';
 // The ready(), registered(), cached(), updatefound() and updated()
 // events passes a ServiceWorkerRegistration instance in their arguments.
 // ServiceWorkerRegistration: https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration
@@ -24,11 +25,19 @@ register(process.env.SERVICE_WORKER_FILE, {
   },
 
   updatefound (/* registration */) {
-    console.log('New content is downloading.')
+    Notify.create({
+      type: 'positive',
+      position: 'top',
+      message: i18n.t("worker.updateFound")
+    });
   },
 
   updated (/* registration */) {
-    console.log('New content is available; please refresh.')
+    Notify.create({
+      type: 'positive',
+      position: 'top',
+      message: i18n.t("worker.updated")
+    });
   },
 
   offline () {
