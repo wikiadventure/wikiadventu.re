@@ -58,6 +58,7 @@ jobs:
           git config --global user.name 'Sacramentix'
       - name: Build backend
         run: |
+          cd back
           haxe node.hxml
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.4
