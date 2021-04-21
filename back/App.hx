@@ -2,7 +2,6 @@ import utils.crypto.RandomBase32;
 import config.admin.Guard;
 import controller.info.InfoController;
 import macros.Env;
-import lobby.player.Player;
 import lobby.TwitchLobby;
 import config.twitch.TwitchCredential;
 import controller.FrontController;
