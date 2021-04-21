@@ -126,11 +126,11 @@
 </style>
 <script lang="ts">
 import Vue from 'vue';
-import ExitBtn from '../../components/ExitButton.vue';
+import ExitBtn from 'src/components/ExitButton.vue';
 import { defineComponent } from '@vue/composition-api';
-import WikiArticle from '../../mixins/wikiArticle';
+import WikiArticle from 'src/mixins/wikiArticle';
 
-import scrollToID from '../../mixins/scrollToID';
+import scrollToID from 'src/mixins/scrollToID';
 
 export default defineComponent({
   name: 'WikiPage',

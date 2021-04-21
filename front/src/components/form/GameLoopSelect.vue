@@ -9,7 +9,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
-import { GameLoopType } from '../../store/gameData/type/gameLoop';
+import { GameLoopType } from 'src/store/gameData/type/gameLoop';
 
 export default defineComponent({
   name: 'GameLoopSelect',

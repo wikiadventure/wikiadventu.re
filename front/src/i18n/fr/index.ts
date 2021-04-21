@@ -72,7 +72,8 @@ export default {
       leaderboard: "Classement"
     },
     gameLoop: {
-      0: "Classique"
+      0: "Classique",
+      1: "Aléatoire"
     },
     phase: {
       0: "En attente de joueurs",

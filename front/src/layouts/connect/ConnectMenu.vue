@@ -119,17 +119,14 @@
 }
 </style>
 <script lang="ts">
-import { v4 as uuid }  from 'uuid';
-import { translate } from "../../i18n/translateErrorCode";
-
-import PrivateCreate from "./tab/PrivateCreate.vue";
-import PrivateJoin from "./tab/PrivateJoin.vue";
-import PublicJoin from "./tab/PublicJoin.vue";
-import TwitchCreate from "./tab/TwitchCreate.vue";
-import TwitchJoin from "./tab/TwitchJoin.vue";
-import Index from "./tab/Index.vue";
-import { LobbyType } from "../../store/gameData/state";
-import { Lang } from '../../i18n';
+import PrivateCreate from './tab/PrivateCreate.vue';
+import PrivateJoin from './tab/PrivateJoin.vue';
+import PublicJoin from './tab/PublicJoin.vue';
+import TwitchCreate from './tab/TwitchCreate.vue';
+import TwitchJoin from './tab/TwitchJoin.vue';
+import Index from './tab/Index.vue';
+import { LobbyType } from 'src/store/gameData/state';
+import { Lang } from 'src/i18n';
 
 import { defineComponent } from '@vue/composition-api';
 

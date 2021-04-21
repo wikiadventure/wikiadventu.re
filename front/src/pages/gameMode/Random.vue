@@ -1,5 +1,5 @@
 <template>
-  <div class="game-mode-classic absolute-full">
+  <div class="game-mode-random absolute-full">
     <game-audio ref="gameAudio" />
     <wait v-if="gamePhase == 0" />
     <wiki-page ref="wikiPage" v-else />
@@ -7,11 +7,11 @@
     <transition name="fade"><leaderboard v-show="showLeaderboard" /></transition>
     <transition name="fade"><round-win v-show="showRoundWin" /></transition>
     <wiki-page ref="rightPanel" class="right-panel" :class="{ 'hideEndPage': !showRightPanel }" endPage/>
-    <classic-slide-menu ref="game"/>
+    <random-slide-menu ref="gameMenu"/>
   </div>
 </template>
 <style lang="scss">
-.game-mode-classic {
+.game-mode-random {
   overflow-x: hidden;
 }
 .fade-enter-active, .fade-leave-active {
@@ -29,7 +29,7 @@
 }
 </style>
 <script lang="ts">
-import ClassicSlideMenu from 'src/layouts/lobby/gameMode/Classic.vue';
+import RandomSlideMenu from 'src/layouts/lobby/gameMode/Random.vue';
 import WikiPage from 'src/layouts/lobby/WikiPage.vue';
 import RoundWin from 'src/layouts/lobby/screen/RoundWin.vue';
 import Leaderboard from 'src/layouts/lobby/screen/Leaderboard.vue';
@@ -47,8 +47,8 @@ import { defineComponent } from '@vue/composition-api';
 import { PhaseType } from 'src/store/gameData/type/phase';
 
 export default defineComponent({
-  name: 'ClassicMode',
-  components: { ClassicSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory, GameAudio },
+  name: 'RandomMode',
+  components: { RandomSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory, GameAudio },
   data(): {
     showRoundWin:boolean,
     showLeaderboard:boolean,

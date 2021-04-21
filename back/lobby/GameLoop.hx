@@ -1,5 +1,8 @@
 package lobby;
 
+import lobby.gameLoop.Classic;
+import lobby.gameLoop.Random;
+import controller.connect.error.ConnectError;
 import lobby.player.Player;
 import lobby.gameLoop.Phase;
 import js.node.Timers.Timeout;
@@ -37,10 +40,22 @@ class GameLoop {
         
     }
 
+    public static function select(type=Classic, lobby:Lobby, ?round:Int, ?data:Any):GameLoop {
+        return switch type {
+            case Classic:
+                new Classic(lobby, round);
+            case Random:
+                new Random(lobby, round);
+            default:
+                throw ConnectError.InvalidGameLoop;
+        }
+    }
+
 }
 
 enum abstract GameLoopType(Int) from Int to Int {
     var Classic;
+    var Random;
 }
 
 enum abstract ModGameLoopType(Int) from Int to Int {

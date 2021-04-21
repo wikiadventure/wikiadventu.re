@@ -8,7 +8,7 @@
 }
 </style>
 <script lang="ts">
-import ConnectBtn from "./ConnectButton.vue";
+import ConnectBtn from './ConnectButton.vue';
 
 import { defineComponent } from '@vue/composition-api';
 

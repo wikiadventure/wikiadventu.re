@@ -1,5 +1,5 @@
 <template>
-  <div id="gameTab">
+  <div class="random-game-tab">
 
     <div class="row justify-evenly q-ma-md text-h3">{{ $t('gameTab.round') }} {{ round }}</div>
 
@@ -18,21 +18,6 @@
     </div>
 
     <q-separator  spaced="lg"/>
-
-    <div id="vote" class="row items-center q-ma-sm">
-      <p class="q-ma-none col-strech">{{ $t('gameTab.vote') }} :</p>
-      <p class="q-ma-none q-ml-sm text-left col">{{ vote }}</p>
-      <q-btn round dense flat icon="mdi-delete" class="voteDelete" @click="resetVote()"></q-btn>
-    </div>
-    <q-form class="voteForm q-ma-sm">
-      <q-input dense class="voteInput" @keydown.enter.prevent="submitVote()" maxlength="255" outlined v-model="voteInput" :label="$t('gameTab.submitVote')" spellcheck="false">
-        <template v-slot:after>
-          <q-btn round dense flat icon="mdi-send" @click="submitVote()"/>
-        </template>
-      </q-input>
-    </q-form>
-
-    <q-separator spaced="lg"/>
 
     <div class="row items-baseline q-ma-sm">
       <p class="q-ma-none col-strech">{{ $t('gameTab.startPage') }} :</p>
@@ -63,13 +48,7 @@
 </template>
 <style lang="scss">
 #gameTab {
-  font-size: 120%;
-}
-.voteDelete {
-  transition: all ease-in-out 0.2s;
-}
-.voteDelete:active {
-  transform: rotate(145deg);
+  font-size: 1.2em;
 }
 .self {
   color: var(--w-color-dark-teal);
@@ -77,11 +56,11 @@
 </style>
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
-import  { ManageScreenEvent } from "../../../mixins/manageScreen";
-import { Player } from '../../../store/gameData/state';
+import  { ManageScreenEvent } from 'src/mixins/manageScreen';
+import { Player } from 'src/store/gameData/state';
 
 export default defineComponent({
-  name: 'GameTabPanel',
+  name: 'RandomGameTab',
   data() {
     var vm = this as any;
     return {

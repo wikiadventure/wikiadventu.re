@@ -60,7 +60,7 @@ class WikiTools {
                 promiseList.push(getRandomURL(lang));
             }
         }
-        if (suggestionList.length < 2) {
+        while (promiseList.length < 2) {
             promiseList.push(getRandomURL(lang));
         }
         var voteResult:Promise<VoteResult> = Promise.all(promiseList).then(

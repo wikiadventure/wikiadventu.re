@@ -70,10 +70,10 @@
 import { date } from 'quasar'
 
 import { defineComponent } from '@vue/composition-api';
-import { Message } from '../../../store/gameData/state';
+import { Message } from 'src/store/gameData/state';
 
 export default defineComponent({
-  name: 'ChatTabPanel',
+  name: 'ChatTab',
   data() {
     return {
       messageInput: ""

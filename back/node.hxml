@@ -2,7 +2,6 @@
 -lib tink_json
 -lib ws
 -lib twitch-chat-client
--lib jsasync
 
 -main App
 -js ../bin/App.js

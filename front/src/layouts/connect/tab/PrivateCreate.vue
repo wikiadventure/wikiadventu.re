@@ -14,14 +14,14 @@
 
 </style>
 <script lang="ts">
-import ConnectBtn from "../../../components/form/ConnectButton.vue";
-import ConnectForm from "../../../components/form/ConnectForm.vue";
-import LangSelect from "../../../components/form/LanguageSelect.vue";
-import PasswordInput from "../../../components/form/PasswordInput.vue";
-import PseudoInput from "../../../components/form/PseudoInput.vue";
-import GameLoopSelect from "../../../components/form/GameLoopSelect.vue";
-import SlotSelect from "../../../components/form/SlotSelect.vue";
-import { login, ConnectEvent, ConnectType } from "../../../mixins/connect";
+import ConnectBtn from 'src/components/form/ConnectButton.vue';
+import ConnectForm from 'src/components/form/ConnectForm.vue';
+import LangSelect from 'src/components/form/LanguageSelect.vue';
+import PasswordInput from 'src/components/form/PasswordInput.vue';
+import PseudoInput from 'src/components/form/PseudoInput.vue';
+import GameLoopSelect from 'src/components/form/GameLoopSelect.vue';
+import SlotSelect from 'src/components/form/SlotSelect.vue';
+import { login, ConnectEvent, ConnectType } from 'src/mixins/connect';
 
 import { defineComponent } from '@vue/composition-api';
 

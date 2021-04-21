@@ -262,18 +262,20 @@ class Lobby {
      * @param player who want to join
      * @return the lobby
      */
-    public static function joinPublicFree(player:Player):Lobby {
+    public static function joinPublicFree(player:Player, gameLoop:Int):Lobby {
         for (l in lobbyList) {
             if (l.type == Public && (l.players.length < l.slot)) {
                 if ( l.language == player.language ) {
-                    return l;
+                    if ( gameLoop == null || (l.gameLoop.type == gameLoop)) {
+                        return l;
+                    }
                 }
             }
         }
         // if no free slot are find create a new public lobby
         var lobby = new Lobby(player.language, Public);
         lobby.giveID();// giveID method also add the lobby to the lobbylist
-        lobby.gameLoop = new Classic(lobby, 5);
+        lobby.gameLoop = GameLoop.select(gameLoop,lobby);
         lobby.gameLoop.start();
         return lobby;
     }

@@ -22,7 +22,7 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
 
-import  { ManageScreenEvent } from "../mixins/manageScreen";
+import  { ManageScreenEvent } from 'src/mixins/manageScreen';
 
 
 export default defineComponent({

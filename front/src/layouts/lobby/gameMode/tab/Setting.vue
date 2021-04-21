@@ -13,16 +13,16 @@
 }
 </style>
 <script lang="ts">
-import ThemeSwitch from '../../../components/setting/ThemeSwitch.vue';
-import LangSwitch from '../../../components/setting/LangSwitch.vue';
-import VolumeSlider from '../../../components/setting/VolumeSlider.vue';
-import FullscreenSwitch from '../../../components/setting/FullscreenSwitch.vue';
-import SafeModeSwitch from '../../../components/setting/SafeModeSwitch.vue';
+import ThemeSwitch from 'src/components/setting/ThemeSwitch.vue';
+import LangSwitch from 'src/components/setting/LangSwitch.vue';
+import VolumeSlider from 'src/components/setting/VolumeSlider.vue';
+import FullscreenSwitch from 'src/components/setting/FullscreenSwitch.vue';
+import SafeModeSwitch from 'src/components/setting/SafeModeSwitch.vue';
 
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
-  name: 'SettingTabPanel',
+  name: 'SettingTab',
   components: { ThemeSwitch, LangSwitch, VolumeSlider, FullscreenSwitch, SafeModeSwitch }
 });
 </script>

@@ -39,6 +39,9 @@ export function login(event:ConnectEvent) {
     if ([ConnectType.PrivateCreate, ConnectType.TwitchCreate].includes(event.type)) {
       query.slot = Store.state.globalForm.slot;
     }
+    if ([ConnectType.PrivateCreate, ConnectType.TwitchCreate, ConnectType.PublicJoin].includes(event.type)) {
+      query.gameMode = Store.state.globalForm.gameLoop;
+    }
     if (event.type != ConnectType.PublicJoin) {
       query.password = event.password;
     }

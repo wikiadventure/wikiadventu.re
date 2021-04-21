@@ -29,7 +29,7 @@ const Store = new Vuex.Store<StateInterface>({
   },
   // enable strict mode (adds overhead!)
   // for dev mode only
-  strict: !!process.env.DEV
+  strict: false
 });
 
 export default store(function ({ Vue }) {

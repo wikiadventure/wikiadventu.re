@@ -29,8 +29,7 @@
 }
 </style>
 <script lang="ts">
-import { copyToClipboard } from 'quasar'
-import { openURL } from 'quasar';
+import { copyToClipboard, openURL } from 'quasar';
 
 import { defineComponent } from '@vue/composition-api';
 

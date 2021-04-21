@@ -15,7 +15,7 @@ const mutation: MutationTree<GlobalForm> = {
     state.lobbyID = id;
   },
   setGameLoop(state:GlobalForm, g:number) {
-    state.gameLoop = g;
+    state.gameLoop = Number(g);
   },
   setSlot(state:GlobalForm, s:number) {
     var s = Number(s);

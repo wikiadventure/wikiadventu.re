@@ -23,11 +23,11 @@
 </style>
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
-import { ManageScreenEvent } from '../../../mixins/manageScreen';
-import { Player } from '../../../store/gameData/state';
+import { ManageScreenEvent } from 'src/mixins/manageScreen';
+import { Player } from 'src/store/gameData/state';
 
 export default defineComponent({
-  name: 'ScoreTabPanel',
+  name: 'ScoreTab',
   data() {
     return {
     }

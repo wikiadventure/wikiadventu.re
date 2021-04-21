@@ -1,5 +1,6 @@
 package controller.connect;
 
+import lobby.GameLoop;
 import controller.connect.error.ConnectError;
 import response.connect.ConnectionError;
 import lobby.GameLoop.GameLoopType;
@@ -30,14 +31,14 @@ class PrivateCreateController {
             var lobby = new Lobby(player.language, Private, passwordHash, form.slot);
             lobby.giveID();// giveID method also add the lobby to the lobbylist
             lobby.connect(player, passwordHash);
-            lobby.gameLoop = new Classic(lobby, 5);
+            lobby.gameLoop = GameLoop.select(form.gameMode, lobby);
             lobby.gameLoop.start();
             var json:ConnectionResponse = {
                 status: Success,
                 lobbyID: lobby.formatID,
                 lobbyType: Private,
                 slot: lobby.slot,
-                gameMode: Classic,
+                gameMode: lobby.gameLoop.type,
                 playerID: player.uuid,
                 lang: lobby.language           
             };

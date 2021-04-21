@@ -6,6 +6,7 @@ enum abstract ConnectError(Int) from Int to Int {
     var NoLobbyFoundWithChannelName;
     var LobbyFull;
     var InvalidPassword;
+    var InvalidGameLoop;
     var LobbyLimitReached = 200; //server error
     var PrivateLobbyLimitReached;
 }

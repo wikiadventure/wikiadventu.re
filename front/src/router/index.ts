@@ -1,7 +1,7 @@
 import { route } from 'quasar/wrappers';
 import VueRouter from 'vue-router';
 import { Store } from "vuex";
-import { StateInterface } from '../store';
+import { StateInterface } from 'src/store';
 import routes from './routes';
 import { Notify } from 'quasar'
 import { Dark } from 'quasar';

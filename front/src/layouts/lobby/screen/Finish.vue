@@ -13,10 +13,10 @@
 }
 </style>
 <script lang="ts">
-import ExitBtn from '../../../components/ExitButton.vue';
+import ExitBtn from 'src/components/ExitButton.vue';
 
 import { defineComponent } from '@vue/composition-api';
-import { Player } from '../../../store/gameData/state';
+import { Player } from 'src/store/gameData/state';
 
 export default defineComponent({
   name: 'RoundWin',

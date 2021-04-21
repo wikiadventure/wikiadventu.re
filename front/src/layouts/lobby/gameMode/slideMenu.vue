@@ -1,28 +1,31 @@
 <template>
-    <div id="slideMenu" :class="{ 'checked': showMenu }">
-      <label @click.stop="showMenu = !showMenu" id="labelShowMenu"><q-icon size="md" name="mdi-play"/><q-badge color="teal" transparent :label="unseenMessagesNumber" floating v-show="unseenMessagesNumber != '0'" /></label>
+    <div class="slideMenu" ref="menu" :class="{ 'checked': showMenu }">
+      <label @click.stop="showMenu = !showMenu" class="showMenu"><q-icon size="md" name="mdi-play"/><q-badge color="teal" transparent :label="unseenMessagesNumber" floating v-show="unseenMessagesNumber != '0'" /></label>
       <q-tab-panels class="content" v-model="tab" animated>
 
         <q-tab-panel name="chat" class="q-pa-none">
-          <chat-tab-panel ref="chatTab" />
+          <chat-tab ref="chatTab" />
         </q-tab-panel>
 
         <q-tab-panel name="score" class="q-pa-none">
-          <score-tab-panel ref="scoreTab" />
+          <score-tab ref="scoreTab" />
         </q-tab-panel>
 
         <q-tab-panel name="game" class="q-pa-none">
-          <game-tab-panel ref="gameTab" />
+          <slot name="gameTab"></slot>
         </q-tab-panel>
+        
 
         <q-tab-panel name="setting" class="q-pa-none">
-          <setting-tab-panel ref="settingTab" />
+          <setting-tab ref="settingTab" />
         </q-tab-panel>
+
+        <slot name="extraTab"></slot>
 
       </q-tab-panels>
       <q-tabs v-model="tab"
               dense
-              class="text-grey game-tabs"
+              class="text-grey menu-tabs"
               active-color="primary"
               indicator-color="primary"
               align="justify"
@@ -31,22 +34,20 @@
         <q-tab name="score" icon="mdi-crown"></q-tab>
         <q-tab name="game" icon="mdi-gamepad"></q-tab>
         <q-tab name="setting" icon="mdi-cog"></q-tab>
+        <slot name="extraTabs"></slot>
       </q-tabs>
     </div>
-  <!--<q-layout class="gameSlideMenu">
-    <input id="showMenu" type="checkbox" v-model="showMenu"/>
-
-  </q-layout>-->
 </template>
 <style lang="scss">
 .gameSlideMenu {
   pointer-events: none;
   z-index: 6;
+  > div {
+    pointer-events: auto;
+  }
 }
-.gameSlideMenu > div {
-  pointer-events: auto;
-}
-#slideMenu {
+
+.slideMenu {
   z-index: 6;
   transition: all ease-in-out 0.2s;
 	background: var(--wa-color-almost-black);
@@ -69,12 +70,19 @@
   .q-tabs {
     flex: 0 1 36px;
   }
+
+  &.checked {
+    transform: translate3d(0,0,0);
+    .showMenu {
+      color: var(--wa-color-blue-white);
+      background: var(--wa-color-almost-black);
+      .q-icon {
+        transform: rotate(180deg);
+      }
+    }
+  }
 }
-#showMenu {
-  position: fixed;
-	left: -10000px;
-}
-#labelShowMenu {
+.showMenu {
 	padding: 0.25em 0.35em;
   border-radius: 10px;
   display: inline-block;
@@ -82,6 +90,8 @@
 	position: absolute;
 	left: 100%;
 	transition: all ease-in-out 0.2s;
+  color: var(--wa-color-almost-black);
+  background: var(--wa-color-blue-white);
   .q-icon {
     transform: rotate(0deg);
     transition: inherit;
@@ -95,41 +105,27 @@
     //display: none;
   }
 }
-#slideMenu.checked #labelShowMenu .q-icon {
-  transform: rotate(180deg);
-}
+
 .q-tab--active, .q-tab__indicator {
   color: var(--wa-color-dark-teal)!important;
 }
-#labelShowMenu {
-  color: var(--wa-color-almost-black);
-  background: var(--wa-color-blue-white);
-}
-#slideMenu.checked #labelShowMenu {
-  color: var(--wa-color-blue-white);
-  background: var(--wa-color-almost-black);
-}
-.game-tabs {
+
+.menu-tabs {
   background: $wa-2;
   color: $wa-3;
 }
-
-#slideMenu.checked {
-  transform: translate3d(0,0,0);
-}
 </style>
 <script lang="ts">
-import ChatTabPanel from "./tab/ChatTabPanel.vue";
-import GameTabPanel from "./tab/GameTabPanel.vue";
-import ScoreTabPanel from "./tab/ScoreTabPanel.vue";
-import SettingTabPanel from "./tab/SettingTabPanel.vue";
+import ChatTab from './tab/Chat.vue';
+import GameTab from './tab/game/Classic.vue';
+import ScoreTab from './tab/Score.vue';
+import SettingTab from './tab/Setting.vue';
 
 import { defineComponent } from '@vue/composition-api';
-import { ManageScreenEvent } from "../../mixins/manageScreen";
 
 export default defineComponent({
-  name: 'GameSlideMenu',
-  components: { ChatTabPanel, GameTabPanel, ScoreTabPanel, SettingTabPanel },
+  name: 'ClassicSlideMenu',
+  components: { ChatTab, GameTab, ScoreTab, SettingTab },
   data():{
     tab:string,
     showMenu:Boolean,
@@ -160,8 +156,9 @@ export default defineComponent({
       this.seenMessage = this.$store.state.gameData.messages.length;
     },
     open(e:Event) {
+      var vm = this as any;
       this.showMenu = true;
-      document.getElementById("slideMenu")!.style.transform = "";
+      vm.$refs.menu.style.transform = "";
       e.stopPropagation();
     },
     close() {
@@ -179,7 +176,7 @@ export default defineComponent({
     }
     this.touchsurface!.addEventListener("keydown", keyDown, false);
     this.onDestroy = function () {
-      this.touchsurface!.addEventListener("keydown", keyDown, false);
+      this.touchsurface!.removeEventListener("keydown", keyDown, false);
     };
   },
   beforeDestroy() {

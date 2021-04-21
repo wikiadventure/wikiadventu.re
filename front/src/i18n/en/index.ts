@@ -72,7 +72,8 @@ export default {
     leaderboard: "Leaderboard"
   },
   gameLoop: {
-    0: "Classic"
+    0: "Classic",
+    1: "Random"
   },
   phase: {
     0: "Waiting player",

@@ -9,7 +9,7 @@
 </style>
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
-import { getLabel, Lang } from '../../i18n';
+import { getLabel, Lang } from 'src/i18n';
 
 export default defineComponent({
   name: 'FullscreenSwitch'
