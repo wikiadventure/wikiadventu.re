@@ -1,0 +1,161 @@
+{
+	"folders": [
+		{
+			"name": "back",
+			"path": "back"
+		},
+		{
+			"name": "front",
+			"path": "front"
+		},
+		{
+			"name": "bin",
+			"path": "bin"
+		},
+
+		{
+			"name": "local",
+			"path": "local"
+		},
+		{
+			"name": ".git",
+			"path": ".git"
+		},
+		{
+			"name": ".github",
+			"path": ".github"
+		}
+	],
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "Build Quasar SPA",
+				"type": "shell",
+				"command": "cd ${workspaceFolder:front}; quasar build"
+			},
+			{
+				"label": "Build Quasar PWA",
+				"type": "shell",
+				"command": "cd ${workspaceFolder:front}; quasar build -m pwa"
+			},
+			{
+				"label": "Debug Quasar SPA",
+				"type": "shell",
+				"command": "cd ${workspaceFolder:front}; quasar build -d"
+			},
+			{
+				"label": "Debug Quasar PWA",
+				"type": "shell",
+				"command": "cd ${workspaceFolder:front}; quasar build -d -m pwa"
+			},
+			{
+				"label": "Quasar dev",
+				"type": "shell",
+				"command": "cd ${workspaceFolder:front}; quasar dev"
+			},
+			{
+				"label": "Quasar dev PWA",
+				"type": "shell",
+				"isBackground": true,
+				"command": "cd ${workspaceFolder:front}; quasar dev -m pwa"
+			},
+			{
+				"label": "Build Haxe",
+				"type": "shell",
+				"command": "cd ${workspaceFolder:back}; haxe node.hxml",
+				"problemMatcher": [
+					"$haxe"
+				]
+			},
+			{
+				"label": "Complete SPA build",
+				"dependsOn": [
+					"Build Haxe",
+					"Build Quasar SPA"
+				]
+			},
+			{
+				"label": "Complete PWA build",
+				"dependsOn": [
+					"Build Haxe",
+					"Build Quasar PWA"
+				]
+			},
+			{
+				"label": "Complete SPA debug",
+				"dependsOn": [
+					"Build Haxe",
+					"Debug Quasar SPA"
+				]
+			},
+			{
+				"label": "Complete PWA debug",
+				"dependsOn": [
+					"Build Haxe",
+					"Debug Quasar PWA"
+				]
+			}
+		]
+	},
+	"launch": {
+		"configurations": [
+			{
+				"name": "Nodemon backend",
+				"console": "integratedTerminal",
+				"internalConsoleOptions": "neverOpen",
+				"cwd": "${workspaceFolder:bin}",
+				"program": "App.js",
+				"request": "launch",
+				"restart": true,
+				"preLaunchTask": "Build Haxe",
+				"runtimeExecutable": "nodemon",
+				"skipFiles": [
+					"<node_internals>/**"
+				],
+				"type": "pwa-node"
+			},
+			{
+				"name": "Launch backend",
+				"program": "app.js",
+				"cwd": "${workspaceFolder:bin}",
+				"request": "launch",
+				"preLaunchTask": "Build Haxe",
+				"skipFiles": [
+					"<node_internals>/**"
+				],
+				"type": "pwa-node"
+			},
+			{
+				"name": "Debug frontend",
+				"type": "chrome",
+				"request": "launch",
+				"url": "http://localhost:5001",
+				"webRoot": "${workspaceFolder:front}",
+				"sourceMaps": true,
+				"sourceMapPathOverrides": {
+					"webpack:///*": "${webRoot}/*"
+				}
+			}
+		],
+		"compounds": [
+			{
+				"name": "Launch backend & frontend",
+				"configurations": [
+					"Launch backend",
+					"Debug frontend"
+				]
+			},
+			{
+				"name": "Nodemon backend & frontend",
+				"configurations": [
+					"Nodemon backend",
+					"Debug frontend"
+				]
+			}
+		]
+	},
+	"settings": {
+		"haxe.configurations": []
+	}
+}
