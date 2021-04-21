@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Program",
+            "cwd": "${workspaceFolder}/bin",
+            "program": "${workspaceFolder}/bin/app.js",
+            "request": "launch",
+            "preLaunchTask": "Haxe build",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        },
+        {
+            "name": "Nodemon",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "cwd": "${workspaceFolder}/bin",
+            "program": "${workspaceFolder}/bin/App.js",
+            "request": "launch",
+            "restart": true,
+            "preLaunchTask": "Haxe build",
+            "runtimeExecutable": "nodemon",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        }
+    ]
+}
