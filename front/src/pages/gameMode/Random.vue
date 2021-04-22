@@ -102,7 +102,7 @@ export default defineComponent({
     this.$root.$on('manage-screen', this.manageScreen);//for exit button
     function keyDown(e:KeyboardEvent) {
       if (e.defaultPrevented) return;
-      if (e.ctrlKey && e.altKey && e.key == "W") {
+      if (e.ctrlKey && e.altKey && e.key == " ") {
         vm.showRightPanel = !vm.showRightPanel;
       }
     }

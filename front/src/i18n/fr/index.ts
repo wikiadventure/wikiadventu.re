@@ -94,7 +94,7 @@ export default {
     wikiPage: {
       noEndPageYet: "Pas encore de page d'arrivée",
       tipsTitle: "Astuce",
-      tipsContent: "Vous pouvez ouvrir le menu du jeu avec le bouton en haut à gauche ou avec ctrl + alt + Q. Vous pouvez aussi ouvrir la page de fin avec ctrl + alt + W.",
+      tipsContent: "Vous pouvez ouvrir le menu du jeu avec le bouton en haut à gauche ou avec ctrl + alt + shift. Vous pouvez aussi ouvrir la page de fin avec ctrl + alt + espace.",
       tipsContentMobile: "Vous pouvez ouvrir le menu du jeu avec le bouton en haut à gauche ou en faisant glisser vers la droite. Vous pouvez aussi ouvrir la page de fin en faisant glisser vers la gauche.",
     },
     connectError: {
