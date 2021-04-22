@@ -94,7 +94,7 @@ export default {
   wikiPage: {
     noEndPageYet: "No End Page yet",
     tipsTitle: "Tips",
-    tipsContent: "You can open the game menu with top left button or with ctrl + shift. You can also open the end page with ctrl + space",
+    tipsContent: "You can open the game menu with top left button or with ctrl + alt + Q. You can also open the end page with ctrl + alt + W",
     tipsContentMobile: "You can open the game menu with top left button or by swiping to the right. You can also open the end page by swiping to the left.",
   },
   connectError: {

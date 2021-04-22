@@ -170,7 +170,7 @@ export default defineComponent({
     this.touchsurface = document.documentElement;
     function keyDown(e:KeyboardEvent) {
       if (e.defaultPrevented) return;
-      if (e.key == "Shift" && e.ctrlKey) {
+      if (e.ctrlKey && e.altKey && e.key == "W") {
         vm.showMenu = !vm.showMenu;
       }
     }
