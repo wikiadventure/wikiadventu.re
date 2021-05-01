@@ -1,6 +1,6 @@
 import { Store } from '../store';
 import { RouteConfig } from 'vue-router';
-import { GameLoopType, importGameMode } from 'src/store/gameData/type/gameLoop';
+import { GameLoopType } from 'src/store/gameData/type/gameLoop';
 
 const routes: RouteConfig[] = [
   {
@@ -17,7 +17,7 @@ const routes: RouteConfig[] = [
       }
     },
     component: () => {
-      return importGameMode(Store.state.gameData.gameLoop);
+      return import('pages/Game.vue');
     }
   },
   {
@@ -30,7 +30,7 @@ const routes: RouteConfig[] = [
       }
     },
     component: () => {
-      return importGameMode(Store.state.gameData.gameLoop);
+      return import('pages/Game.vue');
     }
   },
   {
