@@ -7,6 +7,10 @@ import config.Lang;
 import js.lib.Promise;
 
 class WikiTools {
+
+    static final wikiHeaders = {
+        "Api-User-Agent": "wiki-adventure/1.1 (https://wiki-adventure.sacramentix.fr/; pro@sacramentix.fr)"
+    };
     public static function selectPage(suggestionList:Array<String>, lang:Lang):Promise<VoteResult> {
         var promiseList = new Array<Promise<String>>();
         for (i in 0...suggestionList.length) {
@@ -29,11 +33,7 @@ class WikiTools {
                             hostname: LangTools.getURL(lang),
                             path: encodedParam,
                             method: 'POST',
-                            headers: {
-                                "Api-User-Agent":"wiki-adventure/1.1 (https://wiki-adventure.herokuapp.com/; benjamin.gilloury@gmail.com)",
-                                'Accept': 'application/json',
-                                'Content-type': "application/x-www-form-urlencoded"
-                            } 
+                            headers: wikiHeaders
                         };
                         var request = Https.request(options, function (response) {
                             response.on('data', function (data) {
@@ -103,11 +103,7 @@ class WikiTools {
                 hostname: LangTools.getURL(lang),
                 path: encodedParam,
                 method: 'POST',
-                headers: {
-                    "Api-User-Agent":"wiki-adventure/1.1 (https://wiki-adventure.herokuapp.com/; benjamin.gilloury@gmail.com)",
-                    'Accept': 'application/json',
-                    'Content-type': "application/x-www-form-urlencoded"
-                } 
+                headers: wikiHeaders 
             };
             var request = Https.request(options, function (response) {
                 response.on('data', function (data) {
@@ -149,11 +145,7 @@ class WikiTools {
                     hostname: LangTools.getURL(lang),
                     path: encodedParam,
                     method: 'POST',
-                    headers: {
-                        "Api-User-Agent":"wiki-adventure/1.1 (https://wiki-adventure.herokuapp.com/; benjamin.gilloury@gmail.com)",
-                        'Accept': 'application/json',
-                        'Content-type': "application/x-www-form-urlencoded"
-                    }  
+                    headers: wikiHeaders  
                 };
                 var request = Https.request(options, function (response) {
                     var body = '';
