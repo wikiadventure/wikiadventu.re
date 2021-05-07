@@ -58,7 +58,8 @@
 				"label": "Quasar dev PWA",
 				"type": "shell",
 				"isBackground": true,
-				"command": "cd ${workspaceFolder:front}; quasar dev -m pwa"
+				"command": "cd ${workspaceFolder:front}; quasar dev -m pwa",
+				"problemMatcher": []
 			},
 			{
 				"label": "Build Haxe",
