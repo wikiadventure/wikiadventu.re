@@ -19,18 +19,7 @@
 
     <q-separator  spaced="lg"/>
 
-    <div id="vote" class="row items-center q-ma-sm">
-      <p class="q-ma-none col-strech">{{ $t('gameTab.vote') }} :</p>
-      <p class="q-ma-none q-ml-sm text-left col">{{ vote }}</p>
-      <q-btn round dense flat icon="mdi-delete" class="voteDelete" @click="resetVote()"></q-btn>
-    </div>
-    <q-form class="voteForm q-ma-sm">
-      <q-input dense class="voteInput" @keydown.enter.prevent="submitVote()" maxlength="255" outlined v-model="voteInput" :label="$t('gameTab.submitVote')" spellcheck="false">
-        <template v-slot:after>
-          <q-btn round dense flat icon="mdi-send" @click="submitVote()"/>
-        </template>
-      </q-input>
-    </q-form>
+    <vote-input/>
 
     <q-separator spaced="lg"/>
 
@@ -62,37 +51,24 @@
   </div>
 </template>
 <style lang="scss">
-#gameTab {
+.classic-game-tab {
   font-size: 1.2em;
-}
-.voteDelete {
-  transition: all ease-in-out 0.2s;
-}
-.voteDelete:active {
-  transform: rotate(145deg);
 }
 .self {
   color: var(--w-color-dark-teal);
 }
 </style>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
 import  { ManageScreenEvent } from 'src/mixins/manageScreen';
+import VoteInput from 'src/components/game/VoteInput.vue';
 import { Player } from 'src/store/gameData/state';
+
+import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'ClassicGameTab',
-  data() {
-    var vm = this as any;
-    return {
-      voteInput: ""
-    }
-  },
+  components: { VoteInput },
   computed: {
-    vote():string {
-      var v = this.$store.state.gameData.vote != null ? this.$store.state.gameData.vote : this.$t('gameTab.randomPage');  
-      return v;
-    },
     startPage():string {
       return this.$store.state.gameData.startPage;
     },
@@ -119,14 +95,6 @@ export default defineComponent({
     }
   },
   methods: {
-    submitVote(e:Event) {
-      var vm:any = this;
-      vm.$store.dispatch('gameData/sendVote', vm.voteInput);
-    },
-    resetVote(e:Event) {
-      var vm:any = this;
-      vm.$store.dispatch('gameData/resetVote');
-    },
     voteSkip(e:Event) {
       var vm:any = this;
       vm.$store.dispatch('gameData/voteSkip');

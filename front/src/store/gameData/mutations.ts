@@ -1,8 +1,9 @@
 import counter from './script/countdown';
 import { Lang } from 'src/i18n';
 import { MutationTree } from 'vuex';
-import { GameData, LobbyType, Message, Player } from './state';
+import { GameData, LobbyType, Message, Player, WikiRawSuggestion } from './state';
 import { GameState, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, VoteSkip, WinRound, WsMessage } from './actions';
+import { wikiHeaders } from 'src/mixins/wikiTools';
 
 const mutation: MutationTree<GameData> = {
   setLang(state:GameData, l:Lang) {
@@ -103,6 +104,52 @@ const mutation: MutationTree<GameData> = {
   },
   safeMode(state:GameData, b:boolean) {
     state.safeMode = b;
+  },
+  voteInput(state:GameData, v:string) {
+    state.voteInput = v;
+  },
+  async loadSuggestions(state:GameData) {
+    var url = new URL('https://'+state.lang+'.wikipedia.org/w/api.php');
+    url.search = new URLSearchParams({
+      action: 'query',
+      format: 'json',
+      gpssearch: state.voteInput,
+      generator: 'prefixsearch',
+      prop: 'pageprops|pageimages|pageterms',
+      redirects: '1', // Automatically resolve redirects
+      ppprop: 'displaytitle',
+      piprop: 'thumbnail',
+      pithumbsize: '160',
+      pilimit: '30',
+      wbptterms: 'description',
+      gpsnamespace: "0", // Only return results in Wikipedia's main namespace
+      gpslimit: "5", // Return at most five results
+      origin: '*',
+    }).toString();
+    const response = await fetch(url.toString(), { headers: wikiHeaders })
+    .then((r) => r.json())
+    .catch((error) => {
+      console.log(error);
+    })
+    state.suggestions = [];
+    if (!response.query && response.query.pages) {}
+    for (const page of Object.values(response.query.pages) as WikiRawSuggestion[]) {
+      console.log(page);
+      if ( page.ns === 0 ) {
+        state.suggestions.push({
+          index: page.index,
+          title: page.title,
+          description: page.terms.description[0],
+          thumbnail: page.thumbnail ? page.thumbnail : {
+            source: "",
+            height: 160,
+            width: 160
+          }
+        });
+      }
+    }
+    state.suggestions.sort((a,b) => a.index-b.index);
+    
   }
   
 };

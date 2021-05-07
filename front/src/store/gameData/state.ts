@@ -33,6 +33,8 @@ export interface GameData {
   volume:number;
   mute:boolean;
   safeMode:boolean;
+  voteInput:string;
+  suggestions:WikiSuggestion[];
 }
 
 export interface Player {
@@ -74,7 +76,34 @@ const state: GameData = {
   winnerId: -3,
   volume: 0.3,
   mute: false,
-  safeMode: false
+  safeMode: false,
+  voteInput: "",
+  suggestions: []
 };
 
 export default state;
+
+export interface WikiRawSuggestion  {
+  ns: number, 
+  index: number, 
+  title: string, 
+  terms: {
+    description: string[]
+  },
+  thumbnail: {
+    source: string,
+    width: number,
+    height: number
+  }
+}
+
+export interface WikiSuggestion  {
+  index: number,
+  title: string, 
+  description: string
+  thumbnail: {
+    source: string,
+    width: number,
+    height: number
+  }
+}

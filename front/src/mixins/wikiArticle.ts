@@ -1,4 +1,5 @@
 import { Lang } from "src/i18n";
+import { wikiHeaders } from "./wikiTools";
 
 interface heading {
   title:string,
@@ -47,7 +48,20 @@ export default class WikiArticle {
   }
 
   async fetch() {
-    const response:wikiResponse = await fetch('https://'+this.lang+'.wikipedia.org/w/api.php?action=parse&prop=text&redirects=1&format=json&origin=*&disableeditsection&'+(this.isMobile ? "mobileformat":"")+'&page='+encodeURIComponent(this.pageURL)).then(function(response){return response.json()});
+    var url = new URL('https://'+this.lang+'.wikipedia.org/w/api.php');
+    url.search = new URLSearchParams({
+      action: "parse",
+      prop: "text",
+      redirects: "1",
+      format: "json",
+      origin: "*",
+      formatversion: "2",
+      disableeditsection: "1",
+      mobileformat: this.isMobile ? "1" : "0",
+      page: encodeURIComponent(this.pageURL)
+    }).toString();
+    const response:wikiResponse = await fetch(url.toString(), { headers: wikiHeaders })
+    .then(function(response){return response.json()});
     this.title = response.parse.title;
     this.formatHTML(response.parse.text['*']);
     return this;
