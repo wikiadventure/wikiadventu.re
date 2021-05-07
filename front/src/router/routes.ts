@@ -1,6 +1,5 @@
 import { Store } from '../store';
 import { RouteConfig } from 'vue-router';
-import { GameLoopType } from 'src/store/gameData/type/gameLoop';
 
 const routes: RouteConfig[] = [
   {
@@ -51,12 +50,6 @@ const routes: RouteConfig[] = [
       fetch(window.location.origin+to.fullPath).then(() => window.close());
     },
   },
-  {
-    path: '/test',
-    component: () => {
-      return import('pages/gameMode/Classic.vue');
-    }
-  },
   // Always leave this as last one,
   // but you can also remove it
   {
@@ -64,5 +57,17 @@ const routes: RouteConfig[] = [
     component: () => import('pages/Error404.vue')
   }
 ];
+
+if (process.env.DEV) {
+  routes.push(
+    {
+      path: '/test',
+      component: () => {
+        return import('pages/gameMode/Classic.vue');
+      }
+    }
+  );
+}
+
 
 export default routes;
