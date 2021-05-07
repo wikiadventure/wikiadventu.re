@@ -32,6 +32,7 @@ export default defineComponent({
   },
   methods: {
     close() {
+      if (!this.target) return;
       var payload:ManageScreenEvent = {
         target: this.target,
         state: false
