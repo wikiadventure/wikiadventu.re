@@ -86,6 +86,12 @@ export default {
         2: "La phase de recherche commence. Soyez le premier à atteindre la page d'arrivée!"
       }
     },
+    shortcut: {
+      spaceKey: "espace",
+      openMenu: "Ouvre le menu",
+      openEndPage: "Ouvre la page de fin",
+      disableSafeMode: "Désactive le SafeMode pour la page actuel",
+    },
     exitWarn: "Voulez-vous vraiment quitter la partie?",
     lobbyIDRequired: "Veuiller saisir un identifiant de partie à rejoindre",
     fetchError: "Une erreur a eu lieu lors de la communication avec le serveur",

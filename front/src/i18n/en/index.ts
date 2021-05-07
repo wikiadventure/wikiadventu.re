@@ -86,6 +86,12 @@ export default {
       2: "Searching phase started. Be the first to reach the end page!"
     }
   },
+  shortcut: {
+    spaceKey: "space",
+    openMenu: "Open the menu",
+    openEndPage: "Open the end page",
+    disableSafeMode: "Disable Safemode for the current page",
+  },
   exitWarn: "Do you really want to leave the party?",
   lobbyIDRequired: "Please enter a Party ID to connect to",
   fetchError: "An error occurred while communicating with server",
