@@ -2,8 +2,8 @@
   <div>
     <q-btn class="action-btn" push
         @click="$refs.dialog.open = true"
-        icon="fullscreen"
-        label="shortcut"
+        icon="mdi-keyboard"
+        :label="$t('shortcut.title')"
         />
     <shortcut-dialog ref="dialog"/>
   </div>

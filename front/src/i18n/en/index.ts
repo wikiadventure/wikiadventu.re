@@ -65,7 +65,8 @@ export default {
     send: "Send a message"
   },
   settingTab: {
-    settings: "Settings"
+    settings: "Settings",
+    fullscreen: "Fullscreen"
   },
   scoreTab: {
     title: "Scoreboard",
@@ -87,6 +88,7 @@ export default {
     }
   },
   shortcut: {
+    title: "Shortcuts",
     spaceKey: "space",
     openMenu: "Open the menu",
     openEndPage: "Open the end page",

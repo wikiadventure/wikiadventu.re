@@ -3,7 +3,7 @@
     <div class="shortcut-dialog">
       <exit-btn @click="open = false" />
       <div class="title">
-        Keyboard shortcut
+        {{ $t("shortcut.title") }}
       </div>
       <q-separator/>
       <div class="shortcut-list">
