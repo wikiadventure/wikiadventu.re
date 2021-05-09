@@ -108,8 +108,9 @@ export default defineComponent({
       return this.$store.state.gameData.winnerPageHistory as string[];
     },
     winner():string {
+      var t = Math.round (this.$store.state.gameData.winnerTime * 10) / 10;
       var p = this.$store.getters['gameData/winner'] as Player;
-      return p ? p.pseudo : this.$t('gameTab.noWinnerYet') as any;
+      return p ? p.pseudo + " in " + t + "s" : this.$t('gameTab.noWinnerYet') as any;
     }
   }
 });

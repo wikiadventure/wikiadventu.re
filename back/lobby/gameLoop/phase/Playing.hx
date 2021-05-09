@@ -96,7 +96,7 @@ class Playing extends Phase {
         log("WinRound --> " +  player.id + "(" + player.pseudo + ")", PlayerData);
         lobby.players.emitUpdateScore(player);
         lobby.players.emitWinRound(player);
-        lobby.players.emitPath(player);
+        lobby.players.emitPath(player, duration - timeLeft);
         end();
     }
 

@@ -2,7 +2,7 @@ import counter from './script/countdown';
 import { Lang } from 'src/i18n';
 import { MutationTree } from 'vuex';
 import { GameData, LobbyType, Message, Player, WikiRawSuggestion } from './state';
-import { GameState, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, VoteSkip, WinRound, WsMessage } from './actions';
+import { GameState, Path, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, VoteSkip, WinRound, WsMessage } from './actions';
 import { wikiHeaders } from 'src/mixins/wikiTools';
 
 const mutation: MutationTree<GameData> = {
@@ -24,8 +24,9 @@ const mutation: MutationTree<GameData> = {
   setGameLoop(state:GameData, type:number) {
     state.gameLoop = type;
   },
-  path(state:GameData, a:string[]) {
-    state.winnerPageHistory = a;
+  path(state:GameData, data:Path) {
+    state.winnerPageHistory = data.pages;
+    state.winnerTime = data.time;
   },
   voteSkip(state:GameData, p:VoteSkip) {
     for(var player of state.players) {
@@ -132,7 +133,7 @@ const mutation: MutationTree<GameData> = {
       console.log(error);
     })
     state.suggestions = [];
-    if (!response.query && response.query.pages) {}
+    if (!response.query || !response.query.pages) {}
     for (const page of Object.values(response.query.pages) as WikiRawSuggestion[]) {
       console.log(page);
       if ( page.ns === 0 ) {

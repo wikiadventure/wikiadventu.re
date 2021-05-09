@@ -29,6 +29,7 @@ export interface GameData {
   players: Array<Player>;
   messages: Array<Message>;
   winnerPageHistory: Array<string>,
+  winnerTime: number,
   winnerId: number;
   volume:number;
   mute:boolean;
@@ -69,6 +70,7 @@ const state: GameData = {
   endPage: "",
   vote: null,
   winnerPageHistory: [],
+  winnerTime: 0,
   players: [],
   messages: [],
   self: -1,

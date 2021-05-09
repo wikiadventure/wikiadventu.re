@@ -135,12 +135,13 @@ class PlayersExtension {
         players.iter((p) -> if(p.socket != null) p.socket.send(textData));
     }
 
-    public static function emitPath(players:Array<Player>, player:Player) {
+    public static function emitPath(players:Array<Player>, player:Player, time:Float) {
         var data:LobbyEvent<Path> = {
             type: Path,
             data: {
                 id: player.id,
-                pages: player.pageList
+                pages: player.pageList,
+                time: time
             }
         }
         var textData = Json.stringify(data);
@@ -229,7 +230,8 @@ typedef SetOwner = {
 
 typedef Path = {
     id:Int,
-    pages:Array<String>
+    pages:Array<String>,
+    time:Float
 }
 
 typedef VoteSkip = {

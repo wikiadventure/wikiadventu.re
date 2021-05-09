@@ -1,5 +1,5 @@
 <template>
-  <slide-menu>
+  <slide-menu ref="menu">
     <template v-slot:gameTab>
       <classic ref="gameTab"/>
     </template>

@@ -95,7 +95,7 @@ const actions: ActionTree<GameData, StateInterface> = {
     commit('setOwner', data.id);
   },
   onPath({ commit }, data:Path) {
-    commit('path', data.pages);
+    commit('path', data);
   },
   onVoteSkip({ commit }, data:VoteSkip) {
     commit('voteSkip', data);
@@ -215,7 +215,8 @@ export interface PlayerJoin {
 }
 export interface Path {
   id:number,//The player id
-  pages:string[]
+  pages:string[],
+  time:number
 }
 export interface SetOwner {
   id:number//The player id
