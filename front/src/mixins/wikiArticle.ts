@@ -58,12 +58,12 @@ export default class WikiArticle {
       formatversion: "2",
       disableeditsection: "1",
       mobileformat: this.isMobile ? "1" : "0",
-      page: encodeURIComponent(this.pageURL)
+      page: this.pageURL
     }).toString();
     const response:wikiResponse = await fetch(url.toString(), { headers: wikiHeaders })
     .then(function(response){return response.json()});
     this.title = response.parse.title;
-    this.formatHTML(response.parse.text['*']);
+    this.formatHTML(response.parse.text);
     return this;
   }
 
