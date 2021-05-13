@@ -72,9 +72,12 @@ export default {
       title: "Scores",
       leaderboard: "Classement"
     },
+    roundWinScreen: {
+      timeOut: "Temps écoulé!"
+    },
     gameLoop: {
       0: "Classique",
-      1: "Aléatoire"
+      1: "Aléatoire",
     },
     phase: {
       0: "En attente de joueurs",

@@ -5,7 +5,7 @@
     <wiki-page ref="wikiPage" v-else />
     <transition name="fade"><page-history v-show="showPageHistory" /></transition>
     <transition name="fade"><leaderboard v-show="showLeaderboard" /></transition>
-    <transition name="fade"><round-win v-show="showRoundWin" /></transition>
+    <transition name="fade"><round-win :winner="roundWinner" :hasLose="hasLose" v-show="showRoundWin" /></transition>
     <wiki-page ref="rightPanel" class="right-panel" :class="{ 'hideEndPage': !showRightPanel }" endPage/>
     <classic-slide-menu ref="game"/>
   </div>
@@ -49,6 +49,13 @@ import { PhaseType } from 'src/store/gameData/type/phase';
 export default defineComponent({
   name: 'ClassicMode',
   components: { ClassicSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory, GameAudio },
+  setup(): {
+
+  } {
+    return {
+
+    }
+  },
   data(): {
     showRoundWin:boolean,
     showLeaderboard:boolean,
@@ -79,6 +86,13 @@ export default defineComponent({
     }
   },
   computed: {
+    roundWinner():string {
+      var p = this.$store.getters['gameData/winner'] as Player;
+      return p ? p.pseudo : this.$t("roundWinScreen.timeOut") as string;
+    },
+    hasLose():boolean {
+      return this.$store.state.gameData.winnerId != this.$store.state.gameData.self;
+    },
     winner():Player {
       return this.$store.getters.gameData.winner;
     },
@@ -151,6 +165,12 @@ export default defineComponent({
             position: 'bottom-right',
             message: vm.$t('phase.notify.'+payload.phase) as string
           });
+          setTimeout(() => {
+            vm.$store.commit('gameData/winRound', -3);
+            vm.$refs.gameAudio.loseAudio.play();
+            vm.showRoundWin = true;
+            setTimeout(() => {vm.showRoundWin = false}, 5000);
+          }, payload.time*1000);
           return;
       }
     },

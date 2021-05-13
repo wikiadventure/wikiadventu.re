@@ -4,6 +4,7 @@ import { GameData, Player } from './state';
 
 const getters: GetterTree<GameData, StateInterface> = {
   winner: (state) => {
+    if (state.winnerId == -3) return null;
     return state.players.find((p:Player) => p.id == state.winnerId);
   },
   playersByScore: (state) => {

@@ -72,6 +72,9 @@ export default {
     title: "Scoreboard",
     leaderboard: "Leaderboard"
   },
+  roundWinScreen: {
+    timeOut: "Time out!"
+  },
   gameLoop: {
     0: "Classic",
     1: "Random"
