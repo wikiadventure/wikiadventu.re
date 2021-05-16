@@ -22,9 +22,14 @@ import { Player } from 'src/store/gameData/state';
 export default defineComponent({
   name: 'RoundWin',
   components: { LogoShowIn, ExitBtn },
-  props: {
-    winner:String,
-    hasLose:Boolean
-  },
+  computed: {
+    winner():string {
+      var p = this.$store.getters['gameData/winner'] as Player;
+      return p ? p.pseudo : this.$t("roundWinScreen.timeOut") as string;
+    },
+    hasLose():boolean {
+      return this.$store.state.gameData.winnerId != this.$store.state.gameData.self;
+    },
+  }
 });
 </script>

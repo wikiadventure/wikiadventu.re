@@ -15,6 +15,7 @@ class Playing extends Phase {
 
     public var startPage:String;
     public var endPage:String;
+    public var hasWinner:Bool = false;
     
     public override function onStart() {
         lobby.players.pageHistoryReset();
@@ -23,7 +24,7 @@ class Playing extends Phase {
     }
 
     public override function onEnd() {
-        
+        if (!hasWinner) lobby.players.emitWinRound(null);
     }
 
     public override function controller(player:Player, json:WebsocketPackage) {
@@ -97,6 +98,7 @@ class Playing extends Phase {
         lobby.players.emitUpdateScore(player);
         lobby.players.emitWinRound(player);
         lobby.players.emitPath(player, duration - timeLeft);
+        hasWinner = true;
         end();
     }
 

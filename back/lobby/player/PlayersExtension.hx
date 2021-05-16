@@ -104,7 +104,7 @@ class PlayersExtension {
         var data:LobbyEvent<WinRound> = {
             type: WinRound,
             data: {
-                id: player.id
+                id: player != null ? player.id : -3
             }
         }
         var textData = Json.stringify(data);
