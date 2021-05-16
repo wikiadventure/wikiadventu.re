@@ -1,0 +1,3 @@
+# @install: lix --silent download "haxelib:/uuid#2.3.1" into uuid/2.3.1/haxelib
+-cp ${HAXE_LIBCACHE}/uuid/2.3.1/haxelib/src
+-D uuid=2.3.1

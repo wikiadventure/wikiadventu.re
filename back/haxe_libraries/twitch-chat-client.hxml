@@ -1,0 +1,5 @@
+# @install: lix --silent download "gh://github.com/sacramentix/hx-twitch-chat-client#6e23229408938929eb75607be7a73c2aa9d89f8f" into twitch-chat-client/4.2.4/github/6e23229408938929eb75607be7a73c2aa9d89f8f
+-lib ircv3
+-lib twitch
+-cp ${HAXE_LIBCACHE}/twitch-chat-client/4.2.4/github/6e23229408938929eb75607be7a73c2aa9d89f8f/
+-D twitch-chat-client=4.2.4

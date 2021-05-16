@@ -1,0 +1,7 @@
+# @install: lix --silent download "gh://github.com/Sacramentix/hx-twitch#04e80805e0b3f2011ac6ed3fb279f51c19bd4d6e" into twitch/4.2.4/github/04e80805e0b3f2011ac6ed3fb279f51c19bd4d6e
+-lib d-fischer-logger
+-lib d-fischer-shared-utils
+-lib twitch-api-call
+-lib twitch-auth
+-cp ${HAXE_LIBCACHE}/twitch/4.2.4/github/04e80805e0b3f2011ac6ed3fb279f51c19bd4d6e/
+-D twitch=4.2.4

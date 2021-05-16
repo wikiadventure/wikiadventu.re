@@ -1,6 +1,6 @@
 -lib uuid
 -lib tink_json
--lib ws
+-lib hx-ws
 -lib twitch-chat-client
 
 -main App
