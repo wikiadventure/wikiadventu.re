@@ -23,9 +23,13 @@ Then you need to install [NodeJS > 12.16.0 here](https://nodejs.org/en/download/
 
 Launch the setup script to install Lix, Haxe, Quasar and all needed librairies.
 
- ### Visual Studio Code   
+### Code Workspace
 
-Make sure to install the Haxe extension pack and the Quasar extension pack!
+Open the project with the project.code-workspace with Visual Studio Code.
+
+ ### Extension
+
+Make sure to install the recommended extension.
 
 ## Debug
 
