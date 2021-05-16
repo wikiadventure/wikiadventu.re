@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Tell the player of incoming update
-        run: curl -u ":${{secrets.ADMIN_SECRET}}" https://wiki-adventure.herokuapp-dev.com/api/announce --data "New update is coming your party will be interrupted in few minute."
+        run: curl -u ":${{secrets.ADMIN_SECRET}}" https://wiki-adventure-dev.herokuapp.com/api/announce --data "New update is coming your party will be interrupted in few minute."
       - continue-on-error: true
         run: |
           git config --global user.email 'benji.u1225u@gmail.com'
