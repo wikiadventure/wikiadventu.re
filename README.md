@@ -15,22 +15,21 @@
 
 ## Setup
 
-### Haxe
-
-First you need to install [Haxe > 4.0.0 here](https://haxe.org/download/)
-
 ### NodeJS
 
 Then you need to install [NodeJS > 12.16.0 here](https://nodejs.org/en/download/)
 
 ### Librairies
 
-Launch the setup script to install all the librairies.
-It will install Haxe lib, then backend NPM lib and finally Quasar and frontend lib! 
+Launch the setup script to install Lix, Haxe, Quasar and all needed librairies.
 
- ### Visual Studio Code   
+### Code Workspace
 
-Make sure to install the Haxe extension pack and the Quasar extension pack!
+Open the project with the project.code-workspace with Visual Studio Code.
+
+ ### Extension
+
+Make sure to install the recommended extension.
 
 ## Debug
 

@@ -18,58 +18,29 @@ jobs:
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - uses: actions/checkout@v2
       - name: Tell the player of incoming update
         run: curl -u ":${{secrets.ADMIN_SECRET}}" https://wiki-adventure-dev.herokuapp.com/api/announce --data "New update is coming your party will be interrupted in few minute."
-      - uses: actions/checkout@v2
-      - name: Setup Haxe environment
-        # You may pin to the exact commit or the version.
-        # uses: krdlab/setup-haxe@aab4595a86d3a14ec1b51b9dabad6b6e7810313e
-        uses: krdlab/setup-haxe@v1.1.4
-        with:
-          # Version Spec of the version to use. Example: 3.4.7
-          haxe-version: 4.1.4
-      - name: Install haxe lib
-        continue-on-error: true
-        run: |
-          haxelib git twitch-auth https://github.com/Sacramentix/hx-twitch-auth.git --always
-          haxelib git twitch-api-call https://github.com/Sacramentix/hx-twitch-api-call.git --always
-          haxelib git d-fischer-logger https://github.com/Sacramentix/hx-d-fischer-logger.git --always
-          haxelib git d-fischer-shared-utils https://github.com/Sacramentix/hx-d-fischer-shared-utils.git --always
-          haxelib git d-fischer-typed-event-emitter https://github.com/Sacramentix/hx-d-fischer-typed-event-emitter.git --always
-          haxelib git ws https://github.com/Sacramentix/hx-ws.git --always
-          haxelib install uuid --always
-          haxelib install tink_json --always
-      - continue-on-error: true
-        run: |
-          haxelib git d-fischer-connection https://github.com/Sacramentix/hx-d-fischer-connection.git --always
-      - continue-on-error: true
-        run: |
-          haxelib git twitch https://github.com/Sacramentix/hx-twitch.git --always
-      - name: Install ircv3 lib
-        continue-on-error: true
-        run: |
-          haxelib git ircv3 https://github.com/Sacramentix/hx-ircv3.git --always
-      - continue-on-error: true
-        run: |
-          haxelib git twitch-chat-client https://github.com/Sacramentix/hx-twitch-chat-client.git --always
       - continue-on-error: true
         run: |
           git config --global user.email 'benji.u1225u@gmail.com'
           git config --global user.name 'Sacramentix'
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
+      - name: GitHub Action for npx
+        uses: mikeal/npx@1.0.0
+      - name: Install lix
+        run: |
+          cd back
+          npm i
       - name: Build backend
         run: |
           cd back
-          haxe node.hxml
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.4
+          npx haxe node.hxml
       - name: Install frontend lib
         run: |
           cd front
           npm i
-      - name: GitHub Action for npx
-        # You may pin to the exact commit or the version.
-        # uses: mikeal/npx@e7aaefed7c9f2e83d493ff810f17fa5ccd7ed437
-        uses: mikeal/npx@1.0.0
       - name: Build frontend
         run: |
           cd front
