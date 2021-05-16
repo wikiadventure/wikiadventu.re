@@ -36,7 +36,7 @@ jobs:
       - name: Build backend
         run: |
           cd back
-          haxe node.hxml
+          npx haxe node.hxml
       - name: Install frontend lib
         run: |
           cd front
