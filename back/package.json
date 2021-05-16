@@ -1,0 +1,11 @@
+{
+  "name": "wiki-adventure-back",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "postinstall": "lix download"
+  },
+  "dependencies": {
+    "lix": "=15.8.15"
+  }
+}
