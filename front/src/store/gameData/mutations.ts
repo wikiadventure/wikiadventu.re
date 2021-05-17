@@ -87,6 +87,7 @@ const mutation: MutationTree<GameData> = {
       state.timeLeft = g.time*1000 - (time - state.timeStamp);
       if (state.timeLeft <= 0) {
         state.timeController.abort();
+        state.timeController = new AbortController();
         state.timeLeft = 0;
       }
     });

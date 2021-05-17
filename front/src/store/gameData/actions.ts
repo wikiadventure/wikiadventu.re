@@ -159,6 +159,7 @@ const actions: ActionTree<GameData, StateInterface> = {
     state.lobbyType = LobbyType.Public;
     state.lobbyID = "";
     state.gamePhase = PhaseType.Voting;
+    state.timeController.abort();
     state.timeController = new AbortController();
     state.round = 0;
     state.timeLeft = 0;
