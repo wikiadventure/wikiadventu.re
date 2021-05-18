@@ -33,7 +33,7 @@ export default {
       error: {
         minChars3: "3 caractères minimum",
         maxChars25: "25 caractères maximum",
-        restrictedChars: "N'utilisé pas un de ses caractères < > : | % $ / \\",
+        restrictedChars: "N'utilisez pas ces caractères < > : | % $ / \\",
 
       }
     },
@@ -66,7 +66,7 @@ export default {
     },
     settingTab: {
       settings: "Options",
-      fullscreen: "Pleine écran"
+      fullscreen: "Plein écran"
     },
     scoreTab: {
       title: "Scores",
@@ -91,7 +91,7 @@ export default {
       }
     },
     shortcut: {
-      title: "Raccourcies",
+      title: "Raccourcis",
       spaceKey: "espace",
       openMenu: "Ouvre le menu",
       openEndPage: "Ouvre la page de fin",
