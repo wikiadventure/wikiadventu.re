@@ -1,0 +1,13 @@
+-lib uuid
+-lib tink_json
+-lib hx-ws
+-lib twitch-chat-client
+
+-main App
+-js ../bin/App.js
+-debug
+#remove this tag # and replace the star to the app port
+#-D port=*
+#remove this tag # if you want an https app
+#-D https
+#to use https make sure you generate a certificate and key in bin/config/ssl

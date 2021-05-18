@@ -1,0 +1,3 @@
+# @install: lix --silent download "gh://github.com/Sacramentix/hx-d-fischer-logger#dfbee81e940dbc0d7b1cb36ab003562899d6484f" into d-fischer-logger/2.0.0/github/dfbee81e940dbc0d7b1cb36ab003562899d6484f
+-cp ${HAXE_LIBCACHE}/d-fischer-logger/2.0.0/github/dfbee81e940dbc0d7b1cb36ab003562899d6484f/
+-D d-fischer-logger=2.0.0

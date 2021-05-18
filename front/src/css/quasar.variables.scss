@@ -1,0 +1,26 @@
+
+:root {
+  --wa-color-almost-black: #222;
+  --wa-color-blue-white: #e8ffff;
+  --wa-color-dark-blue: #0e1316;
+  --wa-color-dark-teal: #279b97;
+  --wa-color-teal: #5fc4bf;
+  --wa-color-light-teal: #84d2ce;
+}
+.body--dark {
+  --wa-color-1 : var(--wa-color-dark-blue);
+  --wa-color-2 : var(--wa-color-almost-black);
+  --wa-color-3 : var(--wa-color-blue-white);
+  --wa-color-4 : var(--wa-color-dark-teal);
+}
+.body--light {
+  --wa-color-1 : var(--wa-color-light-teal);
+  --wa-color-2 : var(--wa-color-blue-white);
+  --wa-color-3 : var(--wa-color-dark-blue);
+  --wa-color-4 : var(--wa-color-almost-black);
+}
+
+$wa-1 : var(--wa-color-1);
+$wa-2 : var(--wa-color-2);
+$wa-3 : var(--wa-color-3);
+$wa-4 : var(--wa-color-4);

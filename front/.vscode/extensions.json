@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "francescopastore.quasar-extension-pack"
+  ],
+  "unwantedRecommendations": [
+    "hookyqr.beautify",
+    "dbaeumer.jshint",
+    "ms-vscode.vscode-typescript-tslint-plugin"
+  ]
+}

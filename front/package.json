@@ -1,0 +1,41 @@
+{
+  "name": "wiki-adventure-quasar",
+  "version": "0.0.1",
+  "description": "wiki adventure",
+  "productName": "Quasar App",
+  "author": "Sacramentix <benji.u1225u@gmail.com>",
+  "private": true,
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.10.4",
+    "@types/uuid": "^8.3.0",
+    "@vue/composition-api": "^0.6.4",
+    "core-js": "^3.12.1",
+    "quasar": "^1.15.13",
+    "uuid": "^8.3.2",
+    "vue-i18n": "^8.24.4"
+  },
+  "devDependencies": {
+    "@quasar/app": "^2.2.6",
+    "@types/node": "^12.20.12",
+    "workbox-webpack-plugin": "^5.1.4"
+  },
+  "browserslist": [
+    "last 10 Chrome versions",
+    "last 10 Firefox versions",
+    "last 4 Edge versions",
+    "last 7 Safari versions",
+    "last 8 Android versions",
+    "last 8 ChromeAndroid versions",
+    "last 8 FirefoxAndroid versions",
+    "last 10 iOS versions",
+    "last 5 Opera versions"
+  ],
+  "engines": {
+    "node": ">= 10.18.1",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}

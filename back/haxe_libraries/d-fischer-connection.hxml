@@ -1,0 +1,6 @@
+# @install: lix --silent download "gh://github.com/Sacramentix/hx-d-fischer-connection#47fd102bb89be4e49460876d9ec45b2cde9e8bea" into d-fischer-connection/6.0.2/github/47fd102bb89be4e49460876d9ec45b2cde9e8bea
+-lib d-fischer-logger
+-lib d-fischer-shared-utils
+-lib d-fischer-typed-event-emitter
+-cp ${HAXE_LIBCACHE}/d-fischer-connection/6.0.2/github/47fd102bb89be4e49460876d9ec45b2cde9e8bea/
+-D d-fischer-connection=6.0.2

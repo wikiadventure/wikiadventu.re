@@ -1,0 +1,3 @@
+# @install: lix --silent download "gh://github.com/Sacramentix/hx-d-fischer-typed-event-emitter#4c255cb564c50802c70d2402e60c2cc34cf5a394" into d-fischer-typed-event-emitter/3.0.2/github/4c255cb564c50802c70d2402e60c2cc34cf5a394
+-cp ${HAXE_LIBCACHE}/d-fischer-typed-event-emitter/3.0.2/github/4c255cb564c50802c70d2402e60c2cc34cf5a394/
+-D d-fischer-typed-event-emitter=3.0.2

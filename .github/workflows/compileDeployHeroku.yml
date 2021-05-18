@@ -7,63 +7,45 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+    env:
+      ADMIN_PASSWORD: ${{secrets.ADMIN_PASSWORD}}
+      TWITCH_BOT_USERNAME: ${{secrets.TWITCH_BOT_USERNAME}}
+      TWITCH_BOT_PASSWORD: ${{secrets.TWITCH_BOT_PASSWORD}}
+      TWITCH_CLIENT_ID: ${{secrets.TWITCH_CLIENT_ID}}
+      TWITCH_CLIENT_SECRET: ${{secrets.TWITCH_CLIENT_SECRET}}
+      TWITCH_REDIRECT_URL: ${{secrets.TWITCH_REDIRECT_URL}}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Haxe environment
-        # You may pin to the exact commit or the version.
-        # uses: krdlab/setup-haxe@aab4595a86d3a14ec1b51b9dabad6b6e7810313e
-        uses: krdlab/setup-haxe@v1.1.4
-        with:
-          # Version Spec of the version to use. Example: 3.4.7
-          haxe-version: 4.1.4
-      - name: Install haxe lib
-        continue-on-error: true
-        run: |
-          haxelib git twitch-auth https://github.com/Sacramentix/hx-twitch-auth.git --always
-          haxelib git twitch-api-call https://github.com/Sacramentix/hx-twitch-api-call.git --always
-          haxelib git d-fischer-logger https://github.com/Sacramentix/hx-d-fischer-logger.git --always
-          haxelib git d-fischer-shared-utils https://github.com/Sacramentix/hx-d-fischer-shared-utils.git --always
-          haxelib git d-fischer-typed-event-emitter https://github.com/Sacramentix/hx-d-fischer-typed-event-emitter.git --always
-          haxelib git ws https://github.com/Sacramentix/hx-ws.git --always
-          haxelib install uuid --always
-          haxelib install tink_json --always
-      - continue-on-error: true
-        run: |
-          haxelib git d-fischer-connection https://github.com/Sacramentix/hx-d-fischer-connection.git --always
-      - continue-on-error: true
-        run: |
-          haxelib git twitch https://github.com/Sacramentix/hx-twitch.git --always
-      - name: Install ircv3 lib
-        continue-on-error: true
-        run: |
-          haxelib git ircv3 https://github.com/Sacramentix/hx-ircv3.git --always
-      - continue-on-error: true
-        run: |
-          haxelib git twitch-chat-client https://github.com/Sacramentix/hx-twitch-chat-client.git --always
+      - name: Tell the player of incoming update
+        run: curl -u ":${{secrets.ADMIN_SECRET}}" https://wiki-adventure.herokuapp.com/api/announce --data "New update is coming your party will be interrupted in few minute."
       - continue-on-error: true
         run: |
           git config --global user.email 'benji.u1225u@gmail.com'
           git config --global user.name 'Sacramentix'
-      - name: Build backend
-        run: |
-          haxe node.hxml
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.4
+      - name: GitHub Action for npx
+        uses: mikeal/npx@1.0.0
+      - name: Install lix
+        run: |
+          cd back
+          npm i
+      - name: Build backend
+        run: |
+          cd back
+          npx haxe node.hxml
       - name: Install frontend lib
         run: |
-          cd front-quasar/wiki-adventure-quasar; npm i;
-      - name: GitHub Action for npx
-        # You may pin to the exact commit or the version.
-        # uses: mikeal/npx@e7aaefed7c9f2e83d493ff810f17fa5ccd7ed437
-        uses: mikeal/npx@1.0.0
+          cd front
+          npm i
       - name: Build frontend
         run: |
-          cd front-quasar/wiki-adventure-quasar
+          cd front
           npm i @quasar/cli
-          npx quasar build
+          npx quasar build -m pwa
       - name: Deploy to heroku
         uses: Sacramentix/heroku-deploy@30f0b7e30306900d74c1d7fd5414e1f8421652ba
         with:
@@ -72,6 +54,7 @@ jobs:
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           appdir: "bin"
         env:
+          HD_ADMIN_PASSWORD: ${{secrets.ADMIN_PASSWORD}}
           HD_TWITCH_BOT_USERNAME: ${{secrets.TWITCH_BOT_USERNAME}}
           HD_TWITCH_BOT_PASSWORD: ${{secrets.TWITCH_BOT_PASSWORD}}
           HD_TWITCH_CLIENT_ID: ${{secrets.TWITCH_CLIENT_ID}}
