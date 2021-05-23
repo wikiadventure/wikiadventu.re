@@ -139,6 +139,7 @@ export default defineComponent({
     endPage:Boolean
   },
   data():{
+    wikiArticle:WikiArticle,
     title:string,
     content:string,
     loading:boolean,
@@ -148,6 +149,7 @@ export default defineComponent({
   } {
     return {
       unsubscribe: () => {},
+      wikiArticle: null,
       title: "",
       content: "",
       loading: false,
@@ -210,15 +212,25 @@ export default defineComponent({
           e.preventDefault();
           vm.onLinkClick(this);
         });
-        if (links[i].getAttribute("href") == undefined) continue;
-        if (links[i].getAttribute("href")!.startsWith("#")) {
-          links[i].classList.add("anchorLink");
-        } else if (links[i].getAttribute("href")!.indexOf(":") != -1) {
-          links[i].classList.add("portalLink");
-        } else if (links[i].getAttribute("href")!.startsWith("/wiki/")) {
-          links[i].classList.add("wikiLink");
+        var href = links[i].getAttribute("href");
+        var classes = links[i].classList;
+        if (href == undefined) continue;
+        if (href!.startsWith("#")) {
+          classes.add("anchorLink");
+        } else if (href!.startsWith("/wiki/")) {
+          if (href!.indexOf(":") != -1) {
+            var sub = href.substring(6);
+            var d = decodeURI(sub).replace( /\_/g, ' ' );
+            if (this.wikiArticle.links.find(l => l.title == d && l.ns == 0)) {
+              classes.add("wikiLink");
+            } else {
+              classes.add("portalLink");
+            }
+          } else {
+            classes.add("wikiLink");
+          }
         } else {
-          links[i].classList.add("notWikiLink");
+          classes.add("notWikiLink");
         }
       }
     },
@@ -227,14 +239,7 @@ export default defineComponent({
       var linkHref = link.getAttribute("href");
       if (linkHref == undefined) return;
       //check if the link go to another wikipage and not info page or external
-      if (!vm.endPage &&
-          linkHref.lastIndexOf(":") == -1 &&
-          !link.classList.contains("internal") &&
-          !link.classList.contains("external") &&
-          link.rel != "mw:ExtLink" &&
-          !link.classList.contains("new") &&
-          linkHref!.startsWith("/wiki/")) {
-
+      if (!vm.endPage && link.classList.contains("wikiLink")) {
         var url = linkHref.substring(6);
         var anchor = url.indexOf("#");
         if (anchor != -1) url = url.substring(0, anchor);
@@ -249,9 +254,8 @@ export default defineComponent({
       }
     },
     async fetchArticle(url:string) {
-      var vm = this as any;
-      var article = new WikiArticle(url, this.$store.state.gameData.lang, this.$q.platform.is.mobile);
-      return await article.fetch();
+      this.wikiArticle = new WikiArticle(url, this.$store.state.gameData.lang, this.$q.platform.is.mobile);
+      return await this.wikiArticle.fetch();
     },
     scrollToAnchor(id:string) {
       var vm = this as any;

@@ -9,20 +9,29 @@ interface wikiResponse {
   parse:{
     title:string,
     pageid:number,
-    text:any
+    text:any,
+    links:link[]
   }
+}
+
+interface link {
+  ns: number,
+  exists: string,
+  title: string
 }
 export default class WikiArticle {
   pageURL:string;
   title:string;
   lang:Lang;
   doc?:Document;
+  links:link[];
   isMobile:boolean;
   constructor(pageURL:string, lang:Lang, isMobile = false) {
     this.pageURL = pageURL;
     this.lang = lang;
     this.title = "";
-    this.isMobile = isMobile
+    this.links = [];
+    this.isMobile = isMobile;
   }
 
   get content() {
@@ -51,7 +60,7 @@ export default class WikiArticle {
     var url = new URL('https://'+this.lang+'.wikipedia.org/w/api.php');
     url.search = new URLSearchParams({
       action: "parse",
-      prop: "text",
+      prop: "text|links",
       redirects: "1",
       format: "json",
       origin: "*",
@@ -63,6 +72,7 @@ export default class WikiArticle {
     const response:wikiResponse = await fetch(url.toString(), { headers: wikiHeaders })
     .then(function(response){return response.json()});
     this.title = response.parse.title;
+    this.links = response.parse.links;
     this.formatHTML(response.parse.text);
     return this;
   }
