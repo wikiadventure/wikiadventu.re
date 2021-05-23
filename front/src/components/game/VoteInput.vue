@@ -6,16 +6,19 @@
       <q-btn round dense flat icon="mdi-delete" class="voteDelete" @click="resetVote()"></q-btn>
     </div>
     <q-input @focus="voteInputFocus = true" @blur="blur()" 
-            dense class="voteInput" @keydown.enter.prevent="submitVote(voteInput)" 
+            dense class="voteInput" @keydown.enter.prevent="searchVote(voteInput)" 
             maxlength="255" outlined v-model="voteInput" :label="$t('gameTab.submitVote')" 
             spellcheck="false" >
       <template v-slot:after>
-          <q-btn round dense flat icon="mdi-send" @click="submitVote(voteInput)"/>
+          <q-btn round dense flat icon="mdi-send" @click="searchVote(voteInput)"/>
       </template>
     </q-input>
     <div class="suggest" v-if="voteInputFocus">
       <div v-for="s in suggestions" :key="s.title" @click.stop="submitVote(s.title)">
-        <img v-if="s.thumbnail !== null" :src="s.thumbnail.source" :width="s.thumbnail.width" :height="s.thumbnail.height" />
+        <img class="img" v-if="s.thumbnail != null" :src="s.thumbnail.source" :width="s.thumbnail.width" :height="s.thumbnail.height" />
+        <div class="img" v-else >
+          <q-icon size="40px" name="mdi-help" />
+        </div>
         <h3>{{ s.title }}</h3>
         <p>{{ s.description }}</p>
       </div>
@@ -43,18 +46,24 @@
     padding: 10px;
     display: grid;
     grid-template-columns: 80px 1fr;
-    grid-template-rows: calc(1.5rem + 10px) auto;
+    grid-template-rows: auto auto;
     grid-template-areas: 
     "i t t"
     "i d d";
     &:last-child {
       border: none;
     }
-    img {
+    .img {
       grid-area: i;
       width: 80px;
       height: 80px;
       border-radius: 3px;
+    }
+    div.img {
+      background: inherit;
+      display: grid;
+      place-items: center;
+      filter: brightness(0.6);
     }
     h3 {
       grid-area: t;
@@ -118,8 +127,11 @@ export default defineComponent({
     }
   },
   methods: {
+    searchVote(v:string) {
+      this.$store.dispatch('gameData/searchVote', v);
+    },
     submitVote(v:string) {
-      this.$store.dispatch('gameData/sendVote', v);
+      this.$store.dispatch('gameData/submitVote', v);
     },
     resetVote() {
       this.$store.dispatch('gameData/resetVote');

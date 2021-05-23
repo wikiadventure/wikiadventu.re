@@ -116,7 +116,7 @@ const actions: ActionTree<GameData, StateInterface> = {
     };
     state.ws?.send(JSON.stringify(json));
   },
-  sendVote({ state }, vote) {
+  searchVote({ state, dispatch }, vote) {
     fetch("https://" + state.lang + ".wikipedia.org/w/api.php?action=query&origin=*&list=search&srlimit=1&srnamespace=0&srsearch=intitle:" + encodeURIComponent(vote) + "&format=json&srprop=")
       .then(function(response){return response.json();})
       .then(function(response) {
@@ -124,7 +124,21 @@ const actions: ActionTree<GameData, StateInterface> = {
         if (typeof response.query.search[0] === 'undefined') trueTitle = "no page found";
         else trueTitle = response.query.search[0].title;
         state.vote = vote + " → " + trueTitle;
+    });    fetch("https://" + state.lang + ".wikipedia.org/w/api.php?action=query&origin=*&list=search&srlimit=1&srnamespace=0&srsearch=intitle:" + encodeURIComponent(vote) + "&format=json&srprop=")
+      .then(function(response){return response.json();})
+      .then(function(response) {
+        var trueTitle;
+        if (typeof response.query.search[0] === 'undefined') trueTitle = "no page found";
+        else trueTitle = response.query.search[0].title;
+        state.vote = vote + " → " + trueTitle;
     });
+    dispatch('sendVote', vote);
+  },
+  submitVote({ state, dispatch }, vote) {
+    state.vote = vote;
+    dispatch('sendVote', vote);
+  },
+  sendVote({ state }, vote) {
     var json:WebsocketPackage = {
       type: WebsocketPackageType.Vote,
       value: vote

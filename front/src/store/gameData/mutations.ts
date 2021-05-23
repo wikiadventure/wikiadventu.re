@@ -141,12 +141,8 @@ const mutation: MutationTree<GameData> = {
         state.suggestions.push({
           index: page.index,
           title: page.title,
-          description: page.terms.description[0],
-          thumbnail: page.thumbnail ? page.thumbnail : {
-            source: "",
-            height: 160,
-            width: 160
-          }
+          description: page?.terms.description[0],
+          thumbnail: page?.thumbnail
         });
       }
     }
