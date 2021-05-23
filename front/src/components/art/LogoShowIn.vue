@@ -18,7 +18,7 @@
   perspective: 75vmin;
   transform: translate3d(0px, 0px, 0px);
   opacity: 0;
-  animation: 0.3105s steps(1, end) forwards logoShowInVisible;
+  animation: 0.8005s steps(1, end) forwards logoShowInVisible;
 }
 @keyframes logoShowInVisible {
   0% {
@@ -31,14 +31,14 @@
 
   #logoShowInDepthAdjust {
     transform-style: preserve-3d;
-    animation: 6s linear 0.31s logoShowInShowUp;
+    animation: 6s linear 0.8s logoShowInShowUp;
     transform: translate3d(0px, 0px, 0px);/*To enable GPU acceleration */
     padding-top: 2em;
     position: absolute;
   }
   #logoShowInLogo {
     transform: translate3d(0px, 0px, 0px);
-    animation: 6s linear 0.31s logoShowInFirstSpin;
+    animation: 6s linear 0.8s logoShowInFirstSpin;
     will-change: transform;
   }
   #logoShowInLogo img {
@@ -53,7 +53,7 @@
     top: 2em;
     width: 75vmin;
     transform: scale3d(1,1,1);
-    animation: 6s ease-out 0.31s logoShowInBlurFadeIn;
+    animation: 6s ease-out 0.8s logoShowInBlurFadeIn;
     
   }
 
