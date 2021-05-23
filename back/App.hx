@@ -1,3 +1,4 @@
+import controller.info.BadgeController;
 import utils.crypto.RandomBase32;
 import config.admin.Guard;
 import controller.info.InfoController;
@@ -73,6 +74,7 @@ class App {
                     case "log": new LogController(im, sr, body);
                     case "stat": new StatController(im, sr, body);
                     case "announce": new AnnounceController(im, sr, body);
+                    case "badge": new BadgeController(im, sr);
                     //case "help" to help dev
                     default: new ErrorResponse(im, sr, body, "Sorry, you are looking for something that doesn't exist!", 404);
                 }
