@@ -5,8 +5,8 @@
         <img src="https://img.shields.io/discord/724622557554147348?logo=discord"
             alt="join me on Discord"></a>
     <a href="https://wiki-adventure.sacramentix.fr">
-        <img src="https://img.shields.io/website?label=Wiki%20Adventure&style=flat&logo=Heroku&url=https%3A%2F%2Fwiki-adventure.sacramentix.fr"
-            alt="check the game"></a>
+        <img src="https://img.shields.io/endpoint?url=https://wiki-adventure.sacramentix.fr/api/badge"
+            alt="number of people onlines on the game"></a>
 </p>
 
 <p align="center">
