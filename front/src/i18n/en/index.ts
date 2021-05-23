@@ -76,6 +76,10 @@ export default {
     timeOut: "Time out!"
   },
   gameLoop: {
+    description: {
+      0: "Be the fastest to reach the finish page randomly picked among player vote.",
+      1: "Pages drawn completely at random! Achieve victory by reaching the finish page first."
+    },
     0: "Classic",
     1: "Random"
   },
