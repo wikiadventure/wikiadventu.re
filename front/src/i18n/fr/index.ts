@@ -77,8 +77,8 @@ export default {
     },
     gameLoop: {
       description: {
-        0: "Soyez le plus rapide pour trouver la page d'arrivé tiré au sort parmi les votes des joueurs",
-        1: "Pages tiré complètement au sort! Remporter la victoire en atteignant en premier la page d'arrivé."
+        0: "Soyez le plus rapide pour trouver la page tirée au sort parmi les votes des joueurs !",
+        1: "L'ordinateur choisit les pages pour vous ! Remportez la victoire en atteignant la page en premier !"
       },
       0: "Classique",
       1: "Aléatoire",
