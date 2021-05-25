@@ -36,7 +36,7 @@ export default class TouchSurfaceHandler {
     }
     touchEnd(e:TouchEvent) {
         var touchobj = e.changedTouches[0];
-        this.resetStyle(this.vm.$refs.gameMenu.$el);
+        this.resetStyle(this.vm.$refs.game.$refs.menu.$el);
         this.resetStyle(this.vm.$refs.rightPanel.$el);
         this.distX = touchobj.pageX - this.startX;
         var cap = this.threshold*this.touchSurface.clientWidth;
@@ -56,14 +56,14 @@ export default class TouchSurfaceHandler {
             this.vm.$refs.rightPanel.$el.style.transform = "translate3d(" + (dist) + "px,0,0)";
         }
         if (!this.vm.gameMenu && !this.vm.showRightPanel) {
-            if ( dist > this.vm.$refs.gameMenu.$el.clientWidth ) dist = this.vm.$refs.gameMenu.$el.clientWidth;
-            this.vm.$refs.gameMenu.$el.style.transform = "translate3d(" + (-this.vm.$refs.gameMenu.$el.clientWidth+dist) + "px,0,0)"; 
+            if ( dist > this.vm.$refs.game.$refs.menu.$el.clientWidth ) dist = this.vm.$refs.game.$refs.menu.$el.clientWidth;
+            this.vm.$refs.game.$refs.menu.$el.style.transform = "translate3d(" + (-this.vm.$refs.game.$refs.menu.$el.clientWidth+dist) + "px,0,0)"; 
         }
       } else if ( this.distX < -tmin ) {
         var dist = this.distX+tmin;
         if (this.vm.gameMenu) {
-            if ( dist > this.vm.$refs.gameMenu.$el.clientWidth ) dist = -this.vm.$refs.gameMenu.$el.clientWidth;
-            this.vm.$refs.gameMenu.$el.style.transform = "translate3d(" + (dist) + "px,0,0)";
+            if ( dist > this.vm.$refs.game.$refs.menu.$el.clientWidth ) dist = -this.vm.$refs.game.$refs.menu.$el.clientWidth;
+            this.vm.$refs.game.$refs.menu.$el.style.transform = "translate3d(" + (dist) + "px,0,0)";
         }
         if (!this.vm.gameMenu && !this.vm.showRightPanel) {
             if ( dist > this.vm.$refs.rightPanel.$el.clientWidth ) dist = -this.vm.$refs.rightPanel.$el.clientWidth;
@@ -77,7 +77,7 @@ export default class TouchSurfaceHandler {
         var touchobj = e.changedTouches[0];
         this.distX = 0;
         this.startX = touchobj.pageX;
-        this.vm.$refs.gameMenu.$el.style.transition = "all ease-in-out 0.0s";
+        this.vm.$refs.game.$refs.menu.$el.style.transition = "all ease-in-out 0.0s";
         this.vm.$refs.rightPanel.$el.style.transition = "all ease-in-out 0.0s";
     }
 
