@@ -161,7 +161,16 @@
       margin: 5px 0;
     }
   }
-
+  .multicol {
+    width: 100%!important;
+    tr {
+      display: flex;
+      flex-wrap: wrap;
+      >td {
+        flex: 1 0 300px;
+      }
+    }
+  }
   .wikitable {
     border-collapse: collapse;
     tr, th, td {
