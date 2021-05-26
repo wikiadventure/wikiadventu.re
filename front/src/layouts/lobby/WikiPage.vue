@@ -70,9 +70,6 @@
     padding-left: 2.5em;
     margin: 1em 0;
   }
-  *[style*="background"], *[bgcolor] {
-    color: black;
-  }
   .safeMode {
     img {
       filter: blur(5px);

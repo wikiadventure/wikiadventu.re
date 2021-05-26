@@ -89,10 +89,13 @@
       justify-content: space-around;
       align-items: center;
       width: 100%;
+      max-width: 100% !important;
     }
     @media (max-width: 720px) {
       width: 100% !important;
       max-width: 100% !important;
+      float: none!important;
+      margin: 5px 0;
     }
     .infobox-caption {
       flex-basis: 100%;
@@ -135,6 +138,15 @@
     font-size: 0.8em;
     padding: 0.5em;
   }
+  .thumb {
+    @media (max-width: 720px) {
+      margin: 0;
+      float: none!important;
+      max-width: 100%!important;
+      display: flex;
+      justify-content: center;
+    }
+  }
   .thumbinner {
     max-width: 100%;
     margin: 15px;
@@ -142,13 +154,21 @@
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     img {
-      width: 100%;
+      width: 100%!important;
+    }
+    @media (max-width: 720px) {
+      max-width: 100% !important;
+      margin: 5px 0;
     }
   }
+
   .wikitable {
     border-collapse: collapse;
     tr, th, td {
       border: 1px solid grey;
+    }
+    @media (max-width: 720px) {
+      overflow-x: scroll;
     }
   }
   table.centre,
@@ -183,5 +203,11 @@
   }
   .reflist {
     font-size: 0.8em;
+  }
+  *[style*="background"], *[bgcolor] {
+    color: black;
+  }
+  *[style*="transparent"] {
+    color: white;
   }
 }
