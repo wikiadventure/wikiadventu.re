@@ -12,7 +12,7 @@
 </template>
 <style lang="scss">
 .game-mode-classic {
-  overflow-x: hidden;
+  overflow: hidden;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.25s ease-in-out;

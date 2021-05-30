@@ -7,12 +7,12 @@
     <transition name="fade"><page-history v-show="showPageHistory" /></transition>
     <transition name="fade"><leaderboard v-show="showLeaderboard" /></transition>
     <transition name="fade"><round-win v-show="showRoundWin" /></transition>
-    <classic-slide-menu ref="game"/>
+    <random-slide-menu ref="game"/>
   </div>
 </template>
 <style lang="scss">
 .game-mode-classic {
-  overflow-x: hidden;
+  overflow: hidden;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.25s ease-in-out;
@@ -29,7 +29,7 @@
 }
 </style>
 <script lang="ts">
-import ClassicSlideMenu from 'src/layouts/lobby/gameMode/Classic.vue';
+import RandomSlideMenu from 'src/layouts/lobby/gameMode/Random.vue';
 import WikiPage from 'src/layouts/lobby/WikiPage.vue';
 import RoundWin from 'src/layouts/lobby/screen/RoundWin.vue';
 import Leaderboard from 'src/layouts/lobby/screen/Leaderboard.vue';
@@ -50,8 +50,8 @@ import { Notify } from 'quasar';
 import { i18n } from 'src/boot/i18n';
 
 export default defineComponent({
-  name: 'ClassicMode',
-  components: { ClassicSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory, GameAudio },
+  name: 'RandomMode',
+  components: { RandomSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory, GameAudio },
   setup() {
     var {
       showGameMenu,

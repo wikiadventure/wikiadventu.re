@@ -1,89 +1,85 @@
 <template>
   <div class="random-game-tab">
-
-    <div class="row justify-evenly q-ma-md text-h3">{{ $t('gameTab.round') }} {{ round }}</div>
-
-    <q-separator spaced="lg"/>
-
-    <div class="row items-baseline q-ma-sm">
-      <h4 class="q-ma-none col-strech">{{ $t('gameTab.phase') }}</h4>
-      <h5 class="q-ma-none q-ml-sm text-center col-grow">{{ $t('phase.'+gamePhase) }}</h5>
+    <div class="row justify-evenly text-center">
+      <h4 class="q-ma-sm">{{ $t('gameTab.round') }} {{ $store.state.gameData.round }}</h4>
+      <h4 class="q-ma-sm">{{ $t('phase.'+$store.state.gameData.gamePhase) }}</h4>
     </div>
 
-    <q-separator spaced="lg"/>
+    <q-separator spaced="md"/>
 
-    <div class="row items-baseline q-ma-sm">
-      <h4 class="q-ma-none col-strech">{{ $t('gameTab.timeLeft') }}</h4>
-      <h5 class="q-ma-none q-ml-sm text-center col-grow">{{ timeLeft }}</h5>
+    <div class="row justify-evenly">
+      <h6 class="q-ma-xs">{{ $t('gameTab.timeLeft') }}</h6>
+      <div class="row justify-evenly items-center"><h6 class="q-ma-xs">{{ timeLeft }}</h6><q-icon size="sm" name="mdi-alarm"/></div>
     </div>
 
-    <q-separator  spaced="lg"/>
+    <q-separator spaced="md"/>
 
-    <div class="row items-baseline q-ma-sm">
-      <p class="q-ma-none col-strech">{{ $t('gameTab.startPage') }} :</p>
-      <p class="q-ma-none q-ml-sm text-left col">{{ startPage }}</p>
-    </div>
-    <div class="row items-baseline q-ma-sm">
-      <p class="q-ma-none col-strech">{{ $t('gameTab.endPage') }} :</p>
-      <p class="q-ma-none q-ml-sm text-left col">{{ endPage }}</p>
-    </div>
+    <preview :wikiPreview="startPage" />
 
-    <q-separator  spaced="lg"/>
+    <q-separator spaced="sm"/>
 
-    <div class="row items-center justify-evenly">
-      <q-btn class="action-btn q-ma-sm" push :label="$t('gameTab.pageHistory')" icon="mdi-format-list-bulleted" @click="open('page-history')"/>
-      <q-btn class="action-btn q-ma-sm" push :label="$t('gameTab.showEndPage')" icon="mdi-page-next-outline" @click="open('wiki-end-page')"/>
-    </div>
+    <preview :wikiPreview="endPage">
+      <q-btn round dense flat icon="mdi-open-in-new" @click="showWikiEndPage = !showWikiEndPage, showGameMenu = !showGameMenu"/>
+    </preview>
 
-    <q-separator  spaced="lg"/>
+    <q-separator spaced="sm"/>
 
-    <div class="row items-center justify-evenly">
+    <div class="row items-center justify-evenly q-ma-sm">
       <p class="q-my-none" :class="{ 'self': hasVoteSkip }">{{ totalVoteSkip }} / {{ connectedPlayers }}</p>
-      <q-btn class="action-btn q-ma-sm" push label="skip" icon="mdi-skip-forward" @click="voteSkip()"/>
+      <q-btn class="action-btn q-ma-xs" push label="skip" icon="mdi-skip-forward" @click="$store.dispatch('gameData/voteSkip')"/>
+    </div>
+
+    <q-separator spaced="sm"/>
+
+    <div class="row items-center justify-evenly q-ma-sm">
+      <q-btn class="action-btn q-ma-sm" push :label="$t('gameTab.pageHistory')" icon="mdi-format-list-bulleted" @click="showPageHistory = !showPageHistory, showGameMenu = !showGameMenu"/>
     </div>
     
-    <q-separator spaced="lg"/>
+    <q-separator spaced="sm"/>
 
   </div>
 </template>
 <style lang="scss">
-#gameTab {
+.random-game-tab {
   font-size: 1.2em;
-}
-.self {
-  color: var(--w-color-dark-teal);
+  .self {
+    color: var(--w-color-dark-teal);
+  }
 }
 </style>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
-import  { ManageScreenEvent } from 'src/mixins/manageScreen';
+import VoteInput from 'src/components/game/VoteInput.vue';
 import { Player } from 'src/store/gameData/state';
+import preview from "components/game/WikiPreview.vue";
+import previewSetup from "src/mixins/wiki/preview";
+import manageScreenSetup from "src/mixins/game/manageScreen";
+
+import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'RandomGameTab',
-  data() {
-    var vm = this as any;
+  components: { VoteInput, preview },
+  setup(){
+    var {
+      showGameMenu,
+      showRoundWin,
+      showPageHistory,
+      showLeaderboard,
+      showWikiEndPage
+    } = manageScreenSetup();
+    const { pagePreview, startPage, endPage } = previewSetup();
     return {
-      voteInput: ""
+      showGameMenu,
+      showRoundWin,
+      showPageHistory,
+      showLeaderboard,
+      showWikiEndPage,
+      pagePreview,
+      startPage,
+      endPage
     }
   },
   computed: {
-    vote():string {
-      var v = this.$store.state.gameData.vote != null ? this.$store.state.gameData.vote : this.$t('gameTab.randomPage');  
-      return v;
-    },
-    startPage():string {
-      return this.$store.state.gameData.startPage;
-    },
-    endPage():string {
-      return this.$store.state.gameData.endPage;
-    },
-    gamePhase():number {
-      return this.$store.state.gameData.gamePhase;
-    },
-    round():string {
-      return this.$store.state.gameData.round;
-    },
     timeLeft():string {
       return Math.floor(this.$store.state.gameData.timeLeft/1000).toString();
     },
@@ -95,32 +91,6 @@ export default defineComponent({
     },
     hasVoteSkip():boolean {
       return this.$store.getters['gameData/selfPlayer'] != null ? this.$store.getters['gameData/selfPlayer'].voteSkip : false;
-    }
-  },
-  methods: {
-    submitVote(e:Event) {
-      var vm:any = this;
-      vm.$store.dispatch('gameData/sendVote', vm.voteInput);
-    },
-    resetVote(e:Event) {
-      var vm:any = this;
-      vm.$store.dispatch('gameData/resetVote');
-    },
-    voteSkip(e:Event) {
-      var vm:any = this;
-      vm.$store.dispatch('gameData/voteSkip');
-    },
-    open(target:string) {
-      var payload1:ManageScreenEvent = {
-        target: target,
-        state: true
-      }
-      var payload2:ManageScreenEvent = {
-        target: "game-menu",
-        state: false
-      }
-      this.$root.$emit("manage-screen", payload1);
-      this.$root.$emit("manage-screen", payload2);
     }
   }
 });
