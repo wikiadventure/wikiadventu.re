@@ -7,7 +7,7 @@
     "twitch": "^4.4.11",
     "twitch-chat-client": "^4.4.11",
     "uuid": "^8.3.1",
-    "ws": "^7.4.3"
+    "ws": "^7.4.6"
   },
   "devDependencies": {},
   "scripts": {
