@@ -1,27 +1,20 @@
 <template>
-  <q-form class="voteForm q-ma-sm">
-    <div id="vote" class="row items-center q-ma-sm">
-      <p class="q-ma-none col-strech">{{ $t('gameTab.vote') }} :</p>
-      <p class="q-ma-none q-ml-sm text-left col">{{ vote }}</p>
+  <q-form class="vote-input">
+    <preview :wikiPreview="votePreview" class="vote">
       <q-btn round dense flat icon="mdi-delete" class="voteDelete" @click="resetVote()"></q-btn>
-    </div>
+    </preview>
+    
     <q-input @focus="voteInputFocus = true" @blur="blur()" 
-            dense class="voteInput" @keydown.enter.prevent="searchVote(voteInput)" 
-            maxlength="255" outlined v-model="voteInput" :label="$t('gameTab.submitVote')" 
+            dense class="q-ma-sm" @keydown.enter.prevent="searchVote(voteInput)" 
+            maxlength="255" outlined v-model="voteInput" :label="$t('gameTab.vote.submitVote')" 
             spellcheck="false" >
       <template v-slot:after>
           <q-btn round dense flat icon="mdi-send" @click="searchVote(voteInput)"/>
       </template>
     </q-input>
+    
     <div class="suggest" v-if="voteInputFocus">
-      <div v-for="s in suggestions" :key="s.title" @click.stop="submitVote(s.title)">
-        <img class="img" v-if="s.thumbnail != null" :src="s.thumbnail.source" :width="s.thumbnail.width" :height="s.thumbnail.height" />
-        <div class="img" v-else >
-          <q-icon size="40px" name="mdi-help" />
-        </div>
-        <h3>{{ s.title }}</h3>
-        <p>{{ s.description }}</p>
-      </div>
+      <preview :wikiPreview="s" v-for="s in suggestions" :key="s.title" @click.stop="submitVote(s)" />
     </div>
   </q-form>
 </template>
@@ -39,48 +32,15 @@
   overflow: hidden;
   width: 100%;
   display: grid;
-  &>div {
+  .wiki-preview {
     border-bottom: 1px solid #8885;
     cursor: pointer;
     background: inherit;
-    padding: 10px;
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    grid-template-rows: auto auto;
-    grid-template-areas: 
-    "i t t"
-    "i d d";
-    &:last-child {
-      border: none;
-    }
-    .img {
-      grid-area: i;
-      width: 80px;
-      height: 80px;
-      border-radius: 3px;
-    }
-    div.img {
-      background: inherit;
-      display: grid;
-      place-items: center;
-      filter: brightness(0.6);
-    }
-    h3 {
-      grid-area: t;
-      margin: 5px 15px;
-      font-size: 1.5rem;
-      line-height: 1.5rem;
-    }
-    p {
-      grid-area: d;
-      margin: 5px 15px;
-      font-size: 1rem;
-      line-height: 1rem;
-    }
-    &:hover {
-      filter: brightness(1.2);
+    :hover {
+        filter: brightness(1.1);
     }
   }
+   
 }
 .body--dark {
   .suggest {
@@ -95,12 +55,14 @@
 </style>
 <script lang="ts">
 import { debounce } from 'quasar';
-import { WikiSuggestion } from 'src/store/gameData/state';
+import { WikiPreview, WikiSuggestion } from 'src/store/gameData/state';
+import preview from "components/game/WikiPreview.vue";
 
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: "VoteInput",
+  components: { preview },
   data():{
     voteInputFocus: boolean,
   } {
@@ -109,13 +71,17 @@ export default defineComponent({
     }
   },
   computed: {
-    vote():string {
-      var v = this.$store.state.gameData.vote != null ? this.$store.state.gameData.vote : this.$t('gameTab.randomPage');  
-      return v;
+    votePreview():WikiPreview {
+      let v = this.$store.state.gameData.vote;
+      return {
+        title: v.title || this.$t('gameTab.vote.noVoteTitle'),
+        description: v.description == String.fromCharCode(24) ? this.$t('gameTab.vote.noPageFoundDescription') : (v.description || this.$t('gameTab.vote.noVoteDescription')),
+        thumbnail: v.thumbnail
+      };
     },
     voteInput: {
       get():string {
-        return this.$store.state.gameData.voteInput;
+        return this.$store.state.gameData.vote.input;
       },
       set(v:String) {
         this.$store.commit('gameData/voteInput', v);
@@ -130,8 +96,8 @@ export default defineComponent({
     searchVote(v:string) {
       this.$store.dispatch('gameData/searchVote', v);
     },
-    submitVote(v:string) {
-      this.$store.dispatch('gameData/submitVote', v);
+    submitVote(s:WikiPreview) {
+      this.$store.dispatch('gameData/submitVote', s);
     },
     resetVote() {
       this.$store.dispatch('gameData/resetVote');
