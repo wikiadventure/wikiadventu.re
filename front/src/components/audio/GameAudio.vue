@@ -22,7 +22,7 @@
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
-  name: 'Game',
+  name: 'GameAudio',
   data(): {
     winAudio:HTMLAudioElement | null,
     loseAudio:HTMLAudioElement | null,
