@@ -52,11 +52,15 @@ export default {
     round: "Round",
     phase: "Phase",
     timeLeft: "Time left",
-    vote: "Your vote",
-    submitVote: "Submit your vote",
-    startPage: "Start Page",
-    endPage: "End page",
-    randomPage: "Random page ???",
+    vote: {
+      submitVote: "Submit your vote",
+      noVoteTitle: "Random page ???",
+      noVoteDescription: "You have not yet voted! Your vote counts as a random page.",
+      noPageFoundDescription: "Your Suggestion does not lead to any Wikipedia page!"
+      
+    },
+    start: "Start",
+    end: "Finish",
     noWinnerYet: "No winner yet!",
     pageHistory: "History of the last winner",
     showEndPage: "Show end page",

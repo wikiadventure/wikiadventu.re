@@ -3,7 +3,7 @@ import { Lang } from 'src/i18n';
 import { MutationTree } from 'vuex';
 import { GameData, LobbyType, Message, Player, WikiRawSuggestion } from './state';
 import { GameState, Path, PlayerJoin, PlayerLeft, UpdateScore, VoteResult, VoteSkip, WinRound, WsMessage } from './actions';
-import { wikiHeaders } from 'src/mixins/wikiTools';
+import { loadPreviews, loadSuggestions, wikiHeaders } from 'src/mixins/wiki/wikiTools';
 
 const mutation: MutationTree<GameData> = {
   setLang(state:GameData, l:Lang) {
@@ -62,9 +62,13 @@ const mutation: MutationTree<GameData> = {
   playerLeft(state:GameData, p:PlayerLeft) {
     state.players.find(s => s.id == p.id).isConnected = false;
   },
-  voteResult(state:GameData, v:VoteResult) {
-    state.startPage = v.start;
-    state.endPage = v.end;
+  async voteResult(state:GameData, v:VoteResult) {
+    state.startPage.title = v.start;
+    state.endPage.title = v.end;
+    var previews = await loadPreviews([v.start, v.end], state.lang);
+    state.startPage = previews.find((w) => w.title == v.start);
+    state.endPage = previews.find((w) => w.title == v.end);
+    
   },
   updateScore(state:GameData, p:UpdateScore) {
     for(var player of state.players) {
@@ -83,7 +87,7 @@ const mutation: MutationTree<GameData> = {
     state.timeController = new AbortController();
     state.timeLeft = g.time*1000;
     state.timeStamp = document.timeline ? document.timeline.currentTime : performance.now();
-    counter(1000, state.timeStamp, state.timeController.signal, time => {
+    counter(100, state.timeStamp, state.timeController.signal, time => {
       state.timeLeft = g.time*1000 - (time - state.timeStamp);
       if (state.timeLeft <= 0) {
         state.timeController.abort();
@@ -93,7 +97,10 @@ const mutation: MutationTree<GameData> = {
     });
   },
   deleteVote(state:GameData) {
-    state.vote = null;
+    state.vote.label = null;
+    state.vote.title = null;
+    state.vote.description = null;
+    state.vote.thumbnail = null;
   },
   winRound(state:GameData, w:WinRound) {
     state.winnerId = w.id;
@@ -108,45 +115,10 @@ const mutation: MutationTree<GameData> = {
     state.safeMode = b;
   },
   voteInput(state:GameData, v:string) {
-    state.voteInput = v;
+    state.vote.input = v;
   },
   async loadSuggestions(state:GameData) {
-    var url = new URL('https://'+state.lang+'.wikipedia.org/w/api.php');
-    url.search = new URLSearchParams({
-      action: 'query',
-      format: 'json',
-      gpssearch: state.voteInput,
-      generator: 'prefixsearch',
-      prop: 'pageprops|pageimages|pageterms',
-      redirects: '1', // Automatically resolve redirects
-      ppprop: 'displaytitle',
-      piprop: 'thumbnail',
-      pithumbsize: '160',
-      pilimit: '30',
-      wbptterms: 'description',
-      gpsnamespace: "0", // Only return results in Wikipedia's main namespace
-      gpslimit: "5", // Return at most five results
-      origin: '*',
-    }).toString();
-    const response = await fetch(url.toString(), { headers: wikiHeaders })
-    .then((r) => r.json())
-    .catch((error) => {
-      console.log(error);
-    })
-    state.suggestions = [];
-    if (!response.query || !response.query.pages) {}
-    for (const page of Object.values(response.query.pages) as WikiRawSuggestion[]) {
-      console.log(page);
-      if ( page.ns === 0 ) {
-        state.suggestions.push({
-          index: page.index,
-          title: page.title,
-          description: page?.terms.description[0],
-          thumbnail: page?.thumbnail
-        });
-      }
-    }
-    state.suggestions.sort((a,b) => a.index-b.index);
+    state.suggestions = await loadSuggestions(state.vote.input, state.lang);
     
   }
   

@@ -1,7 +1,6 @@
 <template>
   <div id="scoreTab">
-    <div class="row items-baseline justify-evenly"><h4>{{ $t('scoreTab.title') }}</h4></div>
-    <q-separator spaced="md"/>
+    <h3 class="row items-baseline justify-evenly q-my-xs">{{ $t('scoreTab.title') }}</h3>
     <div class="row items-baseline justify-evenly"><q-btn class="action-btn" push :label="$t('scoreTab.leaderboard')" icon="mdi-format-list-bulleted" @click="openLeaderBoard()"/></div>
     <q-separator spaced="md"/>
     <q-list separator>

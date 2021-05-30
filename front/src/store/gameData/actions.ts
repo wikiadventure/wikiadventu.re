@@ -1,8 +1,10 @@
 import { Lang } from 'src/i18n';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
-import { GameData, LobbyType } from './state';
+import { GameData, LobbyType, WikiPreview, WikiSuggestion } from './state';
 import { PhaseType } from './type/phase';
+import { i18n } from "boot/i18n";
+import { loadSuggestions } from 'src/mixins/wiki/wikiTools';
 
 const actions: ActionTree<GameData, StateInterface> = {
   connect({ commit, dispatch, state }) {
@@ -116,27 +118,28 @@ const actions: ActionTree<GameData, StateInterface> = {
     };
     state.ws?.send(JSON.stringify(json));
   },
-  searchVote({ state, dispatch }, vote) {
-    fetch("https://" + state.lang + ".wikipedia.org/w/api.php?action=query&origin=*&list=search&srlimit=1&srnamespace=0&srsearch=intitle:" + encodeURIComponent(vote) + "&format=json&srprop=")
-      .then(function(response){return response.json();})
-      .then(function(response) {
-        var trueTitle;
-        if (typeof response.query.search[0] === 'undefined') trueTitle = "no page found";
-        else trueTitle = response.query.search[0].title;
-        state.vote = vote + " → " + trueTitle;
-    });    fetch("https://" + state.lang + ".wikipedia.org/w/api.php?action=query&origin=*&list=search&srlimit=1&srnamespace=0&srsearch=intitle:" + encodeURIComponent(vote) + "&format=json&srprop=")
-      .then(function(response){return response.json();})
-      .then(function(response) {
-        var trueTitle;
-        if (typeof response.query.search[0] === 'undefined') trueTitle = "no page found";
-        else trueTitle = response.query.search[0].title;
-        state.vote = vote + " → " + trueTitle;
-    });
+  async searchVote({ state, dispatch }, vote) {
+    var suggestion = await loadSuggestions(vote, state.lang, 1);
+    if (suggestion.length == 0) {
+      state.vote.title = null;
+      state.vote.description = String.fromCharCode(24);
+      state.vote.label = vote;
+      state.vote.thumbnail = null;
+    } else {
+      state.vote.title = suggestion[0].title;
+      state.vote.label = state.vote.title;
+      state.vote.description = suggestion[0].description || "";
+      state.vote.thumbnail = suggestion[0].thumbnail;
+      
+    }
     dispatch('sendVote', vote);
   },
-  submitVote({ state, dispatch }, vote) {
-    state.vote = vote;
-    dispatch('sendVote', vote);
+  submitVote({ state, dispatch }, s:WikiPreview) {
+    state.vote.title = s.title;
+    state.vote.label = s.title;
+    state.vote.description = s.description;
+    state.vote.thumbnail = s.thumbnail;
+    dispatch('sendVote', s.title);
   },
   sendVote({ state }, vote) {
     var json:WebsocketPackage = {
@@ -178,8 +181,16 @@ const actions: ActionTree<GameData, StateInterface> = {
     state.round = 0;
     state.timeLeft = 0;
     state.timeStamp = 0;
-    state.startPage = "";
-    state.endPage = "";
+    state.startPage = {
+      title: null,
+      description: null,
+      thumbnail: null
+    };
+    state.endPage = {
+      title: null,
+      description: null,
+      thumbnail: null
+    };
     state.players = [];
     state.messages = [];
     state.winnerPageHistory = [];

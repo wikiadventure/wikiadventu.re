@@ -52,11 +52,15 @@ export default {
       round: "Round",
       phase: "Phase",
       timeLeft: "Temps restant",
-      vote: "Ton vote",
-      submitVote: "Envoyer ton vote",
-      startPage: "Page de départ",
-      endPage: "Page d'arrivée",
-      randomPage: "Page aléatoire ???",
+      vote: {
+        submitVote: "Envoyer ton vote",
+        noVoteTitle: "Page aléatoire ???",
+        noVoteDescription: "Vous n'avez pas encore voter! Votre vote compte comme une page aléatoire.",
+        noPageFoundDescription: "Votre Suggestion ne mène vers aucune page wikipédia!"
+        
+      },
+      start: "Départ",
+      end: "Arrivée",
       noWinnerYet: "Pas encore de gagnant!",
       pageHistory: "Historique du dernier gagnant",
       showEndPage: "Afficher la page de fin",

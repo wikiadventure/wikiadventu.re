@@ -1,6 +1,6 @@
 <template>
   <div id="leaderboard" class="absolute-full">
-    <exit-btn target="leaderboard"/>
+    <exit-btn @click="showLeaderboard = false"/>
     <div id="grid-leaderboard">
       <div class="grid-leaderboard-podium grid-leaderboard-2">
         <div id="position-2"><img src="svg/podium2neonV2.svg" alt="number 2"/></div>
@@ -190,10 +190,17 @@ import ExitBtn from 'src/components/ExitButton.vue';
 
 import { defineComponent } from '@vue/composition-api';
 import { Player } from 'src/store/gameData/state';
+import manageScreenSetup from "src/mixins/game/manageScreen";
 
 export default defineComponent({
   name: 'Leaderboard',
   components: { ExitBtn },
+  setup() {
+    var { showLeaderboard } = manageScreenSetup();
+    return {
+      showLeaderboard
+    }
+  },
   computed: {
     playerByScore():Player[] {
       return this.$store.getters['gameData/playersByScore'];

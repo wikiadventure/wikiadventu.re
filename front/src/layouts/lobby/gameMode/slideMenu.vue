@@ -1,6 +1,6 @@
 <template>
-    <div class="slideMenu" ref="menu" :class="{ 'checked': showMenu }">
-      <label @click.stop="showMenu = !showMenu" class="showMenu"><q-icon size="md" name="mdi-play"/><q-badge color="teal" transparent :label="unseenMessagesNumber" floating v-show="unseenMessagesNumber != '0'" /></label>
+    <div class="slideMenu" ref="menu" :class="{ 'checked': showGameMenu }">
+      <label @click.stop="showGameMenu = !showGameMenu" class="showMenu"><q-icon size="md" name="mdi-play"/><q-badge color="teal" transparent :label="unseenMessagesNumber" floating v-show="unseenMessagesNumber != '0'" /></label>
       <q-tab-panels class="content" v-model="tab" animated>
 
         <q-tab-panel name="chat" class="q-pa-none">
@@ -120,24 +120,36 @@ import ChatTab from './tab/Chat.vue';
 import GameTab from './tab/game/Classic.vue';
 import ScoreTab from './tab/Score.vue';
 import SettingTab from './tab/Setting.vue';
+import manageScreenSetup from "src/mixins/game/manageScreen";
 
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, onUnmounted } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'ClassicSlideMenu',
   components: { ChatTab, GameTab, ScoreTab, SettingTab },
+  setup() {
+    var { showGameMenu } = manageScreenSetup();
+    var vm = this;
+    var touchsurface = document.documentElement;
+    function keyDown(e:KeyboardEvent) {
+      if (e.defaultPrevented) return;
+      if (e.ctrlKey && e.altKey && e.shiftKey) {
+        showGameMenu.value = !showGameMenu.value;
+      }
+    }
+    touchsurface.addEventListener("keydown", keyDown, false);
+    onUnmounted(() => touchsurface.removeEventListener("keydown", keyDown, false));
+    return {
+      showGameMenu
+    }
+  },
   data():{
     tab:string,
-    showMenu:Boolean,
     seenMessage: number,
-    onDestroy:() => void,
-    touchsurface?:HTMLElement
   } {
     return {
       tab: 'game',
       seenMessage: 0,
-      showMenu: false,
-      onDestroy: () => {},
     }
   },
   computed: {
@@ -147,40 +159,14 @@ export default defineComponent({
       return b;
     },
     totalMessages():number {
-      if (this.tab == "chat" && this.showMenu ) this.seenMessage = this.$store.state.gameData.messages.length;
+      if (this.tab == "chat" && this.showGameMenu ) this.seenMessage = this.$store.state.gameData.messages.length;
       return this.$store.state.gameData.messages.length;
     },
   },
   methods: {
     updateSeenMessage() {
       this.seenMessage = this.$store.state.gameData.messages.length;
-    },
-    open(e:Event) {
-      var vm = this as any;
-      this.showMenu = true;
-      vm.$refs.menu.style.transform = "";
-      e.stopPropagation();
-    },
-    close() {
-      this.showMenu = false;
     }
-  },
-  mounted() {
-    var vm = this;
-    this.touchsurface = document.documentElement;
-    function keyDown(e:KeyboardEvent) {
-      if (e.defaultPrevented) return;
-      if (e.ctrlKey && e.altKey && e.shiftKey) {
-        vm.showMenu = !vm.showMenu;
-      }
-    }
-    this.touchsurface!.addEventListener("keydown", keyDown, false);
-    this.onDestroy = function () {
-      this.touchsurface!.removeEventListener("keydown", keyDown, false);
-    };
-  },
-  beforeDestroy() {
-    this.onDestroy();
   }
 });
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div id="page-history" class="row justify-center absolute-full">
     <div class="page-history-container shadow-6">
-      <exit-btn target="page-history"/>
+      <exit-btn @click="showPageHistory = false"/>
       <div class="page-history-title justify-center">
         {{ winner }}
       </div>
@@ -99,10 +99,17 @@ import ExitBtn from 'src/components/ExitButton.vue';
 
 import { defineComponent } from '@vue/composition-api';
 import { Player } from 'src/store/gameData/state';
+import manageScreenSetup from "src/mixins/game/manageScreen";
 
 export default defineComponent({
   name: 'Wait',
   components: { ExitBtn },
+  setup() {
+    var { showPageHistory } = manageScreenSetup();
+    return {
+      showPageHistory
+    }
+  },
   computed: {
     pages():string[] {
       return this.$store.state.gameData.winnerPageHistory as string[];

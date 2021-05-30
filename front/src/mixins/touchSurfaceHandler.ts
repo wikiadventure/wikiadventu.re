@@ -1,33 +1,47 @@
+import { Ref } from "@vue/composition-api";
 
 
 export default class TouchSurfaceHandler {
     touchSurface:HTMLElement;
-    vm:any;
+    leftOpen:Ref<boolean>;
+    rightOpen:Ref<boolean>;
+    leftElement:any;
+    rightElement:any;
     startX:number;
     distX:number;
     threshold:number;//minimum swipe amount of the touch surface to show element
     min:number;//minimum swipe amount of the touch surface to start transform
     isTouch:boolean;
-    constructor(touchSurface:HTMLElement, vm:any) {
+    destroy:()=>void;
+    constructor(touchSurface:HTMLElement, leftOpen:Ref<boolean>, rightOpen:Ref<boolean>, left:any, right:any) {
         this.touchSurface = touchSurface;
-        this.vm = vm;
+        this.leftOpen = leftOpen;
+        this.rightOpen = rightOpen;
+        this.leftElement = left;
+        this.rightElement = right;
         this.threshold = .45;
         this.min = .15;
         this.isTouch = false;
-        this.touchSurface.addEventListener('touchstart', (e) => this.touchStart(e), false);
-
-        this.touchSurface.addEventListener('touchmove', (e) => this.touchMove(e), false);
-    
-        this.touchSurface.addEventListener('touchend', (e) => this.touchEnd(e), false);
+        let touchStart = this.touchStart.bind(this);
+        let touchMove = this.touchMove.bind(this);
+        let touchEnd = this.touchEnd.bind(this);
+        this.touchSurface.addEventListener('touchstart', touchStart, false);
+        this.touchSurface.addEventListener('touchmove', touchMove, false);
+        this.touchSurface.addEventListener('touchend', touchEnd, false);
+        this.destroy = () => {
+            this.touchSurface.removeEventListener('touchstart', touchStart, false);
+            this.touchSurface.removeEventListener('touchmove', touchMove, false);
+            this.touchSurface.removeEventListener('touchend', touchEnd, false);
+        };
     }
     handleswipe(isRight:boolean, isLeft:boolean) {
-        if (isRight && this.vm.showRightPanel) this.vm.showRightPanel = false;
-        else if (isLeft && this.vm.gameMenu) {
-            this.vm.gameMenu = false;
-        } else if (!this.vm.showRightPanel && !this.vm.gameMenu) {
+        if (isRight && this.rightOpen.value) this.rightOpen.value = false;
+        else if (isLeft && this.leftOpen.value) {
+            this.leftOpen.value = false;
+        } else if (!this.rightOpen.value && !this.leftOpen.value) {
             if (isLeft) {
-                this.vm.showRightPanel = true;
-            } else if (isRight) this.vm.gameMenu = true;
+                this.rightOpen.value = true;
+            } else if (isRight) this.leftOpen.value = true;
         }
     }
     resetStyle(e:HTMLElement) {
@@ -36,8 +50,8 @@ export default class TouchSurfaceHandler {
     }
     touchEnd(e:TouchEvent) {
         var touchobj = e.changedTouches[0];
-        this.resetStyle(this.vm.$refs.game.$refs.menu.$el);
-        this.resetStyle(this.vm.$refs.rightPanel.$el);
+        this.resetStyle(this.leftElement);
+        this.resetStyle(this.rightElement);
         this.distX = touchobj.pageX - this.startX;
         var cap = this.threshold*this.touchSurface.clientWidth;
         var swipeRightBol = ( this.distX >= cap );
@@ -51,23 +65,23 @@ export default class TouchSurfaceHandler {
       var tmin = this.touchSurface.clientWidth*this.min;
       if ( this.distX > tmin ) {
         var dist = this.distX-tmin;
-        if (this.vm.showRightPanel) {
-            if ( dist < -this.vm.$refs.rightPanel.$el.clientWidth ) dist = this.vm.$refs.rightPanel.$el.clientWidth;
-            this.vm.$refs.rightPanel.$el.style.transform = "translate3d(" + (dist) + "px,0,0)";
+        if (this.rightOpen.value) {
+            if ( dist < -this.rightElement.clientWidth ) dist = this.rightElement.clientWidth;
+            this.rightElement.style.transform = "translate3d(" + (dist) + "px,0,0)";
         }
-        if (!this.vm.gameMenu && !this.vm.showRightPanel) {
-            if ( dist > this.vm.$refs.game.$refs.menu.$el.clientWidth ) dist = this.vm.$refs.game.$refs.menu.$el.clientWidth;
-            this.vm.$refs.game.$refs.menu.$el.style.transform = "translate3d(" + (-this.vm.$refs.game.$refs.menu.$el.clientWidth+dist) + "px,0,0)"; 
+        if (!this.leftOpen.value && !this.rightOpen.value) {
+            if ( dist > this.leftElement.clientWidth ) dist = this.leftElement.clientWidth;
+            this.leftElement.style.transform = "translate3d(" + (-this.leftElement.clientWidth+dist) + "px,0,0)"; 
         }
       } else if ( this.distX < -tmin ) {
         var dist = this.distX+tmin;
-        if (this.vm.gameMenu) {
-            if ( dist > this.vm.$refs.game.$refs.menu.$el.clientWidth ) dist = -this.vm.$refs.game.$refs.menu.$el.clientWidth;
-            this.vm.$refs.game.$refs.menu.$el.style.transform = "translate3d(" + (dist) + "px,0,0)";
+        if (this.leftOpen.value) {
+            if ( dist > this.leftElement.clientWidth ) dist = -this.leftElement.clientWidth;
+            this.leftElement.style.transform = "translate3d(" + (dist) + "px,0,0)";
         }
-        if (!this.vm.gameMenu && !this.vm.showRightPanel) {
-            if ( dist > this.vm.$refs.rightPanel.$el.clientWidth ) dist = -this.vm.$refs.rightPanel.$el.clientWidth;
-            this.vm.$refs.rightPanel.$el.style.transform = "translate3d(" + (this.vm.$refs.rightPanel.$el.clientWidth+dist) + "px,0,0)"; 
+        if (!this.leftOpen.value && !this.rightOpen.value) {
+            if ( dist > this.rightElement.clientWidth ) dist = -this.rightElement.clientWidth;
+            this.rightElement.style.transform = "translate3d(" + (this.rightElement.clientWidth+dist) + "px,0,0)"; 
         }
       }
     }
@@ -77,8 +91,8 @@ export default class TouchSurfaceHandler {
         var touchobj = e.changedTouches[0];
         this.distX = 0;
         this.startX = touchobj.pageX;
-        this.vm.$refs.game.$refs.menu.$el.style.transition = "all ease-in-out 0.0s";
-        this.vm.$refs.rightPanel.$el.style.transition = "all ease-in-out 0.0s";
+        this.leftElement.style.transition = "all ease-in-out 0.0s";
+        this.rightElement.style.transition = "all ease-in-out 0.0s";
     }
 
 }

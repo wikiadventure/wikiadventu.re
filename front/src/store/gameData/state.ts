@@ -20,9 +20,6 @@ export interface GameData {
   round: number;
   timeLeft: number;
   timeStamp: number;
-  startPage: string;
-  endPage: string;
-  vote: string,
   lobbyID: string;
   owner:number;//id the owner player
   self: number;//id the player
@@ -34,10 +31,12 @@ export interface GameData {
   volume:number;
   mute:boolean;
   safeMode:boolean;
-  voteInput:string;
-  suggestions:WikiSuggestion[];
-}
 
+  vote:WikiVote;
+  suggestions:WikiSuggestion[];
+  startPage: WikiPreview;
+  endPage: WikiPreview;
+}
 export interface Player {
   pseudo: string;
   id: number;
@@ -66,9 +65,6 @@ const state: GameData = {
   round: 0,
   timeLeft: 0,
   timeStamp: 0,
-  startPage: "",
-  endPage: "",
-  vote: null,
   winnerPageHistory: [],
   winnerTime: 0,
   players: [],
@@ -79,8 +75,24 @@ const state: GameData = {
   volume: 0.3,
   mute: false,
   safeMode: false,
-  voteInput: "",
-  suggestions: []
+  vote: {
+    input: "",
+    label: null,
+    title: null,
+    description: null,
+    thumbnail: null
+  },
+  suggestions: [],
+  startPage: {
+    title: null,
+    description: null,
+    thumbnail: null
+  },
+  endPage: {
+    title: null,
+    description: null,
+    thumbnail: null
+  },
 };
 
 export default state;
@@ -99,8 +111,7 @@ export interface WikiRawSuggestion  {
   }
 }
 
-export interface WikiSuggestion  {
-  index: number,
+export interface WikiPreview  {
   title: string, 
   description: string
   thumbnail: {
@@ -108,4 +119,11 @@ export interface WikiSuggestion  {
     width: number,
     height: number
   }
+}
+export interface WikiSuggestion extends WikiPreview {
+  index?:number
+}
+export interface WikiVote extends WikiPreview {
+  input:string;
+  label:string;//what is display
 }

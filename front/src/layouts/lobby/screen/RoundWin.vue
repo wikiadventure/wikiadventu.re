@@ -1,6 +1,6 @@
 <template>
   <div id="round-win" class="absolute-full">
-    <exit-btn target="round-win"/>
+    <exit-btn @click="showRoundWin = false"/>
     <logo-show-in :title="winner" :class="{ lose: hasLose }" ></logo-show-in>
   </div>
 </template>
@@ -18,10 +18,17 @@ import LogoShowIn from 'src/components/art/LogoShowIn.vue';
 
 import { defineComponent } from '@vue/composition-api';
 import { Player } from 'src/store/gameData/state';
+import manageScreenSetup from "src/mixins/game/manageScreen";
 
 export default defineComponent({
   name: 'RoundWin',
   components: { LogoShowIn, ExitBtn },
+  setup() {
+    var { showRoundWin } = manageScreenSetup();
+    return {
+      showRoundWin
+    }
+  },
   computed: {
     winner():string {
       var p = this.$store.getters['gameData/winner'] as Player;
@@ -29,7 +36,7 @@ export default defineComponent({
     },
     hasLose():boolean {
       return this.$store.state.gameData.winnerId != this.$store.state.gameData.self;
-    },
+    }
   }
 });
 </script>

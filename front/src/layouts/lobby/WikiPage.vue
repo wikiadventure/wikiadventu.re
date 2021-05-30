@@ -1,6 +1,6 @@
 <template>
   <section class="wikiPage absolute-full" :class="{ 'wikifade': fade, 'endPage': endPage }">
-    <exit-btn class="q-ma-md" v-if="endPage" target="wiki-end-page"/>
+    <exit-btn class="q-ma-md" v-if="endPage" @click="showWikiEndPage = false"/>
     <div id="wikiCore" ref="wiki">
       <h1 id="wikiTitle">{{ title }}</h1>
       <div id="wikiMain">
@@ -125,7 +125,8 @@
 import Vue from 'vue';
 import ExitBtn from 'src/components/ExitButton.vue';
 import { defineComponent } from '@vue/composition-api';
-import WikiArticle from 'src/mixins/wikiArticle';
+import WikiArticle from 'src/mixins/wiki/wikiArticle';
+import manageScreenSetup from "src/mixins/game/manageScreen";
 
 import scrollToID from 'src/mixins/scrollToID';
 
@@ -134,6 +135,12 @@ export default defineComponent({
   components: { ExitBtn },
   props: {
     endPage:Boolean
+  },
+  setup() {
+    var { showWikiEndPage } = manageScreenSetup();
+    return {
+      showWikiEndPage
+    }
   },
   data():{
     wikiArticle:WikiArticle,
