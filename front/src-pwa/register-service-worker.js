@@ -38,6 +38,7 @@ register(process.env.SERVICE_WORKER_FILE, {
       position: 'top',
       message: i18n.t("worker.updated")
     });
+    setTimeout(() => window.location.reload(), 1000);
   },
 
   offline () {
