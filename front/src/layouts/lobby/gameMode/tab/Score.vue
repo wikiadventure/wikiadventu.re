@@ -1,7 +1,7 @@
 <template>
   <div id="scoreTab">
     <h3 class="row items-baseline justify-evenly q-my-xs">{{ $t('scoreTab.title') }}</h3>
-    <div class="row items-baseline justify-evenly"><q-btn class="action-btn" push :label="$t('scoreTab.leaderboard')" icon="mdi-format-list-bulleted" @click="openLeaderBoard()"/></div>
+    <div class="row items-baseline justify-evenly"><q-btn class="action-btn" push :label="$t('scoreTab.leaderboard')" icon="mdi-format-list-bulleted" @click="showLeaderboard = !showLeaderboard"/></div>
     <q-separator spaced="md"/>
     <q-list separator>
       <q-item v-for="player in playersByScore" :key="player.id">
@@ -22,13 +22,17 @@
 </style>
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
-import { ManageScreenEvent } from 'src/mixins/manageScreen';
 import { Player } from 'src/store/gameData/state';
+import manageScreenSetup from "src/mixins/game/manageScreen";
 
 export default defineComponent({
   name: 'ScoreTab',
-  data() {
+  setup() {
+    var {
+      showLeaderboard,
+    } = manageScreenSetup();
     return {
+      showLeaderboard
     }
   },
   computed: {
@@ -37,13 +41,6 @@ export default defineComponent({
     }
   },
   methods: {
-    openLeaderBoard(e:Event) {
-      var payload:ManageScreenEvent = {
-        target: "leaderboard",
-        state: true
-      }
-      this.$root.$emit("manage-screen", payload);
-    },
     isSelf(id:number):boolean {
       return this.$store.state.gameData.self == id;
     },
