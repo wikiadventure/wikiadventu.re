@@ -23,6 +23,8 @@ export default {
   twitchLobby: "Twitch Party",
   join: "Join",
   create: "Create",
+  start: "start",
+  invite: "invite",
   input: {
     langSelect: "Select Wikipedia language",
     lobbyID: "Party ID",

@@ -14,9 +14,10 @@
         </div>
       </div>
       <q-separator/>
-      <div class="wait-action justify-center">
+      <div class="wait-action justify-evenly">
+        <q-btn push class="action-btn" :label="$t('invite')" @click="invite()" icon="mdi-link-variant"/>
         <div><!--Only to display tooltip over the disabled q btn -->
-          <q-btn :disable="self != owner" push class="action-btn" label="start" @click="start()" icon="mdi-check-bold"/>
+          <q-btn :disable="self != owner" push class="action-btn" :label="$t('start')" @click="start()" icon="mdi-check-bold"/>
           <q-tooltip v-if="self != owner"  anchor="top middle" self="bottom middle" :offset="[10, 10]">
             Only <q-icon size="xs" class="owner" name="mdi-crown"/> {{ ownerPseudo }} can choose to start
           </q-tooltip>
@@ -117,6 +118,7 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
 import { Player } from 'src/store/gameData/state';
+import { copyToClipboard } from 'quasar';
 
 export default defineComponent({
   name: 'Wait',
@@ -144,6 +146,26 @@ export default defineComponent({
   methods: {
     start() {
       this.$store.dispatch('gameData/sendStart');
+    },
+    invite() {
+      var vm = this;
+      copyToClipboard(window.location.href)
+      .then(() => {
+        vm.$q.notify({
+          type: 'annonce',
+          position: 'bottom-right',
+          timeout: 1000,
+          message: vm.$t('copySuccess') as string
+        });
+      })
+      .catch(() => {
+        vm.$q.notify({
+          type: 'error',
+          position: 'bottom-right',
+          timeout: 1000,
+          message: vm.$t('copyFail') as string
+        });
+      });
     }
   }
 });

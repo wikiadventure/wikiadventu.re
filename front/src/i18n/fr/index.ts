@@ -23,6 +23,8 @@ export default {
     twitchLobby: "Partie sur Twitch",
     join: "Rejoindre",
     create: "Créer",
+    start: "démarrer",
+    invite: "inviter",
     input: {
       langSelect: "Sélectionner la langue du wiki",
       lobbyID: "Identifiant de la Partie",

@@ -52,14 +52,16 @@ export default defineComponent({
       .then(() => {
         vm.$q.notify({
           type: 'annonce',
-          position: 'bottom',
+          timeout: 1000,
+          position: 'bottom-right',
           message: vm.$t('copySuccess') as string
         });
       })
       .catch(() => {
         vm.$q.notify({
           type: 'error',
-          position: 'bottom',
+          timeout: 1000,
+          position: 'bottom-right',
           message: vm.$t('copyFail') as string
         });
       })
