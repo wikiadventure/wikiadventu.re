@@ -72,7 +72,8 @@ export default {
   },
   settingTab: {
     settings: "Settings",
-    fullscreen: "Fullscreen"
+    fullscreen: "Fullscreen",
+    safeModeTooltip: "SafeMode will blur image of wikipedia, you can unblur image for the current page with ctrl + alt + Q"
   },
   scoreTab: {
     title: "Scoreboard",

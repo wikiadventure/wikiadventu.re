@@ -6,7 +6,7 @@
             size="lg"
             color="black">
     <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-      SafeMode will blur image of wikipedia, you can unblur image for the current page with ctrl + Q
+      {{ $t("settingTab.safeModeTooltip") }}
     </q-tooltip>
   </q-toggle>
 </template>

@@ -72,7 +72,8 @@ export default {
     },
     settingTab: {
       settings: "Options",
-      fullscreen: "Plein écran"
+      fullscreen: "Plein écran",
+      safeModeTooltip: "SafeMode vas flouter les images de wikipédia, vous pouvez les déflouté pour la page en cours avec ctrl + alt + Q"
     },
     scoreTab: {
       title: "Scores",
