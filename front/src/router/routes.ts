@@ -47,6 +47,9 @@ const routes: RouteConfig[] = [
   {
     path: '/api/:data',
     beforeEnter: (to, from, next) => {
+      if (to.params.data == "twitch") {
+        window.opener.postMessage(to.query, window.location.origin);
+      }
       fetch(window.location.origin+to.fullPath).then(() => window.close());
     },
   },

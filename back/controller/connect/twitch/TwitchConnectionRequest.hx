@@ -6,5 +6,5 @@ import lobby.LoginType;
 
 typedef TwitchConnectRequest = {
     > ConnectionRequest,
-    ?uuid: String
+    ?code: String
 }

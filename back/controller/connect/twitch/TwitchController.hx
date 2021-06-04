@@ -1,13 +1,12 @@
 package controller.connect.twitch;
 
+import twitch.HelixUser;
 import lobby.GameLoop;
 import response.connect.ConnectionError;
-import lobby.gameLoop.Classic;
 import response.SuccessResponse;
 import lobby.player.Player;
 import controller.connect.twitch.TwitchConnectionRequest;
 import haxe.crypto.Sha256;
-import haxe.Timer;
 import lobby.player.TwitchPlayer;
 import twitch.HelixPrivilegedUser;
 import js.lib.Promise;
@@ -32,6 +31,7 @@ class TwitchController {
     var body : String;
     var form : TwitchConnectRequest;
     var authProvider : StaticAuthProvider;
+    var user : HelixPrivilegedUser;
     
     public function new(im : IncomingMessage, sr : ServerResponse, body : String ) {
         this.im = im;
@@ -67,7 +67,10 @@ class TwitchController {
                         <title>WikiAdventure Twitch login redirection</title>
                     </head>
                     <body>
-                    <script type='text/javascript'>setTimeout(function(){ window.close(); }, 500);</script>
+                    <script type='text/javascript'>
+                    window.opener.postMessage(window.location.search, window.location.origin);
+                    setTimeout(function(){ window.close(); }, 500);
+                    </script>
                     </body>
                 </html>
             ");
@@ -77,31 +80,11 @@ class TwitchController {
             new ErrorResponse(im, sr, body, e, PreconditionFailed);
             return;
         }
-        proceedTwitchLogin(uuid, code);
             
     }
 
-    public function proceedTwitchLogin(uuid:String, code:String) {
-        var loginStatus:TwitchLogin = new TwitchLogin(uuid);
-        TwitchCredential.loginStatusList.push(loginStatus);
-        Timer.delay(function () {
-            loginStatus.error = "Cannot retrieve token after 30 sec";
-            loginStatus.status = Error;
-            TwitchCredential.loginStatusList.remove(loginStatus);
-        },30000); // remove the access if it's not retrieve in 30sec
-        getAccessToken(code)
-        .then(getTwitchUser)
-        .then(function(user:HelixPrivilegedUser) {
-            loginStatus.user = user;
-            loginStatus.authProvider = authProvider;
-            loginStatus.status = Success;
-        }, function(reject) {
-            loginStatus.error = "promise failed : " + reject;
-            loginStatus.status = Error;
-        })
-        .catchError((r) -> {
-            trace(r);
-        });
+    public function proceedTwitchLogin(code:String):Promise<HelixPrivilegedUser> {
+        return getAccessToken(code).then(getTwitchUser);
     }
 
     public function getAccessToken(code:String):Promise<AccessToken> {
@@ -122,17 +105,18 @@ class TwitchController {
             form = Json.parse(body);
             if (form.type == TwitchJoinWithout) return connectWithoutTwitch();
             if ( !( form.type == TwitchCreate || (form.type == TwitchJoinWith && form.lobby != null) ) ) throw "To connect with twitch use login type of TwitchCreate, or TwitchJoinWith with the lobby name";
-            if (form.uuid == null) throw "The JSON provided does not have a uuid field";
-            var loginStatus = searchLoginStatus(form.uuid);
-            if (loginStatus.status == Pending) {
-                sr.writeProcessing();
-                loginStatus.onStatusChange = function(status:TwitchLoginStatus) {
-                    respond(loginStatus, status);
-                    loginStatus.onStatusChange = null;
-                };
-                return;
-            }
-            respond(loginStatus);
+            if (form.code == null) throw "The JSON provided does not have a code field";
+            proceedTwitchLogin(form.code).then(
+                user -> {
+                    this.user = user;
+                    respond();
+                }
+            ).catchError(
+                (e) -> {
+                    trace(e);
+                    new ErrorResponse(im, sr, body, "error", BadRequest);
+                }
+            );
         } catch (e:Dynamic) {
             trace(e);
             new ErrorResponse(im, sr, body, "error", BadRequest);
@@ -140,13 +124,8 @@ class TwitchController {
         }
     }
 
-    public function respond(loginStatus:TwitchLogin, ?status:TwitchLoginStatus) {
-        if (status == null) status = loginStatus.status;
-        if (status == Error) {
-            new ErrorResponse(im, sr, body, loginStatus.error, BadRequest);
-            return;
-        }
-        var player = new TwitchPlayer(form.pseudo, loginStatus.user, loginStatus.authProvider, form.lang);
+    public function respond() {
+        var player = new TwitchPlayer(form.pseudo, user, authProvider, form.lang);
         var lobby:TwitchLobby;
         try {
             if (form.type == TwitchCreate) {
@@ -194,7 +173,7 @@ class TwitchController {
         }
     }
 
-    public function searchLoginStatus(uuid:String):TwitchLogin {
+    /*public function searchLoginStatus(uuid:String):TwitchLogin {
         for (i in 0...TwitchCredential.loginStatusList.length) {
             var l = TwitchCredential.loginStatusList[i];
             if (l.uuid == uuid) {
@@ -203,7 +182,7 @@ class TwitchController {
             }
         }
         throw "The uuid provided is not registered or has time out after 30 sec of inactivity";
-    }
+    }*/
 
     public function twitchCreate(player:TwitchPlayer, form:TwitchConnectRequest):TwitchLobby {
         var passwordHash = Sha256.encode(form.password);

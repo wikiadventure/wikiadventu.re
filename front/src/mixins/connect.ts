@@ -46,16 +46,16 @@ export function login(event:ConnectEvent) {
       query.password = event.password;
     }
     if (event.type == ConnectType.TwitchJoinWith || event.type == ConnectType.TwitchCreate ) {
-      query.uuid = uuid();
-      var twitch = window.open("https://id.twitch.tv/oauth2/authorize?response_type=code&client_id="+process.env.TWITCH_CLIENT_ID+"&redirect_uri="+encodeURIComponent(process.env.TWITCH_REDIRECT_URL)+"&state=" + query.uuid + "&scope=chat%3Aread+chat%3Aedit");
-      var loop = setInterval(function() { if (twitch && twitch.closed) {
-        clearInterval(loop);
-        /* connect to the server send the login query
-        and the uid to prove that you are auth
-        and retrieve an uuid to connect to the ws lobby*/
-        options.body = JSON.stringify(query);
-        connect(options, true);
-      }}, 50);// the duration in ms between each call of loop
+      function onMessage(e:MessageEvent) {
+        if (e.origin == window.origin) {
+          query.code = e.data.code;
+          window.removeEventListener("message",onMessage);
+          options.body = JSON.stringify(query);
+          connect(options, true);
+        }
+      }
+      window.addEventListener("message",onMessage);
+      var twitch = window.open("https://id.twitch.tv/oauth2/authorize?response_type=code&client_id="+process.env.TWITCH_CLIENT_ID+"&redirect_uri="+encodeURIComponent(window.location.origin+"/api/twitch")+"&scope=chat%3Aread+chat%3Aedit");
     } else {
       options.body = JSON.stringify(query);
       connect(options, event.type == ConnectType.TwitchJoinWithout);
@@ -70,6 +70,7 @@ export async function connect(options:RequestInit, twitch?:boolean) {
         start(json);
       }).catch(function(error) {
         Store.state.globalForm.connecting = false;
+        console.log(error);
         Notify.create({
           type: 'negative',
           position: 'top',
@@ -121,7 +122,7 @@ export interface loginQuery {
     lobby?:string;
     slot?:number;
     gameMode?:number;
-    uuid?:string;//for twitch
+    code?:string;
 }
 
 export interface ConnectionResponse {
