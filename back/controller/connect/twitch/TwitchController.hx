@@ -45,42 +45,34 @@ class TwitchController {
             connect();
             return;
         }
-        new ErrorResponse(im, sr, body, "Invalid method. Method available: Get and Post",BadRequest);
+        new ConnectionError(im, sr, InvalidMethod);
         return;
     }
 
     public function onTwitchRedirect() {
-        var uuid:String;
-        var code:String;
-        try {
-            var idx = im.url.indexOf("?", 1);
-            var data = Querystring.parse(im.url.substring(idx+1));
-            uuid = data['state'];
-            if ( !( Uuid.validate(uuid) && Uuid.version(uuid) == 4 ) ) throw "Invalid uuid please provide a valid version 4 uuid in the redirectUrl state of twitch login";
-            code = data['code'];
-            if (code == null) throw "invalid twitch access, please retry!";
-            sr.setHeader('Content-Type', 'text/html; charset=utf-8');
-            sr.write("
-                <!DOCTYPE html>
-                <html>
-                    <head>
-                        <title>WikiAdventure Twitch login redirection</title>
-                    </head>
-                    <body>
-                    <script type='text/javascript'>
-                    window.opener.postMessage(window.location.search, window.location.origin);
-                    setTimeout(function(){ window.close(); }, 500);
-                    </script>
-                    </body>
-                </html>
-            ");
-            sr.end();
-        } catch (e:Dynamic) {
-            trace(e);
-            new ErrorResponse(im, sr, body, e, PreconditionFailed);
-            return;
-        }
-            
+        var idx = im.url.indexOf("?", 1);
+        var data = Querystring.parse(im.url.substring(idx+1));
+        var code = data['code'];
+        if (code == null) {
+            new ConnectionError(im, sr, InvalidTwitchCode);
+            return; 
+        } 
+        sr.setHeader('Content-Type', 'text/html; charset=utf-8');
+        sr.write("
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>WikiAdventure Twitch login redirection</title>
+                </head>
+                <body>
+                <script type='text/javascript'>
+                window.opener.postMessage(" + Json.stringify({code: code}) + ", window.location.origin);
+                setTimeout(function(){ window.close(); }, 500);
+                </script>
+                </body>
+            </html>
+        ");
+        sr.end();
     }
 
     public function proceedTwitchLogin(code:String):Promise<HelixPrivilegedUser> {
@@ -88,13 +80,11 @@ class TwitchController {
     }
 
     public function getAccessToken(code:String):Promise<AccessToken> {
-        trace("get access token");
          return ApiClient.getAccessToken_(TwitchCredential.clientID, TwitchCredential.clientSecret, code, TwitchCredential.redirectURL);
         
     }
 
     public function getTwitchUser(token:AccessToken):Promise<HelixPrivilegedUser> {
-        trace("get Twitch user");
         authProvider = new StaticAuthProvider(TwitchCredential.clientID, token);
         var apiClient = new ApiClient({authProvider: authProvider});
         return apiClient.helix.users.getMe();  
@@ -104,7 +94,8 @@ class TwitchController {
         try {
             form = Json.parse(body);
             if (form.type == TwitchJoinWithout) return connectWithoutTwitch();
-            if ( !( form.type == TwitchCreate || (form.type == TwitchJoinWith && form.lobby != null) ) ) throw "To connect with twitch use login type of TwitchCreate, or TwitchJoinWith with the lobby name";
+            if ( !( form.type == TwitchCreate || (form.type == TwitchJoinWith && form.lobby != null) ) ) new ConnectionError(im, sr, InvalidLobbyType);
+                //throw "To connect with twitch use login type of TwitchCreate, or TwitchJoinWith with the lobby name";
             if (form.code == null) throw "The JSON provided does not have a code field";
             proceedTwitchLogin(form.code).then(
                 user -> {
@@ -114,12 +105,11 @@ class TwitchController {
             ).catchError(
                 (e) -> {
                     trace(e);
-                    new ErrorResponse(im, sr, body, "error", BadRequest);
+                    new ConnectionError(im, sr, TwitchConnectionError);
                 }
             );
         } catch (e:Dynamic) {
-            trace(e);
-            new ErrorResponse(im, sr, body, "error", BadRequest);
+            new ConnectionError(im, sr, InvalidForm);
             return;
         }
     }
@@ -140,7 +130,6 @@ class TwitchController {
             return;
         }
         var json:ConnectionResponse = {
-            status: Success,
             lobbyID: lobby.name,
             lobbyType: Twitch,
             slot: lobby.slot,
@@ -159,7 +148,6 @@ class TwitchController {
             var lobby = TwitchLobby.find(form.lobby);
             lobby.connect(player, passwordHash);
             var json:ConnectionResponse = {
-                status: Success,
                 lobbyID: lobby.name,
                 lobbyType: Twitch,
                 slot: lobby.slot,
@@ -172,17 +160,6 @@ class TwitchController {
             new ConnectionError(im, sr, e);
         }
     }
-
-    /*public function searchLoginStatus(uuid:String):TwitchLogin {
-        for (i in 0...TwitchCredential.loginStatusList.length) {
-            var l = TwitchCredential.loginStatusList[i];
-            if (l.uuid == uuid) {
-                TwitchCredential.loginStatusList.splice(i,1);
-                return l;
-            }
-        }
-        throw "The uuid provided is not registered or has time out after 30 sec of inactivity";
-    }*/
 
     public function twitchCreate(player:TwitchPlayer, form:TwitchConnectRequest):TwitchLobby {
         var passwordHash = Sha256.encode(form.password);

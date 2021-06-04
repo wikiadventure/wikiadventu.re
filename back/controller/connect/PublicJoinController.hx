@@ -1,6 +1,5 @@
 package controller.connect;
 
-import controller.connect.error.ConnectError;
 import haxe.Json;
 import lobby.Lobby;
 import lobby.player.Player;
@@ -29,7 +28,6 @@ class PublicJoinController {
             } else lobby = Lobby.joinPublicFree(player, form.gameMode);
             lobby.connect(player);
             var json:ConnectionResponse = {
-                status: Success,
                 lobbyID: lobby.formatID,
                 lobbyType: Public,
                 slot: lobby.slot,

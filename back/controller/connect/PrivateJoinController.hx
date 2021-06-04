@@ -28,7 +28,6 @@ class PrivateJoinController {
             var lobby = Lobby.find(Lobby.decodeID(form.lobby));
             lobby.connect(player, passwordHash);
             var json:ConnectionResponse = {
-                status: Success,
                 lobbyID: lobby.formatID,
                 lobbyType: Private,
                 slot: lobby.slot,

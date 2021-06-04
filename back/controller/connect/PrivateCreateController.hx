@@ -34,7 +34,6 @@ class PrivateCreateController {
             lobby.gameLoop = GameLoop.select(form.gameMode, lobby);
             lobby.gameLoop.start();
             var json:ConnectionResponse = {
-                status: Success,
                 lobbyID: lobby.formatID,
                 lobbyType: Private,
                 slot: lobby.slot,

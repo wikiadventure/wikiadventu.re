@@ -1,5 +1,6 @@
 package controller.connect;
 
+import response.connect.ConnectionError;
 import tink.Json;
 import response.ErrorResponse;
 import js.node.http.IncomingMessage;
@@ -18,20 +19,20 @@ class ConnectController {
         this.sr = sr;
         this.body = body;
         if (im.method != Post) {
-            new ErrorResponse(im, sr, body, "Method not allowed!", MethodNotAllowed);
+            new ConnectionError(im, sr, InvalidMethod);
             return;
         }
         try {
             form = Json.parse(body);
         } catch (e:Dynamic) {
-            new ErrorResponse(im, sr, body, "form data is invalid",400);
+            new ConnectionError(im, sr, InvalidForm);
             return;
         }
         switch form.type {
             case PublicJoin: new PublicJoinController(im, sr, body, form);
             case PrivateCreate: new PrivateCreateController(im, sr, body, form);
             case PrivateJoin: new PrivateJoinController(im, sr, body, form);
-            default: new ErrorResponse(im, sr, body, "invalid lobby type",400);
+            default: new ConnectionError(im, sr, InvalidLobbyType);
         }
         
     }
