@@ -1,6 +1,7 @@
 <template>
   <q-input outlined v-model="pseudo" :label="$t('input.pseudo')"
-          name="pseudo" spellcheck="false" v-bind="$attrs" v-on="$listeners"
+          name="pseudo" spellcheck="false" :dense="$q.screen.lt.sm"
+          v-bind="$attrs" v-on="$listeners"
           :rules="[ v => v.length >= 3 || $t('input.hint.minChars3'),
                     v => v.length <= 25 || $t('input.hint.maxChars25'),
                     v => !v.match(/[<>:|%$\/\\]/g) || $t('input.hint.restrictedChars')]">

@@ -2,7 +2,7 @@
   <q-input
     @input="onInput($event)" name="slot" outlined hint="" c
     :label="$t('input.slot')" :value="getSlot" :min="2" :max="50"
-    v-bind="$attrs" v-on="$listeners">
+    :dense="$q.screen.lt.sm" v-bind="$attrs" v-on="$listeners">
   </q-input>
 </template>
 <script lang="ts">

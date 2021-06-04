@@ -3,7 +3,7 @@
     @input="onSelect($event)" name="gameLoop" outlined hint=""
     :options="options" :label="$t('input.gameLoop')" behavior="dialog"
     :value="getGameLoop" :display-value="getGameLoopLabel"
-    v-bind="$attrs" v-on="$listeners"
+    :dense="$q.screen.lt.sm" v-bind="$attrs" v-on="$listeners"
   >
     <template v-slot:option="scope">
       <q-item

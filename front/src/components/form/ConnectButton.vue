@@ -1,5 +1,5 @@
 <template>
-  <q-btn :disable="connecting" push class="connect-btn action-btn" v-bind="$attrs" v-on="$listeners" />
+  <q-btn :disable="connecting" :dense="$q.screen.lt.sm" push class="connect-btn action-btn" v-bind="$attrs" v-on="$listeners" />
 </template>
 <style lang="scss">
 .connect-btn {

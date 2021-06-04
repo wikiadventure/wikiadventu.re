@@ -3,7 +3,7 @@
     @input="onSelect($event)" name="lang" outlined hint=""
     :options="options" :label="$t('input.langSelect')" 
     :value="getLang" :display-value="getLangLabel"
-    v-bind="$attrs" v-on="$listeners"
+    :dense="$q.screen.lt.sm" v-bind="$attrs" v-on="$listeners"
   >
   </q-select>
 </template>

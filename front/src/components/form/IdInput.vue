@@ -1,7 +1,7 @@
 <template>
   <q-input outlined v-model="lobbyID" name="lobbyID" :label="$t('input.lobbyID')" 
   spellcheck="false" v-bind="$attrs" v-on="$listeners"
-  hint="">
+  hint="" :dense="$q.screen.lt.sm">
   </q-input>
 </template>
 
