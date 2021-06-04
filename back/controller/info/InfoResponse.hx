@@ -1,6 +1,5 @@
 package controller.info;
 
-import lobby.gameLoop.Phase.PhaseType;
 import lobby.Lobby.LobbyType;
 import config.Lang;
 

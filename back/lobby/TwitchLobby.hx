@@ -1,17 +1,8 @@
 package lobby;
 
-import controller.connect.error.ConnectError;
+import response.connect.ConnectionError.ConnectError;
 import lobby.player.Player;
-import js.node.Timers;
 import lobby.Lobby.LogType;
-import haxe.Timer;
-import twitch.HelixPrivilegedUser;
-import twitch.HelixUser;
-import twitch_chat_client.PrivateMessage;
-import config.twitch.TwitchCredential;
-import config.Lang;
-import lobby.Lobby.LobbyType;
-import twitch_chat_client.ChatClient;
 import lobby.player.TwitchPlayer;
 using config.twitch.TwitchBotExtension;
 

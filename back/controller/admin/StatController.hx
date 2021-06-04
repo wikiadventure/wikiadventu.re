@@ -5,7 +5,6 @@ import async.WS;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import config.admin.Guard;
-import haxe.http.HttpStatus;
 import js.Node.process;
 
 class StatController {

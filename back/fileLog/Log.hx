@@ -1,7 +1,6 @@
 package fileLog;
 
 import js.lib.Promise;
-import js.node.Path;
 import js.node.Fs;
 
 class Log {

@@ -2,7 +2,6 @@ package controller;
 
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
-import haxe.http.HttpStatus;
 import js.node.Fs;
 
 class FrontController {

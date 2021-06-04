@@ -1,8 +1,8 @@
 package lobby;
 
+import response.connect.ConnectionError.ConnectError;
 import lobby.gameLoop.Classic;
 import lobby.gameLoop.Random;
-import controller.connect.error.ConnectError;
 import lobby.player.Player;
 import lobby.gameLoop.Phase;
 import js.node.Timers.Timeout;

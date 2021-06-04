@@ -1,7 +1,6 @@
 package config.twitch;
 
 import lobby.player.TwitchPlayer;
-import twitch_chat_client.ChatClient;
 using Lambda;
 
 class TwitchBotExtension {

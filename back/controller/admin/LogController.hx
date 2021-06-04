@@ -4,7 +4,6 @@ import js.node.Fs;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import config.admin.Guard;
-import haxe.http.HttpStatus;
 
 class LogController {
 

@@ -1,6 +1,5 @@
 package controller.connect;
 
-import controller.connect.error.ConnectError;
 import response.connect.ConnectionError;
 import haxe.Json;
 import response.SuccessResponse;

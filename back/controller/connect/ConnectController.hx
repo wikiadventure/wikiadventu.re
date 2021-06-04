@@ -2,10 +2,8 @@ package controller.connect;
 
 import response.connect.ConnectionError;
 import tink.Json;
-import response.ErrorResponse;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
-import haxe.http.HttpStatus;
 
 class ConnectController {
 

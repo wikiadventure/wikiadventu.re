@@ -1,7 +1,6 @@
 package controller.connect;
 
 import lobby.GameLoop;
-import controller.connect.error.ConnectError;
 import response.connect.ConnectionError;
 import lobby.GameLoop.GameLoopType;
 import lobby.gameLoop.Classic;

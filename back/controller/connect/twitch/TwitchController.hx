@@ -1,6 +1,5 @@
 package controller.connect.twitch;
 
-import twitch.HelixUser;
 import lobby.GameLoop;
 import response.connect.ConnectionError;
 import response.SuccessResponse;
@@ -15,12 +14,9 @@ import twitch.ApiClient;
 import twitch.AccessToken;
 import config.twitch.TwitchCredential;
 import lobby.TwitchLobby;
-import response.ErrorResponse;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
-import haxe.http.HttpStatus;
 import js.node.Querystring;
-import uuid.Uuid;
 import tink.Json;
 using Lambda;
 

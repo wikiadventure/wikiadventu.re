@@ -1,6 +1,5 @@
 package lobby.player;
 
-import js.node.Timers;
 import config.twitch.TwitchCredential;
 import twitch_chat_client.PrivateMessage;
 import twitch.AuthProvider;

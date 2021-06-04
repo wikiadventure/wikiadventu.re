@@ -2,11 +2,7 @@ package config.twitch;
 
 import macros.Env;
 import twitch.ApiClient;
-import twitch.AuthProvider;
 import js.Node.process;
-import twitch_auth.ClientCredentialsAuthProvider;
-import twitch.HelixPrivilegedUser;
-import twitch.StaticAuthProvider;
 
 class TwitchCredential {
     

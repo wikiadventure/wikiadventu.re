@@ -1,18 +1,14 @@
 package lobby;
 
-import haxe.macro.Expr.Catch;
+import response.connect.ConnectionError.ConnectError;
 import lobby.player.Player;
 import lobby.gameLoop.Phase.PhaseType;
 import lobby.GameLoop;
-import controller.connect.error.ConnectError;
-import fileLog.Log;
 import js.node.Timers;
 import js.node.Timers.Timeout;
 import haxe.Timer;
-import haxe.io.Bytes;
 import config.Lang;
 import utils.crypto.RandomBase32;
-import lobby.gameLoop.Classic;
 using lobby.player.PlayersExtension;
 using Lambda;
 class Lobby {
