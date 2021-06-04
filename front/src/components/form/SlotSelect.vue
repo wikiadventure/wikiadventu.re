@@ -1,6 +1,6 @@
 <template>
   <q-input
-    @input="onInput($event)" name="slot" outlined hint="" c
+    @input="onInput($event)" name="slot" outlined hint="" type="number"
     :label="$t('input.slot')" :value="getSlot" :min="2" :max="50"
     :dense="$q.screen.lt.sm" v-bind="$attrs" v-on="$listeners">
   </q-input>
