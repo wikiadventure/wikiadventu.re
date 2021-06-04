@@ -56,7 +56,7 @@
   left: 2px;
 }
 .topRight {
-  right: 2px;
+  right: 15px;
 }
 .main-menu-index {
   --w-angle: -5deg;
