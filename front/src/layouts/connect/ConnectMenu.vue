@@ -127,6 +127,7 @@ import TwitchJoin from './tab/TwitchJoin.vue';
 import Index from './tab/Index.vue';
 import { LobbyType } from 'src/store/gameData/state';
 import { Lang } from 'src/i18n';
+import { error, ErrorCode } from 'src/mixins/connect';
 
 import { defineComponent } from '@vue/composition-api';
 
@@ -178,16 +179,10 @@ export default defineComponent({
         }
       }
     }).catch(function(error) {
-      vm.$q.notify({
-            type: 'negative',
-            position: 'top',
-            message: vm.$t('fetchError') + ' : ' + error.message
-          });
-      console.log(vm.$t('fetchError') + ' : ' + error.message);
+      error(ErrorCode.NoInternet, error);
     });
   }
 });
-import { ErrorCode } from "../../i18n/translateErrorCode";
 
 interface InfoResponse {
     status:InfoStatus,

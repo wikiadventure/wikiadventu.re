@@ -1,5 +1,4 @@
 import { Lang } from 'src/i18n';
-import { ErrorCode, translate } from 'src/i18n/translateErrorCode';
 import { LobbyType } from 'src/store/gameData/state';
 import { Store } from '../store';
 import { Router } from '../router/index';
@@ -12,84 +11,79 @@ export function login(event:ConnectEvent) {
     Store.state.globalForm.connecting = true;
     Store.dispatch('globalForm/validatePseudo');
     var query:loginQuery = {
-      type: event.type,
-      lang: Store.state.globalForm.lang,
-      pseudo: Store.state.globalForm.pseudo
+        type: event.type,
+        lang: Store.state.globalForm.lang,
+        pseudo: Store.state.globalForm.pseudo
     }
     var options:RequestInit = {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         }
     };
     if ([ConnectType.PrivateJoin, ConnectType.PublicJoin, ConnectType.TwitchJoinWith, ConnectType.TwitchJoinWithout].includes(event.type)) {
       if (Store.state.globalForm.lobbyID != "") {
-        query.lobby = Store.state.globalForm.lobbyID;
+            query.lobby = Store.state.globalForm.lobbyID;
       } else if (event.type != ConnectType.PublicJoin) {
         Notify.create({
-          type: 'negative',
-          position: 'top',
-          message: i18n.t('lobbyIDRequired') as string
+            type: 'negative',
+            position: 'top',
+            message: i18n.t('lobbyIDRequired') as string
         });
         Store.state.globalForm.connecting = false;
         return;
       }
     }
     if ([ConnectType.PrivateCreate, ConnectType.TwitchCreate].includes(event.type)) {
-      query.slot = Store.state.globalForm.slot;
+        query.slot = Store.state.globalForm.slot;
     }
     if ([ConnectType.PrivateCreate, ConnectType.TwitchCreate, ConnectType.PublicJoin].includes(event.type)) {
-      query.gameMode = Store.state.globalForm.gameLoop;
+        query.gameMode = Store.state.globalForm.gameLoop;
     }
     if (event.type != ConnectType.PublicJoin) {
-      query.password = event.password;
+        query.password = event.password;
     }
     if (event.type == ConnectType.TwitchJoinWith || event.type == ConnectType.TwitchCreate ) {
-      function onMessage(e:MessageEvent) {
-        if (e.origin == window.origin) {
-          query.code = e.data.code;
-          window.removeEventListener("message",onMessage);
-          options.body = JSON.stringify(query);
-          connect(options, true);
+        function onMessage(e:MessageEvent) {
+            if (e.origin == window.origin) {
+                query.code = e.data.code;
+                window.removeEventListener("message",onMessage);
+                options.body = JSON.stringify(query);
+                connect(options, true);
+            }
         }
-      }
-      window.addEventListener("message",onMessage);
-      var twitch = window.open("https://id.twitch.tv/oauth2/authorize?response_type=code&client_id="+process.env.TWITCH_CLIENT_ID+"&redirect_uri="+encodeURIComponent(window.location.origin+"/api/twitch")+"&scope=chat%3Aread+chat%3Aedit");
+        window.addEventListener("message",onMessage);
+        var twitch = window.open("https://id.twitch.tv/oauth2/authorize?response_type=code&client_id="+process.env.TWITCH_CLIENT_ID+"&redirect_uri="+encodeURIComponent(window.location.origin+"/api/twitch")+"&scope=chat%3Aread+chat%3Aedit");
     } else {
-      options.body = JSON.stringify(query);
-      connect(options, event.type == ConnectType.TwitchJoinWithout);
+        options.body = JSON.stringify(query);
+        connect(options, event.type == ConnectType.TwitchJoinWithout);
     }
 }
 
 export async function connect(options:RequestInit, twitch?:boolean) {
-   return fetch("/api/"+ (twitch ? "twitch" : "connect"), options)
-      .then(function(response:Response):Promise<ConnectionResponse> {
-        return response.json();
-      }).then(function(json:ConnectionResponse) {
-        start(json);
-      }).catch(function(error) {
-        Store.state.globalForm.connecting = false;
-        console.log(error);
-        Notify.create({
-          type: 'negative',
-          position: 'top',
-          message: i18n.t('fetchError') + ' : ' + error.message
-        });
-        console.log(i18n.t('fetchError') + ' : ' + error.message);
+    return fetch("/api/"+ (twitch ? "twitch" : "connect"), options)
+        .then(async r => {return { json: await r.json(), res: r}})
+        .then(r => {
+            Store.state.globalForm.connecting = false;
+            if (!r.res.ok) return error(r.json.code);
+            start(r.json);
+        })
+        .catch(function(e) {
+            Store.state.globalForm.connecting = false;
+            error(ErrorCode.NoInternet, e);
     });
 }
 
+export async function error(n:number, message?:string) {
+  Notify.create({
+    type: 'negative',
+    position: 'top',
+    message: i18n.t(translate(n)) + (message ? (' : ' + message) : "")
+  });
+}
+
 export async function start(json:ConnectionResponse) {
-    Store.state.globalForm.connecting = false;
-    if (json.status == ConnectionStatus.Error) {
-      Notify.create({
-        type: 'negative',
-        position: 'top',
-        message: i18n.t(translate(json.errorCode)) as string
-      });
-      return;
-    }
     Store.commit('gameData/setLang', json.lang);
     Store.commit('gameData/setLobbyID', json.lobbyID);
     Store.commit('gameData/setLobbyType', json.lobbyType);
@@ -102,7 +96,6 @@ export async function start(json:ConnectionResponse) {
 export interface ConnectEvent {
     type:ConnectType,
     password?:string,
-
 }
 
 export enum ConnectType {
@@ -126,17 +119,31 @@ export interface loginQuery {
 }
 
 export interface ConnectionResponse {
-    status:ConnectionStatus,
     lobbyID:string,
     lobbyType:LobbyType,
     slot:number,
     gameMode:number,
     playerID:string,
-    lang:Lang,
-    errorCode?:ErrorCode
+    lang:Lang
+}
+export function translate(e:ErrorCode):string {
+    return "connectError." + (Object.keys(ErrorCode).find(k => ErrorCode[k] === e) || "UnknowError" );
 }
 
-export enum ConnectionStatus {
-    Success = 'Success',
-    Error = 'Error'
+export enum ErrorCode {
+    NoInternet = 0,
+    InvalidMethod = 100, //client error
+    InvalidForm,
+    InvalidID,
+    InvalidLobbyType,
+    NoLobbyFoundWithID,
+    NoLobbyFoundWithChannelName,
+    LobbyFull,
+    InvalidPassword,
+    InvalidGameLoop,
+    InvalidTwitchCode,
+    LobbyLimitReached = 200, //server error
+    PrivateLobbyLimitReached,
+    TwitchConnectionError
 }
+

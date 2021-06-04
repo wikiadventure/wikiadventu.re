@@ -119,12 +119,20 @@ export default {
     tipsContentMobile: "You can open the game menu with top left button or by swiping to the right. You can also open the end page by swiping to the left.",
   },
   connectError: {
+    UnknowError: "??? Unknow error",
+    NoInternet: "Connection problem with the server",
+    InvalidMethod: "??? Invalid http request method",
+    InvalidForm: "??? Form format error",
+    InvalidLobbyType: "??? Non-existent lobby type",
     invalidID: "The Party ID provided is invalid",
     noLobbyFoundWithID: "No game found with this Party ID",
     noLobbyFoundWithChannelName: "No game found with this channel name",
     lobbyFull: "The party you want to join is full",
     invalidPassword: "Invalid Password",
+    InvalidGameLoop: "??? Non-existent game mode",
+    InvalidTwitchCode: "Client error while connecting twitch",
     lobbyLimitReached: "The party limit has been reached!",
-    privateLobbyLimitReached: "The private party limit has been reached!"
+    privateLobbyLimitReached: "The private party limit has been reached!",
+    TwitchConnectionError: "Server error while connecting twitch"
   }
 };
