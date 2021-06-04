@@ -1,12 +1,12 @@
 package macros;
 
 class Env {
-    public static macro function getPort():haxe.macro.Expr {
-        if (haxe.macro.Context.defined("port")) {
-            var port = haxe.macro.Context.definedValue("port");
-            return macro $v{port};
+    public static macro function get(p:String):haxe.macro.Expr {
+        if (haxe.macro.Context.defined(p)) {
+            var x = haxe.macro.Context.definedValue(p);
+            return macro $v{x};
         } else {
-            return macro process.env['PORT'];
+            return macro process.env[$v{p}];
         }
     }  
 }

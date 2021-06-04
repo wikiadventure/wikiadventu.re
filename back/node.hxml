@@ -6,8 +6,8 @@
 -main App
 -js ../bin/App.js
 -debug
-#remove this tag # and replace the star to the app port
-#-D port=*
+#remove you can add any env parameter like below
+#-D PORT=5000
 #remove this tag # if you want an https app
 #-D https
 #to use https make sure you generate a certificate and key in bin/config/ssl

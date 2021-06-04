@@ -40,7 +40,7 @@ class App {
             var server = Http.createServer(handle);
         #end
         TwitchCredential.init();
-        server.listen(Env.getPort());// take the port mentionned in the port compilation flag otherwise take the env one
+        server.listen(Env.get("PORT"));// take the port mentionned in the port compilation flag otherwise take the env one
         WS.init(server);
         console.log("server start");
     }
@@ -81,5 +81,4 @@ class App {
             default: new FrontController(im, sr);
         }
     }
-
 }

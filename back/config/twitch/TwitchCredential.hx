@@ -1,5 +1,6 @@
 package config.twitch;
 
+import macros.Env;
 import twitch.ApiClient;
 import twitch.AuthProvider;
 import js.Node.process;
@@ -16,11 +17,11 @@ class TwitchCredential {
     public static var botPassword:String;
     
     public static function init() {
-        clientID = process.env['TWITCH_CLIENT_ID'];
-        clientSecret = process.env['TWITCH_CLIENT_SECRET'];
-        redirectURL = process.env['TWITCH_REDIRECT_URL'];
-        botUsername = process.env['TWITCH_BOT_USERNAME'];
-        botPassword = process.env['TWITCH_BOT_PASSWORD'];
+        clientID = Env.get('TWITCH_CLIENT_ID');
+        clientSecret = Env.get('TWITCH_CLIENT_SECRET');
+        redirectURL = Env.get('TWITCH_REDIRECT_URL');
+        botUsername = Env.get('TWITCH_BOT_USERNAME');
+        botPassword = Env.get('TWITCH_BOT_PASSWORD');
     }
 
     public static function getApiClient():ApiClient {
