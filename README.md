@@ -35,7 +35,7 @@ Make sure to install the recommended extension.
 
 ### Visual Studio Code
 
-Now you can hit debug > start debugging ( or the f5 key ).
+Now you can hit run > start debugging ( or the f5 key ).
 The back and front will be built and the Visual Studio Code debugger will be attach.
 
 ## Structure ( WIP )
