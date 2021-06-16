@@ -18,7 +18,7 @@ Wiki Adventure is a multiplayer game combining culture and speed. Players compet
 
 ### NodeJS
 
-Then you need to install [NodeJS > 12.16.0 here](https://nodejs.org/en/download/)
+First, you need to install [NodeJS > 12.16.0 here](https://nodejs.org/en/download/)
 
 ### Librairies
 
