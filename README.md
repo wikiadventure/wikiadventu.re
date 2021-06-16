@@ -7,11 +7,11 @@
     <a href="https://wiki-adventure.sacramentix.fr">
         <img src="https://img.shields.io/endpoint?url=https://wiki-adventure.sacramentix.fr/api/badge"
             alt="number of people onlines on the game"></a>
-    Wiki Adventure is a multiplayer game combining culture and speed. Players compete against each other on Wikipedia and have to scroll through the pages as quickly as possible to win.
 </p>
 
 <p align="center">
   <a href="http://wiki-adventure.sacramentix.fr" title="Wiki Adventure"><img width=402 height=250 src="front/public/svg/openGraph.svg" /></a>
+        Wiki Adventure is a multiplayer game combining culture and speed. Players compete against each other on Wikipedia and have to scroll through the pages as quickly as possible to win.
 </p>
 
 ## Setup
