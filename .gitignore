@@ -1,12 +1,3 @@
-#ignore the compiled project
-bin/App.js
-bin/App.js.map
-#ignore the npm module, you can install them : cd bin ; npm install ;
-bin/node_modules
-#ignore log folder;
-bin/log
-bin/front
-bin/config/twitch
 #ignore folder dedicated to local testing
 local
 dump

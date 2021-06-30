@@ -1,0 +1,9 @@
+#ignore the compiled project
+App.js
+App.js.map
+#ignore the npm module, you can install them : cd bin ; npm install ;
+node_modules
+#ignore log folder;
+log
+front
+config/twitch
