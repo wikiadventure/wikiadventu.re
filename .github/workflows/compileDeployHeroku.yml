@@ -47,7 +47,7 @@ jobs:
           npm i @quasar/cli
           npx quasar build -m pwa
       - name: Deploy to heroku
-        uses: Sacramentix/heroku-deploy@b6577b0078d5f4c35dd1a9c421d11f135fb7afae
+        uses: Sacramentix/heroku-deploy@30f0b7e30306900d74c1d7fd5414e1f8421652ba
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "wiki-adventure"
