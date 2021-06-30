@@ -46,7 +46,7 @@ jobs:
           npx quasar build -m pwa
           
       - name: Deploy to Clever Cloud
-        uses: Sacramentix/actions-clever-cloud@b6577b0078d5f4c35dd1a9c421d11f135fb7afae
+        uses: Sacramentix/actions-clever-cloud@ff0f081e0305e878932797b20140cb17e9719fdb
         with:
           appID: ${{secrets.CLEVER_APP_ID}}
           appdir: "bin"
