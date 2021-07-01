@@ -17,8 +17,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
-      - name: Tell the player of incoming update
-        run: curl -u ":${{secrets.ADMIN_SECRET}}" https://wiki-adventure.herokuapp.com/api/announce --data "New update is coming your party will be interrupted in few minute."
+      #- name: Tell the player of incoming update
+        #run: curl -u ":${{secrets.ADMIN_SECRET}}" https://wiki-adventure.herokuapp.com/api/announce --data "New update is coming your party will be interrupted in few minute."
       - continue-on-error: true
         run: |
           git config --global user.email 'benji.u1225u@gmail.com'
@@ -46,7 +46,7 @@ jobs:
           npx quasar build -m pwa
           
       - name: Deploy to Clever Cloud
-        uses: Sacramentix/actions-clever-cloud@6bcd62b8b87604ee426c66829ffd4e17533043f8
+        uses: Sacramentix/actions-clever-cloud@ef0151ce8f7a2547774dde2f75de9c44f54a8e97
         with:
           appID: ${{secrets.CLEVER_APP_ID}}
           appdir: "bin"
