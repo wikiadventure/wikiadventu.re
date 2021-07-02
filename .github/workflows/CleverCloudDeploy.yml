@@ -44,19 +44,19 @@ jobs:
           cd front
           npm i @quasar/cli
           npx quasar build -m pwa
-          
-      - name: Deploy to Clever Cloud
-        uses: Sacramentix/actions-clever-cloud@0e92173758ee550a65271f64484b358674e89819
-        with:
-          appID: ${{secrets.CLEVER_APP_ID}}
-          appdir: "bin"
-          extraEnvSafelist: ADMIN_PASSWORD,TWITCH_BOT_USERNAME,TWITCH_BOT_PASSWORD,TWITCH_CLIENT_ID,TWITCH_CLIENT_SECRET,TWITCH_REDIRECT_URL
-        env:
-          CLEVER_ADMIN_PASSWORD: ${{secrets.ADMIN_PASSWORD}}
-          CLEVER_TWITCH_BOT_USERNAME: ${{secrets.TWITCH_BOT_USERNAME}}
-          CLEVER_TWITCH_BOT_PASSWORD: ${{secrets.TWITCH_BOT_PASSWORD}}
-          CLEVER_TWITCH_CLIENT_ID: ${{secrets.TWITCH_CLIENT_ID}}
-          CLEVER_TWITCH_CLIENT_SECRET: ${{secrets.TWITCH_CLIENT_SECRET}}
-          CLEVER_TWITCH_REDIRECT_URL: ${{secrets.TWITCH_REDIRECT_URL}}
-          CLEVER_TOKEN:  ${{ secrets.CLEVER_TOKEN }}
-          CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
+      - name: Install Clever Tools and deploy the app
+        run: |
+          npm i -g clever-tools
+          cd bin
+          npx clever login --token ${{ secrets.CLEVER_TOKEN }} --secret ${{ secrets.CLEVER_SECRET }}
+          npx clever link ${{secrets.CLEVER_APP_ID}}
+          clever env set CLEVER_ADMIN_PASSWORD ${{secrets.ADMIN_PASSWORD}} \
+          CLEVER_TWITCH_BOT_USERNAME: ${{secrets.TWITCH_BOT_USERNAME}} \
+          CLEVER_TWITCH_BOT_PASSWORD: ${{secrets.TWITCH_BOT_PASSWORD}} \
+          CLEVER_TWITCH_CLIENT_ID: ${{secrets.TWITCH_CLIENT_ID}} \
+          CLEVER_TWITCH_CLIENT_SECRET: ${{secrets.TWITCH_CLIENT_SECRET}} \
+          CLEVER_TWITCH_REDIRECT_URL: ${{secrets.TWITCH_REDIRECT_URL}} \
+          CLEVER_TOKEN:  ${{ secrets.CLEVER_TOKEN }} \
+          CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }} \
+           \
+          npx clever deploy --alias ${{secrets.CLEVER_APP_ID}} --force
