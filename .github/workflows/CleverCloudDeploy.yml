@@ -47,6 +47,9 @@ jobs:
       - name: Install Clever Tools and deploy the app
         run: |
           cd bin
+          git init
+          git add *
+          git commit -m "Deploy..."
           npm i --no-save clever-tools
           npx clever login --token ${{ secrets.CLEVER_TOKEN }} --secret ${{ secrets.CLEVER_SECRET }}
           npx clever link ${{secrets.CLEVER_APP_ID}}
