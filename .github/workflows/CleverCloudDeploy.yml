@@ -46,8 +46,8 @@ jobs:
           npx quasar build -m pwa
       - name: Install Clever Tools and deploy the app
         run: |
-          npm i -g clever-tools
           cd bin
+          npm i --no-save clever-tools
           npx clever login --token ${{ secrets.CLEVER_TOKEN }} --secret ${{ secrets.CLEVER_SECRET }}
           npx clever link ${{secrets.CLEVER_APP_ID}}
           clever env set CLEVER_ADMIN_PASSWORD ${{secrets.ADMIN_PASSWORD}} \
