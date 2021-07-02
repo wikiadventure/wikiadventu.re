@@ -58,4 +58,4 @@ jobs:
           npx clever env set CLEVER_TWITCH_REDIRECT_URL ${{secrets.TWITCH_REDIRECT_URL}}
           npx clever env set CLEVER_TOKEN  ${{ secrets.CLEVER_TOKEN }}
           npx clever env set CLEVER_SECRET ${{ secrets.CLEVER_SECRET }}
-          npx clever deploy --alias ${{secrets.CLEVER_APP_ID}} --force
+          npx clever deploy --force
