@@ -51,11 +51,11 @@ jobs:
           npx clever login --token ${{ secrets.CLEVER_TOKEN }} --secret ${{ secrets.CLEVER_SECRET }}
           npx clever link ${{secrets.CLEVER_APP_ID}}
           npx clever env set CLEVER_ADMIN_PASSWORD ${{secrets.ADMIN_PASSWORD}}
-          npx clever env set CLEVER_TWITCH_BOT_USERNAME: ${{secrets.TWITCH_BOT_USERNAME}}
-          npx clever env set CLEVER_TWITCH_BOT_PASSWORD: ${{secrets.TWITCH_BOT_PASSWORD}}
-          npx clever env set CLEVER_TWITCH_CLIENT_ID: ${{secrets.TWITCH_CLIENT_ID}}
-          npx clever env set CLEVER_TWITCH_CLIENT_SECRET: ${{secrets.TWITCH_CLIENT_SECRET}}
-          npx clever env set CLEVER_TWITCH_REDIRECT_URL: ${{secrets.TWITCH_REDIRECT_URL}}
-          npx clever env set CLEVER_TOKEN:  ${{ secrets.CLEVER_TOKEN }}
-          npx clever env set CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
+          npx clever env set CLEVER_TWITCH_BOT_USERNAME ${{secrets.TWITCH_BOT_USERNAME}}
+          npx clever env set CLEVER_TWITCH_BOT_PASSWORD ${{secrets.TWITCH_BOT_PASSWORD}}
+          npx clever env set CLEVER_TWITCH_CLIENT_ID ${{secrets.TWITCH_CLIENT_ID}}
+          npx clever env set CLEVER_TWITCH_CLIENT_SECRET ${{secrets.TWITCH_CLIENT_SECRET}}
+          npx clever env set CLEVER_TWITCH_REDIRECT_URL ${{secrets.TWITCH_REDIRECT_URL}}
+          npx clever env set CLEVER_TOKEN  ${{ secrets.CLEVER_TOKEN }}
+          npx clever env set CLEVER_SECRET ${{ secrets.CLEVER_SECRET }}
           npx clever deploy --alias ${{secrets.CLEVER_APP_ID}} --force
