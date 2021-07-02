@@ -1,3 +1,7 @@
 #ignore folder dedicated to local testing
+bin/App.js
+bin/App.js.map
+bin/front
+
 local
 dump
