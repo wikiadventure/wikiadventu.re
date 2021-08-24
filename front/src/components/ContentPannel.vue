@@ -1,13 +1,13 @@
 <template>
     <div class="content-pannel">
-        <h2 class="content-pannel-head is-center">{{ head }}</h2>
-        <h2 v-if="subhead" class="content-pannel-subhead is-center">{{ subhead }}</h2>
-        <div class="content-pannel-core row">
+        <h2 class="content-pannel-head">{{ head }}</h2>
+        <h2 v-if="subhead" class="content-pannel-subhead">{{ subhead }}</h2>
+        <div class="content-pannel-core">
             <slot></slot>
         </div>
     </div>
 </template>
-<style scoped>
+<style>
 .content-pannel {
     padding: 0 1em 1em;
     width: 100%;
@@ -24,21 +24,19 @@
 .content-pannel-subhead {
     text-align: center;
 }
-.content-pannel-core > div {
+.content-pannel-core {
     /*border-bottom: 1px solid rgba(0,0,0,0.3);*/
     text-align: center;
     padding: 1.5em;
     width: 100%;
     align-content: center;
-}
-.content-pannel-core > div:nth-child() {
-    text-align: center;
-    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
 }
 </style>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ContentPannel',

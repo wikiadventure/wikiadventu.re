@@ -13,28 +13,21 @@
 
 </style>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { settingSetup } from 'store/setting';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'VolumeSlider',
-  computed: {
-    volume: {
-      get() {
-        return this.$store.state.gameData.volume;
-      },
-      set(v:number) {
-        this.$store.commit('gameData/volume', v);
-      }
-    },
-    mute: {
-      get() {
-        return this.$store.state.gameData.mute;
-      },
-      set(m:number) {
-        this.$store.commit('gameData/mute', m);
-      }
+  setup() {
+    var {
+       volume,
+       mute
+    } = settingSetup();
+
+    return {
+      volume,
+      mute
     }
   }
-
 });
 </script>

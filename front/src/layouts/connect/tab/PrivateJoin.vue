@@ -1,10 +1,10 @@
 <template>
-  <connect-form :title="$t('menu.joinPrivateLobby')">
+  <connect-form :title="t('menu.joinPrivateLobby')">
     <id-input/>
     <password-input v-model="password"/>   
     <pseudo-input/>
     <template v-slot:button>
-      <connect-btn @click="submit" :label="$t('join')"/>
+      <connect-btn @click="submit" :label="t('join')"/>
     </template>
   </connect-form>
 </template>
@@ -17,16 +17,21 @@ import ConnectForm from 'src/components/form/ConnectForm.vue';
 import PasswordInput from 'src/components/form/PasswordInput.vue';
 import PseudoInput from 'src/components/form/PseudoInput.vue';
 import IdInput from 'src/components/form/IdInput.vue';
-import { login, ConnectEvent, ConnectType } from 'src/mixins/connect';
+import { ConnectEvent, ConnectType } from 'store/connect/type';
+import { login } from 'store/connect/action';
 
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'PrivateJoin',
   components: { ConnectForm, ConnectBtn, PasswordInput, PseudoInput, IdInput },
-  data() {
+  setup() {
+    const { t } = useI18n();
+    const password = ref("");
     return {
-      password: ""
+      password,
+      t
     }
   },
   methods: {

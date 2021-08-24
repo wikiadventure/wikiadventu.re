@@ -1,16 +1,16 @@
 <template>
-  <div id="logoShowInContainer" class="logo-show-in">
-    <div id="logoShowInDepthAdjust">
-      <div id="logoShowInLogo">
+  <div ref="container" class="logoShowInContainer logo-show-in">
+    <div class="logoShowInDepthAdjust">
+      <div class="logoShowInLogo">
         <img src="svg/logoV1.svg" alt="wikipedia logo"/>
       </div>
     </div>
-    <img v-if="title == null" id="logoShowInTitle" src="svg/title.svg" alt="wikipedia adventure"/>
-    <div v-else id="logoShowInTitle"><p>{{ title }}</p></div>
+    <img v-if="title == null" class="logoShowInTitle" src="svg/title.svg" alt="wikipedia adventure"/>
+    <div v-else class="logoShowInTitle"><p>{{ title }}</p></div>
   </div>
 </template>
 <style lang="scss">
-#logoShowInContainer {
+.logoShowInContainer {
   display: flex;
   width: 100%;
   height: calc(75vmin + 2em);
@@ -29,25 +29,25 @@
   }
 }
 
-  #logoShowInDepthAdjust {
+  .logoShowInDepthAdjust {
     transform-style: preserve-3d;
     animation: 6s linear 0.8s logoShowInShowUp;
     transform: translate3d(0px, 0px, 0px);/*To enable GPU acceleration */
     padding-top: 2em;
     position: absolute;
   }
-  #logoShowInLogo {
+  .logoShowInLogo {
     transform: translate3d(0px, 0px, 0px);
     animation: 6s linear 0.8s logoShowInFirstSpin;
     will-change: transform;
   }
-  #logoShowInLogo img {
+  .logoShowInLogo img {
     transform: translate3d(0px, 0px, 0px);
     filter: drop-shadow(0 0 25px rgba(18, 230, 238, 0.54));
     width: 75vmin;
     height: auto;
   }
-  #logoShowInTitle {
+  .logoShowInTitle {
     will-change: transform;
     position: absolute;
     top: 2em;
@@ -57,12 +57,12 @@
     
   }
 
-  #logoShowInTitle p {
+  .logoShowInTitle p {
     font-size: 7vw;
     text-align: center;
   }
   .body--dark {
-    #logoShowInTitle p {
+    .logoShowInTitle p {
       color: #cce7f8;
       text-shadow: 0 0 6px rgba(182, 211, 207, 0.9),
         0 0 30px rgba(182, 211, 207, 0.3), 0 0 12px rgba(18, 230, 238, 0.5),
@@ -71,7 +71,7 @@
     }
   }
   .body--light {
-    #logoShowInTitle p {
+    .logoShowInTitle p {
       color: #ebf7ff;
       text-shadow: 0 0 6px rgba(72, 84, 82, 0.9),
         0 0 30px rgba(182, 211, 207, 0.3), 0 0 12px rgba(18, 230, 238, 0.5),
@@ -133,7 +133,7 @@
   }
 </style>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, ref, onMounted } from 'vue';
 
 export default defineComponent({
   name: 'LogoShowIn',
@@ -141,11 +141,15 @@ export default defineComponent({
   props: {
     title: String
   },
-  mounted() {
-    var logo = document.getElementById("logoShowInLogo");
-    logo.addEventListener('animationend', () => {
-      logo.style.animation = "6s linear infinite logoShowInSpin";   
-    });
+  setup() {
+    var container = ref<HTMLElement>()
+    onMounted(()=>{
+      if (container.value == null) return;
+      container.value.addEventListener('animationend', () => {
+        if (container.value == null) return;
+        container.value.style.animation = "6s linear infinite logoShowInSpin";   
+      });
+    })
   }
 
 });

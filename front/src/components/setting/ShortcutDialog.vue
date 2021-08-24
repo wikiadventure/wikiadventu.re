@@ -3,7 +3,7 @@
     <div class="shortcut-dialog">
       <exit-btn @click="open = false" />
       <div class="title">
-        {{ $t("shortcut.title") }}
+        {{ t("shortcut.title") }}
       </div>
       <q-separator/>
       <div class="shortcut-list">
@@ -64,41 +64,52 @@
   }
 </style>
 <script lang="ts">
+import { i18n } from "src/boot/i18n";
 import ExitBtn from "src/components/ExitButton.vue";
+import { GameLoopType, VanillaLoopType } from "store/lobby/game/loop/type";
+import { gameLoop } from "store/lobby/state";
 
-import { defineComponent } from '@vue/composition-api';
-import { GameLoopType } from "src/store/gameData/type/gameLoop";
+import { defineComponent, ref } from 'vue';
+import { useI18n } from "vue-i18n";
 
 export default defineComponent({
   name: 'ShortcutDialog',
   components: { ExitBtn },
-  data() {
+  setup() {
+    const { t } = useI18n();
+    const open = ref(false);
     return {
-      open: false
+      open,
+      t
     }
   },
   computed: {
-    shortcuts():Shortcut[] {
-      switch (this.$store.state.gameData.gameLoop) {
-        case GameLoopType.Classic:
-        case GameLoopType.Random:
-          return [ {
-              combo: "ctrl + alt + shift",
-              desc: this.$t("shortcut.openMenu") as string
-            },
-            {
-              combo: "ctrl + alt + " + this.$t("shortcut.spaceKey"),
-              desc: this.$t("shortcut.openEndPage") as string
-            },
-            {
-              combo: "ctrl + alt + Q",
-              desc: this.$t("shortcut.disableSafeMode") as string
-            },
-          ]
+    shortcuts() {
+      var shortcuts = [];
+      shortcuts.push(
+        {
+          combo: "ctrl + alt + shift",
+          desc: i18n.global.t("shortcut.openMenu")
+        },
+        {
+          combo: "ctrl + alt + Q",
+          desc: i18n.global.t("shortcut.disableSafeMode")
+        }
+      );
+      if (hasEndPage.includes(gameLoop.value)) {
+        shortcuts.push(
+          {
+            combo: "ctrl + alt + " + i18n.global.t("shortcut.spaceKey"),
+            desc: i18n.global.t("shortcut.openEndPage") as string
+          }
+        )
       }
+      return shortcuts;
     }
   }
 });
+
+const hasEndPage:GameLoopType[] = [VanillaLoopType.Classic, VanillaLoopType.Random];
 
 interface Shortcut {
   combo:string,

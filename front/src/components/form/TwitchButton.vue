@@ -1,5 +1,5 @@
 <template>
-  <connect-btn push class="twitch-btn" :dense="$q.screen.lt.sm" v-bind="$attrs" v-on="$listeners" icon-right="mdi-twitch"/>
+  <connect-btn push class="twitch-btn" :dense="$q.screen.lt.sm" v-bind="$attrs" icon-right="mdi-twitch"/>
 </template>
 <style lang="scss">
 .twitch-btn {
@@ -10,7 +10,7 @@
 <script lang="ts">
 import ConnectBtn from './ConnectButton.vue';
 
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'TwitchBtn',

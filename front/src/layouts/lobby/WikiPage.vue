@@ -1,10 +1,10 @@
 <template>
-  <section class="wikiPage absolute-full" :class="{ 'wikifade': fade, 'endPage': endPage }">
-    <exit-btn class="q-ma-md" v-if="endPage" @click="showWikiEndPage = false"/>
+  <section class="wikiPage absolute-full" :class="{ wikifade: fade, disabled: disabled }">
+    <slot></slot>
     <div id="wikiCore" ref="wiki">
-      <h1 id="wikiTitle">{{ title }}</h1>
+      <h1 id="wikiTitle">{{ wikiArticle.title || title }}</h1>
       <div id="wikiMain">
-        <div id="wikiContent" v-html="content" :class="{ safeMode: safeMode }"></div>
+        <div id="wikiContent" v-html="wikiArticle.doc?.body.innerHTML || content" :class="{ safeMode: safeModeActive }"></div>
       </div>
     </div>
   </section>
@@ -15,7 +15,7 @@
 .wikiFade {
   opacity: 0;
 }
-.endPage a:not(.anchorLink) {
+.disabled a:not(.anchorLink) {
   cursor: not-allowed;
 }
 .wikiPage {
@@ -122,78 +122,70 @@
 }
 </style>
 <script lang="ts">
-import Vue from 'vue';
+import { nextTick, reactive, ref } from 'vue';
 import ExitBtn from 'src/components/ExitButton.vue';
-import { defineComponent } from '@vue/composition-api';
-import WikiArticle from 'src/mixins/wiki/wikiArticle';
-import manageScreenSetup from "src/mixins/game/manageScreen";
+import { defineComponent } from 'vue';
+import WikiArticle from 'store/wiki/wikiArticle';
 
-import scrollToID from 'src/mixins/scrollToID';
+import { scrollToID } from 'src/script/scrollToID';
+import { settingSetup } from 'store/setting';
+import { lobbySetup } from 'store/lobby';
+import { sendValidate } from 'store/ws/packetSender/vanilla/validate';
+import { lang } from 'store/lobby/state';
+import { Notify, useQuasar } from 'quasar'
 
 export default defineComponent({
   name: 'WikiPage',
   components: { ExitBtn },
   props: {
-    endPage:Boolean
+    disabled:Boolean,
+    //title:String,
+    //content:String
   },
   setup() {
-    var { showWikiEndPage } = manageScreenSetup();
+    var $q = useQuasar();
+    var {
+      safeModeInterrupted,
+      safeModeActive
+    } = settingSetup();
+    var wiki = ref<HTMLElement>();
+    var wikiArticle = reactive<WikiArticle>(new WikiArticle($q.platform.is.mobile));
+    var loading = ref(false);
+    var fade = ref(false);
+    var title = ref("");
+    var content = ref("");
+
     return {
-      showWikiEndPage
-    }
-  },
-  data():{
-    wikiArticle:WikiArticle,
-    title:string,
-    content:string,
-    loading:boolean,
-    fade:boolean,
-    safeModeActive:boolean,
-    unsubscribe:() => void
-  } {
-    return {
-      unsubscribe: () => {},
-      wikiArticle: null,
-      title: "",
-      content: "",
-      loading: false,
-      fade: false,
-      safeModeActive: false//use to temporarily disable safemode ( for one page )
+      safeModeActive,
+      safeModeInterrupted,
+      lang,
+      wiki,
+      wikiArticle,
+      loading,
+      fade,
+      title,
+      content
     }
   },
   meta () {
-    var vm = this as any;
-    if (!vm.endPage) return;
+    if (!this.disabled) return;
     return {
-      title: "Wiki Adventure : " + vm.title
+      title: "Wiki Adventure : " + this.title
     }
-  },
-  computed: {
-    safeMode: {
-    get():boolean {
-      return this.$store.state.gameData.safeMode && this.safeModeActive;
-    },
-    set(b:boolean) {
-      this.$store.commit('gameData/volume', b);
-      this.safeModeActive = b;
-    }
-  }
   },
   methods: {
     async requestWikiPage(url:string) {
-      var vm:any = this;
+      var vm = this;
       if (vm.loading) return;
       vm.loading = true;
       vm.safeModeActive = true;
-      await vm.fetchArticle(url).then(
-        function(article:WikiArticle) {
+      await vm.fetchArticle(url)
+        .then(article => {
           vm.fade = true;
-          setTimeout(function() {
-            vm.title = article.title;
-            vm.content = article.content;
-            Vue.nextTick().then(function () {
+          setTimeout(() => {
+            nextTick().then(() => {
               vm.loading = false;
-              vm.redirectLinks(vm.$refs.wiki);
+              vm.redirectLinks(vm.wiki);
             });
             vm.fade = false;
           }, 100);
@@ -201,15 +193,16 @@ export default defineComponent({
       ).catch((e:any) => {
         vm.loading = false;
         vm.fade = false;
-        this.$q.notify({
+        Notify.create({
           type: 'negative',
           position: 'bottom-right',
           message: 'A problem occurs when fetching wikipedia article : ' + e
         });
       }); 
     },
-    redirectLinks(doc:HTMLElement) {
-      var vm = this as any;
+    redirectLinks(doc?:HTMLElement) {
+      if(!doc) return;
+      var vm = this;
       var links = doc.getElementsByTagName("a");
       for (var i=0;i<links.length;i++) {
         links[i].addEventListener("click",function(e){
@@ -239,47 +232,31 @@ export default defineComponent({
       }
     },
     onLinkClick(link:HTMLAnchorElement) {
-      var vm = this as any;
       var linkHref = link.getAttribute("href");
       if (linkHref == undefined) return;
       //check if the link go to another wikipage and not info page or external
-      if (!vm.endPage && link.classList.contains("wikiLink")) {
+      if (!this.disabled && link.classList.contains("wikiLink")) {
         var url = linkHref.substring(6);
         var anchor = url.indexOf("#");
         if (anchor != -1) url = url.substring(0, anchor);
         url = decodeURIComponent(url);
-        vm.$store.dispatch('gameData/validateJump', url);
-        vm.requestWikiPage(url).then(() => {
-          if (anchor != -1) vm.scrollToAnchor(url.substring(anchor+1));
-          else vm.$refs.wiki.scrollTo(0,0);
+        sendValidate(url);
+        this.requestWikiPage(url).then(() => {
+          if (anchor != -1) this.scrollToAnchor(url.substring(anchor+1));
+          else this.wiki?.scrollTo(0,0);
         });
       } else if (linkHref.startsWith("#")) {
-        vm.scrollToAnchor(linkHref.substring(1));
+        this.scrollToAnchor(linkHref.substring(1));
       }
     },
-    async fetchArticle(url:string) {
-      this.wikiArticle = new WikiArticle(url, this.$store.state.gameData.lang, this.$q.platform.is.mobile);
-      return await this.wikiArticle.fetch();
+    async fetchArticle(title:string) {
+      this.safeModeInterrupted = false;
+      this.wikiArticle = new WikiArticle(this.$q.platform.is.mobile);
+      return await this.wikiArticle.fetch(title, this.lang);
     },
     scrollToAnchor(id:string) {
-      var vm = this as any;
-      scrollToID(id, vm.$refs.wiki);
+      scrollToID(id,this.wiki);
     },
-  },
-  created() {
-    var vm = this as any;
-    vm.title = vm.endPage ? vm.$t("wikiPage.noEndPageYet") as string : vm.$t("wikiPage.tipsTitle") as string;
-    vm.content = vm.endPage ? "" : vm.$t("wikiPage.tipsContent"+ (vm.$q.platform.is.mobile ? "Mobile" : "")) as string;
-  },
-  mounted() {
-    var vm = this as any;
-    function keyDown(e:KeyboardEvent) {
-      if (e.defaultPrevented) return;
-      if (e.key == "q" && e.ctrlKey) {
-        vm.safeModeActive = false;
-      }
-    }
-    document.addEventListener("keydown", keyDown, false);
   }
 });
 </script>

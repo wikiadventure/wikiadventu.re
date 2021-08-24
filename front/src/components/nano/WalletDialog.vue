@@ -1,8 +1,8 @@
 <template>
-  <q-dialog v-bind="$attrs" v-on="$listeners">
+  <q-dialog v-bind="$attrs">
     <q-card>
       <q-toolbar>
-          <q-btn round flat icon="img:https://cryptologos.cc/logos/nano-nano-logo.svg?v=006" @click="openNewPage('https://nano.org')" />
+          <q-btn round flat icon="img:https://cryptologos.cc/logos/nano-nano-logo.svg?v=006" @click="openURL('https://nano.org')" />
         <q-toolbar-title>My Nano account address</q-toolbar-title>
         <q-btn flat round dense icon="close" v-close-popup />
       </q-toolbar>
@@ -29,42 +29,41 @@
 }
 </style>
 <script lang="ts">
-import { copyToClipboard, openURL } from 'quasar';
+import { copyToClipboard, Notify, openURL } from 'quasar';
 
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'WalletDialog',
-  data():{
-    nanoAddress:string
-  } {
-    return {
-      nanoAddress: "nano_3tobgnzzk9dgktg7gwiq94rwqcooeihgp8oz6s31xak798mgtgmn881t58cq"
-    }
-  },
-  methods: {
-    openNewPage(url: string) {
-      openURL(url);
-    },
-    clip() {
-      var vm = this;
-      copyToClipboard(this.nanoAddress)
+  setup() {
+    const nanoAddress = "nano_3tobgnzzk9dgktg7gwiq94rwqcooeihgp8oz6s31xak798mgtgmn881t58cq";
+
+    function clip() {
+      const { t } = useI18n();
+      copyToClipboard(nanoAddress)
       .then(() => {
-        vm.$q.notify({
+        Notify.create({
           type: 'annonce',
           timeout: 1000,
           position: 'bottom-right',
-          message: vm.$t('copySuccess') as string
+          message: t('copySuccess') as string
         });
       })
       .catch(() => {
-        vm.$q.notify({
+        Notify.create({
           type: 'error',
           timeout: 1000,
           position: 'bottom-right',
-          message: vm.$t('copyFail') as string
+          message: t('copyFail') as string
         });
       })
+    }
+
+    return {
+      nanoAddress,
+      openURL,
+      clip
     }
   }
 });

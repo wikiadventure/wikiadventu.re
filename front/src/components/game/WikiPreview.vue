@@ -1,11 +1,11 @@
 <template>
-  <div class="wiki-preview" v-bind="$attrs" v-on="$listeners">
-    <img class="img" v-if="wikiPreview.thumbnail != null" :src="wikiPreview.thumbnail.source" :width="wikiPreview.thumbnail.width" :height="wikiPreview.thumbnail.height" />
+  <div class="wiki-preview">
+    <img class="img" v-if="wikiPreview?.thumbnail != null" :src="wikiPreview?.thumbnail?.source" :width="wikiPreview?.thumbnail?.width" :height="wikiPreview?.thumbnail?.height" />
     <div class="img" v-else >
       <q-icon size="40px" name="mdi-help" />
     </div>
-    <h3>{{ wikiPreview.title }}<slot></slot></h3>
-    <p>{{ wikiPreview.description }}</p>
+    <h3>{{ beforeTitle + (wikiPreview?.title || "???" ) }}<slot></slot></h3>
+    <p>{{ wikiPreview?.description || "???" }}</p>
   </div>
 </template>
 <style lang="scss">
@@ -50,8 +50,8 @@
 }
 </style>
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api';
-import { WikiPreview } from 'src/store/gameData/state';
+import { WikiPreview } from 'store/vote/type';
+import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
   name: "WikiPreview",
@@ -60,6 +60,10 @@ export default defineComponent({
       type: Object as PropType<WikiPreview>,
       required: true
     },
+    beforeTitle: {
+      type: String,
+      default: ''
+    }
   }
 })
 </script>

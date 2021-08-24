@@ -1,23 +1,19 @@
 <template>
   <q-input
-    @input="onInput($event)" name="slot" outlined hint="" type="number"
-    :label="$t('input.slot')" :value="getSlot" :min="2" :max="50"
-    :dense="$q.screen.lt.sm" v-bind="$attrs" v-on="$listeners">
+    name="slot" outlined hint="" type="number"
+    v-model="slot" :min="2" :max="50"
+    :dense="$q.screen.lt.sm" v-bind="$attrs">
   </q-input>
 </template>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { slot } from 'store/connect/state';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'SlotSelect',
-  methods: {
-    onInput(v:any) {
-      this.$store.commit('globalForm/setSlot', v);
-    }
-  },
-  computed: {
-    getSlot():string {
-      return this.$store.state.globalForm.slot;
+  setup() {
+    return {
+      slot
     }
   }
 });

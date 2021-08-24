@@ -25,8 +25,8 @@
           </q-tab-panels>
 
           <q-tabs v-model="privateTab" dense class="connect-sub-tabs" align="justify" narrow-indicator>
-            <q-tab :label="$q.screen.lt.sm ? '' : $t('join') " name="PrivateJoin" icon="mdi-account-arrow-right"></q-tab>
-            <q-tab :label="$q.screen.lt.sm ? '' : $t('create') " name="PrivateCreate" icon="mdi-account-edit"></q-tab>
+            <q-tab :label="$q.screen.lt.sm ? '' : t('join') " name="PrivateJoin" icon="mdi-account-arrow-right"></q-tab>
+            <q-tab :label="$q.screen.lt.sm ? '' : t('create') " name="PrivateCreate" icon="mdi-account-edit"></q-tab>
           </q-tabs>
 
         </q-tab-panel>
@@ -46,18 +46,18 @@
           </q-tab-panels>
 
           <q-tabs v-model="twitchTab" dense class="connect-sub-tabs" align="justify" narrow-indicator>
-            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : $t('join') " name="TwitchJoin" icon="svguse:icons/twitch.svg#join"></q-tab>
-            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : $t('create') " name="TwitchCreate" icon="svguse:icons/twitch.svg#create"></q-tab>
+            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : t('join') " name="TwitchJoin" icon="svguse:icons/twitch.svg#join"></q-tab>
+            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : t('create') " name="TwitchCreate" icon="svguse:icons/twitch.svg#create"></q-tab>
           </q-tabs>
 
         </q-tab-panel>
       </q-tab-panels>
 
       <q-tabs v-model="tab" dense class="connect-tabs" align="justify" narrow-indicator>
-        <q-tab :label="$q.screen.lt.md ? '' : $t('home') " name="Home" icon="mdi-home"></q-tab>
-        <q-tab :label="$q.screen.lt.md ? '' : $t('publicLobby') " name="PublicJoin" icon="mdi-earth"></q-tab>
-        <q-tab :label="$q.screen.lt.md ? '' : $t('privateLobby') " name="Private" icon="mdi-lock"></q-tab>
-        <q-tab class="twitchTab" :label="$q.screen.lt.md ? '' : $t('twitchLobby')" name="Twitch" icon="mdi-twitch"></q-tab>
+        <q-tab :label="$q.screen.lt.md ? '' : t('home') " name="Home" icon="mdi-home"></q-tab>
+        <q-tab :label="$q.screen.lt.md ? '' : t('publicLobby') " name="PublicJoin" icon="mdi-earth"></q-tab>
+        <q-tab :label="$q.screen.lt.md ? '' : t('privateLobby') " name="Private" icon="mdi-lock"></q-tab>
+        <q-tab class="twitchTab" :label="$q.screen.lt.md ? '' : t('twitchLobby')" name="Twitch" icon="mdi-twitch"></q-tab>
       </q-tabs>
     </div>
   </q-layout>
@@ -125,79 +125,67 @@ import PublicJoin from './tab/PublicJoin.vue';
 import TwitchCreate from './tab/TwitchCreate.vue';
 import TwitchJoin from './tab/TwitchJoin.vue';
 import Index from './tab/Index.vue';
-import { LobbyType } from 'src/store/gameData/state';
-import { Lang } from 'src/i18n';
-import { error, ErrorCode } from 'src/mixins/connect';
+import { useRoute } from "vue-router";
+import { ErrorCode, InfoStatus, InfoResponse, isSucess } from "store/connect/type";
 
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, ref } from 'vue';
+import { LobbyType } from 'store/lobby/type';
+import { Notify } from 'quasar';
+import { id } from 'store/lobby/state';
+import { twitchName } from 'store/connect/twitch/state';
+import { notifyError } from 'store/connect/action';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'ConnectMenu',
   components: { PrivateCreate, PrivateJoin, PublicJoin, TwitchCreate, TwitchJoin, Index },
-  data():{
-    tab:string,
-    privateTab:string,
-    twitchTab:string,
-  } {
-    return {
-      tab: 'Home',
-      privateTab: 'PrivateCreate',
-      twitchTab: 'TwitchCreate'
+  setup() {
+    const tab = ref('Home');
+    const privateTab = ref('PrivateCreate');
+    const twitchTab = ref('TwitchCreate');
+
+        //check if the lobby provided in the url exist
+    const route = useRoute();
+    const { t } = useI18n();
+    const vm = this;
+    if (route.params.id != undefined) {
+      const isTwitch = route.path.startsWith("/twitchConnect/")
+      fetch('/api/info/'+(isTwitch ? "twitch:":"")+ route.params.id)
+        .then(r=> r.json())
+        .then((res:InfoResponse<unknown>) => {
+          if (isSucess(res)) {
+            if ([LobbyType.Public, LobbyType.Private].includes(res.lobbyType)) {
+              id.value = res.lobbyID;
+              if (res.lobbyType == LobbyType.Public) {
+                tab.value = "PublicJoin";
+              } else if (res.lobbyType == LobbyType.Private) {
+                tab.value = "Private";
+                privateTab.value = "PrivateJoin";
+              }
+            } else if (res.lobbyType == LobbyType.Twitch) {
+              twitchName.value = res.lobbyID
+              tab.value = "Twitch";
+              twitchTab.value = "TwitchJoin";
+            }
+          } else {
+            if (res.status == InfoStatus.NotFound) {
+              Notify.create({
+                type: 'negative',
+                position: 'top',
+                message: t('connectError.'+(isTwitch ? 'noLobbyFoundWithChannelName' : 'noLobbyFoundWithID')) + ' ' + id.value
+              });
+            }
+          }
+      }).catch(e => {
+        notifyError(ErrorCode.NoInternet, e);
+      });
     }
-  },
-  created() {
-    //check if the lobby provided in the url exist
-    var vm = this;
-    vm.$store.commit('globalForm/defaultLang');
-    if (vm.$route.params.id == undefined) return;
-    var id = vm.$route.params.id;
-    var isTwitch = (vm.$route.path as string).startsWith("/twitchConnect/")
-    console.log(vm.$route);
-    fetch('/api/info/'+(isTwitch ? "twitch:":"")+ id)
-    .then(function(response:Response):Promise<InfoResponse> {
-      return response.json();
-    }).then(function(json) {
-      if (json.status == InfoStatus.Found) {
-        vm.$store.commit('globalForm/setLobbyID', json.lobbyID);
-        vm.$store.commit('globalForm/setLang', json.lobbyLang);
-        if (json.lobbyType == LobbyType.Public) {
-          vm.tab = "PublicJoin";
-        } else if (json.lobbyType == LobbyType.Private) {
-          vm.tab = "Private";
-          vm.privateTab = "PrivateJoin";
-        } else if (json.lobbyType == LobbyType.Twitch) {
-          vm.tab = "Twitch";
-          vm.twitchTab = "TwitchJoin";
-        }
-      } else {
-        if (json.status == InfoStatus.NotFound) {
-          vm.$q.notify({
-            type: 'negative',
-            position: 'top',
-            message: vm.$t('connectError.'+(isTwitch ? 'noLobbyFoundWithChannelName' : 'noLobbyFoundWithID')) + ' ' + id
-          });
-        }
-      }
-    }).catch(function(error) {
-      error(ErrorCode.NoInternet, error);
-    });
+    return {
+      tab,
+      privateTab,
+      twitchTab,
+      t
+    }
   }
 });
-
-interface InfoResponse {
-    status:InfoStatus,
-    lobbyID?:String,
-    lobbyType?:LobbyType,
-    lobbyLang?:Lang,
-    gameMode?:number,
-    gamePhase?:number,
-    slot?:number,
-    players?:number,
-    error?:String
-}
-enum InfoStatus {
-  Found = "Found",
-  NotFound = "NotFound",
-  ServerError = "ServerError"
-}
 </script>

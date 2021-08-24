@@ -1,11 +1,11 @@
 <template>
-  <connect-form :title="$t('menu.joinPublicLobby')">
+  <connect-form :title="t('menu.joinPublicLobby')">
     <lang-select/>
     <id-input/>
     <pseudo-input/>
     <game-loop-select/>
     <template v-slot:button>
-      <connect-btn @click="submit" :label="$t('join')"/>
+      <connect-btn @click="submit" :label="t('join')"/>
     </template>
   </connect-form>
 </template>
@@ -20,16 +20,21 @@ import PasswordInput from 'src/components/form/PasswordInput.vue';
 import PseudoInput from 'src/components/form/PseudoInput.vue';
 import IdInput from 'src/components/form/IdInput.vue';
 import GameLoopSelect from 'src/components/form/GameLoopSelect.vue';
-import { login, ConnectEvent, ConnectType } from 'src/mixins/connect';
+import { ConnectEvent, ConnectType } from 'store/connect/type';
+import { login } from 'store/connect/action';
 
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'PublicJoin',
   components: { ConnectForm, ConnectBtn, LangSelect, PasswordInput, PseudoInput, IdInput, GameLoopSelect },
-  data() {
+  setup() {
+    const { t } = useI18n();
+    const password = ref("");
     return {
-      password: ""
+      password,
+      t
     }
   },
   methods: {

@@ -1,15 +1,17 @@
 <template>
   <q-form class="vote-input">
     <preview :wikiPreview="votePreview" class="vote">
-      <q-btn round dense flat icon="mdi-delete" class="voteDelete" @click="resetVote()"></q-btn>
+      <q-btn round dense flat icon="mdi-delete" class="voteDelete" @click="deleteVote()"></q-btn>
     </preview>
     
-    <q-input @focus="voteInputFocus = true" @blur="blur()" 
-            dense class="q-ma-sm" @keydown.enter.prevent="searchVote(voteInput)" 
-            maxlength="255" outlined v-model="voteInput" :label="$t('gameTab.vote.submitVote')" 
+    <q-input ref="voteInput" @focus="voteInputFocus = true" 
+            @blur="setTimeout(() => voteInputFocus = false, 250)"
+            @change="loadInputSuggestion()"
+            dense class="q-ma-sm" @keydown.enter.prevent="unfocus();sendVote(vote)" 
+            maxlength="255" outlined v-model="voteInput" :label="t('gameTab.vote.submitVote')" 
             spellcheck="false" >
       <template v-slot:after>
-          <q-btn round dense flat icon="mdi-send" @click="searchVote(voteInput)"/>
+          <q-btn round dense flat icon="mdi-send" @click="unfocus();searchVote(voteInput)"/>
       </template>
     </q-input>
     
@@ -54,63 +56,40 @@
 }
 </style>
 <script lang="ts">
-import { debounce } from 'quasar';
-import { WikiPreview, WikiSuggestion } from 'src/store/gameData/state';
 import preview from "components/game/WikiPreview.vue";
 
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, ref } from 'vue';
+import { voteSetup } from 'store/vote';
+import { sendVote } from 'store/ws/packetSender/vanilla/vote';
+import { useI18n } from "vue-i18n";
 
 export default defineComponent({
   name: "VoteInput",
   components: { preview },
-  data():{
-    voteInputFocus: boolean,
-  } {
+  setup() {
+    const { t } = useI18n();
+    var {
+      vote,
+      voteInput,
+      voteInputFocus,
+      deleteVote,
+      loadInputSuggestions
+    } = voteSetup();
+
+    var input = ref<any>();
+
+    function unfocus(){(input.value.blur() as any).blur()};
+    
     return {
-      voteInputFocus: false,
+      vote,
+      voteInput,
+      voteInputFocus,
+      deleteVote,
+      loadInputSuggestions,
+      sendVote,
+      unfocus,
+      t
     }
-  },
-  computed: {
-    votePreview():WikiPreview {
-      let v = this.$store.state.gameData.vote;
-      return {
-        title: v.title || this.$t('gameTab.vote.noVoteTitle'),
-        description: v.description == String.fromCharCode(24) ? this.$t('gameTab.vote.noPageFoundDescription') : (v.description || this.$t('gameTab.vote.noVoteDescription')),
-        thumbnail: v.thumbnail
-      };
-    },
-    voteInput: {
-      get():string {
-        return this.$store.state.gameData.vote.input;
-      },
-      set(v:String) {
-        this.$store.commit('gameData/voteInput', v);
-        this.loadSuggestions();
-      } 
-    },
-    suggestions():WikiSuggestion[] {
-      return this.$store.state.gameData.suggestions;
-    }
-  },
-  methods: {
-    searchVote(v:string) {
-      this.$store.dispatch('gameData/searchVote', v);
-    },
-    submitVote(s:WikiPreview) {
-      this.$store.dispatch('gameData/submitVote', s);
-    },
-    resetVote() {
-      this.$store.dispatch('gameData/resetVote');
-    },
-    loadSuggestions() {
-      this.$store.commit('gameData/loadSuggestions');
-    },
-    blur() {
-      setTimeout(() => this.voteInputFocus = false, 250);
-    }
-  },
-  created() {
-    this.loadSuggestions = debounce(this.loadSuggestions, 250);
   }
 })
 </script>

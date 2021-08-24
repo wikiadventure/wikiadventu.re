@@ -1,5 +1,5 @@
 <template>
-    <q-btn icon="mdi-close" round class="exit-btn q-ma-xs" size="xs" v-bind="$attrs" v-on="$listeners"></q-btn>
+    <q-btn icon="mdi-close" round class="exit-btn q-ma-xs" size="xs" v-bind="$attrs"></q-btn>
 </template>
 <style>
 .exit-btn {
@@ -18,7 +18,7 @@
 }
 </style>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ExitBtn',

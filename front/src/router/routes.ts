@@ -1,7 +1,7 @@
-import { Store } from '../store';
-import { RouteConfig } from 'vue-router';
+import { uuid } from 'store/player/state';
+import { RouteRecordRaw } from 'vue-router';
 
-const routes: RouteConfig[] = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('pages/Connect.vue')
@@ -9,7 +9,7 @@ const routes: RouteConfig[] = [
   {
     path: '/play/:id',
     beforeEnter: (to, from, next) => {
-      if (Store.state.gameData.uuid == "") {
+      if (uuid.value == "") {
         next('/connect/'+to.params.id);
       } else {
         next();
@@ -22,7 +22,7 @@ const routes: RouteConfig[] = [
   {
     path: '/twitch/:id',
     beforeEnter: (to, from, next) => {
-      if (Store.state.gameData.uuid == "") {
+      if (uuid.value == "") {
         next('/twitchConnect/'+to.params.id);
       } else {
         next();
@@ -46,9 +46,10 @@ const routes: RouteConfig[] = [
   },
   {
     path: '/api/:data',
+    redirect: "/",
     beforeEnter: (to, from, next) => {
       if (to.params.data == "twitch") {
-        window.opener.postMessage(to.query, window.location.origin);
+        window.opener?.postMessage(to.query, window.location.origin);
       }
       fetch(window.location.origin+to.fullPath).then(() => window.close());
     },
@@ -56,21 +57,9 @@ const routes: RouteConfig[] = [
   // Always leave this as last one,
   // but you can also remove it
   {
-    path: '*',
-    component: () => import('pages/Error404.vue')
-  }
+    path: '/:catchAll(.*)*',
+    component: () => import('pages/Error404.vue'),
+  },
 ];
-
-if (process.env.DEV) {
-  routes.push(
-    {
-      path: '/test',
-      component: () => {
-        return import('pages/gameMode/Classic.vue');
-      }
-    }
-  );
-}
-
 
 export default routes;

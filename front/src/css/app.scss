@@ -51,6 +51,14 @@ body, html {
   }
 }
 
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.25s ease-in-out;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
 .action-btn {
   background: var(--wa-color-dark-teal);
   color: var(--wa-color-blue-white);

@@ -1,10 +1,10 @@
 <template>
-  <q-input outlined v-model="pseudo" :label="$t('input.pseudo')"
+  <q-input outlined v-model="pseudo" :label="t('input.pseudo')"
           name="pseudo" spellcheck="false" :dense="$q.screen.lt.sm"
-          v-bind="$attrs" v-on="$listeners"
-          :rules="[ v => v.length >= 3 || $t('input.hint.minChars3'),
-                    v => v.length <= 25 || $t('input.hint.maxChars25'),
-                    v => !v.match(/[<>:|%$\/\\]/g) || $t('input.hint.restrictedChars')]">
+          v-bind="$attrs"
+          :rules="[ v => v.length >= 3 || t('input.hint.minChars3'),
+                    v => v.length <= 25 || t('input.hint.maxChars25'),
+                    v => !v.match(/[<>:|%$\/\\]/g) || t('input.hint.restrictedChars')]">
     <template v-slot:append>
       <q-icon class="iconButton" name="mdi-dice-5" @click="randomizePseudo()"></q-icon>
     </template>
@@ -23,24 +23,24 @@
 </style>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api';
+import { defineComponent, ref } from 'vue';
+import { connectSetup } from 'store/connect'
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'PseudoInput',
-  methods: {
-    randomizePseudo() {
-      this.$store.commit('globalForm/randomizePseudo');
+  setup() {
+    const { t } = useI18n();
+    var {
+      pseudo,
+      randomizePseudo
+    } = connectSetup();
+    
+    return {
+      pseudo,
+      randomizePseudo,
+      t
     }
-  },
-  computed: {
-    pseudo: {
-      get: function() {
-        return this.$store.state.globalForm.pseudo;
-      },
-      set: function(v) {
-        this.$store.commit('globalForm/setPseudo', v);
-      }
-	  }
   }
 });
 </script>

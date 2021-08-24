@@ -1,12 +1,12 @@
 <template>
-  <connect-form :title="$t('menu.createTwitchLobby')">
+  <connect-form :title="t('menu.createTwitchLobby')">
     <lang-select/>
     <pseudo-input/>
     <password-input v-model="password"/>
     <game-loop-select/>
     <slot-select/>
     <template v-slot:button>
-      <twitch-btn @click="submit" :label="$t('menu.button.createWithTwitch')"/>
+      <twitch-btn @click="submit" :label="t('menu.button.createWithTwitch')"/>
     </template>
   </connect-form>
 </template>
@@ -21,16 +21,21 @@ import PasswordInput from 'src/components/form/PasswordInput.vue';
 import PseudoInput from 'src/components/form/PseudoInput.vue';
 import GameLoopSelect from 'src/components/form/GameLoopSelect.vue';
 import SlotSelect from 'src/components/form/SlotSelect.vue';
-import { login, ConnectEvent, ConnectType } from 'src/mixins/connect';
+import { ConnectEvent, ConnectType } from 'store/connect/type';
+import { login } from 'store/connect/action';
 
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'TwitchCreate',
   components: { ConnectForm, TwitchBtn, LangSelect, PasswordInput, PseudoInput, GameLoopSelect, SlotSelect },
-  data() {
+  setup() {
+    const { t } = useI18n();
+    const password = ref("");
     return {
-      password: ""
+      password,
+      t
     }
   },
   methods: {

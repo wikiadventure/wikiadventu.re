@@ -12,7 +12,7 @@
       </q-item>
     </q-list>
     <q-form class="chatForm">
-      <q-input dense class="chatInput" maxlength="512" outlined v-model="messageInput" @keydown.enter.prevent="submitMessage()" :label="$t('chatTab.send')" spellcheck="false">
+      <q-input dense class="chatInput" maxlength="512" outlined v-model="messageInput" @keydown.enter.prevent="submitMessage()" :label="t('chatTab.send')">
         <template v-slot:after>
           <q-btn round dense flat icon="mdi-send" class="chatSubmit" @click="submitMessage()"/>
         </template>
@@ -67,41 +67,48 @@
   }
 </style>
 <script lang="ts">
-import { date } from 'quasar'
+import { date } from 'quasar';
 
-import { defineComponent } from '@vue/composition-api';
-import { Message } from 'src/store/gameData/state';
+import { defineComponent, onUnmounted } from 'vue';
+import { onMessage, WsMessage } from 'store/ws/packetHandler/vanilla/message';
+import { notifSound } from 'store/audio/vanilla/notif';
+import { gameMenuTab, showGameMenu } from 'store/gameLayoutManager/state';
+import { chatSetup } from 'store/chat';
+import { players } from 'store/player/state';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'ChatTab',
-  data() {
-    return {
-      messageInput: ""
+  setup() {
+    const { t } = useI18n();
+    function messageEvent(payload:WsMessage) {
+      if (!(showGameMenu.value && gameMenuTab.value == "chat")) {
+        notifSound.play();
+      } 
     }
-  },
-  computed: {
-    messages():Array<Message> {
-      return this.$store.state.gameData.messages.slice().reverse();
+    var unsubMessage =  onMessage.subscribe(messageEvent);
+
+    onUnmounted(unsubMessage);
+    
+    var {
+      messages,
+      messageInput,
+      submitMessage
+    } = chatSetup();
+
+    return {
+      messages,
+      messageInput,
+      submitMessage,
+      t
     }
   },
   methods: {
     getPseudo(id:number) {
-      if (id == -1) return "";
-      for (let p of this.$store.state.gameData.players) {
-        if (p.id == id) {
-          return p.pseudo;
-        }
-      }
-      return "";
+      return id == -1 ? "" : players.value.find(p=>p.id==id)?.pseudo || "";
     },
     getFormatTime(timeStamp:number):string {
       return date.formatDate(timeStamp, 'HH:mm');
-    },
-    submitMessage(e:Event) {
-      if (!this.messageInput.match(/^\s*$/g)) {
-        this.$store.dispatch('gameData/sendMessage', this.messageInput);
-        this.messageInput = "";
-      }
     }
   }
 });

@@ -27,7 +27,7 @@
  * @todo Make a custom error page 
  * @body The error page should follow the design of the connection page
  */
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'Error404',

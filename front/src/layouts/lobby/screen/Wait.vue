@@ -8,18 +8,18 @@
       <div class="wait-players">
         <div v-for="player in players" :key="player.id">
           <div>
-            <q-icon :class="{ invisible: player.id != owner }" size="xs" class="owner" name="mdi-crown"/>
+            <q-icon :class="{ invisible: player.id != ownerId }" size="xs" class="owner" name="mdi-crown"/>
           </div>
-          <div :class="{ self: player.id == self }">{{ player.pseudo }}</div>
+          <div :class="{ self: player.id == selfId }">{{ player.pseudo }}</div>
         </div>
       </div>
       <q-separator/>
       <div class="wait-action justify-evenly">
-        <q-btn push class="action-btn" :label="$t('invite')" @click="invite()" icon="mdi-link-variant"/>
+        <q-btn push class="action-btn" :label="t('invite')" @click="invite()" icon="mdi-link-variant"/>
         <div><!--Only to display tooltip over the disabled q btn -->
-          <q-btn :disable="self != owner" push class="action-btn" :label="$t('start')" @click="start()" icon="mdi-check-bold"/>
-          <q-tooltip v-if="self != owner"  anchor="top middle" self="bottom middle" :offset="[10, 10]">
-            Only <q-icon size="xs" class="owner" name="mdi-crown"/> {{ ownerPseudo }} can choose to start
+          <q-btn :disable="isOwner" push class="action-btn" :label="t('start')" @click="start()" icon="mdi-check-bold"/>
+          <q-tooltip v-if="isOwner"  anchor="top middle" self="bottom middle" :offset="[10, 10]">
+            Only <q-icon size="xs" class="owner" name="mdi-crown"/> {{ owner.pseudo }} can choose to start
           </q-tooltip>
         </div>
       </div>
@@ -116,56 +116,53 @@
 }
 </style>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
-import { Player } from 'src/store/gameData/state';
-import { copyToClipboard } from 'quasar';
+import { defineComponent } from 'vue';
+import { copyToClipboard, Notify } from 'quasar';
+import { playerSetup } from 'store/player';
+import { slot } from 'store/lobby/state';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'Wait',
-  computed: {
-    players():Player[] {
-      return (this.$store.state.gameData.players as Player[]).filter((p) => {return p.isConnected});
-    },
-    owner():number {
-      return this.$store.state.gameData.owner;
-    },
-    ownerPseudo():string {
-      var players = this.$store.state.gameData.players as Player[];
-      for (var p of players) {
-        if (p.id == this.$store.state.gameData.owner) return p.pseudo;
-      }
-      return;
-    },
-    self():number {
-      return this.$store.state.gameData.self;
-    },
-    slot():number {
-      return this.$store.state.gameData.slot;
-    }   
-  },
-  methods: {
-    start() {
-      this.$store.dispatch('gameData/sendStart');
-    },
-    invite() {
-      var vm = this;
+  setup() {
+    const { t } = useI18n();
+    var {
+      players,
+      selfId,
+      ownerId,
+      owner,
+      isOwner
+    } = playerSetup();
+
+    function invite() {
       copyToClipboard(window.location.href)
       .then(() => {
-        vm.$q.notify({
+        Notify.create({
           type: 'annonce',
           position: 'bottom-right',
           timeout: 1000,
-          message: vm.$t('copySuccess') as string
+          message: t('copySuccess')
         });
       })
       .catch(() => {
-        vm.$q.notify({
+        Notify.create({
           type: 'error',
           position: 'bottom-right',
           timeout: 1000,
-          message: vm.$t('copyFail') as string
+          message: t('copyFail')
         });
       });
+    }
+
+    return {
+      players,
+      selfId,
+      ownerId,
+      owner,
+      isOwner,
+      slot,
+      invite,
+      t
     }
   }
 });

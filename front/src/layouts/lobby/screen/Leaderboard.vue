@@ -4,20 +4,20 @@
     <div id="grid-leaderboard">
       <div class="grid-leaderboard-podium grid-leaderboard-2">
         <div id="position-2"><img src="svg/podium2neonV2.svg" alt="number 2"/></div>
-        <div id="name-2">{{ playerByScore[1] ? playerByScore[1].pseudo : "" }}</div>
-        <div id="score-2">{{ playerByScore[1] ? playerByScore[1].score : "" }}</div>
+        <div id="name-2">{{ playersByScore[1] ? playersByScore[1].pseudo : "" }}</div>
+        <div id="score-2">{{ playersByScore[1] ? playersByScore[1].score : "" }}</div>
       </div>
       <div class="grid-leaderboard-podium grid-leaderboard-1">
         <div id="position-1"><img src="svg/podium1neonV2.svg" alt="number 1"/></div>
-        <div id="name-1">{{ playerByScore[0] ? playerByScore[0].pseudo : "" }}</div>
-        <div id="score-1">{{ playerByScore[0] ? playerByScore[0].score : "" }}</div>
+        <div id="name-1">{{ playersByScore[0] ? playersByScore[0].pseudo : "" }}</div>
+        <div id="score-1">{{ playersByScore[0] ? playersByScore[0].score : "" }}</div>
       </div>
       <div class="grid-leaderboard-podium grid-leaderboard-3">
         <div id="position-3"><img src="svg/podium3neonV2.svg" alt="number 3"/></div>
-        <div id="name-3">{{ playerByScore[2] ? playerByScore[2].pseudo : "" }}</div>
-        <div id="score-3">{{ playerByScore[2] ? playerByScore[2].score : "" }}</div>
+        <div id="name-3">{{ playersByScore[2] ? playersByScore[2].pseudo : "" }}</div>
+        <div id="score-3">{{ playersByScore[2] ? playersByScore[2].score : "" }}</div>
       </div>
-      <div class="grid-leaderboard-item" v-for="(p, i) in playerByScore.slice(3)" :key="p.id">
+      <div class="grid-leaderboard-item" v-for="(p, i) in playersByScore.slice(3)" :key="p.id">
         <div class="position">{{ i+3 }}</div>
         <div class="name">{{ p.pseudo }}</div>
         <div class="score">{{ p.score }}</div>
@@ -187,23 +187,18 @@
 </style>
 <script lang="ts">
 import ExitBtn from 'src/components/ExitButton.vue';
+import { showLeaderboard } from 'store/gameLayoutManager/state';
+import { playersByScore } from 'store/player/computed';
 
-import { defineComponent } from '@vue/composition-api';
-import { Player } from 'src/store/gameData/state';
-import manageScreenSetup from "src/mixins/game/manageScreen";
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'Leaderboard',
   components: { ExitBtn },
   setup() {
-    var { showLeaderboard } = manageScreenSetup();
     return {
-      showLeaderboard
-    }
-  },
-  computed: {
-    playerByScore():Player[] {
-      return this.$store.getters['gameData/playersByScore'];
+      showLeaderboard,
+      playersByScore
     }
   }
 });

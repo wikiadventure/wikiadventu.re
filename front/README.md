@@ -1,6 +1,6 @@
-# Quasar App (wiki-adventure-quasar)
+# Wiki Adventure (wiki-adventure-front)
 
-wiki adventure
+Wiki Adventure is a multiplayer game combining culture and speed. Players compete against each other on Wikipedia and have to scroll through the pages as quickly as possible to win.
 
 ## Install the dependencies
 ```bash
@@ -19,4 +19,4 @@ quasar build
 ```
 
 ### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+See [Configuring quasar.conf.js](https://v2.quasar.dev/quasar-cli/quasar-conf-js).

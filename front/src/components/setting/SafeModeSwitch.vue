@@ -1,12 +1,12 @@
 <template>
   <q-toggle class="safeModeToggle q-ma-none"
-            v-model="theme"
+            v-model="safeMode"
             checked-icon="check"
             unchecked-icon="clear"
             size="lg"
             color="black">
     <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-      {{ $t("settingTab.safeModeTooltip") }}
+      {{ t("settingTab.safeModeTooltip") }}
     </q-tooltip>
   </q-toggle>
 </template>
@@ -36,18 +36,17 @@
 </style>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { safeMode } from 'store/setting/state';
+import { defineComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'SafeModeSwitch',
-  computed: {
-    theme: {
-      get() {
-        return this.$store.state.gameData.safeMode;
-      },
-      set(b:boolean) {
-        return this.$store.commit('gameData/safeMode', b);
-      }
+  setup() {
+    const { t } = useI18n();
+    return {
+      safeMode,
+      t
     }
   }
 });

@@ -1,9 +1,10 @@
 <template>
   <div class="game-mode-classic absolute-full">
-    <game-audio ref="gameAudio" />
     <wait v-if="gamePhase == 0" />
     <wiki-page ref="wikiPage" v-else />
-    <wiki-page ref="wikiEndPage" class="right-panel" :class="{ 'hideEndPage': !showWikiEndPage }" endPage/>
+    <wiki-page ref="wikiEndPage" class="right-panel" :class="{ 'hideEndPage': !showWikiEndPage }" endPage>
+      <exit-btn class="q-ma-md" @click="showWikiEndPage = false"/>
+    </wiki-page>
     <transition name="fade"><page-history v-show="showPageHistory" /></transition>
     <transition name="fade"><leaderboard v-show="showLeaderboard" /></transition>
     <transition name="fade"><round-win v-show="showRoundWin" /></transition>
@@ -14,13 +15,7 @@
 .game-mode-classic {
   overflow: hidden;
 }
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.25s ease-in-out;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-.right-panel {
+.wiki-end-page {
   transition: transform 0.15s ease-in-out;
   filter: drop-shadow(3px 3px 15px black);
 }
@@ -35,120 +30,146 @@ import RoundWin from 'src/layouts/lobby/screen/RoundWin.vue';
 import Leaderboard from 'src/layouts/lobby/screen/Leaderboard.vue';
 import Wait from 'src/layouts/lobby/screen/Wait.vue';
 import PageHistory from 'src/layouts/lobby/screen/PageHistory.vue';
-import GameAudio from 'src/components/audio/GameAudio.vue';
-import TouchSurfaceHandler from 'src/mixins/touchSurfaceHandler';
 
-import { Player } from 'src/store/gameData/state';
-import { GameState, WinRound, VoteResult, WsMessage, Rollback } from 'src/store/gameData/actions';
-import manageScreenSetup from "src/mixins/game/manageScreen";
-import subscribeActionSetup from "src/mixins/game/subscribeAction";
-
-import { computed, ComputedRef, defineComponent, onMounted, onUnmounted, ref } from '@vue/composition-api';
-import { PhaseType } from 'src/store/gameData/type/phase';
-import { Store } from 'src/store';
-import { Notify } from 'quasar';
-import { i18n } from 'src/boot/i18n';
+import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import { Notify, useQuasar } from 'quasar';
+import { gameLayoutManagerSetup } from 'store/gameLayoutManager';
+import { VanillaPhaseType } from 'store/lobby/game/phase/type';
+import { lobbySetup } from 'store/lobby';
+import { onRollback, rollbackHandler, WsRollback } from 'store/ws/packetHandler/vanilla/rollback';
+import { gamePhaseHandler, onGamePhase, WsGamePhase } from 'store/ws/packetHandler/vanilla/gamePhase';
+import { onWinRound, winRoundHandler, WsWinRound } from 'store/ws/packetHandler/vanilla/winRound';
+import { onVoteResult, voteResultHandler, WsVoteResult } from 'store/ws/packetHandler/vanilla/voteResult';
+import { countDownSound } from 'store/audio/vanilla/countDown';
+import TouchSurfaceHandler from 'src/script/touchSurfaceHandler';
+import { connect } from 'store/ws/action';
+import { useI18n } from 'vue-i18n';
+import { PacketHandlers } from 'store/ws/packetHandler';
+import { messageHandler } from 'store/ws/packetHandler/vanilla/message';
+import { pathHandler } from 'store/ws/packetHandler/vanilla/path';
+import { playerJoinHandler } from 'store/ws/packetHandler/vanilla/playerJoin';
+import { playerLeftHandler } from 'store/ws/packetHandler/vanilla/playerLeft';
+import { setOwnerHandler } from 'store/ws/packetHandler/vanilla/setOwner';
+import { updateScoreHandler } from 'store/ws/packetHandler/vanilla/updateScore';
+import { voteSkipHandler } from 'store/ws/packetHandler/vanilla/voteSkip';
 
 export default defineComponent({
   name: 'ClassicMode',
-  components: { ClassicSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory, GameAudio },
+  components: { ClassicSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory },
   setup() {
+    PacketHandlers.splice(0, PacketHandlers.length);
+    PacketHandlers.push(
+      messageHandler,
+      gamePhaseHandler,
+      pathHandler,
+      playerJoinHandler,
+      playerLeftHandler,
+      rollbackHandler,
+      setOwnerHandler,
+      updateScoreHandler,
+      voteResultHandler,
+      voteSkipHandler,
+      winRoundHandler);
+
+    connect();
+    const { t } = useI18n();
+    var $q = useQuasar();
     var {
       showGameMenu,
       showRoundWin,
       showPageHistory,
       showLeaderboard,
-      showWikiEndPage
-    } = manageScreenSetup();
-    var winner:ComputedRef<Player> = computed(() => Store.getters.gameData.winner);
-    var gamePhase:ComputedRef<number> = computed(() => Store.state.gameData.gamePhase);
-    var gameAudio = ref(null);
-    var wikiPage = ref(null);
-    var wikiEndPage = ref(null);
-    var game = ref(null);
+      showWikiEndPage,
+      gameMenuTab
+    } = gameLayoutManagerSetup();
+
+    var {
+      gamePhase,
+      round
+    } = lobbySetup();
     
-    function onGameState(payload:GameState) {
+
+    var wikiPage = ref<InstanceType<typeof WikiPage>>();
+    var wikiEndPage = ref<InstanceType<typeof WikiPage>>();
+    
+    var game = ref<InstanceType<typeof ClassicSlideMenu>>();
+
+    function gamePhaseEvent(payload:WsGamePhase) {
       switch (payload.phase) {
-        case PhaseType.GameFinish:
+        case VanillaPhaseType.GameFinish:
           showLeaderboard.value = true;
           setTimeout(() => {showLeaderboard.value = false}, payload.time*1000);
           return;
-        case PhaseType.Voting:
-          Store.commit('gameData/deleteVote');
+        case VanillaPhaseType.Voting:
           showPageHistory.value = false;
-          ///vm.$refs.game.$refs.menu.tab = "game";
           showGameMenu.value = true;
-          var currentRound = Store.state.gameData.round;
-          if (payload.time > 3) setTimeout(() => {if(Store.state.gameData.gamePhase == PhaseType.Voting && currentRound == Store.state.gameData.round) gameAudio.value.countDownAudio.play()}, payload.time*1000-3000);
+          gameMenuTab.value = "game"
+          var currentRound = round.value;
+          if (payload.time > 4) setTimeout(() => {if(gamePhase.value == VanillaPhaseType.Voting && currentRound == round.value) countDownSound.play()}, payload.time*1000-3000);
           return;
-        case PhaseType.Playing:
+        case VanillaPhaseType.Playing:
           Notify.create({
             type: 'annonce',
             position: 'bottom-right',
-            message: i18n.t('phase.notify.'+payload.phase) as string
+            message: t('phase.notify.'+payload.phase) as string
           });
           return;
       }
     }
 
-    function onWinRound(payload:WinRound) {
-      if (payload.id == Store.state.gameData.self) gameAudio.value.winAudio.play();
-      else gameAudio.value.loseAudio.play();
+    var unsubGamePhase = onGamePhase.subscribe(gamePhaseEvent);
+
+    function winRoundEvent(payload:WsWinRound) {
       showRoundWin.value = true;
       setTimeout(() => showRoundWin.value = false, 5000);
       return;
-
     }
 
-    function onVoteResult(payload:VoteResult) {
-      wikiPage.value.requestWikiPage(payload.start);
-      wikiEndPage.value.requestWikiPage(payload.end);
+    var unsubWinRound = onWinRound.subscribe(winRoundEvent);
+
+    function voteResultEvent(payload:WsVoteResult) {
+      wikiPage.value?.requestWikiPage(payload.start);
+      wikiEndPage.value?.requestWikiPage(payload.end);
       Notify.create({
         type: 'annonce',
         position: 'top',
-        message: i18n.t('gameTab.end') as string + " : " + payload.end
+        message: t('gameTab.end') as string + " : " + payload.end
       });
     }
 
-    function onMessage(payload:WsMessage) {
-      if (!(game.value.$refs.menu.showMenu && game.value.$refs.menu.tab == "chat")) {
-        gameAudio.value.notifAudio.play();
-      } 
-    }
+    var unsubVoteResult = onVoteResult.subscribe(voteResultEvent);
 
-    function onRollback(payload:Rollback) {
-      wikiPage.value.requestWikiPage(payload.page);
-      /*vm.$q.notify({
+    function rollbackEvent(payload:WsRollback) {
+      wikiPage.value?.requestWikiPage(payload.page);
+      /*Notify.create({
         type: 'error',
         position: 'top',
-        message: vm.$t('gameTab.endPage') as string + " : " + payload.end
+        message: t('gameTab.endPage') + " : " + payload.end
       });*/
     }
 
-    var { unsubscribeAction } = subscribeActionSetup(onGameState, onWinRound, null, onVoteResult, onMessage, onRollback);
+    var unsubRollback = onRollback.subscribe(rollbackEvent);
 
-    var touchSurfaceHandler:TouchSurfaceHandler = null;
-    function keyDown(e:KeyboardEvent) {
-      if (e.defaultPrevented) return;
-      if (e.ctrlKey && e.altKey && e.key == " ") {
-        showWikiEndPage.value = !showWikiEndPage.value;
+    var touchSurfaceHandler:TouchSurfaceHandler;
+
+    onMounted(() => {
+      touchSurfaceHandler = new TouchSurfaceHandler(document.documentElement, showGameMenu, showWikiEndPage, game.value?.menu?.$el as any, wikiEndPage.value?.$el);
+      if (wikiPage.value) {
+        wikiPage.value.title = t("wikiPage.tipsTitle");
+        wikiPage.value.content = t("wikiPage.tipsContent"+ ($q.platform.is.mobile ? "Mobile" : ""));
       }
-    }
-    onMounted(
-      () => {
-        console.log(wikiEndPage.value);
-        Store.dispatch('gameData/connect');
-        document.body?.addEventListener("keydown", keyDown, false);
-        touchSurfaceHandler = new TouchSurfaceHandler(document.documentElement, showGameMenu, showWikiEndPage, game.value.$refs.menu.$el, wikiEndPage.value.$el);
+      if (wikiEndPage.value) {
+         wikiEndPage.value.title = t("wikiPage.noEndPageYet");
       }
-    );
-    onUnmounted(
-      () => {
-        document.body?.removeEventListener("keydown", keyDown, false);
-        touchSurfaceHandler.destroy();
-        Store.dispatch('gameData/reset');
-      }
-    )
+    });
+
+    onUnmounted(() => {
+        touchSurfaceHandler.destroy();   
+        unsubGamePhase();
+        unsubWinRound();
+        unsubVoteResult();
+        unsubRollback();  
+    });
 
     return {
       showGameMenu,
@@ -156,23 +177,11 @@ export default defineComponent({
       showPageHistory,
       showLeaderboard,
       showWikiEndPage,
-      unsubscribeAction,
-      winner,
-      touchSurfaceHandler,
       gamePhase,
-      gameAudio,
       wikiPage,
       wikiEndPage,
-      game
+      t
     };
-  },
-  beforeRouteLeave (to, from, next) {
-    const answer = window.confirm(this.$t('exitWarn') as string);
-    if (answer) {
-      next();
-    } else {
-      next(false);
-    }
   }
 });
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div id="round-win" class="absolute-full">
+    <logo-show-in :title="winner?.pseudo || 'No Winner Yet'" :class="{ lose: !isWinner }" ></logo-show-in>
     <exit-btn @click="showRoundWin = false"/>
-    <logo-show-in :title="winner" :class="{ lose: hasLose }" ></logo-show-in>
   </div>
 </template>
 <style lang="scss">
@@ -16,27 +16,37 @@
 import ExitBtn from 'src/components/ExitButton.vue';
 import LogoShowIn from 'src/components/art/LogoShowIn.vue';
 
-import { defineComponent } from '@vue/composition-api';
-import { Player } from 'src/store/gameData/state';
-import manageScreenSetup from "src/mixins/game/manageScreen";
+import { defineComponent, watch } from 'vue';
+import { playerSetup } from 'store/player';
+import { gameLayoutManagerSetup } from 'store/gameLayoutManager';
+import { loseSound } from 'store/audio/vanilla/lose';
+import { winSound } from 'store/audio/vanilla/win';
+import { selfId } from 'store/player/state';
 
 export default defineComponent({
   name: 'RoundWin',
   components: { LogoShowIn, ExitBtn },
   setup() {
-    var { showRoundWin } = manageScreenSetup();
+    var { showRoundWin } = gameLayoutManagerSetup();
+    var {
+      isWinner,
+      winner
+    } = playerSetup();
+
+    watch(showRoundWin,(s) => {
+      if (s) isWinner.value ? winSound.play() : loseSound.play();
+      else {
+        const a = isWinner.value ? winSound : loseSound;
+        a.pause();
+        a.currentTime = 0;
+      }
+    });
+    
     return {
-      showRoundWin
+      showRoundWin,
+      isWinner,
+      winner
     }
   },
-  computed: {
-    winner():string {
-      var p = this.$store.getters['gameData/winner'] as Player;
-      return p ? p.pseudo : this.$t("roundWinScreen.timeOut") as string;
-    },
-    hasLose():boolean {
-      return this.$store.state.gameData.winnerId != this.$store.state.gameData.self;
-    }
-  }
 });
 </script>

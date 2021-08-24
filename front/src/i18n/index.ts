@@ -1,5 +1,8 @@
+import { computed } from "vue";
+import { i18n } from "src/boot/i18n";
 import en from './en';
 import fr from './fr';
+
 
 export default {
   "en": en,
@@ -46,3 +49,15 @@ export function getLabel(lang:string):string {
       return "";
   }
 }
+
+export const langLabel = computed(()=>{
+  getLabel(i18n.global.locale.value);
+});
+
+
+export const allLangOptions:Array<{ value:string, label:string }> = [];
+for (var v in Lang) {
+  var option:{ value:string, label:string } = {value: v, label: getLabel(v as Lang)};
+  allLangOptions.push(option);
+}
+

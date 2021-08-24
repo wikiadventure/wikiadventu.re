@@ -3,11 +3,11 @@
     <div class="page-history-container shadow-6">
       <exit-btn @click="showPageHistory = false"/>
       <div class="page-history-title justify-center">
-        {{ winner }}
+        {{ winner?.pseudo || "no winner Yet" }}
       </div>
       <q-separator/>
       <div class="page-history-page">
-        <div v-for="page in pages" :key="page">
+        <div v-for="page in winnerPageHistory" :key="page">
           <div>{{ page }}</div>
         </div>
       </div>
@@ -97,27 +97,23 @@
 <script lang="ts">
 import ExitBtn from 'src/components/ExitButton.vue';
 
-import { defineComponent } from '@vue/composition-api';
-import { Player } from 'src/store/gameData/state';
-import manageScreenSetup from "src/mixins/game/manageScreen";
+import { defineComponent } from 'vue';
+import { showPageHistory } from 'store/gameLayoutManager/state';
+import { winnerPageHistory } from 'store/player/state';
+import { playerSetup } from 'store/player';
 
 export default defineComponent({
   name: 'Wait',
   components: { ExitBtn },
   setup() {
-    var { showPageHistory } = manageScreenSetup();
+    var {
+      winner,
+      winnerPageHistory
+    } = playerSetup();
     return {
-      showPageHistory
-    }
-  },
-  computed: {
-    pages():string[] {
-      return this.$store.state.gameData.winnerPageHistory as string[];
-    },
-    winner():string {
-      var t = Math.round (this.$store.state.gameData.winnerTime * 10) / 10;
-      var p = this.$store.getters['gameData/winner'] as Player;
-      return p ? p.pseudo + " in " + t + "s" : this.$t('gameTab.noWinnerYet') as any;
+      showPageHistory,
+      winner,
+      winnerPageHistory
     }
   }
 });

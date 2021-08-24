@@ -2,7 +2,8 @@
   "extends": "@quasar/app/tsconfig-preset",
   "compilerOptions": {
     "baseUrl": ".",
-    "strictNullChecks": false,
-    "suppressImplicitAnyIndexErrors": true,
+    "paths": {
+      "store/*": ["src/store/*"],
+    }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <slide-menu ref="menu">
     <template v-slot:gameTab>
-      <random ref="gameTab"/>
+      <random ref="tab"/>
     </template>
   </slide-menu>
 </template>
@@ -11,7 +11,7 @@
 import Random from './tab/game/Random.vue';
 import SlideMenu from './slideMenu.vue';
 
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'RandomSlideMenu',

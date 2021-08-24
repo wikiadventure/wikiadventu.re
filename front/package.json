@@ -1,26 +1,25 @@
 {
-  "name": "wiki-adventure-quasar",
+  "name": "wiki-adventure-front",
   "version": "0.0.1",
-  "description": "wiki adventure",
-  "productName": "Quasar App",
-  "author": "Sacramentix <benji.u1225u@gmail.com>",
+  "description": "Wiki Adventure is a multiplayer game combining culture and speed. Players compete against each other on Wikipedia and have to scroll through the pages as quickly as possible to win.",
+  "productName": "Wiki Adventure",
+  "author": "sacramentix <benji.u1225u@gmail.com>",
   "private": true,
   "scripts": {
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@quasar/extras": "^1.10.4",
-    "@types/uuid": "^8.3.0",
-    "@vue/composition-api": "^0.6.4",
-    "core-js": "^3.12.1",
-    "quasar": "^1.15.13",
+    "@quasar/extras": "^1.0.0",
+    "core-js": "^3.6.5",
+    "quasar": "^2.0.0",
     "uuid": "^8.3.2",
-    "vue-i18n": "^8.24.4"
+    "vue-i18n": "^9.1.7"
   },
   "devDependencies": {
-    "@quasar/app": "^2.2.6",
-    "@types/node": "^12.20.12",
-    "workbox-webpack-plugin": "^5.1.4"
+    "@quasar/app": "^3.0.0",
+    "@types/node": "^10.17.15",
+    "@types/uuid": "^8.3.1",
+    "workbox-webpack-plugin": "^6.2.4"
   },
   "browserslist": [
     "last 10 Chrome versions",
@@ -34,7 +33,7 @@
     "last 5 Opera versions"
   ],
   "engines": {
-    "node": ">= 10.18.1",
+    "node": ">= 12.22.1",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
   }

@@ -6,13 +6,10 @@
 <script lang="ts">
 import ConnectMenu from 'src/layouts/connect/ConnectMenu.vue';
 
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'Connect',
-  components: { ConnectMenu },
-  mounted() {
-    this.$store.dispatch('gameData/reset');
-  }
+  components: { ConnectMenu }
 });
 </script>

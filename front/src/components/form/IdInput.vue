@@ -1,23 +1,22 @@
 <template>
-  <q-input outlined v-model="lobbyID" name="lobbyID" :label="$t('input.lobbyID')" 
-  spellcheck="false" v-bind="$attrs" v-on="$listeners"
+  <q-input outlined v-model="id" name="lobbyID" :label="t('input.lobbyID')" 
+  spellcheck="false" v-bind="$attrs"
   hint="" :dense="$q.screen.lt.sm">
   </q-input>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { id } from 'store/connect/state';
+import { defineComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'IdInput',
-  computed: {
-    lobbyID: {
-      get: function() {
-        return this.$store.state.globalForm.lobbyID;
-      },
-      set: function(v) {
-        this.$store.commit('globalForm/setLobbyID', v);
-      }
+  setup() {
+    const { t } = useI18n();
+    return {
+      id,
+      t
     }
   }
 });

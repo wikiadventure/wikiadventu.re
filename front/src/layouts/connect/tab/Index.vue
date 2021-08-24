@@ -5,42 +5,40 @@
     <theme-switch class="topRight" />
     <div class="skewLineContainer first"><div class="skewLine"></div></div>
     <div class="row wrapper first">
-      <content-pannel id="HowToPlay" :head="$t('indexHowToPlay.title')">
+      <content-pannel id="HowToPlay" :head="t('indexHowToPlay.title')">
         <div class="col">
           <p>
-            {{ $t('indexHowToPlay.content') }}
+            {{ t('indexHowToPlay.content') }}
           </p>
         </div>
       </content-pannel>
       <div class="skewLineContainer second"><div class="skewLine"></div></div>
       <div class="wrapper second">
-        <content-pannel id="News" :head="$t('news')">
+        <content-pannel id="News" :head="t('news')">
           <div class="col">
-            <p>{{ $t('newsContent') }}</p>
+            <p>{{ t('newsContent') }}</p>
           </div>
         </content-pannel>
         <div class="skewLineContainer third"><div class="skewLine"></div></div>
         <div class="wrapper third">
           <content-pannel id="Contribution" head="Contribution">
-            <div class="row justify-evenly">
-              <div class="q-ma-xs">
-                <p>{{ $t('contributionSection.discord') }}</p>
-                <q-btn push icon="mdi-discord" class="discord" size="xl" label="discord" @click="openNewPage('https://discord.gg/wRN6Dam')" />
-              </div>
-              <div class="q-ma-xs">
-                <p>{{ $t('contributionSection.github') }}</p>
-                <q-btn push icon="mdi-github" class="github" size="xl" label="Github" @click="openNewPage('https://github.com/Sacramentix/WikiAdventure')"/>
-              </div>
-              <div class="q-ma-xs">
-                <p>{{ $t('contributionSection.kofi') }}</p>  
-                <q-btn push icon="img:icons/kofi.svg" class="kofi" size="xl" label="Ko-fi" @click="openNewPage('https://ko-fi.com/sacramentix')"/>
-              </div>
-              <div class="q-ma-xs">
-                <p>{{ $t('contributionSection.nano') }}</p>
-                <q-btn push icon="img:https://cryptologos.cc/logos/nano-nano-logo.svg?v=006" class="nano" size="xl" label="Nano" @click="showNano = true" />
-              </div>
-              <wallet-dialog v-model="showNano"/>
+            <div class="q-ma-xs">
+              <p>{{ t('contributionSection.discord') }}</p>
+              <q-btn push icon="mdi-discord" class="discord" size="xl" label="discord" @click="openURL('https://discord.gg/wRN6Dam')" />
             </div>
+            <div class="q-ma-xs">
+              <p>{{ t('contributionSection.github') }}</p>
+              <q-btn push icon="mdi-github" class="github" size="xl" label="Github" @click="openURL('https://github.com/Sacramentix/WikiAdventure')"/>
+            </div>
+            <div class="q-ma-xs">
+              <p>{{ t('contributionSection.kofi') }}</p>  
+              <q-btn push icon="img:icons/kofi.svg" class="kofi" size="xl" label="Ko-fi" @click="openURL('https://ko-fi.com/sacramentix')"/>
+            </div>
+            <div class="q-ma-xs">
+              <p>{{ t('contributionSection.nano') }}</p>
+              <q-btn push icon="img:https://cryptologos.cc/logos/nano-nano-logo.svg?v=006" class="nano" size="xl" label="Nano" @click="showNano = true" />
+            </div>
+            <wallet-dialog v-model="showNano"/>
           </content-pannel>
         </div>
       </div>
@@ -189,21 +187,19 @@ import ThemeSwitch from 'src/components/setting/ThemeSwitch.vue'
 import LogoShowIn from 'src/components/art/LogoShowIn.vue';
 import WalletDialog from 'src/components/nano/WalletDialog.vue'
 
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'Index',
   components: { ContentPannel, LogoShowIn, CompactLangSwitch, ThemeSwitch, WalletDialog },
-  data():{
-    showNano:boolean
-  } {
+  setup() {
+    const { t } = useI18n();
+    const showNano = ref(false);
     return {
-      showNano: false
-    }
-  },
-  methods: {
-    openNewPage(url: string) {
-      openURL(url);
+      showNano,
+      openURL,
+      t
     }
   }
 });
