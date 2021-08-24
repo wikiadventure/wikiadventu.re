@@ -13,25 +13,25 @@ class PublicJoinController {
     var im : IncomingMessage;
     var sr : ServerResponse;
     var body : String;
-    var form : ConnectionRequest;
+    var form : ConnectRequest;
 
-    public function new(im : IncomingMessage, sr : ServerResponse, body : String, form : ConnectionRequest) {
+    public function new(im : IncomingMessage, sr : ServerResponse, body : String, form : ConnectRequest) {
         this.im = im;
         this.sr = sr;
         this.body = body;
         this.form = form;
-        var player = new Player(form.pseudo, form.lang);
         try {
+            var player = new Player(form.pseudo, form.lang);
             var lobby:Lobby;
             if (form.lobby != null && form.lobby != "") {
                 lobby = Lobby.find(Lobby.decodeID(form.lobby));
-            } else lobby = Lobby.joinPublicFree(player, form.gameMode);
+            } else lobby = Lobby.joinPublicFree(player, form.gameLoop);
             lobby.connect(player);
-            var json:ConnectionResponse = {
+            var json:ConnectResponse = {
                 lobbyID: lobby.formatID,
                 lobbyType: Public,
                 slot: lobby.slot,
-                gameMode: lobby.gameLoop.type,
+                gameLoop: lobby.gameLoop.type,
                 playerID: player.uuid,
                 lang: lobby.language           
             }

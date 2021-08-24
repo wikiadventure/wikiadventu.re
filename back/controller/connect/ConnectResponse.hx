@@ -3,10 +3,10 @@ package controller.connect;
 import lobby.Lobby.LobbyType;
 import config.Lang;
 
-typedef ConnectionResponse = {
+typedef ConnectResponse = {
     ?lobbyID:String,
     ?lobbyType:LobbyType,
-    ?gameMode:Int,
+    ?gameLoop:Int,
     ?slot:Int,
     ?playerID:String,
     ?lang:Lang

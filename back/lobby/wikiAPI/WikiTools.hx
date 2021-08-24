@@ -1,5 +1,7 @@
 package lobby.wikiAPI;
 
+import lobby.packet.emitter.vanilla.Rollback.RollbackEmitter;
+import lobby.player.Player;
 import haxe.Json;
 import js.node.Https;
 import js.node.Querystring;
@@ -15,7 +17,7 @@ class WikiTools {
         var promiseList = new Array<Promise<String>>();
         for (i in 0...suggestionList.length) {
             var title = suggestionList[i];
-            if (title != null) {
+            if (title != "") {
                 var promise = new Promise<String>(
                     function (resolve, reject) {
                         var param:WikiRequest = {
@@ -187,6 +189,40 @@ class WikiTools {
             }
         );
     }
+
+    public static function validate(lobby:Lobby, player:Player, toValidate:String) {
+        var oldPage = player.currentPage;
+        player.numberOfJump +=1;
+        player.currentPage = toValidate;
+        var currentValidation = player.currentValidation;
+        var validation:Promise<String>;
+        validation = WikiTools.validateJump(lobby.language, oldPage, toValidate);
+        validation.then(
+            landPage -> {
+                currentValidation.page = landPage;
+                currentValidation.validated = true;
+                player.validationBuffer.remove(validation);
+                return landPage;
+            },
+            (reason) -> {
+                var pos = player.validationList.indexOf(currentValidation);
+                if ( pos != -1) {
+                    player.validationList.splice(pos,player.validationList.length);
+                    RollbackEmitter.emitRollback(player, player.currentPage);
+                }
+                player.validationBuffer.remove(validation);
+                switch reason.type { 
+                    case Cheat: //onCheat(player, oldPage, toValidate, reason.url, reason.body);
+                    case WikiError: //onWikiError(player, oldPage, toValidate, reason.url, reason.body);
+                    case RequestFailed: //onRequestFailed(player, oldPage, toValidate, reason.url, reason.e);
+                }
+                return Promise.reject(reason);
+            }
+            
+        );
+        return validation;
+    }
+
 }
 
 typedef VoteResult = {

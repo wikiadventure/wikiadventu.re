@@ -1,11 +1,11 @@
 package lobby.gameLoop;
 
 import lobby.Lobby.LogType;
-import lobby.Lobby.WebsocketPackage;
 import haxe.Timer;
 import js.node.Timers;
 import lobby.player.Player;
 using lobby.player.PlayersExtension;
+using lobby.packet.emitter.vanilla.GamePhase.GamePhaseEmitter;
 using Lambda;
 
 
@@ -15,12 +15,12 @@ class Phase {
     
     public var duration:Int;//In seconds
     
-    public var type:Int;
+    public var type:PhaseType;
     
     public function start() {
         lobby.players.iter(function(p:Player) {p.voteSkip = false;});
         lobby.gameLoop.timeStampStateBegin = Timer.stamp();
-        lobby.players.emitGameState(type, lobby.gameLoop.currentRound, duration);
+        lobby.players.emitGamePhase(type, lobby.gameLoop.currentRound, duration);
         lobby.log("New phase init : " + type +"|" + lobby.gameLoop.currentRound + "|" + duration, Info);
         onStart();
         if (duration > 0) lobby.gameLoop.loop = Timers.setTimeout(end, duration*1000);
@@ -37,10 +37,6 @@ class Phase {
         
     }
 
-    public function controller(player:Player, json:WebsocketPackage) {
-        
-    }
-
     public function sendCurrentState(player:Player) {
         
     }
@@ -52,17 +48,23 @@ class Phase {
 
     inline function log(data : Dynamic, logType:LogType, ?pos : haxe.PosInfos) {
         lobby.log(data, logType, pos);
+        var d:PhaseType;
     }
 
 }
 
-enum abstract PhaseType(Int) from Int to Int {
+enum abstract PhaseType(Int) from VanillaPhaseType to Int from ModPhaseType to Int {
+    
+}
+
+enum abstract VanillaPhaseType(Int) from Int to Int {
     var Waiting;
     var Voting;
     var Playing;
     var RoundFinish;
     var GameFinish;
 }
+
 // Register your mod phase here and on the front.
 enum abstract ModPhaseType(Int) from Int to Int {
     var Default = 1000;

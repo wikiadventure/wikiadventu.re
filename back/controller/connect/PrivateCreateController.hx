@@ -2,8 +2,6 @@ package controller.connect;
 
 import lobby.GameLoop;
 import response.connect.ConnectionError;
-import lobby.GameLoop.GameLoopType;
-import lobby.gameLoop.Classic;
 import response.SuccessResponse;
 import haxe.crypto.Sha256;
 import lobby.Lobby;
@@ -17,26 +15,26 @@ class PrivateCreateController {
     var im : IncomingMessage;
     var sr : ServerResponse;
     var body : String;
-    var form : ConnectionRequest;
+    var form : ConnectRequest;
 
-    public function new(im : IncomingMessage, sr : ServerResponse, body : String, form : ConnectionRequest) {
+    public function new(im : IncomingMessage, sr : ServerResponse, body : String, form : ConnectRequest) {
         this.im = im;
         this.sr = sr;
         this.body = body;
         this.form = form;
-        var player = new Player(form.pseudo,form.lang);
-        var passwordHash = Sha256.encode(form.password);
         try {
+            var player = new Player(form.pseudo,form.lang);
+            var passwordHash = Sha256.encode(form.password);
             var lobby = new Lobby(player.language, Private, passwordHash, form.slot);
             lobby.giveID();// giveID method also add the lobby to the lobbylist
             lobby.connect(player, passwordHash);
-            lobby.gameLoop = GameLoop.select(form.gameMode, lobby);
+            lobby.gameLoop = GameLoop.select(form.gameLoop, lobby);
             lobby.gameLoop.start();
-            var json:ConnectionResponse = {
+            var json:ConnectResponse = {
                 lobbyID: lobby.formatID,
                 lobbyType: Private,
                 slot: lobby.slot,
-                gameMode: lobby.gameLoop.type,
+                gameLoop: lobby.gameLoop.type,
                 playerID: player.uuid,
                 lang: lobby.language           
             };

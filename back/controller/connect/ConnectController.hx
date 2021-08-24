@@ -1,7 +1,8 @@
 package controller.connect;
 
+import haxe.Json;
 import response.connect.ConnectionError;
-import tink.Json;
+
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 
@@ -10,7 +11,7 @@ class ConnectController {
     var im : IncomingMessage;
     var sr : ServerResponse;
     var body : String;
-    var form : ConnectionRequest;
+    var form : ConnectRequest;
     
     public function new(im : IncomingMessage, sr : ServerResponse, body : String) {
 		this.im = im;

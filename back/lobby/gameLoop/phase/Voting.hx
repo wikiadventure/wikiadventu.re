@@ -1,5 +1,6 @@
 package lobby.gameLoop.phase;
 
+import lobby.gameLoop.Phase.VanillaPhaseType;
 import config.Lang.LangTools;
 import lobby.Lobby.LobbyType;
 import js.node.Timers;
@@ -28,14 +29,13 @@ class Voting extends Phase {
         }
 
         Timers.clearTimeout(lobby.gameLoop.loop);
-        WikiTools.selectPage(lobby.players.map((p) -> p.vote), lobby.language).then(
-            (result) -> lobby.gameLoop.next(result)
-        );
+        WikiTools.selectPage(lobby.players.map(p -> p.vote), lobby.language)
+        .then(result -> lobby.gameLoop.next(result));
     }
     
     public function new(lobby:Lobby, duration:Int = 80) {
         super(lobby, duration);
-        type = Voting;
+        type = VanillaPhaseType.Voting;
     }
 
 }

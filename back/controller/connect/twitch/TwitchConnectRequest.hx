@@ -1,8 +1,8 @@
 package controller.connect.twitch;
 
-import controller.connect.ConnectionRequest;
+import controller.connect.ConnectRequest;
 
 typedef TwitchConnectRequest = {
-    > ConnectionRequest,
+    > ConnectRequest,
     ?code: String
 }

@@ -1,5 +1,6 @@
 package lobby.player;
 
+import response.connect.ConnectionError.ConnectError;
 import js.lib.Promise;
 import config.Lang;
 import uuid.Uuid;
@@ -16,8 +17,8 @@ class Player {
     public var pageList(get, never):Array<String>;
     public var currentPage(get, set):String;
     public var validationBuffer:Array<Promise<String>>;//used to store validation of visited
-    public var vote:String;
-    public var voteSkip:Bool;
+    public var vote:String = "";
+    public var voteSkip:Bool = false;
     public var id:Int;//for client identification
     public var alive:Bool;
     public function get_currentValidation() return validationList.length-1 < 0 ? null : validationList[validationList.length-1];
@@ -31,9 +32,8 @@ class Player {
         this.uuid = Uuid.v4();
         validationList = [];
         validationBuffer = [];
-        var dangerRegex : EReg =  ~/[<>:|%$\/\\]/g;
-        if (pseudo==null || pseudo=="" || pseudo.length<3 || pseudo.length>26 || dangerRegex.match(pseudo)) throw "invalid player name";
-        else this.pseudo = pseudo;
+        if (pseudo==null || pseudo.length<3 || pseudo.length>26) throw ConnectError.InvalidPseudo;
+        this.pseudo = pseudo;
     }
 
     public function assignSocket(socket:Ws):Bool {

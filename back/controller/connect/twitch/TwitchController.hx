@@ -1,10 +1,11 @@
 package controller.connect.twitch;
 
+import haxe.Json;
 import lobby.GameLoop;
 import response.connect.ConnectionError;
 import response.SuccessResponse;
 import lobby.player.Player;
-import controller.connect.twitch.TwitchConnectionRequest;
+import controller.connect.twitch.TwitchConnectRequest;
 import haxe.crypto.Sha256;
 import lobby.player.TwitchPlayer;
 import twitch.HelixPrivilegedUser;
@@ -17,7 +18,7 @@ import lobby.TwitchLobby;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import js.node.Querystring;
-import tink.Json;
+
 using Lambda;
 
 class TwitchController {
@@ -125,11 +126,11 @@ class TwitchController {
             new ConnectionError(im, sr, e);
             return;
         }
-        var json:ConnectionResponse = {
+        var json:ConnectResponse = {
             lobbyID: lobby.name,
             lobbyType: Twitch,
             slot: lobby.slot,
-            gameMode: lobby.gameLoop.type,
+            gameLoop: lobby.gameLoop.type,
             playerID: player.uuid,
             lang: lobby.language
         };
@@ -143,11 +144,11 @@ class TwitchController {
         try {
             var lobby = TwitchLobby.find(form.lobby);
             lobby.connect(player, passwordHash);
-            var json:ConnectionResponse = {
+            var json:ConnectResponse = {
                 lobbyID: lobby.name,
                 lobbyType: Twitch,
                 slot: lobby.slot,
-                gameMode: lobby.gameLoop.type,
+                gameLoop: lobby.gameLoop.type,
                 playerID: player.uuid,
                 lang: lobby.language           
             };
@@ -162,7 +163,7 @@ class TwitchController {
         var lobby = new TwitchLobby(player, passwordHash, form.slot);
         lobby.giveID();// giveID method also add the lobby to the lobbylist
         lobby.join(player, passwordHash);
-        lobby.gameLoop = GameLoop.select(form.gameMode, lobby);
+        lobby.gameLoop = GameLoop.select(form.gameLoop, lobby);
         lobby.gameLoop.start();
         return lobby;
     }

@@ -1,6 +1,6 @@
 package lobby.gameLoop.phase;
 
-import lobby.gameLoop.Phase.PhaseType;
+import lobby.gameLoop.Phase.VanillaPhaseType;
 using lobby.player.PlayersExtension;
 
 class GameFinish extends Phase {
@@ -11,6 +11,6 @@ class GameFinish extends Phase {
     
     public function new(lobby:Lobby, duration:Int = 30) {
         super(lobby, duration);
-        type = GameFinish;
+        type = VanillaPhaseType.GameFinish;
     }
 }

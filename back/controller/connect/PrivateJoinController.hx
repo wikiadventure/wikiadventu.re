@@ -14,23 +14,23 @@ class PrivateJoinController {
     var im : IncomingMessage;
     var sr : ServerResponse;
     var body : String;
-    var form : ConnectionRequest;
+    var form : ConnectRequest;
 
-    public function new(im : IncomingMessage, sr : ServerResponse, body : String, form : ConnectionRequest) {
+    public function new(im : IncomingMessage, sr : ServerResponse, body : String, form : ConnectRequest) {
         this.im = im;
         this.sr = sr;
         this.body = body;
         this.form = form;
-        var player = new Player(form.pseudo, form.lang);
-        var passwordHash = Sha256.encode(form.password);
         try {
+            var player = new Player(form.pseudo, form.lang);
+            var passwordHash = Sha256.encode(form.password);
             var lobby = Lobby.find(Lobby.decodeID(form.lobby));
             lobby.connect(player, passwordHash);
-            var json:ConnectionResponse = {
+            var json:ConnectResponse = {
                 lobbyID: lobby.formatID,
                 lobbyType: Private,
                 slot: lobby.slot,
-                gameMode: lobby.gameLoop.type,
+                gameLoop: lobby.gameLoop.type,
                 playerID: player.uuid,
                 lang: lobby.language
             };

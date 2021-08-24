@@ -1,8 +1,8 @@
 package controller.admin;
 
+import lobby.packet.emitter.ServerPacket.VanillaServerPacketType;
+import lobby.packet.emitter.vanilla.Message.ServerMessage;
 import haxe.Json;
-import lobby.player.PlayersExtension.LobbyEvent;
-import lobby.player.PlayersExtension.Message;
 import async.WS;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
@@ -19,12 +19,10 @@ class AnnounceController {
         this.sr = sr;
         this.body = body;
         if (!Guard.auth(im, sr, body)) return;
-        var data:LobbyEvent<Message> = {
-            type: Message,
-            data: {
-                id: -2,
-                mes: body
-            }
+        var data:ServerMessage = {
+            type: VanillaServerPacketType.Message,
+            id: -2,
+            data: body
         }
         var mes = Json.stringify(data);
         WS.server.clients.forEach((v,k,s) -> k.send(mes));

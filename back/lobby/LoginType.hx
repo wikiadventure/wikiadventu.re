@@ -1,6 +1,6 @@
 package lobby;
 
-enum abstract LoginType(String) {
+enum abstract LoginType(Int) {
     var PublicJoin;
     var PrivateCreate;
     var PrivateJoin;

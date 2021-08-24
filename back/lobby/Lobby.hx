@@ -1,5 +1,9 @@
 package lobby;
 
+import haxe.Json;
+import lobby.packet.handler.ClientPacket;
+import lobby.packet.PacketHandler;
+import lobby.gameLoop.Phase.VanillaPhaseType;
 import response.connect.ConnectionError.ConnectError;
 import lobby.player.Player;
 import lobby.gameLoop.Phase.PhaseType;
@@ -10,6 +14,11 @@ import haxe.Timer;
 import config.Lang;
 import utils.crypto.RandomBase32;
 using lobby.player.PlayersExtension;
+using lobby.packet.PacketHandler;
+using lobby.packet.emitter.vanilla.GamePhase.GamePhaseEmitter;
+using lobby.packet.emitter.vanilla.PlayerJoin.PlayerJoinEmitter;
+using lobby.packet.emitter.vanilla.PlayerLeft.PlayerLeftEmitter;
+using lobby.packet.emitter.vanilla.SetOwner.SetOwnerEmitter;
 using Lambda;
 class Lobby {
     
@@ -29,8 +38,10 @@ class Lobby {
     public var passwordHash:String;
     public var language:Lang;
     public var players:Array<Player>;
+    public var ownerId:Int = 0;//we could meaby have multiple owner
     public var owner(get, never):Player;
-    public function get_owner() return players[0];
+    public function get_owner() return players.find(p->p.id==ownerId);
+    public var packetHandlers:Array<PacketHandler>;
 
     public static var lobbyLimit:Int = 10000;
     public static var privateLimit:Int = 2000;
@@ -100,6 +111,8 @@ class Lobby {
         if (players.length >= slot) throw ConnectError.LobbyFull;
         if (players.lastIndexOf(player) == -1) {
             players.push(player);
+            player.id = totalPlayer;
+            totalPlayer++;
             kickOnTimeout(player);
             log("new player registered : " + player.uuid + " --> " + player.pseudo, PlayerData);
         }
@@ -121,16 +134,21 @@ class Lobby {
      * @param player to remove
      */
     public function removePlayer(player:Player) {
+        log("player left : " + player.uuid + " --> " + player.pseudo, PlayerData);
         players.emitPlayerLeft(player);
         var doOwnerChange = owner == player;
         players.remove(player);
-        checkVoteSkip();
-        if (doOwnerChange && players.length>0) players.emitSetOwner();
-        log("player left : " + player.uuid + " --> " + player.pseudo, PlayerData);
         if (players.length == 0) {
             log("No player left, closing the lobby", Info);
             delete();
+            return;
         }
+        checkVoteSkip();
+        if (doOwnerChange) {
+            ownerId = players[0].id;
+            players.emitSetOwner(ownerId);
+        }
+
     }
 
     public function delete() {
@@ -151,8 +169,6 @@ class Lobby {
         var player = getPlayerFromUUID(uuid);
         if ( player != null ) {
             if (player.assignSocket(ws) ) {
-                player.id = totalPlayer;
-                totalPlayer++;
                 return onPlayerConnection(player);
             }
             return ws.close(1008, 'Connection rejected because there already a client connected with this playerID');
@@ -162,45 +178,10 @@ class Lobby {
 
     public function onPlayerConnection(player:Player) {
         players.emitPlayerJoin(player);
-        players.emitSetOwner(player);
+        [player].emitSetOwner(ownerId);
         sendCurrentState(player);
-        player.socket.on('message', (data:String) -> websocketHandler(player, data));
+        player.socket.on('message', (data:String) -> this.handle(player, data));//handle is method from the static extension packet/PacketHandler.hx
         player.socket.on('close', (data) -> websocketDisconnect(player));
-    }
-
-    public function websocketHandler(player:Player, data:String) {
-        try {
-            var json:WebsocketPackage = tink.Json.parse(data);
-            switch json.type {
-                case Start:
-                    start(player);
-                case Message:
-                    players.emitMessage(player, sanitizeMessage(json.value));
-                case Validate:
-                case Vote:
-                    vote(player, json.value);
-                case ResetVote:
-                    resetVote(player);
-                case VoteSkip:
-                    voteSkip(player);
-            }
-            gameLoop.currentPhase.controller(player, json);
-        } catch(e:Dynamic) {
-            log("Websocket package error : "+e, Error);
-        }
-    }
-
-    public function start(player:Player) {
-        if (gameLoop.currentPhase.type != Waiting) return log("Game already start --> "  + player.uuid, LogType.Error);
-        if (player==owner) {
-            gameLoop.currentPhase.end();
-        } else {
-            log("Someone who is not owner tried to start --> " + player.uuid, LogType.Error);
-        }
-    }
-
-    public function sanitizeMessage(message:String) {
-        return message;
     }
 
     public function websocketDisconnect(player:Player) {
@@ -210,7 +191,7 @@ class Lobby {
 
     public function sendCurrentState(player:Player) {
         var timeLeft = gameLoop.currentPhase.duration - (Timer.stamp() - gameLoop.timeStampStateBegin);
-        [player].emitGameState(gameLoop.currentPhase.type, gameLoop.currentRound, timeLeft);
+        [player].emitGamePhase(gameLoop.currentPhase.type, gameLoop.currentRound, timeLeft);
         players.iter((p) -> if (p!=player) [player].emitPlayerJoin(p));
         gameLoop.sendCurrentState(player);
     }
@@ -228,16 +209,6 @@ class Lobby {
         player.vote = content;
     }
 
-    public function resetVote(player:Player) {
-        player.vote = null;
-    }
-    public function voteSkip(player:Player) {
-        players.emitVoteSkip(player);
-        checkVoteSkip();
-    }
-    public function checkVoteSkip() {
-        if (players.foreach((p) -> p.voteSkip)) gameLoop.currentPhase.end();
-    }
 
     public function checkAlive() {
         players.iter((p) -> 
@@ -253,12 +224,16 @@ class Lobby {
         );
     }
 
+    public function checkVoteSkip() {
+        if (players.foreach((p) -> p.voteSkip)) gameLoop.currentPhase.end();
+    }
+
     /**
      * Search a Lobby of type public and add the player to this one, if no lobby is found, it create one.
      * @param player who want to join
      * @return the lobby
      */
-    public static function joinPublicFree(player:Player, gameLoop:Int):Lobby {
+    public static function joinPublicFree(player:Player, ?gameLoop:GameLoopType):Lobby {
         for (l in lobbyList) {
             if (l.type == Public && (l.players.length < l.slot)) {
                 if ( l.language == player.language ) {
@@ -302,19 +277,6 @@ class Lobby {
         fileLog.Log.inFile(fileName, content);
 	}
 
-}
-
-typedef WebsocketPackage = {
-    type:WebsocketPackageType,
-    ?value:String
-}
-enum abstract WebsocketPackageType(String) {
-    var Start;
-    var Message;
-    var Vote;
-    var ResetVote;
-    var Validate;
-    var VoteSkip;
 }
 
 enum abstract LogType(String) {

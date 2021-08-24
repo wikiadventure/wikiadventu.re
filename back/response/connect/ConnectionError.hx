@@ -1,6 +1,6 @@
 package response.connect;
 
-import controller.connect.ConnectionResponse;
+import controller.connect.ConnectResponse;
 import haxe.Json;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
@@ -29,6 +29,7 @@ enum abstract ConnectError(Int) from Int to Int {
     var InvalidPassword;
     var InvalidGameLoop;
 	var InvalidTwitchCode;
+    var InvalidPseudo;
     var LobbyLimitReached = 200; //server error
     var PrivateLobbyLimitReached;
 	var TwitchConnectionError;
