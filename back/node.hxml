@@ -2,8 +2,10 @@
 -lib hx-ws
 -lib twitch-chat-client
 
+-C src
+--times
 -main App
--js ../bin/App.js
+-js ../../bin/App.js
 -debug
 #remove you can add any env parameter like below
 #-D PORT=5000
