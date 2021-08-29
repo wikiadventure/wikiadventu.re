@@ -46,7 +46,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/api/:data',
-    redirect: "/",
+    component: () => {},
     beforeEnter: (to, from, next) => {
       if (to.params.data == "twitch") {
         window.opener?.postMessage(to.query, window.location.origin);

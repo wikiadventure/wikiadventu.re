@@ -7,6 +7,7 @@ import { ConnectEvent, ConnectResponse, ConnectType, ErrorCode, loginQuery } fro
 import { i18n } from 'src/boot/i18n';
 import router, { Router } from 'src/router';
 import { randomizePseudo } from './randomPseudo/generator';
+import { TWITCH_CLIENT_ID } from './twitch/state';
 
 const WithId = [ConnectType.PrivateJoin, ConnectType.PublicJoin];
 const IdOptionnal = [ConnectType.PublicJoin];
@@ -60,7 +61,7 @@ export function login(event:ConnectEvent) {
             }
         }
         window.addEventListener("message",onMessage);
-        var twitch = window.open(`https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${process.env.TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin+"/api/twitch")}&scope=chat%3Aread+chat%3Aedit`);
+        var twitch = window.open(`https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin+"/api/twitch")}&scope=chat%3Aread+chat%3Aedit`);
     } else {
         options.body = JSON.stringify(query);
         connect(options, event.type == ConnectType.TwitchJoinWithout);

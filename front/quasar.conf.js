@@ -6,6 +6,7 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli/quasar-conf-js
 const path = require('path');
+const webpack = require('webpack');
 const { configure } = require('quasar/wrappers');
 
 module.exports = configure(function (ctx) {
@@ -68,7 +69,10 @@ module.exports = configure(function (ctx) {
         chain.resolve.alias
           .set('store', path.resolve(__dirname, './src/store'))
           .set('i18n', path.resolve(__dirname, './src/i18n'));
-      },
+        chain
+          .plugin("env")
+          .use(new webpack.EnvironmentPlugin(['TWITCH_CLIENT_ID']))
+      }
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
