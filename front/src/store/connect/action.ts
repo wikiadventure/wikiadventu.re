@@ -52,8 +52,10 @@ export function login(event:ConnectEvent) {
     if (!NoPassword.includes(event.type)) query.password = event.password;
 
     if (WithTwitch.includes(event.type)) {
+        var hasReceived = false;
         function onMessage(e:MessageEvent) {
             if (e.origin == window.origin) {
+                hasReceived = true;
                 query.code = e.data.code;
                 window.removeEventListener("message",onMessage);
                 options.body = JSON.stringify(query);
@@ -62,6 +64,17 @@ export function login(event:ConnectEvent) {
         }
         window.addEventListener("message",onMessage);
         var twitch = window.open(`https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin+"/api/twitch")}&scope=chat%3Aread+chat%3Aedit`);
+        if (twitch) {
+            var timer = setInterval(() => { 
+                if(twitch?.closed) {
+                    clearInterval(timer);
+                    if (!hasReceived) {
+                        connecting.value = false;
+                        //TODO: Notify twitch auth user closed twitch auth
+                    }
+                }
+            }, 1000);
+        }
     } else {
         options.body = JSON.stringify(query);
         connect(options, event.type == ConnectType.TwitchJoinWithout);
