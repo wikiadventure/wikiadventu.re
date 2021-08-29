@@ -131,7 +131,7 @@ import { ErrorCode, InfoStatus, InfoResponse, isSucess } from "store/connect/typ
 import { defineComponent, ref } from 'vue';
 import { LobbyType } from 'store/lobby/type';
 import { Notify } from 'quasar';
-import { id } from 'store/lobby/state';
+import { id } from 'store/connect/state';
 import { twitchName } from 'store/connect/twitch/state';
 import { notifyError } from 'store/connect/action';
 import { useI18n } from 'vue-i18n';
@@ -143,8 +143,7 @@ export default defineComponent({
     const tab = ref('Home');
     const privateTab = ref('PrivateCreate');
     const twitchTab = ref('TwitchCreate');
-
-        //check if the lobby provided in the url exist
+    //check if the lobby provided in the url exist, auto complete field and switch to correct tab
     const route = useRoute();
     const { t } = useI18n({ useScope: 'global' });
     const vm = this;

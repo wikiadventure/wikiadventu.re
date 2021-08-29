@@ -6,6 +6,7 @@ import { LobbyType } from 'store/lobby/type';
 import { ConnectEvent, ConnectResponse, ConnectType, ErrorCode, loginQuery } from './type';
 import { i18n } from 'src/boot/i18n';
 import router, { Router } from 'src/router';
+import { randomizePseudo } from './randomPseudo/generator';
 
 const WithId = [ConnectType.PrivateJoin, ConnectType.PublicJoin];
 const IdOptionnal = [ConnectType.PublicJoin];
@@ -16,6 +17,7 @@ const WithTwitch = [ConnectType.TwitchCreate, ConnectType.TwitchJoinWith];
 
 export function login(event:ConnectEvent) {
     if(connecting.value) return;
+    validatePseudo();
     connecting.value = true;
     var query:loginQuery = {
         type: event.type,
@@ -69,13 +71,20 @@ export async function connect(options:RequestInit, twitch?:boolean) {
     return fetch("/api/"+ (twitch ? "twitch" : "connect"), options)
         .then(async r => {return { json: await r.json(), res: r}})
         .then(r => {
-            if (!r.res.ok) return notifyError(r.json.code);
+            if (!r.res.ok) {
+                connecting.value = false;
+                return notifyError(r.json.code);
+            }
             start(r.json);
         })
-        .catch(function(e) {
+        .catch(e => {
             connecting.value = false;
             notifyError(ErrorCode.NoInternet, e);
     });
+}
+
+export function validatePseudo() {
+    if (pseudo.value.length < 3 || pseudo.value.length > 25) randomizePseudo();
 }
 
 export async function start(json:ConnectResponse) {

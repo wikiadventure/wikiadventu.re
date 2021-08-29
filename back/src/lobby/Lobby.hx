@@ -286,7 +286,7 @@ enum abstract LogType(String) {
     var Info;
 }
 
-enum abstract LobbyType(String) {
+enum abstract LobbyType(Int) {
     var Public;
     var Private;
     var Twitch;
