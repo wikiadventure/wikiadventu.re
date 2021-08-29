@@ -1,11 +1,11 @@
 <template>
   <div class="setting">
     <div class="span2 text-h3 q-py-lg">{{ t('settingTab.settings') }}</div>
-    <fullscreen-switch class="action-btn"/><theme-switch/>
-    <p class="q-ma-none">SafeMode : </p><safe-mode-switch/>
-    <lang-switch class="span2 strech"/>
-    <volume-slider class="span2 strech"/>
-    <shortcut-btn/>
+    <fullscreen-switch class="action-btn"/> <theme-switch/>
+    <p class="q-ma-none">SafeMode : </p>    <safe-mode-switch/>
+              <lang-switch class="span2 strech"/>
+              <volume-slider class="span2 strech"/>
+    <shortcut-btn/>                         <compact-lang-switch/>
   </div>
 </template>
 <style lang="scss">
@@ -30,6 +30,7 @@
 <script lang="ts">
 import ThemeSwitch from 'src/components/setting/ThemeSwitch.vue';
 import LangSwitch from 'src/components/setting/LangSwitch.vue';
+import CompactLangSwitch from 'src/components/setting/CompactLangSwitch.vue';
 import VolumeSlider from 'src/components/setting/VolumeSlider.vue';
 import FullscreenSwitch from 'src/components/setting/FullscreenSwitch.vue';
 import SafeModeSwitch from 'src/components/setting/SafeModeSwitch.vue';
@@ -40,9 +41,9 @@ import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'SettingTab',
-  components: { ThemeSwitch, LangSwitch, VolumeSlider, FullscreenSwitch, SafeModeSwitch, ShortcutBtn },
+  components: { ThemeSwitch, LangSwitch, VolumeSlider, FullscreenSwitch, SafeModeSwitch, ShortcutBtn, CompactLangSwitch },
   setup() {
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     return {
       t
     }

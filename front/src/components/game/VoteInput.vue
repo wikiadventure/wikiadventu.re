@@ -67,7 +67,7 @@ export default defineComponent({
   name: "VoteInput",
   components: { preview },
   setup() {
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     var {
       vote,
       voteInput,

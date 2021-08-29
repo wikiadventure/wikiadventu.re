@@ -29,7 +29,7 @@ export default defineComponent({
   name: 'TwitchJoin',
   components: { ConnectForm, ConnectBtn, TwitchBtn, PasswordInput, PseudoInput, IdInput },
   setup() {
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     const password = ref("");
     return {
       password,

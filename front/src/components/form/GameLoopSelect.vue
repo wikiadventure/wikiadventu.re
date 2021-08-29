@@ -30,7 +30,7 @@ import { useI18n } from 'vue-i18n';
 export default defineComponent({
   name: 'GameLoopSelect',
   setup() {
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     var gameLoops = Object.values(VanillaLoopType)/*.concat(Object.values(ModLoopType))*/;
     return {
       gameLoops,

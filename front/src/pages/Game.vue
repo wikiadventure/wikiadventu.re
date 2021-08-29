@@ -21,7 +21,7 @@ export default defineComponent({
     ),
   },
   setup() {
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     var gameLoopName = computed(()=> VanillaLoopType[gameLoop.value] || ModLoopType[gameLoop.value] );
 
     onBeforeRouteLeave((to, from, next) => {

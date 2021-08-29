@@ -64,7 +64,7 @@ export default defineComponent({
   name: 'RandomGameTab',
   components: { VoteInput, preview },
   setup(){
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     var {
       showGameMenu,
       showRoundWin,

@@ -27,7 +27,7 @@ export default defineComponent({
   name: 'PrivateJoin',
   components: { ConnectForm, ConnectBtn, PasswordInput, PseudoInput, IdInput },
   setup() {
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     const password = ref("");
     return {
       password,

@@ -56,7 +56,7 @@ module.exports = configure(function (ctx) {
       // rtl: true, // https://v2.quasar.dev/options/rtl-support
       // preloadChunks: true,
       // showProgress: false,
-      gzip: true,
+      // gzip: true,
       // analyze: true,
 
       // Options below are automatically set depending on the env, set them if you want to override
@@ -66,7 +66,8 @@ module.exports = configure(function (ctx) {
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
       chainWebpack (chain) {
         chain.resolve.alias
-          .set('store', path.resolve(__dirname, './src/store'));
+          .set('store', path.resolve(__dirname, './src/store'))
+          .set('i18n', path.resolve(__dirname, './src/i18n'));
       },
     },
 

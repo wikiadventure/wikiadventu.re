@@ -40,7 +40,7 @@ export default defineComponent({
     const nanoAddress = "nano_3tobgnzzk9dgktg7gwiq94rwqcooeihgp8oz6s31xak798mgtgmn881t58cq";
 
     function clip() {
-      const { t } = useI18n();
+      const { t } = useI18n({ useScope: 'global' });
       copyToClipboard(nanoAddress)
       .then(() => {
         Notify.create({

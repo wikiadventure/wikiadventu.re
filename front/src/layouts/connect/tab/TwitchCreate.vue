@@ -31,7 +31,7 @@ export default defineComponent({
   name: 'TwitchCreate',
   components: { ConnectForm, TwitchBtn, LangSelect, PasswordInput, PseudoInput, GameLoopSelect, SlotSelect },
   setup() {
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     const password = ref("");
     return {
       password,

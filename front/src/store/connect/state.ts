@@ -1,10 +1,11 @@
 import { ref } from "vue";
 import { Lang } from "src/i18n";
 import { GameLoopType, VanillaLoopType } from "store/lobby/game/loop/type";
+import { Quasar } from "quasar";
 
-// var localLang = useQuasar().lang.getLocale();
-// var computedLocalLang = (localLang?.split("-")[0] || Lang.en) as Lang;
-// if (!Object.values(Lang).includes(computedLocalLang)) computedLocalLang = Lang.en;
+var localLang = Quasar.lang.getLocale();
+var computedLocalLang = (localLang?.split("-")[0] || Lang.en) as Lang;
+if (!Object.values(Lang).includes(computedLocalLang)) computedLocalLang = Lang.en;
 
 export const lang = ref<Lang>(Lang.en);
 export const pseudo = ref("");

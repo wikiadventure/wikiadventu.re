@@ -41,21 +41,42 @@ import { i18n } from 'src/boot/i18n';
 import { gameLayoutManagerSetup } from 'store/gameLayoutManager';
 import { VanillaPhaseType } from 'store/lobby/game/phase/type';
 import { lobbySetup } from 'store/lobby';
-import { onRollback, WsRollback } from 'store/ws/packetHandler/vanilla/rollback';
-import { onGamePhase, WsGamePhase } from 'store/ws/packetHandler/vanilla/gamePhase';
-import { onWinRound, WsWinRound } from 'store/ws/packetHandler/vanilla/winRound';
-import { onVoteResult, WsVoteResult } from 'store/ws/packetHandler/vanilla/voteResult';
+import { onRollback, rollbackHandler, WsRollback } from 'store/ws/packetHandler/vanilla/rollback';
+import { gamePhaseHandler, onGamePhase, WsGamePhase } from 'store/ws/packetHandler/vanilla/gamePhase';
+import { onWinRound, winRoundHandler, WsWinRound } from 'store/ws/packetHandler/vanilla/winRound';
+import { onVoteResult, voteResultHandler, WsVoteResult } from 'store/ws/packetHandler/vanilla/voteResult';
 import { countDownSound } from 'store/audio/vanilla/countDown';
 import TouchSurfaceHandler from 'src/script/touchSurfaceHandler';
 import { connect } from 'store/ws/action';
 import { useI18n } from 'vue-i18n';
+import { PacketHandlers } from 'store/ws/packetHandler';
+import { messageHandler } from 'store/ws/packetHandler/vanilla/message';
+import { pathHandler } from 'store/ws/packetHandler/vanilla/path';
+import { playerJoinHandler } from 'store/ws/packetHandler/vanilla/playerJoin';
+import { playerLeftHandler } from 'store/ws/packetHandler/vanilla/playerLeft';
+import { setOwnerHandler } from 'store/ws/packetHandler/vanilla/setOwner';
+import { updateScoreHandler } from 'store/ws/packetHandler/vanilla/updateScore';
+import { voteSkipHandler } from 'store/ws/packetHandler/vanilla/voteSkip';
 
 export default defineComponent({
   name: 'RandomMode',
   components: { ClassicSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory },
   setup() {
+    PacketHandlers.splice(0, PacketHandlers.length);
+    PacketHandlers.push(
+      messageHandler,
+      gamePhaseHandler,
+      pathHandler,
+      playerJoinHandler,
+      playerLeftHandler,
+      rollbackHandler,
+      setOwnerHandler,
+      updateScoreHandler,
+      voteResultHandler,
+      voteSkipHandler,
+      winRoundHandler);
     connect();
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     var {
       showGameMenu,
       showRoundWin,

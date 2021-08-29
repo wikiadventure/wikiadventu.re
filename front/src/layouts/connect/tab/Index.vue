@@ -194,7 +194,7 @@ export default defineComponent({
   name: 'Index',
   components: { ContentPannel, LogoShowIn, CompactLangSwitch, ThemeSwitch, WalletDialog },
   setup() {
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     const showNano = ref(false);
     return {
       showNano,

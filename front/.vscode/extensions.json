@@ -1,7 +1,6 @@
 {
   "recommendations": [
-    "octref.vetur",
-    "francescopastore.quasar-extension-pack"
+    "sacramentix.quasar-v2-extension-pack"
   ],
   "unwantedRecommendations": [
     "hookyqr.beautify",

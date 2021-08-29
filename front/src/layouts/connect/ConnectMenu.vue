@@ -146,7 +146,7 @@ export default defineComponent({
 
         //check if the lobby provided in the url exist
     const route = useRoute();
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     const vm = this;
     if (route.params.id != undefined) {
       const isTwitch = route.path.startsWith("/twitchConnect/")

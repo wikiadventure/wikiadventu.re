@@ -17,14 +17,6 @@ import routes from './routes';
  * with the Router instance.
  */
 
-Dark.set(true);
-Notify.registerType('annonce', {
-  icon: 'announcement',
-  progress: true,
-  color: 'teal',
-  textColor: 'white',
-  actions: [{ icon: 'close', color: 'white' }]
-})
 const createHistory = process.env.SERVER
   ? createMemoryHistory
   : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);

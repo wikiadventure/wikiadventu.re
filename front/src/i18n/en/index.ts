@@ -32,7 +32,7 @@ export default {
     password: "Password",
     gameLoop: "Select a game mode",
     slot: "Slots",
-    hint: {
+    error: {
       minChars3: '3 character minimum',
       maxChars25: '25 character maximum',
       restrictedChars: 'Don\'t use any of this character < > : | % $ / \\',
@@ -125,15 +125,15 @@ export default {
     InvalidMethod: "??? Invalid http request method",
     InvalidForm: "??? Form format error",
     InvalidLobbyType: "??? Non-existent lobby type",
-    invalidID: "The Party ID provided is invalid",
-    noLobbyFoundWithID: "No game found with this Party ID",
-    noLobbyFoundWithChannelName: "No game found with this channel name",
-    lobbyFull: "The party you want to join is full",
-    invalidPassword: "Invalid Password",
+    InvalidID: "The Party ID provided is invalid",
+    NoLobbyFoundWithID: "No game found with this Party ID",
+    NoLobbyFoundWithChannelName: "No game found with this channel name",
+    LobbyFull: "The party you want to join is full",
+    InvalidPassword: "Invalid Password",
     InvalidGameLoop: "??? Non-existent game mode",
     InvalidTwitchCode: "Client error while connecting twitch",
-    lobbyLimitReached: "The party limit has been reached!",
-    privateLobbyLimitReached: "The private party limit has been reached!",
+    LobbyLimitReached: "The party limit has been reached!",
+    PrivateLobbyLimitReached: "The private party limit has been reached!",
     TwitchConnectionError: "Server error while connecting twitch"
   }
 };

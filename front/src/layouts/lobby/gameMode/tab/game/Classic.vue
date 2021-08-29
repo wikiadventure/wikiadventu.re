@@ -68,7 +68,7 @@ export default defineComponent({
   name: 'ClassicGameTab',
   components: { VoteInput, preview },
   setup(){
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     var {
       showGameMenu,
       showRoundWin,

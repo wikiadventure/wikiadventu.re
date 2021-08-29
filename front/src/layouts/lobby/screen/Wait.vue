@@ -125,7 +125,7 @@ import { useI18n } from 'vue-i18n';
 export default defineComponent({
   name: 'Wait',
   setup() {
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     var {
       players,
       selfId,

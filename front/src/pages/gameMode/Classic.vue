@@ -72,7 +72,7 @@ export default defineComponent({
       winRoundHandler);
 
     connect();
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     var $q = useQuasar();
     var {
       showGameMenu,

@@ -21,7 +21,7 @@ export default defineComponent({
   name: 'ShortcutButton',
   components: { ShortcutDialog },
   setup() {
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     return {
       t
     }

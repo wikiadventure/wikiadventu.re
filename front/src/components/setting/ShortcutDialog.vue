@@ -69,42 +69,43 @@ import ExitBtn from "src/components/ExitButton.vue";
 import { GameLoopType, VanillaLoopType } from "store/lobby/game/loop/type";
 import { gameLoop } from "store/lobby/state";
 
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { useI18n } from "vue-i18n";
 
 export default defineComponent({
   name: 'ShortcutDialog',
   components: { ExitBtn },
   setup() {
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     const open = ref(false);
-    return {
-      open,
-      t
-    }
-  },
-  computed: {
-    shortcuts() {
+
+    const shortcuts = computed(() => {
       var shortcuts = [];
       shortcuts.push(
         {
           combo: "ctrl + alt + shift",
-          desc: i18n.global.t("shortcut.openMenu")
+          desc: t("shortcut.openMenu")
         },
         {
           combo: "ctrl + alt + Q",
-          desc: i18n.global.t("shortcut.disableSafeMode")
+          desc: t("shortcut.disableSafeMode")
         }
       );
       if (hasEndPage.includes(gameLoop.value)) {
         shortcuts.push(
           {
-            combo: "ctrl + alt + " + i18n.global.t("shortcut.spaceKey"),
-            desc: i18n.global.t("shortcut.openEndPage") as string
+            combo: "ctrl + alt + " + t("shortcut.spaceKey"),
+            desc: t("shortcut.openEndPage") as string
           }
         )
       }
       return shortcuts;
+    });
+
+    return {
+      open,
+      shortcuts,
+      t
     }
   }
 });

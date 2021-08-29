@@ -30,7 +30,7 @@ export default defineComponent({
   name: 'PublicJoin',
   components: { ConnectForm, ConnectBtn, LangSelect, PasswordInput, PseudoInput, IdInput, GameLoopSelect },
   setup() {
-    const { t } = useI18n();
+    const { t } = useI18n({ useScope: 'global' });
     const password = ref("");
     return {
       password,
