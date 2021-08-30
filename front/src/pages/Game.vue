@@ -9,6 +9,11 @@ import { ModLoopType, VanillaLoopType } from 'store/lobby/game/loop/type';
 import { gameLoop } from 'store/connect/state';
 import { onBeforeRouteLeave } from "vue-router";
 import { useI18n } from 'vue-i18n';
+import { chatReset } from 'store/chat/state';
+import { gameLayoutManagerReset } from 'store/gameLayoutManager/state';
+import { lobbyReset } from 'store/lobby/state';
+import { playerReset } from 'store/player/state';
+import { voteReset } from 'store/vote/state';
 
 export default defineComponent({
   name: 'Game',
@@ -21,6 +26,11 @@ export default defineComponent({
     ),
   },
   setup() {
+    chatReset();
+    gameLayoutManagerReset();
+    lobbyReset();
+    playerReset();
+    voteReset();
     const { t } = useI18n({ useScope: 'global' });
     var gameLoopName = computed(()=> VanillaLoopType[gameLoop.value] || ModLoopType[gameLoop.value] );
 

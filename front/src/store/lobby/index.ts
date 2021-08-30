@@ -21,16 +21,3 @@ export function lobbySetup() {
       startTimer
     }
 }
-
-export function lobbyReset() {
-  lang.value = Lang.en;
-  type.value = LobbyType.Public;
-  slot.value = 0;
-  gameLoop.value = VanillaLoopType.Classic;
-  gamePhase.value = VanillaPhaseType.Waiting;
-  timeController.value = new AbortController();
-  timeLeft.value = 0
-  timeStamp.value = 0
-  round.value = 0
-  currentRound.value = 0
-}

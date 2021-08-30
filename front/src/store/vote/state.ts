@@ -8,3 +8,12 @@ export const suggestions = ref<WikiSuggestion[]>([]);
 export const startPage = ref<WikiPreview>({});
 export const endPage = ref<WikiPreview>({});
 
+export function voteReset() {
+    vote.value = {input:""};
+    voteInput.value = "";
+    voteInputFocus.value = false;
+    suggestions.value = [];
+    startPage.value = {};
+    endPage.value = {};
+}
+  

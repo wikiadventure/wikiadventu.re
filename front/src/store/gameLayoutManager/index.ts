@@ -14,15 +14,6 @@ export function gameLayoutManagerSetup() {
     }
 }
 
-export function gameLayoutManagerReset() {
-    showGameMenu.value = false;
-    showRoundWin.value = false;
-    showPageHistory.value = false;
-    showLeaderboard.value = false;
-    showWikiEndPage.value = false;
-    gameMenuTab.value = "game";
-}
-
 watch(gameMenuTab, t => {
   if (t == "chat" && showGameMenu.value) seenMessages.value == messages.value.length;
 });

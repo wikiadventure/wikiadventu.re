@@ -20,13 +20,3 @@ export function playerSetup() {
       playersVoteSkip
     }
 }
-
-export function playerReset() {
-  uuid.value = "";
-  players.value = [];
-  selfId.value = -1;
-  ownerId.value = -2;
-  winnerId.value = -3;
-  winnerPageHistory.value = [];
-  winnerTime.value = -1;
-};

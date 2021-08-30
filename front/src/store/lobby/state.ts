@@ -16,3 +16,19 @@ export const timeLeft = ref(0);// Time left until the end of the round updated l
 export const timeStamp = ref(0);// A timestamp of when the current round start used by the Time Controller
 export const round = ref(0);
 export const currentRound = ref(0);
+
+
+export function lobbyReset() {
+    id.value = "";
+    lang.value = Lang.en;
+    type.value = LobbyType.Public;
+    slot.value = 0;
+    gameLoop.value = VanillaLoopType.Classic;
+    gamePhase.value = VanillaPhaseType.Waiting;
+    time.value = 0;
+    timeController.value = new AbortController();
+    timeLeft.value = 0
+    timeStamp.value = 0
+    round.value = 0
+    currentRound.value = 0
+}
