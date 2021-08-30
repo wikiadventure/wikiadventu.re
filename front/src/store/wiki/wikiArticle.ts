@@ -20,14 +20,12 @@ interface link {
   title: string
 }
 export default class WikiArticle {
-  title:string;
+  title= "";
   doc?:Document;
-  links:link[];
-  isMobile:boolean;
-  constructor(isMobile = false) {
-    this.title = "";
-    this.links = [];
-    this.isMobile = isMobile;
+  links:link[] = [];
+  isMobile = false;
+  constructor() {
+
   }
 
   get headings() {
@@ -48,7 +46,7 @@ export default class WikiArticle {
     return headings
   }
 
-  async fetch(title:string, lang:Lang) {
+  async fetch(title:string, lang:Lang, isMobile = false) {
     var url = new URL('https://'+lang+'.wikipedia.org/w/api.php');
     url.search = new URLSearchParams({
       action: "parse",
@@ -62,7 +60,8 @@ export default class WikiArticle {
       page: title
     }).toString();
     const response:wikiResponse = await fetch(url.toString(), { headers: wikiHeaders })
-    .then(function(response){return response.json()});
+    .then(r => r.json());
+    this.isMobile = isMobile;
     this.title = response.parse.title;
     this.links = response.parse.links;
     this.formatHTML(response.parse.text);

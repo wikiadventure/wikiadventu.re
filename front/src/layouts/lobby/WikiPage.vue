@@ -126,13 +126,11 @@ import { nextTick, reactive, ref } from 'vue';
 import ExitBtn from 'src/components/ExitButton.vue';
 import { defineComponent } from 'vue';
 import WikiArticle from 'store/wiki/wikiArticle';
-
 import { scrollToID } from 'src/script/scrollToID';
 import { settingSetup } from 'store/setting';
-import { lobbySetup } from 'store/lobby';
 import { sendValidate } from 'store/ws/packetSender/vanilla/validate';
 import { lang } from 'store/lobby/state';
-import { Notify, useQuasar } from 'quasar'
+import { Notify, useMeta, useQuasar } from 'quasar';
 
 export default defineComponent({
   name: 'WikiPage',
@@ -142,72 +140,61 @@ export default defineComponent({
     //title:String,
     //content:String
   },
-  setup() {
-    var $q = useQuasar();
-    var {
+  setup(props) {
+    const $q = useQuasar();
+
+    const {
       safeModeInterrupted,
       safeModeActive
     } = settingSetup();
-    var wiki = ref<HTMLElement>();
-    var wikiArticle = reactive<WikiArticle>(new WikiArticle($q.platform.is.mobile));
-    var loading = ref(false);
-    var fade = ref(false);
-    var title = ref("");
-    var content = ref("");
 
-    return {
-      safeModeActive,
-      safeModeInterrupted,
-      lang,
-      wiki,
-      wikiArticle,
-      loading,
-      fade,
-      title,
-      content
-    }
-  },
-  meta () {
-    if (!this.disabled) return;
-    return {
-      title: "Wiki Adventure : " + this.title
-    }
-  },
-  methods: {
-    async requestWikiPage(url:string) {
-      var vm = this;
-      if (vm.loading) return;
-      vm.loading = true;
-      vm.safeModeActive = true;
-      await vm.fetchArticle(url)
-        .then(article => {
-          vm.fade = true;
+    const wiki = ref<HTMLElement>();
+    const wikiArticle = reactive<WikiArticle>(new WikiArticle());
+    const loading = ref(false);
+    const fade = ref(false);
+    const title = ref("");
+    const content = ref("");
+
+    props.disabled || useMeta(() => {
+      return {
+        title: wikiArticle.title || "Wiki Adventure"
+      }
+    })
+
+    async function requestWikiPage(url:string) {
+      if (loading.value) return;
+      loading.value = true;
+      safeModeInterrupted.value = true;
+      await fetchArticle(url)
+        .then(a => {
+          fade.value = true;
           setTimeout(() => {
             nextTick().then(() => {
-              vm.loading = false;
-              vm.redirectLinks(vm.wiki);
+              loading.value = false;
+              redirectLinks(wiki.value);
             });
-            vm.fade = false;
+            fade.value = false;
           }, 100);
         }
-      ).catch((e:any) => {
-        vm.loading = false;
-        vm.fade = false;
+      ).catch(e => {
+        loading.value  = false;
+        fade.value  = false;
+        //TODO: must translate this
         Notify.create({
           type: 'negative',
           position: 'bottom-right',
           message: 'A problem occurs when fetching wikipedia article : ' + e
         });
       }); 
-    },
-    redirectLinks(doc?:HTMLElement) {
+    }
+
+    function redirectLinks(doc?:HTMLElement) {
       if(!doc) return;
-      var vm = this;
       var links = doc.getElementsByTagName("a");
       for (var i=0;i<links.length;i++) {
         links[i].addEventListener("click",function(e){
           e.preventDefault();
-          vm.onLinkClick(this);
+          onLinkClick(this);
         });
         var href = links[i].getAttribute("href");
         var classes = links[i].classList;
@@ -218,7 +205,7 @@ export default defineComponent({
           if (href!.indexOf(":") != -1) {
             var sub = href.substring(6);
             var d = decodeURI(sub).replace( /\_/g, ' ' );
-            if (this.wikiArticle.links.find(l => l.title == d && l.ns == 0)) {
+            if (wikiArticle.links.find(l => l.title == d && l.ns == 0)) {
               classes.add("wikiLink");
             } else {
               classes.add("portalLink");
@@ -230,33 +217,45 @@ export default defineComponent({
           classes.add("notWikiLink");
         }
       }
-    },
-    onLinkClick(link:HTMLAnchorElement) {
+    }
+
+    function onLinkClick(link:HTMLAnchorElement) {
       var linkHref = link.getAttribute("href");
       if (linkHref == undefined) return;
       //check if the link go to another wikipage and not info page or external
-      if (!this.disabled && link.classList.contains("wikiLink")) {
+      if (!props.disabled && link.classList.contains("wikiLink")) {
         var url = linkHref.substring(6);
         var anchor = url.indexOf("#");
         if (anchor != -1) url = url.substring(0, anchor);
         url = decodeURIComponent(url);
         sendValidate(url);
-        this.requestWikiPage(url).then(() => {
-          if (anchor != -1) this.scrollToAnchor(url.substring(anchor+1));
-          else this.wiki?.scrollTo(0,0);
+        requestWikiPage(url).then(() => {
+          if (anchor != -1) scrollToAnchor(url.substring(anchor+1));
+          else wiki.value?.scrollTo(0,0);
         });
       } else if (linkHref.startsWith("#")) {
-        this.scrollToAnchor(linkHref.substring(1));
+        scrollToAnchor(linkHref.substring(1));
       }
-    },
-    async fetchArticle(title:string) {
-      this.safeModeInterrupted = false;
-      this.wikiArticle = new WikiArticle(this.$q.platform.is.mobile);
-      return await this.wikiArticle.fetch(title, this.lang);
-    },
-    scrollToAnchor(id:string) {
-      scrollToID(id,this.wiki);
-    },
+    }
+
+    async function fetchArticle(title:string) {
+      safeModeInterrupted.value = false;
+      return await wikiArticle.fetch(title, lang.value, $q.platform.is.mobile);
+    }
+    
+    function scrollToAnchor(id:string) {
+      scrollToID(id, wiki.value);
+    }
+
+    return {
+      safeModeActive,
+      wiki,
+      wikiArticle,
+      loading,
+      fade,
+      title,
+      content
+    }
   }
 });
 </script>
