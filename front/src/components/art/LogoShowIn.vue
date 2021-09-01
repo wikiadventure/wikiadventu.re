@@ -18,6 +18,7 @@
   perspective: 75vmin;
   transform: translate3d(0px, 0px, 0px);
   opacity: 0;
+  filter: drop-shadow(0 0 25px rgba(18, 230, 238, 0.54));
   animation: 0.8005s steps(1, end) forwards logo-visibility; // prevent logo beeing visible at start
 
   .zTransform {
@@ -35,7 +36,6 @@
   }
   .logo img {
     transform: translate3d(0px, 0px, 0px);
-    filter: drop-shadow(0 0 25px rgba(18, 230, 238, 0.54));
     animation: 1.5s cubic-bezier(0, 1, 1, 1) 0.8s logo-fast-spin;
     width: 75vmin;
     height: auto;
