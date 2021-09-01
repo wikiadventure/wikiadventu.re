@@ -10,7 +10,6 @@ export const winnerPageHistory= ref<string[]>([]);
 export const winnerTime = ref(-1); 
 
 export function playerReset() {
-    uuid.value = "";
     players.value = [];
     selfId.value = -1;
     ownerId.value = -2;

@@ -1,4 +1,4 @@
-import { deleteVote, loadInputSuggestions } from "./actions";
+import { deleteVote, loadInputSuggestions, searchVote, submitSuggestion } from "./actions";
 import { vote, suggestions, startPage, endPage, voteInput, voteInputFocus } from "./state";
 
 export function voteSetup() {
@@ -10,6 +10,8 @@ export function voteSetup() {
     startPage,
     endPage,
     deleteVote,
+    searchVote,
+    submitSuggestion,
     loadInputSuggestions
   }
 }

@@ -1,19 +1,20 @@
-import { ref } from "vue";
+import { ref, reactive } from "vue";
+import { resetPreview, resetVote } from "./actions";
 import { WikiPreview, WikiSuggestion, WikiVote } from "./type";
 
-export const vote = ref<WikiVote>({input:""});
+export const vote = reactive<WikiVote>({input:""});
 export const voteInput = ref("");
 export const voteInputFocus = ref(false);
 export const suggestions = ref<WikiSuggestion[]>([]);
-export const startPage = ref<WikiPreview>({});
-export const endPage = ref<WikiPreview>({});
+export const startPage = reactive<WikiPreview>({});
+export const endPage = reactive<WikiPreview>({});
 
 export function voteReset() {
-    vote.value = {input:""};
+    resetVote();
     voteInput.value = "";
     voteInputFocus.value = false;
     suggestions.value = [];
-    startPage.value = {};
-    endPage.value = {};
+    resetPreview(startPage);
+    resetPreview(endPage);
 }
   

@@ -17,13 +17,7 @@ export const timeStamp = ref(0);// A timestamp of when the current round start u
 export const round = ref(0);
 export const currentRound = ref(0);
 
-
 export function lobbyReset() {
-    id.value = "";
-    lang.value = Lang.en;
-    type.value = LobbyType.Public;
-    slot.value = 0;
-    gameLoop.value = VanillaLoopType.Classic;
     gamePhase.value = VanillaPhaseType.Waiting;
     time.value = 0;
     timeController.value = new AbortController();

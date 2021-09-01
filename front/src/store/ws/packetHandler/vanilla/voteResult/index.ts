@@ -17,11 +17,11 @@ export function canProcess(p:Packet<unknown>): p is Packet<WsVoteResult> {
 }
 
 export async function process(v:WsVoteResult) {
-    startPage.value.title = v.start;
-    endPage.value.title = v.end
+    startPage.title = v.start;
+    endPage.title = v.end
     var previews = await loadPreviews([v.start, v.end], lang.value);
-    startPage.value = previews.find((w) => w.title == v.start) || {};
-    endPage.value = previews.find((w) => w.title == v.end) || {};
+    Object.assign(startPage, previews.find((w) => w.title == v.start) || {});
+    Object.assign(endPage, previews.find((w) => w.title == v.end) || {});
     onVoteResult.forEach(f=>f(v));
 }
 
