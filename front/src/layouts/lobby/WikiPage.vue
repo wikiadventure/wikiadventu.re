@@ -254,7 +254,13 @@ export default defineComponent({
       loading,
       fade,
       title,
-      content
+      content,
+      requestWikiPage,
+      redirectLinks,
+      onLinkClick,
+      fetchArticle,
+      scrollToAnchor
+
     }
   }
 });
