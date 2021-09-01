@@ -1,8 +1,8 @@
 <template>
   <q-select
     v-model="lang" name="lang" outlined hint=""
-    :options="options" :label="t('input.langSelect')" 
-    :display-value="getLabel(lang)"
+    :options="allLangOptions" :label="t('input.langSelect')" 
+    :display-value="getLabel(lang)" emit-value map-options
     :dense="$q.screen.lt.sm" v-bind="$attrs"
   >
   </q-select>
