@@ -103,7 +103,7 @@ import { winnerPageHistory } from 'store/player/state';
 import { playerSetup } from 'store/player';
 
 export default defineComponent({
-  name: 'Wait',
+  name: 'PageHistory',
   components: { ExitBtn },
   setup() {
     var {
