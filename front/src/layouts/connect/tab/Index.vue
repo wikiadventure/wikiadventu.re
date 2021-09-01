@@ -118,10 +118,10 @@
   }
 }
 #HowToPlay, #Contribution{
-  color: $wa-4;
+  color: $clr-accent-alt;
 }
 #News {
-  color: $wa-3;
+  color: $clr-accent;
 }
 #Contribution {
   pointer-events: all;
@@ -148,24 +148,24 @@
 }
 .skewLineContainer.first {
   .skewLine {
-    background: $wa-1;
+    background: $clr-main;
   }
 }
 .skewLineContainer.second {
   .skewLine {
-    background: $wa-2;
+    background: $clr-alt;
   }
 }
 .skewLineContainer.third {
   .skewLine {
-    background: $wa-1;
+    background: $clr-main;
   }
 }
 .wrapper.first, .wrapper.third {
-  background: $wa-1;
+  background: $clr-main;
 }
 .wrapper.second {
-  background: $wa-2;
+  background: $clr-alt;
 }
 .body--dark {
   .skewLine {

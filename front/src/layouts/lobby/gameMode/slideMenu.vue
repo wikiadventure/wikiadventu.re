@@ -107,8 +107,8 @@
 }
 
 .menu-tabs {
-  background: $wa-2;
-  color: $wa-3;
+  background: $clr-alt;
+  color: $clr-accent;
 }
 </style>
 <script lang="ts">
