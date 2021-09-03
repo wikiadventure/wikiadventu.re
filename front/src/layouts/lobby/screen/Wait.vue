@@ -34,7 +34,7 @@
   >div {
     background: hsla(0,0%,50%,0.15);
     div {
-      color: var(--clr-main);
+      color: var(--clr-reverse);
     }
   }
 }
