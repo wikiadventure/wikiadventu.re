@@ -7,22 +7,16 @@ import { sendVote } from "store/ws/packetSender/vanilla/vote";
 import { suggestions, vote, voteInput } from "./state";
 import { i18n } from "src/boot/i18n";
 
+export function deleteVote() {
+  vote.value = {input:""};
+  sendResetVote();
+};
+
 export function resetPreview(p:WikiPreview) {
   p.title = undefined;
   p.description = undefined;
   p.thumbnail = undefined;
 }
-
-export function resetVote() {
-  vote.input = "";
-  vote.label = undefined;
-  resetPreview(vote);
-}
-
-export function deleteVote() {
-  resetVote();
-  sendResetVote();
-};
 
 export async function noDebounceLoadInputSuggestions(vote:string, l=lang.value) {
   console.log("vote : "+voteInput.value);
@@ -33,15 +27,15 @@ export const loadInputSuggestions = debounce(noDebounceLoadInputSuggestions, 250
 export async function searchVote(v:string) {
   var suggestion = await loadSuggestions(v, lang.value, 1);
   if (suggestion.length == 0) {
-    vote.title = undefined;
-    vote.description = i18n.global.t('gameTab.vote.noPageFoundDescription')
-    vote.label = v;
-    vote.thumbnail = undefined;
+    vote.value.title = undefined;
+    vote.value.description = i18n.global.t('gameTab.vote.noPageFoundDescription')
+    vote.value.label = v;
+    vote.value.thumbnail = undefined;
   } else {
-    vote.title = suggestion[0].title;
-    vote.label = suggestion[0].title;
-    vote.description = suggestion[0].description || i18n.global.t('gameTab.vote.noVoteDescription');
-    vote.thumbnail = suggestion[0].thumbnail;
+    vote.value.title = suggestion[0].title;
+    vote.value.label = suggestion[0].title;
+    vote.value.description = suggestion[0].description || i18n.global.t('gameTab.vote.noVoteDescription');
+    vote.value.thumbnail = suggestion[0].thumbnail;
     
   }
   sendVote(v);
@@ -49,7 +43,7 @@ export async function searchVote(v:string) {
 
 export async function submitSuggestion(s:WikiSuggestion) {
   if (s.title == null) return;
-  vote.input = s.title;
-  Object.assign(vote, s);
-  vote.title
+  
+  vote.value = Object.assign({ input: s.title }, s);
+  console.log("submit : ", vote.value);
 }
