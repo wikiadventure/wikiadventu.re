@@ -33,14 +33,14 @@
     transform: translate3d(0px, 0px, 0px);
     animation: 6s linear 0.8s logo-spin infinite;
     will-change: transform;
+    img {
+      transform: translate3d(0px, 0px, 0px);
+      animation: 1.5s cubic-bezier(0, 1, 1, 1) 0.8s logo-fast-spin;
+      width: 75vmin;
+      height: auto;
+    }
   }
-  .logo img {
-    transform: translate3d(0px, 0px, 0px);
-    animation: 1.5s cubic-bezier(0, 1, 1, 1) 0.8s logo-fast-spin;
-    width: 75vmin;
-    height: auto;
-  }
-
+  
   .title {
     will-change: transform;
     position: absolute;
@@ -85,6 +85,7 @@
 }
 @keyframes logo-blur-fade-in {
   0% {
+    //we don't start at 0 because browser make optimisation so they don't load the logo and it will pop of with unwanted delay
     opacity: 0.001;
     transform: scale3d(1,1,1);
   }
@@ -111,6 +112,23 @@
   0% { transform: translate3d(-225vmin, 225vmin, -225vmin); }
   10% { transform: translate3d(-45vmin, 45vmin, -180vmin); }
   15%, 100% { transform: translate3d(0vmin, 0vmin, 0vmin); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-show-in {
+    animation: 0s forwards logo-visibility;
+    .zTransform {
+      animation: 0s logo-zTransform;
+    }
+    .logo {
+      animation: none;
+      img {
+        animation: none;
+      }
+    }
+    .title {
+      animation: 0s logo-blur-fade-in;
+    }
+  }
 }
 </style>
 <script lang="ts">
