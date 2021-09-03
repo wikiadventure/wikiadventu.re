@@ -11,30 +11,16 @@
   </q-toggle>
 </template>
 <style lang="scss">
-.body--light {
-  .safeModeToggle {
-    .q-toggle__thumb:after {
-      background: var(--wa-color-almost-black);
-    }
-    .q-icon {
-      color: var(--wa-color-blue-white);
-      opacity: 1;
-    }
+.safeModeToggle {
+  .q-toggle__thumb:after {
+    background: var(--clr-reverse);
   }
-}
-.body--dark {
-  .safeModeToggle {
-    .q-toggle__thumb:after {
-      background: var(--wa-color-almost-black);
-    }
-    .q-icon {
-      color: var(--wa-color-dark-teal);
-      opacity: 1;
-    }
+  .q-icon {
+    color: var(--clr-main)!important;
+    opacity: 1;
   }
 }
 </style>
-
 <script lang="ts">
 import { safeMode } from 'store/setting/state';
 import { defineComponent } from 'vue';

@@ -59,38 +59,15 @@
   margin: 4px;
   font-size: 2em;
 }
-.body--dark {
-  .page-history-container {
-    background: var(--wa-color-almost-black);
-  }
-  .page-history-page {
-    background: var(--wa-color-almost-black);
-    div {
-      background: #191919;
-      div {
-        color: var(--wa-color-blue-white);
-      }
-    }
-  }
-  .page-history-title {
-    color: var(--wa-color-blue-white);
-  }
+.page-history-container {
+  background: var(--clr-alt);
 }
-.body--light {
-  .page-history-container {
-    background: var(--wa-color-light-teal);
-  }
-  .page-history-page {
-    background: var(--wa-color-light-teal);
+.page-history-page {
+  >div {
+    background: hsla(0,0%,50%,0.15);
     div {
-      background: var(--wa-color-blue-white);
-      div {
-        color: var(--wa-color-almost-black);
-      }
+      color: var(--clr-main);
     }
-  }
-  .page-history-title {
-    color: var(--wa-color-blue-white);
   }
 }
 </style>

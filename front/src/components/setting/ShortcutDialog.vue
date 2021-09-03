@@ -26,7 +26,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background: var(--wa-color-dark-blue);
+    background: var(--clr-alt);
     @media screen and (max-width: 600px) {
       margin: 0;
       height: 100%;

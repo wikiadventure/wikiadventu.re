@@ -4,7 +4,7 @@
 <style lang="scss">
 .twitch-btn {
   background: #6441A4;
-  color: var(--wa-color-blue-white);
+  color: var(--clr-light);
 }
 </style>
 <script lang="ts">

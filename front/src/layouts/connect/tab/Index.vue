@@ -98,7 +98,7 @@
 .skewLine {
   position: absolute;
   transform-origin: top left;
-  border-top: 1px solid var(--wa-color-blue-white);
+  border-top: 1px solid var(--clr-light);
   left: -2%;
   width: 104%;
   height: 50em;
@@ -128,18 +128,18 @@
 }
 .github {
   background: #000;
-  color: var(--wa-color-blue-white);
+  color: var(--clr-light);
 }
 .discord {
   background: #7289DA;
-  color: var(--wa-color-blue-white);
+  color: var(--clr-light);
 }
 .kofi {
   background: #29abe0;
-  color: var(--wa-color-blue-white);
+  color: var(--clr-light);
 }
 .nano {
-  background: var(--wa-color-blue-white);
+  background: var(--clr-light);
   color: #4a90e2;
 }
 .github, .discord, .nano, .kofi {

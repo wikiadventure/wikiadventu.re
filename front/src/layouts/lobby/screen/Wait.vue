@@ -17,9 +17,9 @@
       <div class="wait-action justify-evenly">
         <q-btn push class="action-btn" :label="t('invite')" @click="invite()" icon="mdi-link-variant"/>
         <div><!--Only to display tooltip over the disabled q btn -->
-          <q-btn :disable="isOwner" push class="action-btn" :label="t('start')" @click="start()" icon="mdi-check-bold"/>
-          <q-tooltip v-if="isOwner"  anchor="top middle" self="bottom middle" :offset="[10, 10]">
-            Only <q-icon size="xs" class="owner" name="mdi-crown"/> {{ owner.pseudo }} can choose to start
+          <q-btn :disable="!isOwner" push class="action-btn" :label="t('start')" @click="sendStart()" icon="mdi-check-bold"/>
+          <q-tooltip v-if="!isOwner"  anchor="top middle" self="bottom middle" :offset="[10, 10]">
+            Only <q-icon size="xs" class="owner" name="mdi-crown"/> {{ owner?.pseudo }} can choose to start
           </q-tooltip>
         </div>
       </div>
@@ -27,39 +27,15 @@
   </div>
 </template>
 <style lang="scss">
-.body--dark {
-  .wait-container {
-    background: var(--wa-color-almost-black);
-  }
-  .wait-players {
-    background: var(--wa-color-almost-black);
-    div {
-      background: #191919;
-      div {
-        color: var(--wa-color-blue-white);
-      }
-    }
-  }
-  .wait-slot {
-    color: var(--wa-color-blue-white);
-  }
+.wait-container {
+  background: var(--clr-alt);
 }
-.body--light {
-  .wait-container {
-    background: var(--wa-color-light-teal);
-  }
-  .wait-players {
-    background: var(--wa-color-light-teal);
+.wait-players {
+  >div {
+    background: hsla(0,0%,50%,0.15);
     div {
-      background: var(--wa-color-blue-white);
-      div {
-        color: var(--wa-color-almost-black);
-      }
-
+      color: var(--clr-main);
     }
-  }
-  .wait-slot {
-    color: var(--wa-color-blue-white);
   }
 }
 .wait-screen {
@@ -108,12 +84,10 @@
 .wait-slot {
   font-size: 2em;
 }
-.self {
-  color: var(--wa-color-dark-teal)!important;
+.self, .owner {
+  color: var(--clr-dark-teal)!important;
 }
-.owner {
-  color: var(--wa-color-dark-teal);
-}
+
 </style>
 <script lang="ts">
 import { defineComponent } from 'vue';
@@ -121,6 +95,7 @@ import { copyToClipboard, Notify } from 'quasar';
 import { playerSetup } from 'store/player';
 import { slot } from 'store/lobby/state';
 import { useI18n } from 'vue-i18n';
+import { sendStart } from 'store/ws/packetSender/vanilla/start';
 
 export default defineComponent({
   name: 'Wait',
@@ -162,6 +137,7 @@ export default defineComponent({
       isOwner,
       slot,
       invite,
+      sendStart,
       t
     }
   }

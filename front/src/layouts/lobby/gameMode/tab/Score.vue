@@ -17,7 +17,7 @@
 </template>
 <style lang="scss">
 .self {
-  color: var(--wa-color-dark-teal);
+  color: var(--clr-dark-teal);
 }
 </style>
 <script lang="ts">
@@ -30,7 +30,7 @@ export default defineComponent({
   name: 'ScoreTab',
   setup() {
     const { t } = useI18n({ useScope: 'global' });
-    var {
+    const {
       playersByScore,
       ownerId,
       selfId

@@ -15,19 +15,8 @@
   }
   .q-field__control {
     background: transparent!important;
-  }
-}
-.body--dark {
-  .compact-lang-switch {
-    .q-field__control div {
-      color: var(--wa-color-blue-white)!important;
-    }
-  }
-}
-.body--light {
-  .compact-lang-switch {
-    .q-field__control div {
-      color: var(--wa-color-almost-black)!important;
+    div {
+      color: var(--clr-reverse)!important;
     }
   }
 }

@@ -88,31 +88,31 @@
   }
 }
 .q-tab--active, .q-tab__indicator {
-  color: var(--wa-color-dark-teal)!important;
+  color: var(--clr-dark-teal)!important;
 }
 .q-tab--active.twitchTab, .twitchTab .q-tab__indicator {
   color: #6441A4!important;
 }
 .body--dark {
   .connect-tabs {
-    background: rgb(17,17,17);
+    background: scale-color($color: $clr-dark, $lightness: 3%);
     color: #ddd;
     border-top: solid 1px grey;
   }
   .connect-sub-tabs {
-    background: rgb(22,22,22);
+    background: scale-color($color: $clr-dark, $lightness: 6%);
     color: darkgray;
     border-top: solid 1px grey;
   }
 }
 .body--light {
   .connect-tabs {
-    background: rgb(200,200,200);
+    background:  scale-color($color: $clr-light, $lightness: -3%);
     color: #333;
     border-top: solid 1px grey;
   }
   .connect-sub-tabs {
-    background: rgb(230,230,230);
+    background:  scale-color($color: $clr-light, $lightness: -6%);
     color: #333;
     border-top: solid 1px grey;
   }

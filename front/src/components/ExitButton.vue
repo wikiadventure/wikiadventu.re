@@ -7,14 +7,8 @@
   right: 0;
   top: 0;
   filter: drop-shadow(2px 2px 3px black);
-}
-.body--dark .exit-btn {
-  border: 2px solid var(--wa-color-blue-white);
-  color: var(--wa-color-blue-white);
-}
-.body--light .exit-btn {
-  border: 2px solid var(--wa-color-almost-black);
-  color: var(--wa-color-almost-black);
+  border: 2px solid var(--clr-main);
+  color: var(--clr-main);
 }
 </style>
 <script lang="ts">

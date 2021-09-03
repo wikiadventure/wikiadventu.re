@@ -1,7 +1,7 @@
 <template>
   <div class="wiki-preview">
     <img class="img" v-if="wikiPreview?.thumbnail != null" :src="wikiPreview?.thumbnail?.source" :width="wikiPreview?.thumbnail?.width" :height="wikiPreview?.thumbnail?.height" />
-    <div class="img" v-else >
+    <div class="img none" v-else >
       <q-icon size="40px" name="mdi-help" />
     </div>
     <h3>{{ beforeTitle + (wikiPreview?.title || "???" ) }}<slot></slot></h3>
@@ -25,9 +25,11 @@
     width: 80px;
     height: 80px;
     border-radius: 3px;
+    background: hsla(0,0%,100%,0.5);
+
   }
   div.img {
-    background: inherit;
+    background: none;
     display: grid;
     place-items: center;
     border: 1px solid grey

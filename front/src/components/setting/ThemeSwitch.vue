@@ -7,30 +7,16 @@
   </q-toggle>
 </template>
 <style lang="scss">
-.body--light {
-  .darkModeToggle {
-    .q-toggle__thumb:after {
-      background: var(--wa-color-almost-black);
-    }
-    .q-icon {
-      color: var(--wa-color-blue-white);
-      opacity: 1;
-    }
+.darkModeToggle {
+  .q-toggle__thumb:after {
+    background: var(--clr-main);
   }
-}
-.body--dark {
-  .darkModeToggle {
-    .q-toggle__thumb:after {
-      background: var(--wa-color-almost-black);
-    }
-    .q-icon {
-      color: var(--wa-color-dark-teal);
-      opacity: 1;
-    }
+  .q-icon {
+    color: var(--clr-reverse);
+    opacity: 1;
   }
 }
 </style>
-
 <script lang="ts">
 import { Dark } from 'quasar';
 

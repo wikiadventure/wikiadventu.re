@@ -46,7 +46,7 @@
 .slideMenu {
   z-index: 6;
   transition: all ease-in-out 0.2s;
-	background: var(--wa-color-almost-black);
+
 	width: 50%;
   height: 100%;
   position: absolute;
@@ -70,8 +70,8 @@
   &.checked {
     transform: translate3d(0,0,0);
     .showMenu {
-      color: var(--wa-color-blue-white);
-      background: var(--wa-color-almost-black);
+      color: var(--clr-reverse);
+      background: var(--clr-main);
       .q-icon {
         transform: rotate(180deg);
       }
@@ -86,8 +86,8 @@
 	position: absolute;
 	left: 100%;
 	transition: all ease-in-out 0.2s;
-  color: var(--wa-color-almost-black);
-  background: var(--wa-color-blue-white);
+  color: var(--clr-main);
+  background: var(--clr-reverse);
   .q-icon {
     transform: rotate(0deg);
     transition: inherit;
@@ -103,7 +103,7 @@
 }
 
 .q-tab--active, .q-tab__indicator {
-  color: var(--wa-color-dark-teal)!important;
+  color: var(--clr-dark-teal)!important;
 }
 
 .menu-tabs {

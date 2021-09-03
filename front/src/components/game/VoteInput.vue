@@ -1,22 +1,21 @@
 <template>
   <q-form class="vote-input">
-    <preview :wikiPreview="votePreview" class="vote">
+    <preview :wikiPreview="vote" class="vote">
       <q-btn round dense flat icon="mdi-delete" class="voteDelete" @click="deleteVote()"></q-btn>
     </preview>
     
-    <q-input ref="voteInput" @focus="voteInputFocus = true" 
-            @blur="setTimeout(() => voteInputFocus = false, 250)"
-            @change="loadInputSuggestion()"
-            dense class="q-ma-sm" @keydown.enter.prevent="unfocus();sendVote(vote)" 
-            maxlength="255" outlined v-model="voteInput" :label="t('gameTab.vote.submitVote')" 
-            spellcheck="false" >
+    <q-input ref="input" 
+            @focus="voteInputFocus = true" @blur="unfocus()"
+            @keydown.enter.prevent="blur();sendVote(vote.input)" 
+            v-model="voteInput" :label="t('gameTab.vote.submitVote')" 
+            maxlength="255" outlined dense class="q-ma-sm" spellcheck="false" >
       <template v-slot:after>
-          <q-btn round dense flat icon="mdi-send" @click="unfocus();searchVote(voteInput)"/>
+          <q-btn round dense flat icon="mdi-send" @click="blur();searchVote(voteInput)"/>
       </template>
     </q-input>
     
     <div class="suggest" v-if="voteInputFocus">
-      <preview :wikiPreview="s" v-for="s in suggestions" :key="s.title" @click.stop="submitVote(s)" />
+      <preview v-for="s in suggestions" :wikiPreview="s" :key="s.title" @click.stop="blur();submitSuggestion(s)" />
     </div>
   </q-form>
 </template>
@@ -32,62 +31,70 @@
   position: absolute;
   border-radius: 10px;
   overflow: hidden;
-  width: 100%;
+  width: 98%;
   display: grid;
+  margin: 0 1%;
+  border: 1px solid #8885;
+  background: $clr-alt;
   .wiki-preview {
     border-bottom: 1px solid #8885;
     cursor: pointer;
     background: inherit;
-    :hover {
+    &:last-child {
+      border-bottom: none;
+    }
+    &:hover {
         filter: brightness(1.1);
     }
   }
    
 }
-.body--dark {
-  .suggest {
-    background: var(--wa-color-dark-blue);
-  }
-}
-.body--light {
-  .suggest {
-    background: var(--wa-color-light-teal);
-  }
-}
 </style>
 <script lang="ts">
 import preview from "components/game/WikiPreview.vue";
 
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import { voteSetup } from 'store/vote';
 import { sendVote } from 'store/ws/packetSender/vanilla/vote';
 import { useI18n } from "vue-i18n";
+import { noDebounceLoadInputSuggestions } from "store/vote/actions";
 
 export default defineComponent({
   name: "VoteInput",
   components: { preview },
   setup() {
     const { t } = useI18n({ useScope: 'global' });
-    var {
+    const {
       vote,
       voteInput,
       voteInputFocus,
+      suggestions,
       deleteVote,
+      searchVote,
+      submitSuggestion,
       loadInputSuggestions
     } = voteSetup();
 
-    var input = ref<any>();
+    watch(voteInput, (v)=>loadInputSuggestions(v));
 
-    function unfocus(){(input.value.blur() as any).blur()};
+    const input = ref<any>();
+    //the set time out is a hack to prevent vue from remove (v-if) the suggestions before it handle the click event on it
+    //nextTick don't work for some reason
+    function unfocus(){setTimeout(() => voteInputFocus.value = false,250)};
+    function blur(){input.value?.blur()};
     
     return {
       vote,
       voteInput,
       voteInputFocus,
+      suggestions,
       deleteVote,
-      loadInputSuggestions,
+      searchVote,
+      submitSuggestion,
+      noDebounceLoadInputSuggestions,
       sendVote,
       unfocus,
+      blur,
       t
     }
   }

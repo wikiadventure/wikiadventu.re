@@ -81,10 +81,10 @@
   }
 }
 .body--dark {
-  --wiki-page-bg: var(--wa-color-almost-black);
-  --wiki-page-color: var(--wa-color-blue-white);
+  --wiki-page-bg: var(--clr-main);
+  --wiki-page-color: var(--clr-reverse);
 
-  --wiki-link-color: var(--wa-color-dark-teal);
+  --wiki-link-color: var(--clr-teal);
   --not-wiki-link-color: #8e3a45;
   --portal-link-color: #168243;
   --anchor-link-color: #26488f;
