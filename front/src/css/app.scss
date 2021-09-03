@@ -59,7 +59,21 @@ body, html {
   opacity: 0;
 }
 
-.action-btn {
-  background: var(--wa-color-dark-teal);
-  color: var(--wa-color-blue-white);
+.body--dark {
+  .action-btn {
+    background: var(--clr-dark-teal);
+    color: var(--clr-light);
+  }
+}
+.body--light {
+  .action-btn {
+    background: var(--clr-light);
+    color: var(--clr-dark-teal);
+  }
+  .action-btn.disabled {
+    color: hsl(0,0%,40%);
+  }
+  .q-tab-panels {
+    background: var(--clr-light);
+  }
 }
