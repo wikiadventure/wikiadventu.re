@@ -1,44 +1,15 @@
+$clr-dark: hsl(0,0%,12%);
+$clr-dark-alt: hsl(203,22%,7%);
+$clr-light: hsl(180,100%,99%);
+$clr-dark-teal: hsl(187,76%,40%);
+$clr-teal: hsl(187,86%,49%);
+$clr-light-teal: hsl(187,97%,87%);
 
 :root {
-  /*--h-dark: 0;
-  --s-dark: 0%;
-  --l-dark: 12%;
-  --hsl-dark: var(--h-dark) var(--s-dark) var(--l-dark);
-  --clr-dark: hsl(var(--hsl-dark));
-
-  --h-dark-alt: 203;
-  --s-dark-alt: 22%;
-  --l-dark-alt: 7%;
-  --hsl-dark-alt: var(--h-dark-alt) var(--s-dark-alt) var(--l-dark-alt);
-  --clr-dark-alt: hsl(var(--hsl-dark-alt));
-
-  --h-light: 180;
-  --s-light: 100%;
-  --l-light: 95%;
-  --hsl-light: var(--h-light) var(--s-light) var(--l-light);
-  --clr-light: hsl(var(--hsl-light));
-
-  --h-dark-teal: 187;
-  --s-dark-teal: 76%;
-  --l-dark-teal: 40%;
-  --hsl-dark-teal: var(--h-dark-teal) var(--s-dark-teal) var(--l-dark-teal);
-  --clr-dark-teal: hsl(var(--hsl-dark-teal)); 
-
-  --h-teal: 187;
-  --s-teal: 86%;
-  --l-teal: 49%;
-  --hsl-teal: var(--h-teal) var(--s-teal) var(--l-teal);
-  --clr-teal: hsl(var(--hsl-teal));
-
-  --h-light-teal: 187;
-  --s-light-teal: 97%;
-  --l-light-teal: 87%;
-  --hsl-light-teal: var(--h-light-teal) var(--s-light-teal) var(--l-light-teal);
-  --clr-light-teal: hsl(var(--hsl-light-teal));*/
 
   --clr-dark: hsl(0,0%,12%);
   --clr-dark-alt: hsl(203,22%,7%);
-  --clr-light: hsl(180,100%,95%);
+  --clr-light: hsl(180,100%,99%);
   --clr-dark-teal: hsl(187,76%,40%);
   --clr-teal: hsl(187,86%,49%);
   --clr-light-teal: hsl(187,97%,87%);
@@ -49,12 +20,14 @@
   --clr-alt: var(--clr-dark-alt);
   --clr-accent: var(--clr-teal);
   --clr-accent-alt: var(--clr-dark-teal);
+  --clr-reverse: var(--clr-light);
 }
 .body--light {
   --clr-main: var(--clr-light);
   --clr-alt: var(--clr-light-teal);
   --clr-accent: var(--clr-dark-alt);
   --clr-accent-alt: var(--clr-dark);
+  --clr-reverse: var(--clr-dark);
 }
 
 $clr-main: var(--clr-main);
