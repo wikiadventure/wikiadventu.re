@@ -1,4 +1,4 @@
-import { WikiSuggestion, WikiVote, WikiPreview } from './type';
+import { WikiSuggestion, WikiPreview } from './type';
 import { debounce } from "quasar";
 import { lang } from "store/lobby/state";
 import { loadSuggestions } from "store/wiki/action";
@@ -45,5 +45,5 @@ export async function submitSuggestion(s:WikiSuggestion) {
   if (s.title == null) return;
   
   vote.value = Object.assign({ input: s.title }, s);
-  console.log("submit : ", vote.value);
+  sendVote(s.title);
 }
