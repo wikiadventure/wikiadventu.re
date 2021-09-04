@@ -15,7 +15,10 @@ class PacketEventSubscriber {
 
     public static function subscribe(lobby:Lobby, type:InternalClientPacketType, callback:(lobby:Lobby, player:Player, p:Any)->Void) {
         var subscriber = lobby.gameLoop.packetEventSubscribers.find((p)->p.type==type);
-        if (subscriber == null) subscriber = new PacketEventSubscriber(type);
+        if (subscriber == null) {
+            subscriber = new PacketEventSubscriber(type);
+            lobby.gameLoop.packetEventSubscribers.push(subscriber);
+        }
         subscriber.callbacks.push(callback);
         return () -> subscriber.callbacks.remove(callback);
     }
