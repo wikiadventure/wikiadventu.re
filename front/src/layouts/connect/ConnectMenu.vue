@@ -1,7 +1,7 @@
 <template>
   <q-layout class="tabMenu">
     <div class="tabPanel">
-      <q-tab-panels class="tabContent" v-model="tab" animated swipeable infinite>
+      <q-tab-panels class="tabContent" v-model="tab" animated :swipeable="$q.platform.has.touch" infinite>
         <q-tab-panel name="Home" class="q-pa-none tabContent scroll-y">
           <index></index>
         </q-tab-panel>
