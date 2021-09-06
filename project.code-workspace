@@ -1,4 +1,5 @@
 {
+	"extensions": {},
 	"folders": [
 		{
 			"name": "back",
@@ -30,40 +31,75 @@
 		"version": "2.0.0",
 		"tasks": [
 			{
-				"label": "Build Quasar PWA",
+				"label": "Quasar build",
 				"type": "shell",
-				"command": "cd ${workspaceFolder:front}; quasar build -m pwa",
+				"options": {
+					"cwd": "${workspaceFolder:front}"
+				},
+				"command": "quasar build -m ${input:QuasarMode}",
 				"problemMatcher": [
 					"$ts-webpack"
 				]
 			},
 			{
-				"label": "Debug Quasar PWA",
-				"type": "shell",
-				"command": "cd ${workspaceFolder:front}; quasar build -d -m pwa",
-				"problemMatcher": [
-					"$ts-webpack"
-				]
-			},
-			{
-				"label": "Quasar dev PWA",
+				"label": "Quasar dev",
 				"type": "shell",
 				"isBackground": true,
-				"command": "cd ${workspaceFolder:front}; quasar dev -m pwa",
+				"options": {
+					"cwd": "${workspaceFolder:front}"
+				},
+				"command": "quasar dev -m ${input:QuasarMode}",
 				"problemMatcher": [
-					"$ts-webpack-watch"
+					"$ts-webpack-watch",
+					{
+						"base": "$ts-webpack-watch",
+						"background": {
+							"activeOnStart": true,
+							"beginsPattern": " App •  WAIT  •",
+							"endsPattern": " App •  READY  •"
+						}
+					}
 				]
 			},
 			{
-				"label": "Build Haxe backend",
+				"label": "Haxe build",
 				"type": "shell",
-				"command": "cd ${workspaceFolder:back}; haxe node.hxml",
+				"options": {
+					"cwd": "${workspaceFolder:back}"
+				},
+				"command": "haxe node.hxml",
+				"problemMatcher": [
+					"$haxe"
+				]
+			},
+			{
+				"label": "Haxe dev",
+				"type": "shell",
+				"options": {
+					"cwd": "${workspaceFolder:back}"
+				},
+				"command": "lix watch node.hxml",
+				"isBackground": true,
 				"problemMatcher": [
 					"$haxe",
-					"$haxe-absolute",
-					"$haxe-error",
-					"$haxe-trace"
+					{	
+						"base": "$haxe",
+						"background": {
+							"activeOnStart": true,
+							"beginsPattern": "name",
+							"endsPattern": "Build completed in"
+						}
+					}
 				]
+			}
+		],
+		"inputs": [
+			{
+				"id": "QuasarMode",
+				"description": "Choose Quasar app mode :",
+				"default": "spa",
+				"type": "pickString",
+				"options": ["spa","pwa","electron"]
 			}
 		]
 	},
@@ -76,9 +112,9 @@
 				"cwd": "${workspaceFolder:bin}",
 				"program": "App.js",
 				"request": "launch",
+				"preLaunchTask": "Haxe dev",
 				"restart": true,
 				"sourceMaps": true,
-				"preLaunchTask": "Build Haxe backend",
 				"runtimeExecutable": "nodemon",
 				"skipFiles": [
 					"<node_internals>/**"
@@ -86,11 +122,11 @@
 				"type": "pwa-node"
 			},
 			{
-				"name": "Launch backend",
+				"name": "Node backend",
 				"program": "app.js",
 				"cwd": "${workspaceFolder:bin}",
 				"request": "launch",
-				"preLaunchTask": "Build Haxe",
+				"preLaunchTask": "Haxe build",
 				"sourceMaps": true,
 				"skipFiles": [
 					"<node_internals>/**"
@@ -98,31 +134,32 @@
 				"type": "pwa-node"
 			},
 			{
-				"name": "Debug PWA frontend",
+				"name": "Quasar frontend",
 				"type": "pwa-chrome",
 				"request": "launch",
 				"url": "http://localhost:5001",
-				"webRoot": "${workspaceFolder:front}",
-				"preLaunchTask": "Quasar dev PWA",
+				"webRoot": "${workspaceFolder:front}/src",
+				"preLaunchTask": "Quasar dev",
+				"breakOnLoad": true,
 				"sourceMaps": true,
 				"sourceMapPathOverrides": {
-					"webpack:///*": "${webRoot}/*"
+				  "webpack:///./src/*": "${webRoot}/*"
 				}
 			}
 		],
 		"compounds": [
 			{
-				"name": "Launch backend & PWA frontend",
+				"name": "Node backend & Quasar frontend",
 				"configurations": [
-					"Launch backend",
-					"Debug PWA frontend"
+					"Node backend",
+					"Quasar frontend"
 				]
 			},
 			{
-				"name": "Nodemon backend & PWA frontend",
+				"name": "Nodemon backend & Quasar frontend",
 				"configurations": [
 					"Nodemon backend",
-					"Debug PWA frontend"
+					"Quasar frontend"
 				]
 			}
 		]
