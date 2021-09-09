@@ -1,4 +1,3 @@
-import { Dark, Notify } from 'quasar';
 import { route } from 'quasar/wrappers';
 import {
   createMemoryHistory,
