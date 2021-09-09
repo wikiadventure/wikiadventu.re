@@ -78,16 +78,15 @@
 				"options": {
 					"cwd": "${workspaceFolder:back}"
 				},
-				"command": "lix watch node.hxml",
+				"command": "lix watch node.hxml -D watch.verbose",
 				"isBackground": true,
 				"problemMatcher": [
-					"$haxe",
-					{	
+					{
 						"base": "$haxe",
 						"background": {
 							"activeOnStart": true,
-							"beginsPattern": "name",
-							"endsPattern": "Build completed in"
+							"beginsPattern": "> Build started",
+							"endsPattern": "> Build finished"
 						}
 					}
 				]
@@ -105,6 +104,8 @@
 	},
 	"launch": {
 		"configurations": [
+
+
 			{
 				"name": "Nodemon backend",
 				"console": "integratedTerminal",
