@@ -28,7 +28,7 @@ class PublicJoinController {
             } else lobby = Lobby.joinPublicFree(player, form.gameLoop);
             lobby.connect(player);
             var json:ConnectResponse = {
-                lobbyID: lobby.formatID,
+                lobbyID: lobby.formatId,
                 lobbyType: Public,
                 slot: lobby.slot,
                 gameLoop: lobby.gameLoop.type,

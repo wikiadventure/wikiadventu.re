@@ -22,7 +22,7 @@ class InfoController {
         var twitchID = lobbyID.startsWith("twitch:") ? im.url.substring(17) : null;
         try {
             var lobby = twitchID == null ? Lobby.find(Lobby.decodeID(lobbyID)) : TwitchLobby.find(twitchID);
-            var id = twitchID == null ? lobby.formatID : cast(lobby, TwitchLobby).name;
+            var id = twitchID == null ? lobby.formatId : cast(lobby, TwitchLobby).name;
             var json:InfoResponse = {
                 status: Found,
                 lobbyID: id,
