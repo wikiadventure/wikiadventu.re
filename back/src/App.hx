@@ -25,8 +25,7 @@ import js.node.Https;
 
 class App {
 
-    static function main() {     
-        TwitchLobby.init();
+    static function main() {
         Guard.init();
         RandomBase32.init();
         #if https

@@ -8,7 +8,7 @@ using config.twitch.TwitchBotExtension;
 
 class TwitchLobby extends Lobby {
 
-    public static var lobbyList:Array<TwitchLobby>;
+    public static var lobbyList:Array<TwitchLobby> = [];
     public static var suggestionLimit:Int = 100;
     
     public var name:String;
@@ -21,10 +21,6 @@ class TwitchLobby extends Lobby {
         twitchPlayerList = new Array<TwitchPlayer>();
         suggestionList = new Array<String>();
         name = player.twitchUser.name;
-    }
-
-    public static function init() {
-        lobbyList = new Array<TwitchLobby>();
     }
 
     /**
