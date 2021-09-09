@@ -1,5 +1,6 @@
 package lobby;
 
+import lobby.packet.PacketHandler;
 import lobby.packet.handler.ClientPacket;
 import response.connect.ConnectionError.ConnectError;
 import lobby.gameLoop.Classic;
@@ -20,9 +21,11 @@ class GameLoop {
     public var round:Int;
     public var currentRound:Int;
     public var packetEventSubscribers:Array<PacketEventSubscriber>;
+    public var packetHandlers:Array<PacketHandler>;
 
     public function new() {
         packetEventSubscribers = [];
+        packetHandlers = [];
     }
 
     public function start(?data:Any) {

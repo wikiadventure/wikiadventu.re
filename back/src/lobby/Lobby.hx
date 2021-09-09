@@ -30,8 +30,8 @@ class Lobby {
     public var slot:Int;
     public var id:Int;
 
-    public var formatID(get,never):String;
-    public function get_formatID():String {
+    public var formatId(get,never):String;
+    public function get_formatId():String {
         return RandomBase32.encode(id);
     }
 
@@ -41,18 +41,10 @@ class Lobby {
     public var ownerId:Int = 0;//we could meaby have multiple owner
     public var owner(get, never):Player;
     public function get_owner() return players.find(p->p.id==ownerId);
-    public var packetHandlers:Array<PacketHandler>;
 
     public static var lobbyLimit:Int = 10000;
     public static var privateLimit:Int = 2000;
-    public static var lobbyList:Array<Lobby>;
-
-    /**
-     * instanciate the lobby list
-     */
-    public static function init() {
-        lobbyList = new Array<Lobby>();
-    }
+    public static var lobbyList:Array<Lobby> = [];
 
     public function new(language:Lang, type:LobbyType, ?passwordHash:String, slot:Int=15) {
         if (lobbyList.length >= lobbyLimit) throw ConnectError.LobbyLimitReached;
@@ -269,7 +261,7 @@ class Lobby {
 
     public function log( data : Dynamic, logType:LogType, ?pos : haxe.PosInfos ) {
         var time = "[" + Date.now().toString() + "]";
-        var f = formatID;
+        var f = formatId;
 		pos.fileName = time + " lobby " + f + " " + logType + " -> " + pos.fileName;
         haxe.Log.trace(data, pos);
         var fileName = "lobby/" + f + "/" + logType + ".log";

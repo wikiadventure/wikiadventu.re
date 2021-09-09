@@ -33,7 +33,7 @@ using Lambda;
             return;
         }
         if (packet.type == null) return;
-        var handler = lobby.packetHandlers.find(p->p.canProcess(packet));
+        var handler = lobby.gameLoop.packetHandlers.find(p->p.canProcess(packet));
         if (handler == null) return;
         handler.process(lobby, player, packet);
     }

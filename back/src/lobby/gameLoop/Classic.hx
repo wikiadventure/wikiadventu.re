@@ -55,7 +55,7 @@ class Classic extends GameLoop {
         this.lobby = lobby;
         this.round = round;
         this.type = VanillaGameLoopType.Classic;
-        this.lobby.packetHandlers = [
+        this.packetHandlers = [
             new ClientMessageHandler(),
             new ClientResetVoteHandler(),
             new ClientStartHandler(),

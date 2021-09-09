@@ -52,7 +52,7 @@ class Random extends GameLoop {
         this.lobby = lobby;
         this.round = round;
         this.type = VanillaGameLoopType.Random;
-        this.lobby.packetHandlers = [
+        this.packetHandlers = [
             new ClientMessageHandler(),
             new ClientStartHandler(),
             new ClientValidateHandler(),
