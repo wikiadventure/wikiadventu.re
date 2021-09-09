@@ -32,18 +32,16 @@ export default defineComponent({
   setup() {
     const { t } = useI18n({ useScope: 'global' });
     const password = ref("");
-    return {
-      password,
-      t
-    }
-  },
-  methods: {
-    submit() {
-      var vm:any = this;
+    function submit() {
       var connectEvent:ConnectEvent = {
         type: ConnectType.PublicJoin
       }
       login(connectEvent);
+    }
+    return {
+      password,
+      submit,
+      t
     }
   }
 });

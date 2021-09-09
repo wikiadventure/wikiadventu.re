@@ -31,19 +31,17 @@ export default defineComponent({
   setup() {
     const { t } = useI18n({ useScope: 'global' });
     const password = ref("");
-    return {
-      password,
-      t
-    }
-  },
-  methods: {
-    submit(withTwitch:boolean) {
-      var vm:any = this;
+    function submit(withTwitch:boolean) {
       var connectEvent:ConnectEvent = {
         type: withTwitch ? ConnectType.TwitchJoinWith : ConnectType.TwitchJoinWithout,
-        password: vm.password
+        password: password.value
       }
       login(connectEvent);
+    }
+    return {
+      password,
+      submit,
+      t
     }
   }
 });

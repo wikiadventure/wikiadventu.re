@@ -89,6 +89,14 @@ export default defineComponent({
     var unsubMessage =  onMessage.subscribe(messageEvent);
 
     onUnmounted(unsubMessage);
+
+    function getPseudo(id:number) {
+      return id == -1 ? "" : players.value.find(p=>p.id==id)?.pseudo || "";
+    }
+
+    function getFormatTime(timeStamp:number):string {
+      return date.formatDate(timeStamp, 'HH:mm');
+    }
     
     var {
       messages,
@@ -100,15 +108,9 @@ export default defineComponent({
       messages,
       messageInput,
       submitMessage,
+      getPseudo,
+      getFormatTime,
       t
-    }
-  },
-  methods: {
-    getPseudo(id:number) {
-      return id == -1 ? "" : players.value.find(p=>p.id==id)?.pseudo || "";
-    },
-    getFormatTime(timeStamp:number):string {
-      return date.formatDate(timeStamp, 'HH:mm');
     }
   }
 });
