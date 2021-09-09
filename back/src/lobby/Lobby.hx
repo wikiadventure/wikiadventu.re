@@ -59,7 +59,7 @@ class Lobby {
     /**
      * give the lobby a valid id, loop until it found a unused one
      */
-    public function giveID() {
+    public function giveId() {
         var pos = -1;
         do {
             id = Std.random(1048576);
@@ -237,7 +237,7 @@ class Lobby {
         }
         // if no free slot are find create a new public lobby
         var lobby = new Lobby(player.language, Public);
-        lobby.giveID();// giveID method also add the lobby to the lobbylist
+        lobby.giveId();// giveId method also add the lobby to the lobbylist
         lobby.gameLoop = GameLoop.select(gameLoop,lobby);
         lobby.gameLoop.start();
         return lobby;

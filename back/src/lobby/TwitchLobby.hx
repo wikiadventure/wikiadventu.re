@@ -26,7 +26,7 @@ class TwitchLobby extends Lobby {
     /**
      * the id of the lobby is the channel name of the streamer
      */
-    public override function giveID() {
+    public override function giveId() {
         var pos = 0;
         while ( lobbyList[pos] != null && name > lobbyList[pos].name) {
             pos++;
