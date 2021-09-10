@@ -51,5 +51,5 @@ What you can do to help:
 
 ## Development setup
 
-<h3><a><img src="https://nodejs.org/static/images/logo.svg" alt="node js"/></a></h3>
+<h3><a><img height=64 src="https://nodejs.org/static/images/logo.svg" alt="node js"/></a></h3>
 <p>Make sure you have v14 or higher. You can install it from the official website [here](https://nodejs.org).</p>
