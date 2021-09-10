@@ -41,10 +41,8 @@ The back and front will be built and the Visual Studio Code debugger will be att
 
 ## Structure ( WIP )
 
-<p align="center">
-  <a href="http://wiki-adventure.sacramentix.fr" title="Wiki Adventure"><img src="back/AppDiagram.drawio.svg" /></a>
-</p>
-    
+Check out the project diagram on [Draw io](https://app.diagrams.net/#HSacramentix%2FWikiAdventure%2FQuasar-V2%2Fback%2FAppDiagram.drawio.svg)
+
 ## TODO
 
 - [ ] Add an celebration on the leaderboard screen
