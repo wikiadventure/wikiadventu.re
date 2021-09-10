@@ -161,7 +161,6 @@ class TwitchController {
     public function twitchCreate(player:TwitchPlayer, form:TwitchConnectRequest):TwitchLobby {
         var passwordHash = Sha256.encode(form.password);
         var lobby = new TwitchLobby(player, passwordHash, form.slot);
-        lobby.giveId();// giveId method also add the lobby to the lobbylist
         lobby.join(player, passwordHash);
         lobby.gameLoop = GameLoop.select(form.gameLoop, lobby);
         lobby.gameLoop.start();

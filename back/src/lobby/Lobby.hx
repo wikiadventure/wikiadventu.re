@@ -55,6 +55,7 @@ class Lobby {
         this.slot = slot;
         this.passwordHash = passwordHash;
         heartbeat = Timers.setInterval(checkAlive, 30000);
+        giveId();
     }
     /**
      * give the lobby a valid id, loop until it found a unused one
@@ -113,7 +114,7 @@ class Lobby {
     public function kickOnTimeout(player:Player):Timeout {
         return Timers.setTimeout(() -> if (player.socket == null) removePlayer(player),30000);
     }
-
+        //TODO: refactor this we don't have to create a new player if the password
     public function connect(player:Player, ?passwordHash:String) {
         if (this.type == Public || this.passwordHash == passwordHash) return addPlayer(player);
         log("connection rejected : " + player.uuid + " --> " + player.pseudo + "provide a wrong password", PlayerData);
@@ -188,20 +189,6 @@ class Lobby {
         gameLoop.sendCurrentState(player);
     }
 
-    /**
-     * assign the vote to the [vote] variable of the player
-     * PS: we don't verify if the title lead to something, we will in the [selectPage()] method
-     * the client also do the verification so they are aware if there title lead to something
-     * @param player from which the data come from
-     * @param content the page title we receive
-     */
-    public function vote(player:Player, content:String) {
-        log("player vote : " + player.uuid + " --> " + player.pseudo + " | " + content, PlayerData);
-        if (content.length > 255) return;
-        player.vote = content;
-    }
-
-
     public function checkAlive() {
         players.iter((p) -> 
             if(p.socket != null) {
@@ -237,7 +224,6 @@ class Lobby {
         }
         // if no free slot are find create a new public lobby
         var lobby = new Lobby(player.language, Public);
-        lobby.giveId();// giveId method also add the lobby to the lobbylist
         lobby.gameLoop = GameLoop.select(gameLoop,lobby);
         lobby.gameLoop.start();
         return lobby;

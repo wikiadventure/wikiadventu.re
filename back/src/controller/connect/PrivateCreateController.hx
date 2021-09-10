@@ -26,7 +26,6 @@ class PrivateCreateController {
             var player = new Player(form.pseudo,form.lang);
             var passwordHash = Sha256.encode(form.password);
             var lobby = new Lobby(player.language, Private, passwordHash, form.slot);
-            lobby.giveId();// giveId method also add the lobby to the lobbylist
             lobby.connect(player, passwordHash);
             lobby.gameLoop = GameLoop.select(form.gameLoop, lobby);
             lobby.gameLoop.start();
