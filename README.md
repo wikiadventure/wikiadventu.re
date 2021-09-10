@@ -16,7 +16,7 @@
 		•
 		<a href="#-diagram">Diagram</a>
 		•
-		<a href="#-run-the-project">Run the project</a>
+		<a href="#run-the-project">Run the project</a>
 	</strong>
 </p>
 
