@@ -28,7 +28,7 @@ The project is Web app made out of a backend and a frontend:
 Want to help with Wiki Adventure? Well first, Thank you so much for your interest! We are always appreciate for improvements to the project and contributions from open-source developers are greatly appreciated.
 What you can do to help:
 - Make the game available in your language, check this guide (WIP).
-- Make a game mode for the game, check this guide (WIP).
+- Create you own game mode, check this guide (WIP).
 - Solve one of those issue (if there no issue we've made a great job!).
 - Donate on [Ko-Fi](https://ko-fi.com/sacramentix) ❤️
 
