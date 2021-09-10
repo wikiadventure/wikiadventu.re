@@ -18,9 +18,17 @@ Wiki Adventure is a multiplayer game combining culture and speed. Players compet
 
 <p align="center">
     <a href="https://haxe.org"><img width=32 height=32 src="https://haxe.org/img/haxe-logo.svg" alt="Haxe logo"></a>
+        
+        
     <a href="https://nodejs.org"><img width=32 height=32 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/nodejs/nodejs.png" alt="Node js logo"></a>
+        
+        
     <a href="https://quasar.dev"><img width=32 height=32 src="https://cdn.quasar.dev/logo-v2/svg/logo.svg" alt="Quasar js logo"></a>
+        
+        
     <a href="https://v3.vuejs.org"><img width=32 height=32 src="https://v3.vuejs.org/logo.png" alt="Vue js logo"></a>
+        
+        
     <a href="https://vue-i18n.intlify.dev"><img width=36.57 height=32 src="https://vue-i18n.intlify.dev/vue-i18n-logo.png" alt="Vue js logo"></a>
 </p>
 The project is Web app made out of a backend and a frontend:
@@ -30,30 +38,7 @@ The project is Web app made out of a backend and a frontend:
 - The frontend is written in [Quasar](https://quasar.dev) 2 based on [Vue 3](https://v3.vuejs.org) with typescript
     - It also use the [vue-i18n](https://vue-i18n.intlify.dev) lib.
 
-## Setup
-
-### NodeJS
-
-First, you need to install [NodeJS > 12.16.0 here](https://nodejs.org/en/download/)
-
-### Librairies
-
-Launch the setup script to install Lix, Haxe, Quasar and all needed librairies.
-
-### Code Workspace
-
-Open the project with the project.code-workspace with Visual Studio Code.
-
- ### Extension
-
-Make sure to install the recommended extension.
-
-## Debug
-
-### Visual Studio Code
-
-Now you can hit run > start debugging ( or the f5 key ).
-The back and front will be built and the Visual Studio Code debugger will be attach.
+## Contributing
 
 ## Diagram
 <p align="center">Check out the project diagram on</p>
