@@ -28,7 +28,7 @@ The project is Web app made out of a backend and a frontend:
 - The backend is written in [Haxe](https://haxe.org) which compile to javascript that will be interpreted by Node js.
     - It also use the [Twurple](https://github.com/twurple/twurple) , the [ws](https://github.com/websockets/ws) and the [uuid](https://github.com/uuidjs/uuid) lib.
 - The frontend is written in [Quasar](https://quasar.dev) 2 based on [Vue 3](https://v3.vuejs.org) with typescript
-    - It also use the vue-i18n lib.
+    - It also use the [vue-i18n](https://vue-i18n.intlify.dev) lib.
 
 ## Setup
 
