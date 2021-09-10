@@ -41,7 +41,9 @@ The back and front will be built and the Visual Studio Code debugger will be att
 
 ## Structure ( WIP )
 
-You can find a Lucidchart diagram of the project structure [here](https://lucid.app/lucidchart/invitations/accept/dca36f9b-f3a1-4547-a113-c6a8adb6ab82).
+<p align="center">
+  <a href="http://wiki-adventure.sacramentix.fr" title="Wiki Adventure"><img src="back/AppDiagram.drawio.svg" /></a>
+</p>
     
 ## TODO
 
