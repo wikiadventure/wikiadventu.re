@@ -1,4 +1,4 @@
-# Install global lib
+echo "Install global lib"
 npm i -g lix; npm i -g nodemon; npm i -g @quasar/cli
-# Install local lib
+echo "Install local lib"
 cd back; npm i; cd ../bin; npm i; cd ../front; npm i
