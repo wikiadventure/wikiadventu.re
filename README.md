@@ -14,7 +14,7 @@
 </p>
 Wiki Adventure is a multiplayer game combining culture and speed. Players compete against each other on Wikipedia and have to scroll through the pages as quickly as possible to win.
 
-## 🚀Tech stack
+## 🚀 Tech stack
 
 <p align="center">
     <a href="https://haxe.org"><img width=32 height=32 src="https://haxe.org/img/haxe-logo.svg" alt="Haxe logo"></a>
