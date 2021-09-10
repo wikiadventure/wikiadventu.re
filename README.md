@@ -32,6 +32,15 @@ The project is Web app made out of a backend and a frontend:
 
 ## 🖋️ Contributing
 
+Want to help with Wiki Adventure? Well first, Thank you so much for your interest! We are always appreciate for improvements to the project and contributions from open-source developers are greatly appreciated.
+What you can do to help:
+- Make the game available in your language, check this guide (WIP).
+- Make a game mode for the game, check this guide (WIP).
+- Solve one of those issue (if there no issue we made a great job!).
+- Donate on [Ko-Fi](https://ko-fi.com/sacramentix) ❤️
+
+If you have a contribution in mind, please check out our Contribution Guide for information on how to do so. Also, make sure you read our Code of Conduct to foster an encouraging sense of community.
+
 ## 📋 Diagram
 <p align="center">Check out the project diagram on</p>
 <p align="center"><a href="https://app.diagrams.net/#HSacramentix%2FWikiAdventure%2FQuasar-V2%2Fback%2FAppDiagram.drawio.svg" title="Draw io logo"><img width=199 height=50 src="https://drawio-app.com/wp-content/uploads/2020/11/drawio_logo_RGB_dark_mini_199x50px.png" /></a></p>
