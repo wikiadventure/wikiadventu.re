@@ -41,7 +41,7 @@ The back and front will be built and the Visual Studio Code debugger will be att
 
 ## Structure ( WIP )
 
-Check out the project diagram on <a href="https://app.diagrams.net/#HSacramentix%2FWikiAdventure%2FQuasar-V2%2Fback%2FAppDiagram.drawio.svg" title="Draw io logo"><img width=199 height=50 src="https://drawio-app.com/wp-content/uploads/2020/11/drawio_logo_RGB_dark_mini_199x50px.png" /></a>
+<p align="center">Check out the project diagram on <a href="https://app.diagrams.net/#HSacramentix%2FWikiAdventure%2FQuasar-V2%2Fback%2FAppDiagram.drawio.svg" title="Draw io logo"><img width=199 height=50 src="https://drawio-app.com/wp-content/uploads/2020/11/drawio_logo_RGB_dark_mini_199x50px.png" /></a></p>
 
 ## TODO
 
