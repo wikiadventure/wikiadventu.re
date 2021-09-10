@@ -2,9 +2,9 @@
   <a href="http://wiki-adventure.sacramentix.fr"><img width=402 height=250 src="front/public/svg/openGraph.svg" alt="Wiki Adventure"/></a>
 </h1>
 
-<h3 align="center">
+<h4 align="center">
 	Wiki Adventure is a multiplayer game combining culture and speed. Players compete against each other on Wikipedia and have to scroll through the pages as quickly as possible to win.
-</h3>
+</h4>
 
 
 ## 🚀 Tech stack
