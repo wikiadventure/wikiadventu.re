@@ -103,9 +103,23 @@
 		]
 	},
 	"launch": {
+		"compounds": [
+			{
+				"name": "Nodemon backend & Quasar frontend",
+				"configurations": [
+					"Nodemon backend",
+					"Quasar frontend"
+				]
+			},
+			{
+				"name": "Node backend & Quasar frontend",
+				"configurations": [
+					"Node backend",
+					"Quasar frontend"
+				]
+			}
+		],
 		"configurations": [
-
-
 			{
 				"name": "Nodemon backend",
 				"console": "integratedTerminal",
@@ -146,22 +160,6 @@
 				"sourceMapPathOverrides": {
 				  "webpack:///./src/*": "${webRoot}/*"
 				}
-			}
-		],
-		"compounds": [
-			{
-				"name": "Node backend & Quasar frontend",
-				"configurations": [
-					"Node backend",
-					"Quasar frontend"
-				]
-			},
-			{
-				"name": "Nodemon backend & Quasar frontend",
-				"configurations": [
-					"Nodemon backend",
-					"Quasar frontend"
-				]
 			}
 		]
 	},
