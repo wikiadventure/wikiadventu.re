@@ -32,6 +32,6 @@ The project is Web app made out of a backend and a frontend:
 
 ## 🖋️ Contributing
 
-## Diagram
+## 📋 Diagram
 <p align="center">Check out the project diagram on</p>
 <p align="center"><a href="https://app.diagrams.net/#HSacramentix%2FWikiAdventure%2FQuasar-V2%2Fback%2FAppDiagram.drawio.svg" title="Draw io logo"><img width=199 height=50 src="https://drawio-app.com/wp-content/uploads/2020/11/drawio_logo_RGB_dark_mini_199x50px.png" /></a></p>
