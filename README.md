@@ -18,7 +18,7 @@ Wiki Adventure is a multiplayer game combining culture and speed. Players compet
 
 <p align="center">
     <a href="https://haxe.org"><img width=32 height=32 src="https://haxe.org/img/haxe-logo.svg" alt="Haxe logo"></a>
-    <a href="https://nodejs.org"><img width=52.24 height=32 src="https://nodejs.org/static/images/logo.svg" alt="Node js"></a>
+    <a href="https://nodejs.org"><img width=32 height=32 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/nodejs/nodejs.png" alt="Node js"></a>
 </p>
 
 The project is Web app made out of a backend and a frontend:
