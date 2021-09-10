@@ -1,4 +1,5 @@
 npm i -g lix
+npm i -g nodemon
 npm i -g @quasar/cli
 cd back
 npm i
