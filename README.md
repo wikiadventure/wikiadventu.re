@@ -17,7 +17,7 @@ Wiki Adventure is a multiplayer game combining culture and speed. Players compet
 ## 🚀Tech stack
 
 <p align="center">
-    <a href="https://haxe.org"><img src="https://haxe.org/img/haxe-logo-horizontal-on-dark.svg" alt="Haxe logo"></a>
+    <a href="https://haxe.org"><img width=32 height=32 src="https://haxe.org/img/haxe-logo.svg" alt="Haxe logo"></a>
     <a href="https://nodejs.org"><img src="https://nodejs.org/static/images/logo.svg" alt="Node js"></a>
 </p>
 
