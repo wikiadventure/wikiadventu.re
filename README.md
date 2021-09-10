@@ -1,16 +1,28 @@
 <h1 align="center">
-  <a href="http://wiki-adventure.sacramentix.fr"><img width=402 height=250 src="front/public/svg/openGraph.svg" alt="Wiki Adventure"/></a>
+	<a href="https://wikiadventu.re"><img width=402 height=250 src="front/public/svg/openGraph.svg" alt="Wiki Adventure"/></a>
 </h1>
 
 <h4 align="center">
 	Wiki Adventure is a multiplayer game combining culture and speed. Players compete against each other on Wikipedia and have to scroll through the pages as quickly as possible to win.
 </h4>
 
+<p align="center">
+	<strong>
+		<a href="https://wikiadventu.re">Play</a>
+		•
+		<a href="#-tech-stack">Tech stack</a>
+		•
+		<a href="#%EF%B8%8F-contributing">Contributing</a>
+		•
+		<a href="#-diagram">Diagram</a>
+	</strong>
+</p>
+
 
 ## 🚀 Tech stack
 
 <p align="center">
-    <a href="https://haxe.org"><img width=32 height=32 src="https://haxe.org/img/haxe-logo.svg" alt="Haxe logo"></a>
+	<a href="https://haxe.org"><img width=32 height=32 src="https://haxe.org/img/haxe-logo.svg" alt="Haxe logo"></a>
     <a href="https://nodejs.org"><img width=32 height=32 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/nodejs/nodejs.png" alt="Node js logo"></a> 
     <a href="https://quasar.dev"><img width=32 height=32 src="https://cdn.quasar.dev/logo-v2/svg/logo.svg" alt="Quasar js logo"></a>  
     <a href="https://v3.vuejs.org"><img width=32 height=32 src="https://v3.vuejs.org/logo.png" alt="Vue js logo"></a>  
