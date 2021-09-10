@@ -36,10 +36,8 @@ Want to help with Wiki Adventure? Well first, Thank you so much for your interes
 What you can do to help:
 - Make the game available in your language, check this guide (WIP).
 - Make a game mode for the game, check this guide (WIP).
-- Solve one of those issue (if there no issue we made a great job!).
+- Solve one of those issue (if there no issue we've made a great job!).
 - Donate on [Ko-Fi](https://ko-fi.com/sacramentix) ❤️
-
-If you have a contribution in mind, please check out our Contribution Guide for information on how to do so. Also, make sure you read our Code of Conduct to foster an encouraging sense of community.
 
 ## 📋 Diagram
 <p align="center">Check out the project diagram on</p>
