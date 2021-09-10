@@ -30,6 +30,7 @@ What you can do to help:
 - Make the game available in your language, check this guide (WIP).
 - Create you own game mode, check this guide (WIP).
 - Solve one of those issue (if there no issue we've made a great job!).
+- Make a code review. It always good to have a second eye!
 - Donate on [Ko-Fi](https://ko-fi.com/sacramentix) ❤️
 
 ## 📋 Diagram
