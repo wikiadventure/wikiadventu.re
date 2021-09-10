@@ -30,7 +30,7 @@ The project is Web app made out of a backend and a frontend:
 - The frontend is written in [Quasar](https://quasar.dev) 2 based on [Vue 3](https://v3.vuejs.org) with typescript
     - It also use the [vue-i18n](https://vue-i18n.intlify.dev) lib.
 
-## Contributing
+## 🖋️ Contributing
 
 ## Diagram
 <p align="center">Check out the project diagram on</p>
