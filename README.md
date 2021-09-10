@@ -15,6 +15,8 @@
 		<a href="#%EF%B8%8F-contributing">Contributing</a>
 		•
 		<a href="#-diagram">Diagram</a>
+		•
+		<a href="#-run-the-project">Run the project</a>
 	</strong>
 </p>
 
@@ -49,7 +51,7 @@ What you can do to help:
 <p align="center">Check out the project diagram on</p>
 <p align="center"><a href="https://app.diagrams.net/#HSacramentix%2FWikiAdventure%2FQuasar-V2%2Fback%2FAppDiagram.drawio.svg" title="Draw io logo"><img width=199 height=50 src="https://drawio-app.com/wp-content/uploads/2020/11/drawio_logo_RGB_dark_mini_199x50px.png" /></a></p>
 
-## Development setup
+## Run the project
 
 #### Node js
 - Make sure you have v14 or higher. You can install it from the official website [here](https://nodejs.org).
