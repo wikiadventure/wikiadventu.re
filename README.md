@@ -51,7 +51,7 @@ What you can do to help:
 
 ## Development setup
 
-<h3>Node js</h3>
+#### Node js
 - Make sure you have v14 or higher. You can install it from the official website [here](https://nodejs.org).
-<h3>Librairies</h3>
+#### Librairies
 - Install all the required librairies for the backend and frontend in one click with the [setup.sh](/setup.sh) script.
