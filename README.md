@@ -61,3 +61,12 @@ npm i -g lix; npm i -g nodemon; npm i -g @quasar/cli
 echo "Install local lib"
 cd back; npm i; cd ../bin; npm i; cd ../front; npm i
 ```
+#### Workspace
+- If you use [Visual Studio Code](https://code.visualstudio.com) (I recommend it ❤️) you can open the project with the project.code-workspace file.
+#### Debug
+- In [Visual Studio Code](https://code.visualstudio.com) just press F5 to run the default debug config.
+#### Run a private instance
+- First make sure you follow [# Node js](#node-js) and [# Librairies](#librairies) part. Then go to the bin folder and run 
+```
+npm run build; npm run start
+``` 
