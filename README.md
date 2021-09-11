@@ -2,6 +2,14 @@
 	<a href="https://wikiadventu.re"><img width=402 height=250 src="front/public/svg/openGraph.svg" alt="Wiki Adventure"/></a>
 </h1>
 
+<p align="center">
+    <a href="https://discord.gg/wRN6Dam">
+        <img src="https://img.shields.io/discord/724622557554147348?logo=discord" alt="join me on Discord">
+	</a>
+    <a href="https://wikiadventu.re">
+        <img src="https://img.shields.io/endpoint?url=https://wiki-adventure.sacramentix.fr/api/badge" alt="number of people onlines on the game">
+	</a>
+</p>
 <h4 align="center">
 	Wiki Adventure is a multiplayer game combining culture and speed. Players compete against each other on Wikipedia and have to scroll through the pages as quickly as possible to win.
 </h4>
