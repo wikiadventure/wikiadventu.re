@@ -59,7 +59,13 @@ What you can do to help:
 
 ## 📋 Diagram
 <p align="center">Check out the backend diagram on</p>
-<p align="center"><a href="https://app.diagrams.net/#HSacramentix%2FWikiAdventure%2FQuasar-V2%2Fback%2FAppDiagram.drawio.svg" title="Draw io logo"><img width=199 height=50 src="https://drawio-app.com/wp-content/uploads/2020/11/drawio_logo_RGB_dark_mini_199x50px.png" /></a></p>
+<p align="center">
+	<a 
+	   href="https://app.diagrams.net/?title=AppDiagram.drawio.svg&ui=dark#Uhttps%3A%2F%2Fraw.githubusercontent.com%2FSacramentix%2FWikiAdventure%2FQuasar-V2%2Fback%2FAppDiagram.drawio.svg"
+	   title="Draw io logo">
+		<img width=199 height=50 src="https://drawio-app.com/wp-content/uploads/2020/11/drawio_logo_RGB_dark_mini_199x50px.png" />
+	</a>
+</p>
 
 ## Run the project
 
