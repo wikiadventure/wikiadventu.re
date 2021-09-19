@@ -1,22 +1,8 @@
-# Wiki Adventure (wiki-adventure-front)
+# Wiki Adventure front
 
-Wiki Adventure is a multiplayer game combining culture and speed. Players compete against each other on Wikipedia and have to scroll through the pages as quickly as possible to win.
-
-## Install the dependencies
-```bash
-npm install
-```
-
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
-```
-
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.conf.js](https://v2.quasar.dev/quasar-cli/quasar-conf-js).
+<p align="center">
+  <a href="https://quasar.dev"><img width=32 height=32 src="https://cdn.quasar.dev/logo-v2/svg/logo.svg" alt="Quasar js logo"></a>  
+  <a href="https://v3.vuejs.org"><img width=32 height=32 src="https://v3.vuejs.org/logo.png" alt="Vue js logo"></a>  
+  <a href="https://vue-i18n.intlify.dev"><img width=36.57 height=32 src="https://vue-i18n.intlify.dev/vue-i18n-logo.png" alt="Vue js logo"></a>
+	<a href="https://www.typescriptlang.org"><img width=32 height=32 src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="Typescript logo"></a>
+</p>
