@@ -7,7 +7,7 @@
         <img src="https://img.shields.io/discord/724622557554147348?logo=discord" alt="join me on Discord">
 	</a>
     <a href="https://wikiadventu.re">
-        <img src="https://img.shields.io/endpoint?url=https://wiki-adventure.sacramentix.fr/api/badge" alt="number of people onlines on the game">
+        <img src="https://img.shields.io/endpoint?url=https://wikiadventu.re/api/badge" alt="number of people onlines on the game">
 	</a>
 </p>
 <h4 align="center">
