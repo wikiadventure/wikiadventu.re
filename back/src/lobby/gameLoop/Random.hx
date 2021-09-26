@@ -49,6 +49,7 @@ class Random extends GameLoop {
     }
 
     public function new(lobby:Lobby, round=5) {
+        super();
         this.lobby = lobby;
         this.round = round;
         this.type = VanillaGameLoopType.Random;
@@ -58,7 +59,6 @@ class Random extends GameLoop {
             new ClientValidateHandler(),
             new ClientVoteSkipHandler()
         ];
-        super();
         
     }
     public function randomPagePlaying() {
