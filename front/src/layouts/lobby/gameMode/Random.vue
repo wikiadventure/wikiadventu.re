@@ -11,10 +11,18 @@
 import Random from './tab/game/Random.vue';
 import SlideMenu from './slideMenu.vue';
 
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'RandomSlideMenu',
-  components: { SlideMenu, Random }
+  components: { SlideMenu, Random },
+    setup() {
+    const menu = ref<InstanceType<typeof SlideMenu>>();
+    const tab = ref<InstanceType<typeof Random>>();
+    return {
+      menu,
+      tab
+    }
+  }
 });
 </script>
