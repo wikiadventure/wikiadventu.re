@@ -25,7 +25,7 @@
     <q-separator spaced="sm"/>
 
     <div class="row items-center justify-evenly q-ma-sm">
-      <p class="q-my-none" :class="{ 'self': selfPlayer.voteSkip }">{{ playersVoteSkip.length }} / {{ playersConnected.length }}</p>
+      <p class="q-my-none" :class="{ 'self': selfPlayer?.voteSkip }">{{ playersVoteSkip.length }} / {{ playersConnected.length }}</p>
       <q-btn class="action-btn q-ma-xs" push label="skip" icon="mdi-skip-forward" @click="sendVoteSkip()"/>
     </div>
 
