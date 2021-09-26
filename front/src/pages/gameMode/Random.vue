@@ -2,24 +2,20 @@
   <div class="game-mode-random absolute-full">
     <wait v-if="gamePhase == 0" />
     <wiki-page ref="wikiPage" v-else />
-    <wiki-page ref="wikiEndPage" class="right-panel" :class="{ 'hideEndPage': !showWikiEndPage }" endPage/>
+    <wiki-page ref="wikiEndPage" class="right-panel" :class="{ 'hideEndPage': !showWikiEndPage }" endPage>
+      <exit-btn class="q-ma-md" @click="showWikiEndPage = false"/>
+    </wiki-page>
     <transition name="fade"><page-history v-show="showPageHistory" /></transition>
     <transition name="fade"><leaderboard v-show="showLeaderboard" /></transition>
     <transition name="fade"><round-win v-show="showRoundWin" /></transition>
-    <classic-slide-menu ref="game"/>
+    <random-slide-menu ref="game"/>
   </div>
 </template>
 <style lang="scss">
 .game-mode-random {
   overflow: hidden;
 }
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.25s ease-in-out;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-.right-panel {
+.wiki-end-page {
   transition: transform 0.15s ease-in-out;
   filter: drop-shadow(3px 3px 15px black);
 }
@@ -28,7 +24,7 @@
 }
 </style>
 <script lang="ts">
-import ClassicSlideMenu from 'src/layouts/lobby/gameMode/Classic.vue';
+import RandomSlideMenu from 'src/layouts/lobby/gameMode/Random.vue';
 import WikiPage from 'src/layouts/lobby/WikiPage.vue';
 import RoundWin from 'src/layouts/lobby/screen/RoundWin.vue';
 import Leaderboard from 'src/layouts/lobby/screen/Leaderboard.vue';
@@ -36,8 +32,7 @@ import Wait from 'src/layouts/lobby/screen/Wait.vue';
 import PageHistory from 'src/layouts/lobby/screen/PageHistory.vue';
 
 import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
-import { Notify } from 'quasar';
-import { i18n } from 'src/boot/i18n';
+import { Notify, useQuasar } from 'quasar';
 import { gameLayoutManagerSetup } from 'store/gameLayoutManager';
 import { VanillaPhaseType } from 'store/lobby/game/phase/type';
 import { lobbySetup } from 'store/lobby';
@@ -45,7 +40,6 @@ import { onRollback, rollbackHandler, WsRollback } from 'store/ws/packetHandler/
 import { gamePhaseHandler, onGamePhase, WsGamePhase } from 'store/ws/packetHandler/vanilla/gamePhase';
 import { onWinRound, winRoundHandler, WsWinRound } from 'store/ws/packetHandler/vanilla/winRound';
 import { onVoteResult, voteResultHandler, WsVoteResult } from 'store/ws/packetHandler/vanilla/voteResult';
-import { countDownSound } from 'store/audio/vanilla/countDown';
 import TouchSurfaceHandler from 'src/script/touchSurfaceHandler';
 import { connect } from 'store/ws/action';
 import { useI18n } from 'vue-i18n';
@@ -59,8 +53,8 @@ import { updateScoreHandler } from 'store/ws/packetHandler/vanilla/updateScore';
 import { voteSkipHandler } from 'store/ws/packetHandler/vanilla/voteSkip';
 
 export default defineComponent({
-  name: 'RandomMode',
-  components: { ClassicSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory },
+  name: 'ClassicMode',
+  components: { RandomSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory },
   setup() {
     PacketHandlers.splice(0, PacketHandlers.length);
     PacketHandlers.push(
@@ -75,8 +69,10 @@ export default defineComponent({
       voteResultHandler,
       voteSkipHandler,
       winRoundHandler);
+
     connect();
     const { t } = useI18n({ useScope: 'global' });
+    var $q = useQuasar();
     var {
       showGameMenu,
       showRoundWin,
@@ -90,10 +86,12 @@ export default defineComponent({
       gamePhase,
       round
     } = lobbySetup();
+    
 
     var wikiPage = ref<InstanceType<typeof WikiPage>>();
     var wikiEndPage = ref<InstanceType<typeof WikiPage>>();
-    var game = ref<InstanceType<typeof ClassicSlideMenu>>();
+    
+    var game = ref<InstanceType<typeof RandomSlideMenu>>();
 
     function gamePhaseEvent(payload:WsGamePhase) {
       switch (payload.phase) {
@@ -102,7 +100,6 @@ export default defineComponent({
           setTimeout(() => {showLeaderboard.value = false}, payload.time*1000);
           return;
         case VanillaPhaseType.Playing:
-          showPageHistory.value = false;
           Notify.create({
             type: 'annonce',
             position: 'bottom-right',
@@ -139,7 +136,7 @@ export default defineComponent({
       /*Notify.create({
         type: 'error',
         position: 'top',
-        message: t('gameTab.endPage') as string + " : " + payload.end
+        message: t('gameTab.endPage') + " : " + payload.end
       });*/
     }
 
@@ -148,8 +145,16 @@ export default defineComponent({
     var touchSurfaceHandler:TouchSurfaceHandler;
 
     onMounted(() => {
-        touchSurfaceHandler = new TouchSurfaceHandler(document.documentElement, showGameMenu, showWikiEndPage, game.value?.menu?.$el as any, wikiEndPage.value?.$el);
+      touchSurfaceHandler = new TouchSurfaceHandler(document.documentElement, showGameMenu, showWikiEndPage, game.value?.menu?.$el as any, wikiEndPage.value?.$el);
+      if (wikiPage.value) {
+        wikiPage.value.title = t("wikiPage.tipsTitle");
+        wikiPage.value.content = t("wikiPage.tipsContent"+ ($q.platform.is.mobile ? "Mobile" : ""));
+      }
+      if (wikiEndPage.value) {
+         wikiEndPage.value.title = t("wikiPage.noEndPageYet");
+      }
     });
+
     onUnmounted(() => {
         touchSurfaceHandler.destroy();   
         unsubGamePhase();
@@ -167,6 +172,7 @@ export default defineComponent({
       gamePhase,
       wikiPage,
       wikiEndPage,
+      t
     };
   }
 });
