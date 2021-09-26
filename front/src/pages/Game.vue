@@ -1,8 +1,8 @@
 <template>
-    <component :is="'Classic'"/>
+  <suspense>
+    <component :is="gameComponent"/>
+  </suspense>
 </template>
-<style>
-</style>
 <script lang="ts">
 import { defineComponent, computed, defineAsyncComponent } from 'vue';
 import { ModLoopType, VanillaLoopType } from 'store/lobby/game/loop/type';
@@ -17,14 +17,6 @@ import { voteReset } from 'store/vote/state';
 
 export default defineComponent({
   name: 'Game',
-  components: {
-    "Classic": defineAsyncComponent(() =>
-      import('./gameMode/Classic.vue')
-    ),
-    "Random": defineAsyncComponent(() =>
-      import('./gameMode/Random.vue')
-    ),
-  },
   setup() {
     chatReset();
     gameLayoutManagerReset();
@@ -32,19 +24,15 @@ export default defineComponent({
     playerReset();
     voteReset();
     const { t } = useI18n({ useScope: 'global' });
-    var gameLoopName = computed(()=> VanillaLoopType[gameLoop.value] || ModLoopType[gameLoop.value] );
+    const gameLoopName = computed(() => VanillaLoopType[gameLoop.value] || ModLoopType[gameLoop.value] );
+    const isMod = computed(() => ModLoopType[gameLoop.value] != null );
 
-    onBeforeRouteLeave((to, from, next) => {
-      const answer = window.confirm(t('exitWarn') as string);
-      if (answer) {
-        next();
-      } else {
-        next(false);
-      }
-    });
+    onBeforeRouteLeave((to, from, next) => next(window.confirm(t('exitWarn'))));
 
-    return {
-      gameLoopName
+    const gameComponent = computed(() => defineAsyncComponent(()=>import(`./gameMode/${(isMod.value ? "mod/" :"") + gameLoopName.value}.vue`)));
+
+    return { 
+      gameComponent
     };
   }
 })
