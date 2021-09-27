@@ -83,6 +83,7 @@
 				"problemMatcher": [
 					{
 						"base": "$haxe",
+						"fileLocation":["relative", "${workspaceFolder:back}/src"],
 						"background": {
 							"activeOnStart": true,
 							"beginsPattern": "> Build started",
