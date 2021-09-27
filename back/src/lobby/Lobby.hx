@@ -224,7 +224,7 @@ class Lobby {
         }
         // if no free slot are find create a new public lobby
         var lobby = new Lobby(player.language, Public);
-        lobby.gameLoop = GameLoop.select(gameLoop,lobby);
+        lobby.gameLoop = GameLoop.select(gameLoop,lobby, null);
         lobby.gameLoop.start();
         return lobby;
     }

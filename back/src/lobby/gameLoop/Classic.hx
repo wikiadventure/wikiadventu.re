@@ -1,5 +1,9 @@
 package lobby.gameLoop;
 
+import lobby.GameLoop.PhaseDuration;
+import lobby.GameLoop.Round;
+import haxe.macro.Expr.TypeDefinition;
+import haxe.rtti.CType.Typedef;
 import lobby.GameLoop.VanillaGameLoopType;
 import lobby.packet.handler.vanilla.VoteSkip.ClientVoteSkipHandler;
 import lobby.packet.handler.vanilla.Vote.ClientVoteHandler;
@@ -19,6 +23,9 @@ import lobby.gameLoop.phase.Voting;
 import lobby.gameLoop.phase.Playing;
 
 class Classic extends GameLoop {
+
+    public var voteDuration:PhaseDuration;
+    public var playDuration:PhaseDuration;
 
     public override function onStart(?data:Any) {
         currentPhase = lobby.type != Public ? new Waiting(lobby) : new Voting(lobby);
@@ -50,10 +57,12 @@ class Classic extends GameLoop {
         if (currentPhase != null) currentPhase.start();
     }
 
-    public override function new(lobby:Lobby, round=5) {
+    public override function new(lobby:Lobby, c:ClassicConfig) {
         super();
         this.lobby = lobby;
-        this.round = round;
+        this.round = new Round(c.round, 3);
+        this.voteDuration = new PhaseDuration(c.voteDuration, 60);
+        this.playDuration = new PhaseDuration(c.playDuration, 600);
         this.type = VanillaGameLoopType.Classic;
         this.packetHandlers = [
             new ClientMessageHandler(),
@@ -66,8 +75,10 @@ class Classic extends GameLoop {
         
     }
 
-    public override function sendCurrentState(player:Player) {
-        currentPhase.sendCurrentState(player);
-    }
+}
 
+typedef ClassicConfig = {
+    ?round:String,
+    ?voteDuration:String,
+    ?playDuration:String
 }

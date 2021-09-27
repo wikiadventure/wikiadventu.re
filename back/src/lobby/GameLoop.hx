@@ -56,12 +56,12 @@ class GameLoop {
         if (s!=null) s.onPacket(lobby, player, p);
     }
     //TODO: Make the select work like packet handler
-    public static function select(type:GameLoopType = Classic, lobby:Lobby, ?round:Int, ?data:Any):GameLoop {
+    public static function select(type:GameLoopType = Classic, lobby:Lobby, config:Any):GameLoop {
         return switch type {
             case Classic:
-                new Classic(lobby, round);
+                new Classic(lobby, config);
             case Random:
-                new Random(lobby, round);
+                new Random(lobby, config);
             default:
                 throw ConnectError.InvalidGameLoop;
         }
@@ -80,5 +80,42 @@ enum abstract ModGameLoopType(Int) from Int to Int {
 }
 
 enum abstract GameLoopType(Int) from VanillaGameLoopType to Int from ModGameLoopType to Int  {
+
+}
+
+/**
+ * An abstract that clamp the round and assign a default value if null
+ */
+abstract Round(Int) from Int to Int {
+
+    /**
+     * create a correct round
+     * @param v the round input value
+     * @param d the round default value
+     * @return a correct round
+     */
+    inline public function new(s:String,d:Int) {
+        var v = Std.parseInt(s);
+        this = v == null ? d : v < 1 ? 1 : v > 50 ? 50 : v;
+    }
+
+}
+
+//TODO: we might to add -1 to handle endless phase
+/**
+ * An abstract that clamp the phase duration and assign a default value if null
+ */
+abstract PhaseDuration(Int) from Int to Int {
+
+    /**
+     * create a correct phase duration
+     * @param v the phase duration input value
+     * @param d the phase duration default value
+     * @return a correct phase duration
+     */
+    inline public function new(s:String,d:Int) {
+        var v = Std.parseInt(s);
+        this = v == null ? d : v < 0 ? 0 : v > 3600 ? 3600 : v;
+    }
 
 }

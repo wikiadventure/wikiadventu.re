@@ -162,7 +162,7 @@ class TwitchController {
         var passwordHash = Sha256.encode(form.password);
         var lobby = new TwitchLobby(player, passwordHash, form.slot);
         lobby.join(player, passwordHash);
-        lobby.gameLoop = GameLoop.select(form.gameLoop, lobby);
+        lobby.gameLoop = GameLoop.select(form.gameLoop, lobby, form.config);
         lobby.gameLoop.start();
         return lobby;
     }

@@ -11,5 +11,6 @@ typedef ConnectRequest = {
     ?slot:Int,
     ?gameLoop:GameLoopType,
     ?password:String,
-    ?lobby:String
+    ?lobby:String,
+    config:Any
 }

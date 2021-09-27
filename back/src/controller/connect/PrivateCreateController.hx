@@ -27,7 +27,7 @@ class PrivateCreateController {
             var passwordHash = Sha256.encode(form.password);
             var lobby = new Lobby(player.language, Private, passwordHash, form.slot);
             lobby.connect(player, passwordHash);
-            lobby.gameLoop = GameLoop.select(form.gameLoop, lobby);
+            lobby.gameLoop = GameLoop.select(form.gameLoop, lobby, form.config);
             lobby.gameLoop.start();
             var json:ConnectResponse = {
                 lobbyID: lobby.formatId,
