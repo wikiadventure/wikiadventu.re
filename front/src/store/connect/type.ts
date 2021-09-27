@@ -26,6 +26,7 @@ export interface loginQuery {
     lobby?:string;
     slot?:number;
     gameLoop?:number;
+    config?:any;
     code?:string;
 }
 

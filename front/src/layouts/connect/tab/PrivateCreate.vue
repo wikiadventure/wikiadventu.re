@@ -5,6 +5,7 @@
     <pseudo-input/>
     <game-loop-select/>
     <slot-select/>
+    <config/>
     <template v-slot:button>
       <connect-btn @click="submit" :label="t('create')"/>
     </template>
@@ -21,6 +22,7 @@ import LangSelect from 'src/components/form/LanguageSelect.vue';
 import PasswordInput from 'src/components/form/PasswordInput.vue';
 import PseudoInput from 'src/components/form/PseudoInput.vue';
 import SlotSelect from 'src/components/form/SlotSelect.vue';
+import Config from 'src/components/form/GameLoopConfig.vue';
 import { login } from 'store/connect/action';
 import { ConnectEvent, ConnectType } from 'store/connect/type';
 import { defineComponent, ref } from 'vue';
@@ -29,7 +31,7 @@ import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'PrivateCreate',
-  components: { ConnectForm, ConnectBtn, LangSelect, PasswordInput, PseudoInput, GameLoopSelect, SlotSelect },
+  components: { ConnectForm, ConnectBtn, LangSelect, PasswordInput, PseudoInput, GameLoopSelect, SlotSelect, Config },
   setup() {
     const { t } = useI18n({ useScope: 'global' });
     const password = ref("");

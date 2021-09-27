@@ -77,3 +77,6 @@ body, html {
     background: var(--clr-light);
   }
 }
+.q-field.reveal-shadow-text .q-field__shadow {
+  opacity: 0.6;
+}

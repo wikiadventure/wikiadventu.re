@@ -4,7 +4,7 @@ export enum VanillaLoopType {
 }
 // Register your mod loop here and on the back.
 export enum ModLoopType {
-    Default = 1000,
+    //Default = 1000,
 }
 
 export type GameLoopType = VanillaLoopType | ModLoopType;

@@ -5,9 +5,10 @@ import { connecting, gameLoop, id, lang, pseudo, slot } from './state';
 import { LobbyType } from 'store/lobby/type';
 import { ConnectEvent, ConnectResponse, ConnectType, ErrorCode, loginQuery } from './type';
 import { i18n } from 'src/boot/i18n';
-import router, { Router } from 'src/router';
+import { Router } from 'src/router';
 import { randomizePseudo } from './randomPseudo/generator';
 import { TWITCH_CLIENT_ID } from './twitch/state';
+import { setConfig } from './extra/state';
 
 const WithId = [ConnectType.PrivateJoin, ConnectType.PublicJoin];
 const IdOptionnal = [ConnectType.PublicJoin];
@@ -45,7 +46,10 @@ export function login(event:ConnectEvent) {
         return;
       }
     }
-    if (Create.includes(event.type)) query.slot = slot.value;
+    if (Create.includes(event.type)) {
+        query.slot = slot.value;
+        query.config = setConfig();
+    }
 
     if (ChooseGameLoop.includes(event.type)) query.gameLoop = gameLoop.value;
 
