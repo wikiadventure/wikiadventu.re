@@ -26,16 +26,19 @@ export default {
   start: "start",
   invite: "invite",
   input: {
-    langSelect: "Select Wikipedia language",
+    langSelect: "Wiki language",
     lobbyID: "Party ID",
     pseudo: "Username",
     password: "Password",
-    gameLoop: "Select a game mode",
+    gameLoop: "Game mode",
     slot: "Slots",
+    gameModeConfig: "Game mode configuration",
+    voteDuration: "Vote phase duration in secondes",
+    playDuration: "Play phase duration in secondes",
+    round: "Round",
     error: {
       minChars3: '3 character minimum',
       maxChars25: '25 character maximum',
-      restrictedChars: 'Don\'t use any of this character < > : | % $ / \\',
 
     }
   },

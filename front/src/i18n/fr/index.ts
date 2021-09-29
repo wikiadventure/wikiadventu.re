@@ -28,16 +28,19 @@ const fr:MessageSchema = {
   start: "démarrer",
   invite: "inviter",
   input: {
-    langSelect: "Sélectionner la langue du wiki",
-    lobbyID: "Identifiant de la Partie",
+    langSelect: "Langue du wiki",
+    lobbyID: "ID de la Partie",
     pseudo: "Pseudo",
     password: "Mot de passe",
-    gameLoop: "Sélectionner un mode de jeu",
+    gameLoop: "Mode de jeu",
     slot: "Places",
+    gameModeConfig: "Configuration du mode de jeu",
+    voteDuration: "Durée de la phase de vote en secondes",
+    playDuration: "Durée de la phase de jeu en secondes",
+    round: "Round",
     error: {
       minChars3: "3 caractères minimum",
       maxChars25: "25 caractères maximum",
-      restrictedChars: "N'utilisez pas ces caractères < > : | % $ / \\",
     }
   },
   menu: {

@@ -1,6 +1,6 @@
 <template>
   <q-expansion-item class="extra-config" switch-toggle-side expand-separator
-    label="Game mode config" expand-icon="mdi-cog">
+    :label="t('input.gameModeConfig')" expand-icon="mdi-cog">
     <component :is="config" />
   </q-expansion-item>
 </template>
@@ -22,18 +22,23 @@
 }
 </style>
 <script lang="ts">
-import { defineComponent, defineAsyncComponent, computed } from 'vue';
+import { defineComponent, defineAsyncComponent, ref, Component, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { gameLoop } from "store/connect/state";
-import { VanillaLoopType, ModLoopType } from "store/lobby/game/loop/type";
+import { VanillaLoopType, ModLoopType, GameLoopType } from "store/lobby/game/loop/type";
 
 export default defineComponent({
   name: 'ExtraConfig',
   setup() {
     const { t } = useI18n({ useScope: 'global' });
-    const gameLoopName = computed(() => VanillaLoopType[gameLoop.value] || ModLoopType[gameLoop.value] );
-    const isMod = computed(() => ModLoopType[gameLoop.value] != null );
-    const config = computed(() => defineAsyncComponent(()=>import(`./configs/${(isMod.value ? "mod/" :"") + gameLoopName.value}Config.vue`)));
+
+    function setConfig(gameLoop:GameLoopType):Component {
+      var isMod = false;
+      var gameLoopName = VanillaLoopType[gameLoop] || (()=>{isMod=true; return ModLoopType[gameLoop]});
+      return defineAsyncComponent(()=>import(`./configs/${(isMod ? "mod/" :"") + gameLoopName}Config.vue`));
+    }
+    const config = ref(setConfig(gameLoop.value));
+    watch(gameLoop,() => config.value = setConfig(gameLoop.value));
     return {
       t,
       config
