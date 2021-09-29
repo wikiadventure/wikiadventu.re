@@ -23,16 +23,10 @@ class TwitchLobby extends Lobby {
         name = player.twitchUser.name;
     }
 
-    /**
-     * the id of the lobby is the channel name of the streamer
-     */
-    public override function giveId() {
-        var pos = 0;
-        while ( lobbyList[pos] != null && name > lobbyList[pos].name) {
-            pos++;
-        }
-        lobbyList.insert(pos,this);
-        log("create the lobby", Info);
+    public override function insert() {
+        var pos = -search(name);
+        if (pos >= 0) return lobbyList.insert(pos,this);
+        throw ConnectError.TwitchIdAlreadyUsed;
     }
     
     public function join(twitchPlayer:TwitchPlayer, passwordHash:String) { 
@@ -56,12 +50,23 @@ class TwitchLobby extends Lobby {
         } catch(e:Dynamic) {
         }
     }
+     public inline static function search(name:String) {
+        return s(name,0,lobbyList.length-1);
+    }   
 
-    public static function find(channelName:String):TwitchLobby {
-        for (l in lobbyList) {
-            if (l.name > channelName) break;
-            if (l.name == channelName) return l;
+    private static function s(name:String,l:Int, r:Int) {
+        if (r >= l) {
+            var mid = l + Math.floor((r - l) / 2);
+            if (lobbyList[mid].name == name) return mid;
+            if (lobbyList[mid].name > name) return s(name, l, mid - 1);
+            return s(name, mid + 1, r);
         }
+        return -r;
+    }
+
+    public static function find(name:String) {
+        var pos = search(name);
+        if (pos >= 0) return lobbyList[pos];
         throw ConnectError.NoLobbyFoundWithID;
     }
 

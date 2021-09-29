@@ -30,6 +30,7 @@ enum abstract ConnectError(Int) from Int to Int {
     var InvalidGameLoop;
 	var InvalidTwitchCode;
     var InvalidPseudo;
+    var TwitchIdAlreadyUsed;
     var LobbyLimitReached = 200; //server error
     var PrivateLobbyLimitReached;
 	var TwitchConnectionError;

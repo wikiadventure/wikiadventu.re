@@ -55,43 +55,53 @@ class Lobby {
         this.slot = slot;
         this.passwordHash = passwordHash;
         heartbeat = Timers.setInterval(checkAlive, 30000);
-        giveId();
+        insert();
     }
     /**
      * give the lobby a valid id, loop until it found a unused one
      */
-    public function giveId() {
-        var pos = -1;
-        do {
-            id = Std.random(1048576);
-            pos = checkIdUsed(id);
-        } while (pos == -1);
-
+    public function insert() {
+        var pos = 0;
+        if (lobbyList.length != 0) {
+            do {
+                id = Std.random(1048576);//32^4
+                pos = -search(id);
+            } while (pos < 0);
+        } else id = Std.random(1048576);
         lobbyList.insert(pos,this);
         log("create the lobby", Info);
     }
 
-    /**
-     * Check if the randomly generated id is used
-     * @param id futur id of the lobby
-     * @return Int the position in the list of the futur lobby, return -1 if the id is already taken
-     */
-    //tested perform quite well can insert correctly 1000 lobby when there already 9000 lobby in 0.000013 ~ 0.000014
-    public static function checkIdUsed(id:Int):Int {
-        var i=0;
-        for (l in lobbyList) {
-            if (l.id > id) return i; // because the list is sorted, so if the id is inferior to the next one it means the id is between the last and the next one
-            if (l.id == id) return -1;
-            i++;
-        }
-        return i;
+    public inline static function search(id:Int) {
+        return s(id,0,lobbyList.length-1);
     }
 
-    public static function find(id:Int):Lobby {
-        for (l in lobbyList) {
-            if (l.id > id) break;
-            if (l.id == id) return l;
+    /**
+     * #Recursive - Binary search of a lobby by his id should be called with search
+     * @param id of the lobby to search
+     * @param l INTERNAL left limit position in the lobbyList
+     * @param r INTERNAL right limit position in the lobbyList
+     * @return The index of the found lobby in the lobbyList.
+     * If not found return a negative index of where it should be.
+     */
+    private static function s(id:Int,l:Int, r:Int):Int {
+        if (r >= l) {
+            var mid = l + Math.floor((r - l) / 2);
+            return  lobbyList[mid].id == id ? mid :
+                    lobbyList[mid].id > id ? s(id, l, mid - 1) :
+                    s(id, mid + 1, r);
         }
+        return -r;
+    }
+    /**
+     * Find a lobby by his id ( can throw a connection Error)
+     * @param id of the lobby
+     * @return the Lobby
+     * 
+     */
+    public static function find(id:Int):Lobby {
+        var pos = search(id);
+        if (pos >= 0) return lobbyList[pos];
         throw ConnectError.NoLobbyFoundWithID;
     }
 
