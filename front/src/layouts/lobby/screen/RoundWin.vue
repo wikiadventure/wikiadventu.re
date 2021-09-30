@@ -1,15 +1,15 @@
 <template>
-  <div id="round-win" class="absolute-full">
+  <div class="round-win absolute-full">
     <logo-show-in :title="winner?.pseudo || 'No Winner Yet'" :class="{ lose: !isWinner }" ></logo-show-in>
     <exit-btn @click="showRoundWin = false"/>
   </div>
 </template>
 <style lang="scss">
-#round-win {
+.round-win {
   background: rgba(0,0,0,0.5);
-}
-.lose {
-  filter: hue-rotate(180deg);
+  .lose {
+    filter: hue-rotate(180deg);
+  }
 }
 </style>
 <script lang="ts">
@@ -21,7 +21,6 @@ import { playerSetup } from 'store/player';
 import { gameLayoutManagerSetup } from 'store/gameLayoutManager';
 import { loseSound } from 'store/audio/vanilla/lose';
 import { winSound } from 'store/audio/vanilla/win';
-import { selfId } from 'store/player/state';
 
 export default defineComponent({
   name: 'RoundWin',

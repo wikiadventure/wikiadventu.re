@@ -107,12 +107,12 @@
 }
 .body--light {
   .connect-tabs {
-    background:  scale-color($color: $clr-light, $lightness: -3%);
+    background: scale-color($color: $clr-light, $lightness: -3%);
     color: #333;
     border-top: solid 1px grey;
   }
   .connect-sub-tabs {
-    background:  scale-color($color: $clr-light, $lightness: -6%);
+    background: scale-color($color: $clr-light, $lightness: -6%);
     color: #333;
     border-top: solid 1px grey;
   }

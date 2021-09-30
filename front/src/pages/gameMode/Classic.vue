@@ -15,7 +15,7 @@
 .game-mode-classic {
   overflow: hidden;
 }
-.wiki-end-page {
+.right-panel {
   transition: transform 0.15s ease-in-out;
   filter: drop-shadow(3px 3px 15px black);
 }

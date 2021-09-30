@@ -1,5 +1,5 @@
 <template>
-  <div id="chatTab">
+  <div class="chat-tab">
     <q-list class="chatOutput" bordered padding>
       <q-item v-for="mes in messages" :key="mes.playerID" class="q-pa-none">
         <q-item-section>
@@ -21,7 +21,7 @@
   </div>
 </template>
 <style lang="scss">
-#chatTab {
+.chat-tab {
 	//background: blue;/*#23272a*/
 	display: flex;
   flex-direction: column;
@@ -39,32 +39,30 @@
   }
 }
 .chatForm {
-		//background: #23272a;
-		padding: 3px;
-		bottom: 0;
-    width: 100%;
-    flex: 0 0 auto;
-		//border-top: 2px solid #2f353a;
-		display: inline-flex;
-	}
-	.chatInput {
-		width: 100%;
+  padding: 3px;
+	bottom: 0;
+  width: 100%;
+  flex: 0 0 auto;
+	display: inline-flex;
+}
+.chatInput {
+  width: 100%;
+}
+.chatSubmit:active {
+  transform: scale(0.9);
+}
+.chatLabel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  p {
+    margin: 0;
   }
-  .chatSubmit:active {
-    transform: scale(0.9);
+  p:nth-child(2) {
+    opacity: 0.7;
+    font-size: 85%;
   }
-  .chatLabel {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    p {
-      margin: 0;
-    }
-    p:nth-child(2) {
-      opacity: 0.7;
-      font-size: 85%;
-    }
-  }
+}
 </style>
 <script lang="ts">
 import { date } from 'quasar';

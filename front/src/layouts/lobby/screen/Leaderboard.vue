@@ -1,21 +1,21 @@
 <template>
-  <div id="leaderboard" class="absolute-full">
+  <div class="leaderboard absolute-full">
     <exit-btn @click="showLeaderboard = false"/>
-    <div id="grid-leaderboard">
+    <div class="grid-leaderboard">
       <div class="grid-leaderboard-podium grid-leaderboard-2">
-        <div id="position-2"><img src="svg/podium2neonV2.svg" alt="number 2"/></div>
-        <div id="name-2">{{ playersByScore[1] ? playersByScore[1].pseudo : "" }}</div>
-        <div id="score-2">{{ playersByScore[1] ? playersByScore[1].score : "" }}</div>
+        <div class="position-2"><img src="svg/podium2neonV2.svg" alt="number 2"/></div>
+        <div class="name-2">{{ playersByScore[1] ? playersByScore[1].pseudo : "" }}</div>
+        <div class="score-2">{{ playersByScore[1] ? playersByScore[1].score : "" }}</div>
       </div>
       <div class="grid-leaderboard-podium grid-leaderboard-1">
-        <div id="position-1"><img src="svg/podium1neonV2.svg" alt="number 1"/></div>
-        <div id="name-1">{{ playersByScore[0] ? playersByScore[0].pseudo : "" }}</div>
-        <div id="score-1">{{ playersByScore[0] ? playersByScore[0].score : "" }}</div>
+        <div class="position-1"><img src="svg/podium1neonV2.svg" alt="number 1"/></div>
+        <div class="name-1">{{ playersByScore[0] ? playersByScore[0].pseudo : "" }}</div>
+        <div class="score-1">{{ playersByScore[0] ? playersByScore[0].score : "" }}</div>
       </div>
       <div class="grid-leaderboard-podium grid-leaderboard-3">
-        <div id="position-3"><img src="svg/podium3neonV2.svg" alt="number 3"/></div>
-        <div id="name-3">{{ playersByScore[2] ? playersByScore[2].pseudo : "" }}</div>
-        <div id="score-3">{{ playersByScore[2] ? playersByScore[2].score : "" }}</div>
+        <div class="position-3"><img src="svg/podium3neonV2.svg" alt="number 3"/></div>
+        <div class="name-3">{{ playersByScore[2] ? playersByScore[2].pseudo : "" }}</div>
+        <div class="score-3">{{ playersByScore[2] ? playersByScore[2].score : "" }}</div>
       </div>
       <div class="grid-leaderboard-item" v-for="(p, i) in playersByScore.slice(3)" :key="p.id">
         <div class="position">{{ i+3 }}</div>
@@ -26,15 +26,15 @@
   </div>
 </template>
 <style lang="scss">
-#leaderboard {
+.leaderboard {
     line-height: 1.7em;
-    color: rgb(220, 220, 220);
+    color: #dcdcdc;
     background: #36393F;
     font-size: 13px;
     overflow-x: hidden;
     overflow-y: scroll;
 
-    #grid-leaderboard {
+    .grid-leaderboard {
         display: grid;
         gap: 10px;
         grid-template-columns: 1.4fr 2fr 1.4fr;
@@ -71,7 +71,6 @@
         padding: 2px;
     }
 
-
     .position {
         flex: 0 0 25px;
         text-align: center;
@@ -79,7 +78,7 @@
         /*background-color: rgba(50, 250, 50, 0.3);*/
         border-right: rgba(41, 161, 156, 0.7) ridge 2px;
     }
-    #name-1, #score-1 {
+    .name-1, .score-1 {
         color: hsl(43, 74%, 49%);
         text-shadow: 
         0 0.025em 0 hsl(43, 74%, 44%), 
@@ -95,7 +94,7 @@
         0 0.1em 0.1em rgba(0,0,0,.2), 
         0 0.2em 0.2em rgba(0,0,0,.15);
     }
-    #name-2, #score-2 {
+    .name-2, .score-2 {
         color: silver;
         text-shadow: 
         0 0.025em 0 hsl(0, 0%, 70%), 
@@ -111,7 +110,7 @@
         0 0.1em 0.1em rgba(0,0,0,.2), 
         0 0.2em 0.2em rgba(0,0,0,.15);
     }
-    #name-3, #score-3 {
+    .name-3, .score-3 {
         color: #cd8032;
         text-shadow: 
         0 0.025em 0 hsl(30, 61%, 35%), 
@@ -129,33 +128,30 @@
     }
 
 
-    #position-1, #position-2, #position-3 {
+    .position-1, .position-2, .position-3 {
         height: calc(28vw - 4em);
         width: calc(28vw - 4em);
         padding: 0;
-        /*background-color: rgba(255, 0, 0, 0.3);*/
         border-radius: 50%;
     }
 
 
-    #name-1, #name-2, #name-3 {
+    .name-1, .name-2, .name-3 {
         flex: 0 0 2em;
         max-width: 25.2vw;
         font-weight: bolder;
         text-align: center;
-        /*background-color: rgba(38, 255, 0, 0.3);*/
         overflow: hidden;
         white-space: pre;
         text-overflow: ellipsis;
     }
 
-    #score-1, #score-2, #score-3 {
+    .score-1, .score-2, .score-3 {
         flex: 0 0 2em;
         max-width: 25.2vw;
         font-size: 1.2em;
         font-weight: bolder;
         text-align: center;
-        /*background-color: rgba(98, 0, 255, 0.3);*/
         overflow: hidden;
         white-space: pre;
         text-overflow: ellipsis;
@@ -177,7 +173,6 @@
         flex: 1 1 0;
         text-align: right;
         color: #29a19c;
-        /*background-color: rgba(50, 50, 250, 0.3);*/
         overflow: hidden;
         white-space: pre;
         text-overflow: ellipsis;

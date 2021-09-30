@@ -91,7 +91,6 @@ export default defineComponent({
       deleteVote,
       searchVote,
       submitSuggestion,
-      noDebounceLoadInputSuggestions,
       sendVote,
       unfocus,
       blur,

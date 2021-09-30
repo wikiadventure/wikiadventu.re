@@ -15,7 +15,7 @@
 .game-mode-random {
   overflow: hidden;
 }
-.wiki-end-page {
+.right-panel {
   transition: transform 0.15s ease-in-out;
   filter: drop-shadow(3px 3px 15px black);
 }
@@ -133,6 +133,7 @@ export default defineComponent({
 
     function rollbackEvent(payload:WsRollback) {
       wikiPage.value?.requestWikiPage(payload.page);
+      //TODO: notify user of rollback (we chould put it in store)
       /*Notify.create({
         type: 'error',
         position: 'top',

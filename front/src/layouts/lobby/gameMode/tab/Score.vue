@@ -1,5 +1,5 @@
 <template>
-  <div class="score">
+  <div class="score-tab">
     <h3 class="row items-baseline justify-evenly q-my-xs">{{ t('scoreTab.title') }}</h3>
     <div class="row items-baseline justify-evenly"><q-btn class="action-btn" push :label="t('scoreTab.leaderboard')" icon="mdi-format-list-bulleted" @click="showLeaderboard = !showLeaderboard"/></div>
     <q-separator spaced="md"/>

@@ -31,7 +31,6 @@ export default defineComponent({
   components: { ConnectForm, ConnectBtn, LangSelect, PasswordInput, PseudoInput, IdInput, GameLoopSelect },
   setup() {
     const { t } = useI18n({ useScope: 'global' });
-    const password = ref("");
     function submit() {
       var connectEvent:ConnectEvent = {
         type: ConnectType.PublicJoin
@@ -39,7 +38,6 @@ export default defineComponent({
       login(connectEvent);
     }
     return {
-      password,
       submit,
       t
     }

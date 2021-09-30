@@ -1,11 +1,11 @@
 <template>
   <q-input outlined v-model="password" hint="" name="password"
           :label="t('input.password')" spellcheck="false"
-          :dense="$q.screen.lt.sm" :type="isPwd ? 'password' : 'text'"
+          :dense="$q.screen.lt.sm" :type="isVisible ? 'password' : 'text'"
           v-bind="$attrs">
     <template v-slot:append>
-      <q-icon :name="isPwd ? 'visibility_off' : 'visibility'"
-              class="cursor-pointer" @click="isPwd = !isPwd">
+      <q-icon :name="isVisible ? 'visibility_off' : 'visibility'"
+              class="cursor-pointer" @click="isVisible = !isVisible">
       </q-icon>
     </template>
   </q-input>

@@ -1,5 +1,5 @@
 <template>
-  <div id="page-history" class="row justify-center absolute-full">
+  <div class="page-history row justify-center absolute-full">
     <div class="page-history-container shadow-6">
       <exit-btn @click="showPageHistory = false"/>
       <div class="page-history-title justify-center">
@@ -15,7 +15,7 @@
   </div>
 </template>
 <style lang="scss">
-#page-history {
+.page-history {
   overflow: hidden;
 }
 .page-history-container {

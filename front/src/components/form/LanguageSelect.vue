@@ -9,7 +9,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { allLangOptions, getLabel, Lang } from 'src/i18n';
+import { allLangOptions, getLabel } from 'src/i18n';
 import { lang } from 'store/connect/state';
 import { useI18n } from 'vue-i18n';
 

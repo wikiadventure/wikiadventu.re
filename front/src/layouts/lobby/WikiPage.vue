@@ -1,10 +1,10 @@
 <template>
-  <section class="wikiPage absolute-full" :class="{ wikifade: fade, disabled: disabled }">
+  <section class="wiki-page absolute-full" :class="{ wikifade: fade, disabled: disabled }">
     <slot></slot>
-    <div id="wikiCore" ref="wiki">
-      <h1 id="wikiTitle">{{ wikiArticle.title || title }}</h1>
-      <div id="wikiMain">
-        <div id="wikiContent" v-html="wikiArticle.doc?.body.innerHTML || content" :class="{ safeMode: safeModeActive }"></div>
+    <div class="wikiCore" ref="wiki">
+      <h1 class="wikiTitle">{{ wikiArticle.title || title }}</h1>
+      <div class="wikiMain">
+        <div class="wikiContent" v-html="wikiArticle.doc?.body.innerHTML || content" :class="{ safeMode: safeModeActive }"></div>
       </div>
     </div>
   </section>
@@ -18,15 +18,15 @@
 .disabled a:not(.anchorLink) {
   cursor: not-allowed;
 }
-.wikiPage {
+.wiki-page {
   overflow-wrap: break-word;
   opacity: 1;
   transition: opacity ease-in-out 0.1s;
 }
-#wikiTitle {
+.wikiTitle {
   text-align: center;
 }
-#wikiCore {
+.wikiCore {
   overflow-y: scroll;
   width: 100%;
   height: 100%;
@@ -56,7 +56,7 @@
     height: auto;
   }
 }
-#wikiMain {
+.wikiMain {
   width: 100%;
   padding: 2em 4em;
   @media screen and (max-width: 1220px) {
@@ -98,11 +98,11 @@
   --portal-link-color: #168243;
   --anchor-link-color: #2593ce;
 }
-.wikiPage {
+.wiki-page {
   background: var(--wiki-page-bg);
   color: var(--wiki-page-color);
 }
-#wikiContent {
+.wikiContent {
   .hatnote {
     background-color: var(--hatnote-bg);
     color: var(--hatnote-color);

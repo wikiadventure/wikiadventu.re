@@ -3,7 +3,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Dark, Notify } from 'quasar';
+import { Dark } from 'quasar';
 
 export default defineComponent({
   name: 'App',

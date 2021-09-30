@@ -1,5 +1,5 @@
 <template>
-  <div class="setting">
+  <div class="setting-tab">
     <div class="span2 text-h3 q-py-lg">{{ t('settingTab.settings') }}</div>
     <fullscreen-switch class="action-btn"/> <theme-switch/>
     <p class="q-ma-none">SafeMode : </p>    <safe-mode-switch/>
@@ -9,7 +9,7 @@
   </div>
 </template>
 <style lang="scss">
-.setting {
+.setting-tab {
   display: grid;
   grid-template-columns: 1fr 1fr;
   padding: 15px;

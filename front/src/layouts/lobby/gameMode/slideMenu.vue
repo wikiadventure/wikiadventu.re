@@ -1,5 +1,5 @@
 <template>
-    <div class="slideMenu" ref="menu" :class="{ 'checked': showGameMenu }">
+    <div class="slide-menu" ref="menu" :class="{ 'checked': showGameMenu }">
       <label @click.stop="showGameMenu = !showGameMenu" class="showMenu">
         <q-icon size="md" name="mdi-play"/>
         <q-badge color="teal" transparent :label="unseenMessagesNumber" floating v-show="unseenMessagesNumber != '0'" />
@@ -25,12 +25,8 @@
         <slot name="extraTab"></slot>
 
       </q-tab-panels>
-      <q-tabs v-model="gameMenuTab"
-              dense
-              class="text-grey menu-tabs"
-              active-color="primary"
-              indicator-color="primary"
-              align="justify"
+      <q-tabs v-model="gameMenuTab" dense
+              class="menu-tabs" align="justify"
               narrow-indicator>
         <q-tab name="chat" icon="mdi-android-messages" @click="seenMessages = 0">
           <q-badge color="teal" transparent :label="unseenMessagesNumber" floating v-show="unseenMessagesNumber != '0'" />
@@ -43,7 +39,7 @@
     </div>
 </template>
 <style lang="scss">
-.slideMenu {
+.slide-menu {
   z-index: 6;
   transition: all ease-in-out 0.2s;
 
@@ -77,38 +73,38 @@
       }
     }
   }
-}
-.showMenu {
-	padding: 0.25em 0.35em;
-  border-radius: 10px;
-  display: inline-block;
-	opacity: .7;
-	position: absolute;
-	left: 100%;
-	transition: all ease-in-out 0.2s;
-  color: var(--clr-main);
-  background: var(--clr-reverse);
-  .q-icon {
-    transform: rotate(0deg);
-    transition: inherit;
+  .showMenu {
+    padding: 0.25em 0.35em;
+    border-radius: 10px;
+    display: inline-block;
+    opacity: .7;
+    position: absolute;
+    left: 100%;
+    transition: all ease-in-out 0.2s;
+    color: var(--clr-main);
+    background: var(--clr-reverse);
+    cursor: pointer;
+    .q-icon {
+      transform: rotate(0deg);
+      transition: inherit;
+    }
+    .q-badge {
+      bottom: -4px;
+      top: unset;
+    }
+    @media(max-width: 720px) {
+      //display: none;
+    }
   }
-  .q-badge {
-    bottom: -4px;
-    top: unset;
-  }
-  cursor: pointer;
-  @media(max-width: 720px) {
-    //display: none;
-  }
-}
 
-.q-tab--active, .q-tab__indicator {
-  color: var(--clr-dark-teal)!important;
-}
+  .q-tab--active, .q-tab__indicator {
+    color: var(--clr-dark-teal)!important;
+  }
 
-.menu-tabs {
-  background: $clr-alt;
-  color: $clr-accent;
+  .menu-tabs {
+    background: $clr-alt;
+    color: $clr-accent;
+  }
 }
 </style>
 <script lang="ts">

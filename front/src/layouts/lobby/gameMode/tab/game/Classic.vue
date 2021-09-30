@@ -54,7 +54,7 @@
 </style>
 <script lang="ts">
 import VoteInput from 'src/components/game/VoteInput.vue';
-import preview from "components/game/WikiPreview.vue";
+import Preview from "components/game/WikiPreview.vue";
 
 import { defineComponent } from 'vue';
 import { gameLayoutManagerSetup } from 'store/gameLayoutManager';
@@ -66,7 +66,7 @@ import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'ClassicGameTab',
-  components: { VoteInput, preview },
+  components: { VoteInput, Preview },
   setup(){
     const { t } = useI18n({ useScope: 'global' });
     var {

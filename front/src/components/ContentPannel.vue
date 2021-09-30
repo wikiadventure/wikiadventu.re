@@ -25,7 +25,6 @@
     text-align: center;
 }
 .content-pannel-core {
-    /*border-bottom: 1px solid rgba(0,0,0,0.3);*/
     text-align: center;
     padding: 1.5em;
     width: 100%;
@@ -34,7 +33,6 @@
     justify-content: space-evenly;
 }
 </style>
-
 <script lang="ts">
 import { defineComponent } from 'vue';
 
