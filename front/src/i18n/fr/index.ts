@@ -1,6 +1,10 @@
 import type { MessageSchema } from "../";
 
 const fr:MessageSchema = {
+  error404: {
+    content: "Hey! Comment est vous arrivé là? Il n'y a rien à voir. Vous devriez retourner à l'accueil.",
+    button: "Accueil"
+  },
   play: "Jouer",
   worker: {
     updateFound: "Nouvelle mise à jour! Le jeu va recharger après le téléchargement.",

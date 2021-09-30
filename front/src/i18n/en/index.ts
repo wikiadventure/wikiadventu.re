@@ -1,4 +1,8 @@
 export default {
+  error404: {
+    content: "Hey! How did you get here? There is nothing to see. You should return home.",
+    button: "Home"
+  },
   play: "play",
   worker: {
     updateFound: "New update! The game will restart after downloading.",
