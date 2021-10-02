@@ -14,10 +14,10 @@
 <style lang="scss">
 .error-404 {
   position: absolute;
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
   place-items: center;
   justify-content: space-evenly;
   background: var(--clr-main);

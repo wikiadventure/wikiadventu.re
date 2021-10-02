@@ -1,5 +1,5 @@
 <template>
-  <q-input outlined v-model="pseudo" :label="t('input.pseudo')"
+  <q-input class="pseudo-input" outlined v-model="pseudo" :label="t('input.pseudo')"
           name="pseudo" spellcheck="false" :dense="$q.screen.lt.sm"
           v-bind="$attrs"
           >
@@ -7,19 +7,19 @@
                     v => v.length <= 25 || t('input.hint.maxChars25'),
                     v => !v.match(/[<>:|%$\/\\]/g) || t('input.hint.restrictedChars')]"-->
     <template v-slot:append>
-      <q-icon class="iconButton" name="mdi-dice-5" @click="randomizePseudo()"></q-icon>
+      <q-icon class="iconBtn" name="mdi-dice-5" @click="randomizePseudo()"></q-icon>
     </template>
   </q-input>
 </template>
-<style scoped>
-.iconButton {
+<style lang="scss">
+.pseudo-input .iconBtn{
   transition: transform 0.2s ease-in-out;
-}
-.iconButton:hover {  
-  transform: scale(1.2);
-}
-.iconButton:active {
-  transform: scale(1) rotate(360deg);
+  &:hover {
+    transform: scale(1.2);
+  }
+  &:active {
+    transform: scale(1) rotate(360deg);
+  }
 }
 </style>
 <script lang="ts">

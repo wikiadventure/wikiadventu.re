@@ -6,9 +6,9 @@
   position: absolute;
   right: 0;
   top: 0;
-  filter: drop-shadow(2px 2px 3px black);
   border: 2px solid var(--clr-main);
   color: var(--clr-main);
+  filter: drop-shadow(2px 2px 3px black);
 }
 </style>
 <script lang="ts">

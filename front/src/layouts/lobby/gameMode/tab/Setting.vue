@@ -12,9 +12,9 @@
 .setting-tab {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  row-gap: 15px;
   padding: 15px;
   place-items: center;
-  row-gap: 15px;
   .action-btn {
     padding: 5px;
   }

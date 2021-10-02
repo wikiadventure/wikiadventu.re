@@ -46,16 +46,6 @@
   </div>
 </template>
 <style lang="scss">
-.topLeft, .topRight {
-  position: absolute;
-  top: 2px;
-}
-.topLeft {
-  left: 2px;
-}
-.topRight {
-  right: 15px;
-}
 .main-menu-index {
   --w-angle: -5deg;
   --w-slope-ratio: 11.66vw;
@@ -67,105 +57,131 @@
   .logo-show-in {
     pointer-events: none;
   }
-}
-.skewLineContainer {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  top: 0;
-}
-.skewLineContainer.first {
-  height: calc(65vmin + var(--w-slope-ratio) + 5px);
-  .skewLine {
-    top: calc(65vmin + var(--w-slope-ratio));
+  .topLeft, .topRight {
+    position: absolute;
+    top: 2px;
   }
-}
+  .topLeft {
+    left: 2px;
+  }
+  .topRight {
+    right: 15px;
+  }
+  .skewLineContainer {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+  .skewLineContainer.first {
+    height: calc(65vmin + var(--w-slope-ratio) + 5px);
+    .skewLine {
+      top: calc(65vmin + var(--w-slope-ratio));
+    }
+  }
 
-.skewLineContainer.second {
-  height: calc(var(--w-slope-ratio) + 55px);
-  margin-top: -50px;
-  .skewLine {
-    top: calc(var(--w-slope-ratio) + 50px );
+  .skewLineContainer.second {
+    height: calc(var(--w-slope-ratio) + 55px);
+    margin-top: -50px;
+    .skewLine {
+      top: calc(var(--w-slope-ratio) + 50px );
+    }
   }
-}
-.skewLineContainer.third {
-  height: calc(var(--w-slope-ratio) + 55px);
-  margin-top: -50px;
-  .skewLine {
-    top: calc(var(--w-slope-ratio) + 50px );
+  .skewLineContainer.third {
+    height: calc(var(--w-slope-ratio) + 55px);
+    margin-top: -50px;
+    .skewLine {
+      top: calc(var(--w-slope-ratio) + 50px );
+    }
   }
-}
-.skewLine {
-  position: absolute;
-  transform-origin: top left;
-  border-top: 1px solid var(--clr-light);
-  left: -2%;
-  width: 104%;
-  height: 50em;
-  transform: skewY(var(--w-angle));
-  box-shadow: 0 0 50px rgba(18, 230, 238, 0.54);
-}
-.wrapper {
-  position: relative;
-  top: -1px;
-  width: 100%;
-}
-#HowToPlay, #News, #Contribution {
-  display: inline-block; // To force a new block formatting context
-  margin-top: -3.7vmax;
-  @media screen and (max-width: 600px) {
-    margin-top: 0;
-  }
-}
-#HowToPlay, #Contribution{
-  color: $clr-accent-alt;
-}
-#News {
-  color: $clr-accent;
-}
-#Contribution {
-  pointer-events: all;
-}
-.github {
-  background: #000;
-  color: var(--clr-light);
-}
-.discord {
-  background: #7289DA;
-  color: var(--clr-light);
-}
-.kofi {
-  background: #29abe0;
-  color: var(--clr-light);
-}
-.nano {
-  background: var(--clr-light);
-  color: #4a90e2;
-}
-.github, .discord, .nano, .kofi {
-  border-radius: 5px;
-  margin: 0 15px 5px;
-}
-.skewLineContainer.first {
   .skewLine {
+    position: absolute;
+    left: -2%;
+    width: 104%;
+    height: 50em;
+    border-top: 1px solid var(--clr-light);
+    box-shadow: 0 0 50px rgba(18, 230, 238, 0.54);
+    transform-origin: top left;
+    transform: skewY(var(--w-angle));
+  }
+  .wrapper {
+    position: relative;
+    top: -1px;
+    width: 100%;
+  }
+  #HowToPlay, #News, #Contribution {
+    display: inline-block; // To force a new block formatting context
+    margin-top: -3vmin;
+    @media screen and (max-width: 600px) {
+      //margin-top: 0;
+    }
+  }
+  #HowToPlay, #Contribution{
+    color: $clr-accent-alt;
+  }
+  #News {
+    color: $clr-accent;
+  }
+  #Contribution {
+    pointer-events: all;
+    .content-pannel-core {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 15px;
+      gap: 15px;
+      &>div {
+        flex: 0 0;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        .q-btn__content {
+          flex-wrap: nowrap;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+  .github {
+    background: #000;
+    color: var(--clr-light);
+  }
+  .discord {
+    background: #7289DA;
+    color: var(--clr-light);
+  }
+  .kofi {
+    background: #29abe0;
+    color: var(--clr-light);
+  }
+  .nano {
+    background: var(--clr-light);
+    color: #4a90e2;
+  }
+  .github, .discord, .nano, .kofi {
+    margin: 0 15px 5px;
+    border-radius: 5px;
+  }
+  .skewLineContainer.first {
+    .skewLine {
+      background: $clr-main;
+    }
+  }
+  .skewLineContainer.second {
+    .skewLine {
+      background: $clr-alt;
+    }
+  }
+  .skewLineContainer.third {
+    .skewLine {
+      background: $clr-main;
+    }
+  }
+  .wrapper.first, .wrapper.third {
     background: $clr-main;
   }
-}
-.skewLineContainer.second {
-  .skewLine {
+  .wrapper.second {
     background: $clr-alt;
   }
-}
-.skewLineContainer.third {
-  .skewLine {
-    background: $clr-main;
-  }
-}
-.wrapper.first, .wrapper.third {
-  background: $clr-main;
-}
-.wrapper.second {
-  background: $clr-alt;
 }
 .body--dark {
   .skewLine {

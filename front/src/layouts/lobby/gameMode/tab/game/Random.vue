@@ -41,8 +41,8 @@
 </template>
 <style lang="scss">
 .random-game-tab  {
-  font-size: 1.2em;
   min-height: 100%;
+  font-size: 1.2em;
   .self {
     color: var(--w-color-dark-teal);
   }

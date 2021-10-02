@@ -64,19 +64,19 @@
 </template>
 <style lang="scss">
 .tabMenu {
+  overflow: hidden;
   display: flex;
   flex-flow: column;
   min-height: 100%;
-  overflow: hidden;
   .tabPanel {
-    height: 100%;
-    width: 100%;
     position: absolute;
     bottom: 0;
+    height: 100%;
+    width: 100%;
   }
   .tabContent, .tabContent .q-panel, .tabPanel {
-    flex: 1 1 auto;
     overflow: hidden;
+    flex: 1 1 auto;
     display: flex;
     flex-flow: column;
   }

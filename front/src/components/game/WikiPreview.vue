@@ -10,13 +10,13 @@
 </template>
 <style lang="scss">
 .wiki-preview {
-  padding: 10px;
   display: grid;
   grid-template-columns: 80px 1fr;
   grid-template-rows: auto auto;
   grid-template-areas: 
   "i t t"
   "i d d";
+  padding: 10px;
   &:last-child {
     border: none;
   }
@@ -24,14 +24,14 @@
     grid-area: i;
     width: 80px;
     height: 80px;
-    border-radius: 3px;
     background: hsla(0,0%,100%,0.5);
+    border-radius: 3px;
 
   }
   div.img {
-    background: none;
     display: grid;
     place-items: center;
+    background: none;
     border: 1px solid grey
   }
   h3 {

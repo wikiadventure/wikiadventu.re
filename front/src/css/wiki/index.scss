@@ -3,20 +3,20 @@
   .infobox,
   .infobox_v2,
   .infobox_v3 {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
     display: flex;
     flex-flow: column nowrap;
     place-items: stretch;
-    font-size: 0.9em;
-    line-height: 1.7em;
-    max-width: 30%;
-    min-width: 25em;
     float: right;
     clear: right;
+    min-width: 25em;
+    max-width: 30%;
     margin: 15px 0 15px 15px;
+    font-size: 0.9em;
+    line-height: 1.7em;
     border-radius: 10px;
-    overflow: hidden;
     border-collapse: collapse;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     table {
       display: flex;
       flex-flow: column nowrap;
@@ -25,15 +25,15 @@
     tr,
     td {
       flex: 1 1 auto;
-      border: none;
+      display: flex;
+      margin: 0;
       place-items: stretch;
       justify-content: center;
-      display: flex;
       flex-flow: row wrap;
-      margin: 0;
+      border: none;
       br {
-        width: 100%;
         content: "";
+        width: 100%;
       }
     }
     th {
@@ -48,9 +48,9 @@
       flex-flow: column nowrap;
     }
     > tbody > tr {
-      min-width: 100%;
       display: flex;
       flex-flow: row nowrap;
+      min-width: 100%;
     }
     td:only-child,
     th:only-child {
@@ -79,22 +79,22 @@
       display: none;
     }
     .legend {
-      text-align: center;
       padding: 3px 5px;
+      text-align: center;
     }
     .image,
     .images {
-      text-align: center;
-      display: inline-flex;
-      justify-content: space-around;
-      align-items: center;
-      width: 100%;
       max-width: 100% !important;
+      display: inline-flex;
+      width: 100%;
+      justify-content: space-around;
+      text-align: center;
+      align-items: center;
     }
     @media (max-width: 720px) {
+      float: none!important;
       width: 100% !important;
       max-width: 100% !important;
-      float: none!important;
       margin: 5px 0;
     }
     .infobox-caption {
@@ -103,23 +103,19 @@
     }
   }
   .hatnote {
-    padding: 0.5em 1.5em;
     display: inline-block;
+    padding: 0.5em 1.5em;
+    margin-bottom: 1em;
     font-size: 0.85em;
     line-height: 1.4;
-    margin-bottom: 1em;
     border-radius: 2em;
   }
   .tleft,
-  .floatleft {
-    float: left;
-    clear: left;
-    margin: 0 1.2em 1.2em;
-  }
+  .floatleft,
   .tright,
   .floatright {
-    float: right;
-    clear: right;
+    float: left;
+    clear: left;
     margin: 0 1.2em 1.2em;
   }
   .tleft {
@@ -135,23 +131,23 @@
     }
   }
   .thumbcaption {
-    font-size: 0.8em;
     padding: 0.5em;
+    font-size: 0.8em;
   }
   .thumb {
     @media (max-width: 720px) {
-      margin: 0;
       float: none!important;
       max-width: 100%!important;
       display: flex;
       justify-content: center;
+      margin: 0;
     }
   }
   .thumbinner {
+    overflow: hidden;
     max-width: 100%;
     margin: 15px;
     border-radius: 10px;
-    overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     img {
       width: 100%!important;
@@ -213,6 +209,8 @@
   .reflist {
     font-size: 0.8em;
   }
+
+  //TODO: some check
   *[style*="background"], *[bgcolor] {
     color: black;
   }

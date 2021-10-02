@@ -12,8 +12,8 @@
     background: var(--clr-main);
   }
   .q-icon {
-    color: var(--clr-reverse);
     opacity: 1;
+    color: var(--clr-reverse);
   }
 }
 </style>

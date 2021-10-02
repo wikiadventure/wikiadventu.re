@@ -17,20 +17,20 @@
 </template>
 <style lang="scss">
   .shortcut-dialog {
+    overflow: hidden;
     position: relative;
+    display: flex;
+    flex-direction: column;
     width: Max(50%, 500px);
     max-width: 100%;
     height: 95%;
     margin: 1.25%;
-    border-radius: 6px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
     background: var(--clr-alt);
+    border-radius: 6px;
     @media screen and (max-width: 600px) {
-      margin: 0;
       height: 100%;
       width: 100%;
+      margin: 0;
       border-radius: 0;
     }
     .exit-btn {
@@ -38,17 +38,17 @@
     }
   }
   .shortcut-list {
-    display: flex;
     overflow-y: scroll;
+    display: flex;
     flex-direction: column;
-    padding: 25px 5px;
     gap: 25px;
+    padding: 25px 5px;
     &>div {
       flex: 0 1;
-      width: 100%;
       display: flex;
-      text-align: center;
+      width: 100%;
       align-items: center;
+      text-align: center;
       &>div:nth-child(1) {
         flex: 0 0 30%;
       }
@@ -58,8 +58,8 @@
     }
   }
   .title {
-    font-size: 2em;
     margin: 15px 5px;
+    font-size: 2em;
     text-align: center;
   }
 </style>

@@ -41,21 +41,20 @@
 <style lang="scss">
 .slide-menu {
   z-index: 6;
-  transition: all ease-in-out 0.2s;
-
-	width: 50%;
-  height: 100%;
   position: absolute;
+	bottom: 0;
   display: flex;
   flex-flow: column;
-	bottom: 0;
+	width: 50%;
+  height: 100%;
+  transition: all ease-in-out 0.2s;
 	transform: translate3d(-100%,0,0);
   will-change: transform;
   @media(max-width: 720px) {
     width: 100%;
   }
-	filter: drop-shadow(3px 3px 15px black);
   word-break: break-word;
+	filter: drop-shadow(3px 3px 15px black);
   .content {
     flex: 1 1 auto;
   }
@@ -74,15 +73,15 @@
     }
   }
   .showMenu {
-    padding: 0.25em 0.35em;
-    border-radius: 10px;
-    display: inline-block;
-    opacity: .7;
     position: absolute;
     left: 100%;
-    transition: all ease-in-out 0.2s;
-    color: var(--clr-main);
+    opacity: .7;
+    display: inline-block;
+    padding: 0.25em 0.35em;
     background: var(--clr-reverse);
+    color: var(--clr-main);
+    border-radius: 10px;
+    transition: all ease-in-out 0.2s;
     cursor: pointer;
     .q-icon {
       transform: rotate(0deg);

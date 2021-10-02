@@ -5,8 +5,6 @@
     </template>
   </slide-menu>
 </template>
-<style lang="scss">
-</style>
 <script lang="ts">
 import Random from './tab/game/Random.vue';
 import SlideMenu from './slideMenu.vue';

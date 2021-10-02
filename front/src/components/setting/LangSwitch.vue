@@ -11,7 +11,7 @@
 <style lang="scss">
 </style>
 <script lang="ts">
-import { allLangOptions, langLabel, getLabel } from 'src/i18n';
+import { allLangOptions } from 'src/i18n';
 import { defineComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -21,8 +21,6 @@ export default defineComponent({
     const { locale } = useI18n({ useScope: 'global' });
     return {
       locale,
-      langLabel,
-      getLabel,
       allLangOptions
     }
   }

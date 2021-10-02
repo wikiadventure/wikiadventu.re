@@ -9,17 +9,17 @@
 </template>
 <style lang="scss">
 .connect-form {
-  min-height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 100%;
 }
 .inputGrid {
-  display: grid;
-  gap: 5px 20px;
   flex: 0;
-  padding: 0 20px;
+  display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: min-content;
+  gap: 5px 20px;
+  padding: 0 20px;
   justify-content: space-evenly;
   @media(max-width: $breakpoint-xs-max) {
     > * {
@@ -32,16 +32,16 @@
   text-align: center;
   @media(max-width: $breakpoint-xs-max) {
     h3 {
-      font-size: 2.5em;
       margin: 20px 0;
+      font-size: 2.5em;
     }
   }
 }
 .buttonContainer {
   flex: 1;
-  padding-bottom: 20px;
   display: flex;
   flex-direction: row;
+  padding-bottom: 20px;
   align-items: center;
   justify-content: space-evenly;
 

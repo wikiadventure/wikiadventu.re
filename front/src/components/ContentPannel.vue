@@ -9,28 +9,28 @@
 </template>
 <style>
 .content-pannel {
-    padding: 0 1em 1em;
     width: 100%;
+    padding: 0 1em 1em;
 }
 .content-pannel-head {
+    margin: 0 0 1em;
     font-weight: 400;
     font-size: 1.5em;
     line-height: 1.5em;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    margin: 0 0 1em;
     text-align: center;
 }
 .content-pannel-subhead {
     text-align: center;
 }
 .content-pannel-core {
-    text-align: center;
-    padding: 1.5em;
-    width: 100%;
-    align-content: center;
     display: flex;
+    width: 100%;
+    padding: 1.5em;
     justify-content: space-evenly;
+    align-content: center;
+    text-align: center;
 }
 </style>
 <script lang="ts">

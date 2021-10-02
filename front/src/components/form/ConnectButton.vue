@@ -5,8 +5,8 @@
 .connect-btn {
   font-size: 1.5em;
   @media screen and (max-width: 720px) {
-    font-size: 1em;
     padding: 0.2em 0.5em;
+    font-size: 1em;
   }
 }
 </style>

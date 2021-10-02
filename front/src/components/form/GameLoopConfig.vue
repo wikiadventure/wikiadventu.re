@@ -9,9 +9,9 @@
   grid-column: span 2;
   .q-expansion-item__content {
     display: grid;
-    gap: 5px 20px;
     grid-template-columns: 1fr 1fr;
     grid-auto-rows: min-content;
+    gap: 5px 20px;
     justify-content: space-evenly;
     @media(max-width: $breakpoint-xs-max) {
       > * {

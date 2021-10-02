@@ -9,9 +9,6 @@
     </template>
   </connect-form>
 </template>
-<style lang="scss">
-
-</style>
 <script lang="ts">
 import ConnectBtn from 'src/components/form/ConnectButton.vue';
 import TwitchBtn from 'src/components/form/TwitchButton.vue';

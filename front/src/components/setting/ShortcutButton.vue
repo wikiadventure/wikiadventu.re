@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-btn class="action-btn" push
-        @click="$refs.dialog.open = true"
+        @click="dialog && (dialog.open = true)"
         icon="mdi-keyboard"
         :label="t('shortcut.title')"
         />
@@ -11,10 +11,9 @@
 <style lang="scss">
 </style>
 <script lang="ts">
-import { getLabel, Lang } from 'src/i18n';
 import ShortcutDialog from './ShortcutDialog.vue';
 
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
@@ -22,8 +21,10 @@ export default defineComponent({
   components: { ShortcutDialog },
   setup() {
     const { t } = useI18n({ useScope: 'global' });
+    const dialog = ref<InstanceType<typeof ShortcutDialog>>();
     return {
-      t
+      t,
+      dialog
     }
   }
 });

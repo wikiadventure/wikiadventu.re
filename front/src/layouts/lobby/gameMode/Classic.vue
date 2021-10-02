@@ -5,8 +5,6 @@
     </template>
   </slide-menu>
 </template>
-<style lang="scss">
-</style>
 <script lang="ts">
 import Classic from './tab/game/Classic.vue';
 import SlideMenu from './slideMenu.vue';

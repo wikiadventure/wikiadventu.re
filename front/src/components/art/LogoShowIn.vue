@@ -14,19 +14,20 @@
   display: flex;
   width: 100%;
   height: calc(75vmin + 2em);
+  opacity: 0;
   justify-content: center;
   perspective: 75vmin;
   transform: translate3d(0px, 0px, 0px);
-  opacity: 0;
-  filter: drop-shadow(0 0 25px rgba(18, 230, 238, 0.54));
   animation: 0.8005s steps(1, end) forwards logo-visibility; // prevent logo beeing visible at start
+  filter: drop-shadow(0 0 25px rgba(18, 230, 238, 0.54));
 
   .zTransform {
-    transform-style: preserve-3d;
-    animation: 6s linear 0.8s logo-zTransform;
-    transform: translate3d(0px, 0px, 0px);/*To enable GPU acceleration */
-    padding-top: 2em;
     position: absolute;
+    padding-top: 2em;
+    transform-style: preserve-3d;
+    transform: translate3d(0px, 0px, 0px);/*To enable GPU acceleration */
+    animation: 6s linear 0.8s logo-zTransform;
+
   }
   .logo {
     transform-style: preserve-3d;
@@ -34,20 +35,20 @@
     animation: 6s linear 0.8s logo-spin infinite;
     will-change: transform;
     img {
-      transform: translate3d(0px, 0px, 0px);
-      animation: 1.5s cubic-bezier(0, 1, 1, 1) 0.8s logo-fast-spin;
       width: 75vmin;
       height: auto;
+      transform: translate3d(0px, 0px, 0px);
+      animation: 1.5s cubic-bezier(0, 1, 1, 1) 0.8s logo-fast-spin;
     }
   }
   
   .title {
-    will-change: transform;
     position: absolute;
     top: 2em;
     width: 75vmin;
     transform: scale3d(1,1,1);
     animation: 6s ease-out 0.8s logo-blur-fade-in;
+    will-change: transform;
     
   }
 
@@ -120,8 +121,7 @@
       animation: 0s logo-zTransform;
     }
     .logo {
-      animation: none;
-      img {
+      &,img {
         animation: none;
       }
     }

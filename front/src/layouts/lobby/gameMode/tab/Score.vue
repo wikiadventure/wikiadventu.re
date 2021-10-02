@@ -16,8 +16,10 @@
   </div>
 </template>
 <style lang="scss">
-.self {
-  color: var(--clr-dark-teal);
+.score-tab {
+  .self {
+    color: var(--clr-dark-teal);
+  }
 }
 </style>
 <script lang="ts">

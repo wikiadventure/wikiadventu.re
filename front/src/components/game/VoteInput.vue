@@ -28,18 +28,18 @@
 }
 .suggest {
   z-index: 2;
-  position: absolute;
-  border-radius: 10px;
   overflow: hidden;
-  width: 98%;
+  position: absolute;
   display: grid;
+  width: 98%;
   margin: 0 1%;
-  border: 1px solid #8885;
   background: $clr-alt;
+  border: 1px solid #8885;
+  border-radius: 10px;
   .wiki-preview {
+    background: inherit;
     border-bottom: 1px solid #8885;
     cursor: pointer;
-    background: inherit;
     &:last-child {
       border-bottom: none;
     }

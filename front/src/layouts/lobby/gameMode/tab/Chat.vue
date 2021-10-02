@@ -22,16 +22,14 @@
 </template>
 <style lang="scss">
 .chat-tab {
-	//background: blue;/*#23272a*/
-	display: flex;
+  display: flex;
   flex-direction: column;
   height: 100%;
 }
 .chatOutput {
-  overflow-x: auto;
-  overflow-y: scroll;
-  display: flex;
+  overflow: auto scroll;
   flex: 1;
+  display: flex;
 	flex-direction: column-reverse;
   border: none;
   .q-item {
@@ -39,11 +37,11 @@
   }
 }
 .chatForm {
-  padding: 3px;
-	bottom: 0;
-  width: 100%;
   flex: 0 0 auto;
 	display: inline-flex;
+	bottom: 0;
+  width: 100%;
+  padding: 3px;
 }
 .chatInput {
   width: 100%;
