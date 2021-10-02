@@ -4,7 +4,7 @@
 <style>
 </style>
 <script lang="ts">
-import ConnectMenu from 'src/layouts/connect/ConnectMenu.vue';
+import ConnectMenu from './connect/ConnectMenu.vue';
 
 import { defineComponent } from 'vue';
 
