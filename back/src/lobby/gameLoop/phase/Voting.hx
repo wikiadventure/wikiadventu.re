@@ -33,7 +33,7 @@ class Voting extends Phase {
         .then(result -> lobby.gameLoop.next(result));
     }
     
-    public function new(lobby:Lobby, duration:Int = 80) {
+    public function new(lobby:Lobby, duration:Int = 60) {
         super(lobby, duration);
         type = VanillaPhaseType.Voting;
     }

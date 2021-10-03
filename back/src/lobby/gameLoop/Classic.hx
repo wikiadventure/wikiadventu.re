@@ -28,7 +28,7 @@ class Classic extends GameLoop {
     public var playDuration:PhaseDuration;
 
     public override function onStart(?data:Any) {
-        currentPhase = lobby.type != Public ? new Waiting(lobby) : new Voting(lobby);
+        currentPhase = lobby.type != Public ? new Waiting(lobby) : new Voting(lobby, voteDuration);
         currentPhase.start();
     }
 
@@ -39,17 +39,17 @@ class Classic extends GameLoop {
         if (lobby.players.length == 0) return;
         switch currentPhase.type {
             case VanillaPhaseType.Waiting:
-                currentPhase = new Voting(lobby);
+                currentPhase = new Voting(lobby, voteDuration);
             case VanillaPhaseType.Voting:
                 var v:VoteResult = data;
-                currentPhase = new Playing(v.startPage, v.endPage, lobby);
+                currentPhase = new Playing(v.startPage, v.endPage, lobby, playDuration);
             case VanillaPhaseType.Playing:
                 currentPhase = new RoundFinish(lobby);
             case VanillaPhaseType.RoundFinish:
                 if (lobby.gameLoop.currentRound >= lobby.gameLoop.round) currentPhase = new GameFinish(lobby);
                 else {
                     currentRound++;
-                    currentPhase = new Voting(lobby);
+                    currentPhase = new Voting(lobby, voteDuration);
                 }
             case VanillaPhaseType.GameFinish:
                 return end();

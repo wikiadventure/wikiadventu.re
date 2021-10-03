@@ -22,8 +22,10 @@ class Random extends GameLoop {
     public var playDuration:PhaseDuration;
 
     public override function onStart(?data:Any) {
-        currentPhase = lobby.type != Public ? new Waiting(lobby) : new Voting(lobby);
-        currentPhase.start();
+        if (lobby.type != Public) {
+            currentPhase = new Waiting(lobby);
+            currentPhase.start();
+        } else randomPagePlaying();
     }
 
     public override function onEnd(?data:Any) {
@@ -64,7 +66,7 @@ class Random extends GameLoop {
     public function randomPagePlaying() {
          return WikiTools.selectPage([], lobby.language).then(
             (v:VoteResult) -> {
-                currentPhase = new Playing(v.startPage, v.endPage, lobby);
+                currentPhase = new Playing(v.startPage, v.endPage, lobby, playDuration);
                 currentPhase.start();
             }
         );
