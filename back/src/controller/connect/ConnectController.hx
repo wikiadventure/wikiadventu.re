@@ -23,7 +23,6 @@ class ConnectController {
         }
         try {
             form = Json.parse(body);
-            form.config = form.config != null ? form.config : {};
         } catch (e:Dynamic) {
             new ConnectionError(im, sr, InvalidForm);
             return;

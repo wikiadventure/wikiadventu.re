@@ -56,7 +56,8 @@ class GameLoop {
         if (s!=null) s.onPacket(lobby, player, p);
     }
     //TODO: Make the select work like packet handler
-    public static function select(type:GameLoopType = Classic, lobby:Lobby, config:Any):GameLoop {
+    public static function select(type:GameLoopType = Classic, lobby:Lobby, ?config:Any):GameLoop {
+        config = config != null ? config : {};
         return switch type {
             case Classic:
                 new Classic(lobby, config);
