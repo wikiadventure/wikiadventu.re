@@ -102,7 +102,7 @@
 
   .menu-tabs {
     background: $clr-alt;
-    color: $clr-accent;
+    color: $clr-reverse;
   }
 }
 </style>
