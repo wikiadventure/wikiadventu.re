@@ -58,7 +58,7 @@ class Lobby {
         insert();
     }
     /**
-     * give the lobby a valid id, loop until it found a unused one
+     * give the lobby a valid id and insert it in the lobbyList
      */
     public function insert() {
         var pos = 0;
@@ -234,7 +234,7 @@ class Lobby {
         }
         // if no free slot are find create a new public lobby
         var lobby = new Lobby(player.language, Public);
-        lobby.gameLoop = GameLoop.select(gameLoop,lobby, null);
+        lobby.gameLoop = GameLoop.select(gameLoop,lobby);
         lobby.gameLoop.start();
         return lobby;
     }
