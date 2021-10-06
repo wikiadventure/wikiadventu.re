@@ -1,7 +1,6 @@
 package controller.connect.twitch;
 
 import haxe.Json;
-import lobby.GameLoop;
 import response.connect.ConnectionError;
 import response.SuccessResponse;
 import lobby.player.Player;
@@ -19,6 +18,7 @@ import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import js.node.Querystring;
 
+using lobby.GameLoop;
 using Lambda;
 
 class TwitchController {
@@ -162,7 +162,7 @@ class TwitchController {
         var passwordHash = Sha256.encode(form.password);
         var lobby = new TwitchLobby(player, passwordHash, form.slot);
         lobby.join(player, passwordHash);
-        lobby.gameLoop = GameLoop.select(form.gameLoop, lobby, form.config);
+        lobby.select(form.gameLoop, form.config);
         lobby.gameLoop.start();
         return lobby;
     }

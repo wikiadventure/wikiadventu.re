@@ -16,8 +16,8 @@ class ClientStartHandler extends PacketHandler {
 
     override function process(lobby:Lobby, player:Player, c:ClientStart) {
         if (player.id != lobby.ownerId) return lobby.log("Someone who is not owner tried to start --> " + player.uuid, LogType.Error);
-        if (lobby.gameLoop.currentPhase.type != VanillaPhaseType.Waiting) return lobby.log("Game already start --> "  + player.uuid, LogType.Error);
-        lobby.gameLoop.currentPhase.end();
+        if (lobby.gameLoop.phase.type != VanillaPhaseType.Waiting) return lobby.log("Game already start --> "  + player.uuid, LogType.Error);
+        lobby.gameLoop.phase.end();
         super.process(lobby, player, c);
     }
 

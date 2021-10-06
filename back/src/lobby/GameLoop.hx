@@ -16,7 +16,7 @@ class GameLoop {
     public var lobby:Lobby;
     public var type:GameLoopType;
     public var loop:Timeout;
-    public var currentPhase:Phase;
+    public var phase:Phase;
     public var timeStampStateBegin:Float;
     public var round:Int;
     public var currentRound:Int;
@@ -43,11 +43,20 @@ class GameLoop {
     public function onEnd(?data:Any) {
         
     }
-
+    /**
+     * an abstract function that should start a new phase depending on the previous one
+     * you can pass any data to it
+     * @param data 
+     */
     public function next(?data:Any) {
         
     }
-    public function sendCurrentState(player:Player) {
+
+    /**
+     * an abstract function that should send every info so a player can join mid game
+     * @param player to send to
+     */
+    public function sendState(player:Player) {
         
     }
 
@@ -56,13 +65,11 @@ class GameLoop {
         if (s!=null) s.onPacket(lobby, player, p);
     }
     //TODO: Make the select work like packet handler
-    public static function select(type:GameLoopType = Classic, lobby:Lobby, ?config:Any):GameLoop {
+    public static function select(lobby:Lobby, type:GameLoopType, ?config:Any) {
         config = config != null ? config : {};
-        return switch type {
-            case Classic:
-                new Classic(lobby, config);
-            case Random:
-                new Random(lobby, config);
+        lobby.gameLoop = switch type {
+            case Classic: new Classic(lobby, config);
+            case Random: new Random(lobby, config);
             default:
                 throw ConnectError.InvalidGameLoop;
         }

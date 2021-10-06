@@ -37,7 +37,7 @@ class Phase {
         
     }
 
-    public function sendCurrentState(player:Player) {
+    public function sendState(player:Player) {
         
     }
 

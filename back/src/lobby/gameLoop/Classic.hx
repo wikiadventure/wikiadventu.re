@@ -28,8 +28,8 @@ class Classic extends GameLoop {
     public var playDuration:PhaseDuration;
 
     public override function onStart(?data:Any) {
-        currentPhase = lobby.type != Public ? new Waiting(lobby) : new Voting(lobby, voteDuration);
-        currentPhase.start();
+        phase = lobby.type != Public ? new Waiting(lobby) : new Voting(lobby, voteDuration);
+        phase.start();
     }
 
     public override function onEnd(?data:Any) {
@@ -37,24 +37,24 @@ class Classic extends GameLoop {
 
     public override function next(?data:Any) {
         if (lobby.players.length == 0) return;
-        switch currentPhase.type {
+        switch phase.type {
             case VanillaPhaseType.Waiting:
-                currentPhase = new Voting(lobby, voteDuration);
+                phase = new Voting(lobby, voteDuration);
             case VanillaPhaseType.Voting:
                 var v:VoteResult = data;
-                currentPhase = new Playing(v.startPage, v.endPage, lobby, playDuration);
+                phase = new Playing(v.startPage, v.endPage, lobby, playDuration);
             case VanillaPhaseType.Playing:
-                currentPhase = new RoundFinish(lobby);
+                phase = new RoundFinish(lobby);
             case VanillaPhaseType.RoundFinish:
-                if (lobby.gameLoop.currentRound >= lobby.gameLoop.round) currentPhase = new GameFinish(lobby);
+                if (lobby.gameLoop.currentRound >= lobby.gameLoop.round) phase = new GameFinish(lobby);
                 else {
                     currentRound++;
-                    currentPhase = new Voting(lobby, voteDuration);
+                    phase = new Voting(lobby, voteDuration);
                 }
             case VanillaPhaseType.GameFinish:
                 return end();
         }
-        if (currentPhase != null) currentPhase.start();
+        if (phase != null) phase.start();
     }
 
     public override function new(lobby:Lobby, c:ClassicConfig) {

@@ -44,7 +44,7 @@ class StatController {
                             <tr><th>type : ::type::</th></tr>
                             <tr><th>Language : ::language::</th></tr>
                             <tr><th>gamemode : ::gameLoop.type::</th></tr>
-                            <tr><th>gamephase : ::gameLoop.currentPhase.type::</th></tr>
+                            <tr><th>gamephase : ::gameLoop.phase.type::</th></tr>
                             <tr><th>Round : ::gameLoop.currentRound:: / ::gameLoop.round::</th></tr>
                             <tr><th>Player : ::players.length:: / ::slot::</th></tr>
                             <tr><th>Total player : ::totalPlayer::</th></tr>

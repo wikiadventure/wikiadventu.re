@@ -31,7 +31,7 @@ class InfoController {
                 slot: lobby.slot,
                 players: lobby.players.length,
                 gameMode: lobby.gameLoop.type,
-                gamePhase: lobby.gameLoop.currentPhase.type
+                gamePhase: lobby.gameLoop.phase.type
                 
 
             };

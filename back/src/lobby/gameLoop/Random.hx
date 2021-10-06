@@ -23,8 +23,8 @@ class Random extends GameLoop {
 
     public override function onStart(?data:Any) {
         if (lobby.type != Public) {
-            currentPhase = new Waiting(lobby);
-            currentPhase.start();
+            phase = new Waiting(lobby);
+            phase.start();
         } else randomPagePlaying();
     }
 
@@ -33,14 +33,14 @@ class Random extends GameLoop {
 
     public override function next(?data:Any) {
         if (lobby.players.length == 0) return;
-        switch currentPhase.type {
+        switch phase.type {
             case VanillaPhaseType.Waiting:
                 randomPagePlaying();
             case VanillaPhaseType.Playing:
-                currentPhase = new RoundFinish(lobby);
-                currentPhase.start();
+                phase = new RoundFinish(lobby);
+                phase.start();
             case VanillaPhaseType.RoundFinish:
-                if (lobby.gameLoop.round >= lobby.gameLoop.currentRound) currentPhase = new GameFinish(lobby);
+                if (lobby.gameLoop.round >= lobby.gameLoop.currentRound) phase = new GameFinish(lobby);
                 else {
                     currentRound++;
                     randomPagePlaying();
@@ -66,14 +66,10 @@ class Random extends GameLoop {
     public function randomPagePlaying() {
          return WikiTools.selectPage([], lobby.language).then(
             (v:VoteResult) -> {
-                currentPhase = new Playing(v.startPage, v.endPage, lobby, playDuration);
-                currentPhase.start();
+                phase = new Playing(v.startPage, v.endPage, lobby, playDuration);
+                phase.start();
             }
         );
-    }
-
-    public override function sendCurrentState(player:Player) {
-        currentPhase.sendCurrentState(player);
     }
 
 }

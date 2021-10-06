@@ -30,7 +30,7 @@ class TwitchPlayer extends Player {
         if (twitchLobby == null || user == TwitchCredential.botUsername) return;
         if (msg.length > 231) return;
         msg = StringTools.trim(msg);
-        if (StringTools.startsWith(msg, "!vote ") && twitchLobby.gameLoop.currentPhase.type  == VanillaPhaseType.Voting) {
+        if (StringTools.startsWith(msg, "!vote ") && twitchLobby.gameLoop.phase.type  == VanillaPhaseType.Voting) {
             twitchLobby.log(user + " from " + channel + " submitted this vote :", Info);
             if (twitchLobby.suggestionList.length < TwitchLobby.suggestionLimit) {
                 var title = msg.substr(6);

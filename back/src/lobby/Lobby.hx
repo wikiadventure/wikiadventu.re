@@ -7,7 +7,6 @@ import lobby.gameLoop.Phase.VanillaPhaseType;
 import response.connect.ConnectionError.ConnectError;
 import lobby.player.Player;
 import lobby.gameLoop.Phase.PhaseType;
-import lobby.GameLoop;
 import js.node.Timers;
 import js.node.Timers.Timeout;
 import haxe.Timer;
@@ -19,6 +18,7 @@ using lobby.packet.emitter.vanilla.GamePhase.GamePhaseEmitter;
 using lobby.packet.emitter.vanilla.PlayerJoin.PlayerJoinEmitter;
 using lobby.packet.emitter.vanilla.PlayerLeft.PlayerLeftEmitter;
 using lobby.packet.emitter.vanilla.SetOwner.SetOwnerEmitter;
+using lobby.GameLoop;
 using Lambda;
 class Lobby {
     
@@ -182,7 +182,7 @@ class Lobby {
     public function onPlayerConnection(player:Player) {
         players.emitPlayerJoin(player);
         [player].emitSetOwner(ownerId);
-        sendCurrentState(player);
+        sendState(player);
         player.socket.on('message', (data:String) -> this.handle(player, data));//handle is method from the static extension packet/PacketHandler.hx
         player.socket.on('close', (data) -> websocketDisconnect(player));
     }
@@ -192,11 +192,12 @@ class Lobby {
         kickOnTimeout(player);
     }
 
-    public function sendCurrentState(player:Player) {
-        var timeLeft = gameLoop.currentPhase.duration - (Timer.stamp() - gameLoop.timeStampStateBegin);
-        [player].emitGamePhase(gameLoop.currentPhase.type, gameLoop.currentRound, timeLeft);
+    public function sendState(player:Player) {
+        var timeLeft = gameLoop.phase.duration - (Timer.stamp() - gameLoop.timeStampStateBegin);
+        [player].emitGamePhase(gameLoop.phase.type, gameLoop.currentRound, timeLeft);
         players.iter((p) -> if (p!=player) [player].emitPlayerJoin(p));
-        gameLoop.sendCurrentState(player);
+        gameLoop.sendState(player);
+        gameLoop.phase.sendState(player);
     }
 
     public function checkAlive() {
@@ -214,7 +215,7 @@ class Lobby {
     }
 
     public function checkVoteSkip() {
-        if (players.foreach((p) -> p.voteSkip)) gameLoop.currentPhase.end();
+        if (players.foreach((p) -> p.voteSkip)) gameLoop.phase.end();
     }
 
     /**
@@ -222,7 +223,7 @@ class Lobby {
      * @param player who want to join
      * @return the lobby
      */
-    public static function joinPublicFree(player:Player, ?gameLoop:GameLoopType):Lobby {
+    public static function joinPublicFree(player:Player, gameLoop:GameLoopType):Lobby {
         for (l in lobbyList) {
             if (l.type == Public && (l.players.length < l.slot)) {
                 if ( l.language == player.language ) {
@@ -234,7 +235,7 @@ class Lobby {
         }
         // if no free slot are find create a new public lobby
         var lobby = new Lobby(player.language, Public);
-        lobby.gameLoop = GameLoop.select(gameLoop,lobby);
+        lobby.select(gameLoop);
         lobby.gameLoop.start();
         return lobby;
     }

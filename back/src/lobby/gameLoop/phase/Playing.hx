@@ -50,7 +50,7 @@ class Playing extends Phase {
     }
 
     public function win(player:Player) {
-        if (lobby.gameLoop.currentPhase.type != VanillaPhaseType.Playing) return;
+        if (lobby.gameLoop.phase.type != VanillaPhaseType.Playing) return;
         var timeLeft = duration - (Timer.stamp() - lobby.gameLoop.timeStampStateBegin);
         player.score += 500 + Std.int(timeLeft*0.5);
         log("updateScore --> " +  player.id + "(" + player.pseudo + ") :" + player.score, PlayerData);
@@ -86,7 +86,7 @@ class Playing extends Phase {
         lobby.players.emitMessage("Server verification error for " + player.pseudo);*/
     }
 
-    public override function sendCurrentState(player:Player) {
+    public override function sendState(player:Player) {
         player.currentPage = startPage;
         [player].emitVoteResult(startPage, endPage);
     }
