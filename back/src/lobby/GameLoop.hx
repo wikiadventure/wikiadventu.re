@@ -13,11 +13,11 @@ using Lambda;
 
 class GameLoop {
     
-    public var lobby:Lobby;
     public var type:GameLoopType;
-    public var loop:Timeout;
+    public var lobby:Lobby;
     public var phase:Phase;
-    public var timeStampStateBegin:Float;
+    public var loop:Timeout;
+    public var timestamp:Float;
     public var round:Int;
     public var currentRound:Int;
     public var packetEventSubscribers:Array<PacketEventSubscriber>;

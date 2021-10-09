@@ -51,7 +51,7 @@ class Playing extends Phase {
 
     public function win(player:Player) {
         if (lobby.gameLoop.phase.type != VanillaPhaseType.Playing) return;
-        var timeLeft = duration - (Timer.stamp() - lobby.gameLoop.timeStampStateBegin);
+        var timeLeft = duration - (Timer.stamp() - lobby.gameLoop.timestamp);
         player.score += 500 + Std.int(timeLeft*0.5);
         log("updateScore --> " +  player.id + "(" + player.pseudo + ") :" + player.score, PlayerData);
         log("WinRound --> " +  player.id + "(" + player.pseudo + ")", PlayerData);

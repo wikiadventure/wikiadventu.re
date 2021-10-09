@@ -19,7 +19,7 @@ class Phase {
     
     public function start() {
         lobby.players.iter(function(p:Player) {p.voteSkip = false;});
-        lobby.gameLoop.timeStampStateBegin = Timer.stamp();
+        lobby.gameLoop.timestamp = Timer.stamp();
         lobby.players.emitGamePhase(type, lobby.gameLoop.currentRound, duration);
         lobby.log("New phase init : " + type +"|" + lobby.gameLoop.currentRound + "|" + duration, Info);
         onStart();

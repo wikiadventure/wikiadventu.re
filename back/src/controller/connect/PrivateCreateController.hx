@@ -1,6 +1,5 @@
 package controller.connect;
 
-import lobby.GameLoop;
 import response.connect.ConnectionError;
 import response.SuccessResponse;
 import haxe.crypto.Sha256;
@@ -9,6 +8,8 @@ import lobby.player.Player;
 import js.node.http.ServerResponse;
 import js.node.http.IncomingMessage;
 import haxe.Json;
+
+using lobby.GameLoop;
 
 class PrivateCreateController {
     
@@ -27,7 +28,7 @@ class PrivateCreateController {
             var passwordHash = Sha256.encode(form.password);
             var lobby = new Lobby(player.language, Private, passwordHash, form.slot);
             lobby.connect(player, passwordHash);
-            lobby.gameLoop = GameLoop.select(form.gameLoop, lobby, form.config);
+            lobby.select(form.gameLoop, form.config);
             lobby.gameLoop.start();
             var json:ConnectResponse = {
                 lobbyID: lobby.formatId,

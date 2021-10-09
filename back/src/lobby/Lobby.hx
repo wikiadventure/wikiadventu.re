@@ -193,7 +193,7 @@ class Lobby {
     }
 
     public function sendState(player:Player) {
-        var timeLeft = gameLoop.phase.duration - (Timer.stamp() - gameLoop.timeStampStateBegin);
+        var timeLeft = gameLoop.phase.duration - (Timer.stamp() - gameLoop.timestamp);
         [player].emitGamePhase(gameLoop.phase.type, gameLoop.currentRound, timeLeft);
         players.iter((p) -> if (p!=player) [player].emitPlayerJoin(p));
         gameLoop.sendState(player);
