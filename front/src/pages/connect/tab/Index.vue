@@ -32,11 +32,11 @@
             </div>
             <div class="q-ma-xs">
               <p>{{ t('contributionSection.kofi') }}</p>  
-              <q-btn push icon="img:icons/kofi.svg" class="kofi" size="xl" label="Ko-fi" @click="openURL('https://ko-fi.com/sacramentix')"/>
+              <q-btn push :icon="'img:'+require('assets/icons/kofi.svg')" class="kofi" size="xl" label="Ko-fi" @click="openURL('https://ko-fi.com/sacramentix')"/>
             </div>
             <div class="q-ma-xs">
               <p>{{ t('contributionSection.nano') }}</p>
-              <q-btn push icon="img:https://cryptologos.cc/logos/nano-nano-logo.svg?v=006" class="nano" size="xl" label="Nano" @click="showNano = true" />
+              <q-btn push :icon="'img:'+require('assets/icons/nano.svg')" class="nano" size="xl" label="Nano" @click="showNano = true" />
             </div>
             <wallet-dialog v-model="showNano"/>
           </content-pannel>

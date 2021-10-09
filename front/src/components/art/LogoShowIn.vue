@@ -2,10 +2,10 @@
   <div class="logo-show-in">
     <div class="zTransform">
       <div class="logo">
-        <img src="svg/logoV1.svg" alt="wikipedia logo"/>
+        <img src="~assets/svg/logoV1.svg" alt="wikipedia logo"/>
       </div>
     </div>
-    <img v-if="title == null" class="title" src="svg/title.svg" alt="wikipedia adventure"/>
+    <img v-if="title == null" class="title" src="~assets/svg/title.svg" alt="wikipedia adventure"/>
     <div v-else class="title"><p>{{ title }}</p></div>
   </div>
 </template>

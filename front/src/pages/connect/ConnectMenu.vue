@@ -46,8 +46,8 @@
           </q-tab-panels>
 
           <q-tabs v-model="twitchTab" dense class="connect-sub-tabs" align="justify" narrow-indicator>
-            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : t('join') " name="TwitchJoin" icon="svguse:icons/twitch.svg#join"></q-tab>
-            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : t('create') " name="TwitchCreate" icon="svguse:icons/twitch.svg#create"></q-tab>
+            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : t('join') " name="TwitchJoin" :icon="'svguse:'+require('assets/icons/twitch.svg')+'#join'"></q-tab>
+            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : t('create') " name="TwitchCreate" :icon="'svguse:'+require('assets/icons/twitch.svg')+'#create'"></q-tab>
           </q-tabs>
 
         </q-tab-panel>

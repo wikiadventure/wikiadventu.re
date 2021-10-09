@@ -2,13 +2,13 @@
   <q-dialog v-bind="$attrs">
     <q-card>
       <q-toolbar>
-          <q-btn round flat icon="img:https://cryptologos.cc/logos/nano-nano-logo.svg?v=006" @click="openURL('https://nano.org')" />
+          <q-btn round flat icon="img:~assets/icons/nano.svg" @click="openURL('https://nano.org')" />
         <q-toolbar-title>My Nano account address</q-toolbar-title>
         <q-btn flat round dense icon="close" v-close-popup />
       </q-toolbar>
       <q-separator/>
       <q-card-section class="row justify-center">
-        <img class="QRCode" src="images/NanoQRCode.png"/>
+        <img class="QRCode" src="~assets/images/NanoQRCode.png"/>
       </q-card-section>
       <q-separator/>
       <q-card-actions align="center">
