@@ -1,6 +1,8 @@
 <template>
   <div class="wiki-preview">
-    <img class="img" v-if="wikiPreview?.thumbnail != null" :src="wikiPreview?.thumbnail?.source" :width="wikiPreview?.thumbnail?.width" :height="wikiPreview?.thumbnail?.height" />
+    <div class="img" v-if="wikiPreview?.thumbnail != null">
+      <img :src="wikiPreview?.thumbnail?.source" :width="wikiPreview?.thumbnail?.width" :height="wikiPreview?.thumbnail?.height" />
+    </div>
     <div class="img none" v-else >
       <q-icon size="40px" name="mdi-help" />
     </div>
@@ -20,19 +22,27 @@
   &:last-child {
     border: none;
   }
+
   .img {
+    display: grid;
     grid-area: i;
     width: 80px;
     height: 80px;
     background: hsla(0,0%,100%,0.5);
+    place-items: center;
+    background: none;
     border-radius: 3px;
 
   }
-  div.img {
-    display: grid;
-    place-items: center;
-    background: none;
-    border: 1px solid grey
+  .img>img {
+    max-width: 80px;
+    max-height: 80px;
+    object-fit: cover;
+    border-radius: 3px;
+  }
+
+  .img.none {
+    border: 1px solid grey;
   }
   h3 {
     grid-area: t;
