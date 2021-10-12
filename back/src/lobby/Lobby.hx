@@ -85,7 +85,7 @@ class Lobby {
      * If not found return a negative index of where it should be.
      */
     private static function s(id:Int,l:Int, r:Int):Int {
-        if (r >= l) {
+        if (lobbyList[r].id >= lobbyList[l].id) {
             var mid = l + Math.floor((r - l) / 2);
             return  lobbyList[mid].id == id ? mid :
                     lobbyList[mid].id > id ? s(id, l, mid - 1) :
@@ -100,8 +100,10 @@ class Lobby {
      * 
      */
     public static function find(id:Int):Lobby {
-        var pos = search(id);
-        if (pos >= 0) return lobbyList[pos];
+        if (lobbyList.length > 0) {
+            var pos = search(id);
+            if (pos >= 0) return lobbyList[pos];
+        }
         throw ConnectError.NoLobbyFoundWithID;
     }
 
