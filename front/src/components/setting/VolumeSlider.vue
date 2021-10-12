@@ -1,5 +1,5 @@
 <template>
-  <q-item>
+  <q-item class="volume-slider">
     <q-item-section avatar>
       <q-btn round dense flat :icon=" mute ? 'mdi-volume-off' : 'mdi-volume-high'" class="chatSubmit" @click="mute = !mute"/>
 
@@ -10,7 +10,11 @@
   </q-item>
 </template>
 <style lang="scss">
-
+.volume-slider {
+  .q-slider {
+    color: var(--clr-accent);
+  }
+}
 </style>
 <script lang="ts">
 import { settingSetup } from 'store/setting';
