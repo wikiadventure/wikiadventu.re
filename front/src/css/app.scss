@@ -58,25 +58,50 @@ body, html {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+.q-tab-panels {
+  background: var(--clr-main);
+}
+body.body--dark, body.body--light {
+  background: var(--clr-main);
+  color: var(--clr-reverse);
+}
 
-.body--dark {
-  .action-btn {
-    background: var(--clr-dark-teal);
-    color: var(--clr-light);
-  }
+
+.action-btn {
+  background: var(--clr-reverse);
+  color:  var(--clr-main);
 }
-.body--light {
-  .action-btn {
-    background: var(--clr-light);
-    color: var(--clr-dark-teal);
-  }
-  .action-btn.disabled {
-    color: hsl(0,0%,40%);
-  }
-  .q-tab-panels {
-    background: var(--clr-light);
-  }
+.action-btn-alt {
+  background: var(--clr-main);
+  color: var(--clr-reverse);
 }
+// .body--light {
+//   .action-btn {
+//     background: var(--clr-main);
+//   }
+// }
+// .body--dark {
+//   .action-btn {
+//     background: var(--clr-dark-teal);
+//     color: var(--clr-light);
+//   }
+// }
+// .body--light {
+//   .action-btn {
+//     background: var(--clr-light);
+//     color: var(--clr-dark-teal);
+//   }
+//   .action-btn.disabled {
+//     color: hsl(0,0%,40%);
+//   }
+//   .q-tab-panels {
+//     background: var(--clr-light);
+//   }
+// }
 .q-field.reveal-shadow-text .q-field__shadow {
   opacity: 0.6;
+}
+
+.q-tab--active, .q-tab__indicator {
+  color: var(--clr-accent)!important;
 }
