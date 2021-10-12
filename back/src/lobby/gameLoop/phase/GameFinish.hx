@@ -7,6 +7,7 @@ class GameFinish extends Phase {
 
     public override function onEnd() {
         lobby.players.resetScore();
+        return null;
     }
     
     public function new(lobby:Lobby, duration:Int = 30) {

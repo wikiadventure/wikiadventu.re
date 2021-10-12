@@ -40,8 +40,10 @@ class Random extends GameLoop {
                 phase = new RoundFinish(lobby);
                 phase.start();
             case VanillaPhaseType.RoundFinish:
-                if (lobby.gameLoop.round >= lobby.gameLoop.currentRound) phase = new GameFinish(lobby);
-                else {
+                if (lobby.gameLoop.round >= lobby.gameLoop.currentRound) {
+                    phase = new GameFinish(lobby);
+                    phase.start();
+                } else {
                     currentRound++;
                     randomPagePlaying();
                 }

@@ -1,6 +1,7 @@
 -lib uuid
 -lib hx-ws
 -lib twitch-chat-client
+-lib hxasync
 
 -C src
 --times

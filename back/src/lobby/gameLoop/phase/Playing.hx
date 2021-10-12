@@ -15,6 +15,7 @@ using lobby.packet.emitter.vanilla.Path.PathEmitter;
 using lobby.packet.emitter.vanilla.UpdateScore.UpdateScoreEmitter;
 using Lambda;
 
+@:build(hxasync.AsyncMacro.build())
 class Playing extends Phase {
 
     public var startPage:String;
@@ -22,15 +23,17 @@ class Playing extends Phase {
     public var hasWinner:Bool = false;
     public var unsubscribes:Array<()->Void> = [];
     
-    public override function onStart() {
+    @async public override function onStart() {
         lobby.players.pageHistoryReset();
         lobby.players.setStartPage(startPage);
         lobby.players.emitVoteResult(startPage, endPage);
+        return null;
     }
 
-    public override function onEnd() {
+    @async public override function onEnd() {
         if (!hasWinner) lobby.players.emitWinRound(null);
         unsubscribes.iter(f->f());
+        return null;
     }
 
     public function checkWin(lobby:Lobby, player:Player, p:Any) {

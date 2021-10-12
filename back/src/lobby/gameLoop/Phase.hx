@@ -1,5 +1,6 @@
 package lobby.gameLoop;
 
+import js.lib.Promise;
 import lobby.Lobby.LogType;
 import haxe.Timer;
 import js.node.Timers;
@@ -8,7 +9,7 @@ using lobby.player.PlayersExtension;
 using lobby.packet.emitter.vanilla.GamePhase.GamePhaseEmitter;
 using Lambda;
 
-
+@:build(hxasync.AsyncMacro.build())
 class Phase {
 
     public var lobby:Lobby;
@@ -17,24 +18,25 @@ class Phase {
     
     public var type:PhaseType;
     
-    public function start() {
+    @async public function start() {
         lobby.players.iter(function(p:Player) {p.voteSkip = false;});
         lobby.gameLoop.timestamp = Timer.stamp();
         lobby.players.emitGamePhase(type, lobby.gameLoop.currentRound, duration);
         lobby.log("New phase init : " + type +"|" + lobby.gameLoop.currentRound + "|" + duration, Info);
-        onStart();
+        @await onStart();
         if (duration > 0) lobby.gameLoop.loop = Timers.setTimeout(end, duration*1000);
     }
-    public function end() {
+    @async public function end() {
         Timers.clearTimeout(lobby.gameLoop.loop);
-        onEnd();
-        if (lobby.id != null) lobby.gameLoop.next();
+        var data = @await onEnd();
+        if (lobby.id != null) lobby.gameLoop.next(data);
     }
-    public function onStart() {
+    @async public function onStart():Any {
+        return null;
+    }
 
-    }
-    public function onEnd() {
-        
+    @async public function onEnd():Any {
+        return null;
     }
 
     public function sendState(player:Player) {
