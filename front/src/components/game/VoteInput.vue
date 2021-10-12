@@ -20,44 +20,45 @@
   </q-form>
 </template>
 <style lang="scss">
-.voteDelete {
-  transition: all ease-in-out 0.2s;
-  &:active {
-    transform: rotate(145deg);
-  }
-}
-.suggest {
-  z-index: 2;
-  overflow: hidden;
-  position: absolute;
-  display: grid;
-  width: 98%;
-  margin: 0 1%;
-  background: $clr-alt;
-  border: 1px solid #8885;
-  border-radius: 10px;
-  .wiki-preview {
-    background: inherit;
-    border-bottom: 1px solid #8885;
-    cursor: pointer;
-    &:last-child {
-      border-bottom: none;
-    }
-    &:hover {
-        filter: brightness(1.1);
+.vote-input {
+  .voteDelete {
+    transition: all ease-in-out 0.2s;
+    &:active {
+      transform: rotate(145deg);
     }
   }
-   
+  .suggest {
+    z-index: 2;
+    overflow: hidden;
+    position: absolute;
+    display: grid;
+    width: 98%;
+    margin: 0 1%;
+    background: var(--clr-alt);
+    border: 1px solid #8885;
+    border-radius: 10px;
+    .wiki-preview {
+      background: inherit;
+      border-bottom: 1px solid #8885;
+      cursor: pointer;
+      &:last-child {
+        border-bottom: none;
+      }
+      &:hover {
+          filter: brightness(1.1);
+      }
+    }
+    
+  }
 }
 </style>
 <script lang="ts">
-import preview from "components/game/WikiPreview.vue";
+import preview from "./WikiPreview.vue";
 
 import { defineComponent, ref, watch } from 'vue';
 import { voteSetup } from 'store/vote';
 import { sendVote } from 'store/ws/packetSender/vanilla/vote';
 import { useI18n } from "vue-i18n";
-import { noDebounceLoadInputSuggestions } from "store/vote/actions";
 
 export default defineComponent({
   name: "VoteInput",
@@ -77,7 +78,7 @@ export default defineComponent({
 
     watch(voteInput, (v)=>loadInputSuggestions(v));
 
-    const input = ref<any>();
+    const input = ref<HTMLElement>();
     //the set time out is a hack to prevent vue from remove (v-if) the suggestions before it handle the click event on it
     //nextTick don't work for some reason
     function unfocus(){setTimeout(() => voteInputFocus.value = false,250)};
