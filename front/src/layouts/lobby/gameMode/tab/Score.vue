@@ -6,7 +6,7 @@
     <q-list separator>
       <q-item v-for="player in playersByScore" :key="player.id">
         <q-item-section avatar>            
-          <q-icon v-if="player.id == ownerId" color="teal" name="mdi-crown"></q-icon>
+          <q-icon v-if="player.id == ownerId" class="owner" name="mdi-crown"></q-icon>
           <q-icon v-else-if="!player.isConnected" color="red" name="mdi-wifi-off"></q-icon>
         </q-item-section>
         <q-item-section :class="{ self: player.id == selfId }">{{ player.pseudo }}</q-item-section>
@@ -17,8 +17,11 @@
 </template>
 <style lang="scss">
 .score-tab {
+  .self, .owner {
+    color: var(--clr-contrast)!important;
+  }
   .self {
-    color: var(--clr-dark-teal);
+    font-weight: bolder;
   }
 }
 </style>

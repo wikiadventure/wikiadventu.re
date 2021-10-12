@@ -15,9 +15,9 @@
       </div>
       <q-separator/>
       <div class="wait-action justify-evenly">
-        <q-btn push class="action-btn" :label="t('invite')" @click="invite()" icon="mdi-link-variant"/>
+        <q-btn push class="action-btn-alt" :label="t('invite')" @click="invite()" icon="mdi-link-variant"/>
         <div><!--Only to display tooltip over the disabled q btn -->
-          <q-btn :disable="!isOwner" push class="action-btn" :label="t('start')" @click="sendStart()" icon="mdi-check-bold"/>
+          <q-btn :disable="!isOwner" push class="action-btn-alt" :label="t('start')" @click="sendStart()" icon="mdi-check-bold"/>
           <q-tooltip v-if="!isOwner"  anchor="top middle" self="bottom middle" :offset="[10, 10]">
             Only <q-icon size="xs" class="owner" name="mdi-crown"/> {{ owner?.pseudo }} can choose to start
           </q-tooltip>
@@ -27,67 +27,69 @@
   </div>
 </template>
 <style lang="scss">
-.wait-container {
-  background: var(--clr-alt);
-}
-.wait-players {
-  >div {
-    background: hsla(0,0%,50%,0.15);
-    div {
-      color: var(--clr-reverse);
-    }
-  }
-}
 .wait-screen {
   overflow: hidden;
-}
-.wait-container {
-  width: Max(50%, 500px);
-  max-width: 100%;
-  height: 95%;
-  margin: 1.25%;
-  border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-  @media screen and (max-width: 600px) {
-    margin: 0;
-    height: 100%;
-    width: 100%;
-    border-radius: 0;
+  .wait-container {
+    background: var(--clr-alt);
   }
-}
-.wait-players {
-  overflow-x: auto;
-  overflow-y: scroll;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 4px;
-  div {
-    flex: 0 0 auto;
-    border-radius: 6px;
-    margin: 1px;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    padding: 3px 6px;
-    div {
-      padding: 1px 4px;
+  .wait-players {
+    >div {
+      background: hsla(0,0%,50%,0.15);
+      div {
+        color: var(--clr-reverse);
+      }
     }
   }
+  .wait-container {
+    width: Max(50%, 500px);
+    max-width: 100%;
+    height: 95%;
+    margin: 1.25%;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    @media screen and (max-width: 600px) {
+      margin: 0;
+      height: 100%;
+      width: 100%;
+      border-radius: 0;
+    }
+  }
+  .wait-players {
+    overflow-x: auto;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 4px;
+    div {
+      flex: 0 0 auto;
+      border-radius: 6px;
+      margin: 1px;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      padding: 3px 6px;
+      div {
+        padding: 1px 4px;
+      }
+    }
+  }
+  .wait-action, .wait-slot {
+    display: inline-flex;
+    flex: 0 0 auto;
+    margin: 4px;
+  }
+  .wait-slot {
+    font-size: 2em;
+  }
+  .self, .owner {
+    color: var(--clr-contrast)!important;
+  }
+  .self {
+    font-weight: bolder;
+  }
 }
-.wait-action, .wait-slot {
-  display: inline-flex;
-  flex: 0 0 auto;
-  margin: 4px;
-}
-.wait-slot {
-  font-size: 2em;
-}
-.self, .owner {
-  color: var(--clr-dark-teal)!important;
-}
-
 </style>
 <script lang="ts">
 import { defineComponent } from 'vue';
