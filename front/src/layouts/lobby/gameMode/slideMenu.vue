@@ -95,14 +95,21 @@
       //display: none;
     }
   }
-
-  .q-tab--active, .q-tab__indicator {
-    color: var(--clr-dark-teal)!important;
+  
+  .menu-tabs {
+    border-top: 1px solid rgba(0,0,0,0.12);
+    background:  var(--clr-main);
   }
 
-  .menu-tabs {
-    background: $clr-alt;
-    color: $clr-reverse;
+}
+
+.body--dark {
+  .slide-menu{
+    .menu-tabs {
+      border-top: 1px solid rgba(255,255,255,.28);
+      background:  var(--clr-main);
+      //color:  var(--clr-reverse);
+    }
   }
 }
 </style>
