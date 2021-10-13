@@ -13,7 +13,6 @@ class ClientResetVoteHandler extends PacketHandler {
 
     override function process(lobby:Lobby, player:Player, c:ClientPacket) {
         player.vote = "";
-        super.process(lobby, player, c);
     }
 
 }

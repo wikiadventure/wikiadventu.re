@@ -22,7 +22,7 @@ using Lambda;
      * A function that process the data of the packet
      */
     public function process(lobby:Lobby,  player:Player, p: ClientPacket) {
-        lobby.gameLoop.onPacket(player, p);
+        
     }
 
     public static function handle(lobby:Lobby, player:Player, data:String) {
@@ -36,6 +36,7 @@ using Lambda;
         var handler = lobby.gameLoop.packetHandlers.find(p->p.canProcess(packet));
         if (handler == null) return;
         handler.process(lobby, player, packet);
+        lobby.gameLoop.onPacket(player, packet);
     }
 
 }

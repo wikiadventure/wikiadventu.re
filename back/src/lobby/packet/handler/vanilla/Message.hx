@@ -18,7 +18,6 @@ class ClientMessageHandler extends PacketHandler {
         var m:ClientMessage = cast c;
         if (m.data == null) return;
         MessageEmitter.emitMessage(lobby, m.data, player);
-        super.process(lobby, player, c);
         
     }
 

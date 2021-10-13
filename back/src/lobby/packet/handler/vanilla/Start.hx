@@ -18,7 +18,6 @@ class ClientStartHandler extends PacketHandler {
         if (player.id != lobby.ownerId) return lobby.log("Someone who is not owner tried to start --> " + player.uuid, LogType.Error);
         if (lobby.gameLoop.phase.type != VanillaPhaseType.Waiting) return lobby.log("Game already start --> "  + player.uuid, LogType.Error);
         lobby.gameLoop.phase.end();
-        super.process(lobby, player, c);
     }
 
 }

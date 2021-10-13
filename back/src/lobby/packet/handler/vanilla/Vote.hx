@@ -16,7 +16,6 @@ class ClientVoteHandler extends PacketHandler {
     override function process(lobby:Lobby, player:Player, c:ClientPacket) {
         var v:ClientVote = cast c;
         player.vote = v.vote;
-        super.process(lobby, player, v);
     }
 
 }

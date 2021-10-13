@@ -17,7 +17,6 @@ class ClientVoteSkipHandler extends PacketHandler {
         player.voteSkip = !player.voteSkip;
         VoteSkipEmitter.emitVoteSkip(lobby,player);
         lobby.checkVoteSkip();
-        super.process(lobby,player,c);
     }
 
 } 
