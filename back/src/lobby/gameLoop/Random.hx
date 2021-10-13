@@ -66,7 +66,7 @@ class Random extends GameLoop {
         
     }
     public function randomPagePlaying() {
-         return WikiTools.selectPage([], lobby.language).then(
+         return WikiTools.selectPage([], lobby.lang).then(
             (v:VoteResult) -> {
                 phase = new Playing(v.startPage, v.endPage, lobby, playDuration);
                 phase.start();

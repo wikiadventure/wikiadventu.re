@@ -196,7 +196,7 @@ class WikiTools {
         player.currentPage = toValidate;
         var currentValidation = player.currentValidation;
         var validation:Promise<String>;
-        validation = WikiTools.validateJump(lobby.language, oldPage, toValidate);
+        validation = WikiTools.validateJump(lobby.lang, oldPage, toValidate);
         validation.then(
             landPage -> {
                 currentValidation.page = landPage;

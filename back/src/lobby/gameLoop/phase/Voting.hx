@@ -16,7 +16,7 @@ class Voting extends Phase {
     @async public override function onStart():Any {
         if (lobby.type == Twitch) {
             var l = cast(lobby, TwitchLobby);
-            l.twitchPlayerList.sayAll(LangTools.getTwitchVoteOpen(l.language));
+            l.twitchPlayerList.sayAll(LangTools.getTwitchVoteOpen(l.lang));
         }
         lobby.players.voteReset();
         lobby.players.pageHistoryReset();
@@ -27,9 +27,9 @@ class Voting extends Phase {
     @async public override function onEnd():Any {
         if (lobby.type == Twitch) {
             var l = cast(lobby, TwitchLobby);
-            l.twitchPlayerList.sayAll(LangTools.getTwitchVoteClose(l.language));
+            l.twitchPlayerList.sayAll(LangTools.getTwitchVoteClose(l.lang));
         }
-        return @await WikiTools.selectPage(lobby.players.map(p -> p.vote), lobby.language);
+        return @await WikiTools.selectPage(lobby.players.map(p -> p.vote), lobby.lang);
         
     }
     

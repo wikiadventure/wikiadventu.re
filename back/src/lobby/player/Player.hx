@@ -9,7 +9,7 @@ class Player {
     public var socket:Ws;
     public var pseudo:String;
     public var uuid:String;//for authentification
-    public var language:Lang;
+    public var lang:Lang;
     public var score:Int=0;
     public var numberOfJump:Int=0;
     public var validationList:Array<PageValidation>;
@@ -27,8 +27,8 @@ class Player {
     public function set_currentPage(s:String) {validationList.push({page: s, validated: false}); return s;}
     public function validationListReset() validationList = [];
 
-    public function new(pseudo:String, language:Lang) {
-        this.language = language;
+    public function new(pseudo:String, lang:Lang) {
+        this.lang = lang;
         this.uuid = Uuid.v4();
         validationList = [];
         validationBuffer = [];

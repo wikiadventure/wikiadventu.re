@@ -27,7 +27,7 @@ class InfoController {
                 status: Found,
                 lobbyID: id,
                 lobbyType: lobby.type,
-                lobbyLang: lobby.language,
+                lobbyLang: lobby.lang,
                 slot: lobby.slot,
                 players: lobby.players.length,
                 gameMode: lobby.gameLoop.type,

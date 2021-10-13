@@ -42,7 +42,7 @@ class StatController {
                         ::foreach lobby::
                             <tr><th><h3>Lobby ::formatId::</h3></th></tr>
                             <tr><th>type : ::type::</th></tr>
-                            <tr><th>Language : ::language::</th></tr>
+                            <tr><th>Language : ::lang::</th></tr>
                             <tr><th>gamemode : ::gameLoop.type::</th></tr>
                             <tr><th>gamephase : ::gameLoop.phase.type::</th></tr>
                             <tr><th>Round : ::gameLoop.currentRound:: / ::gameLoop.round::</th></tr>

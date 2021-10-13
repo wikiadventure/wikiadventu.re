@@ -32,7 +32,7 @@ class PrivateJoinController {
                 slot: lobby.slot,
                 gameLoop: lobby.gameLoop.type,
                 playerID: player.uuid,
-                lang: lobby.language
+                lang: lobby.lang
             };
             new SuccessResponse(im, sr, Json.stringify(json));
         } catch (e:ConnectError) {

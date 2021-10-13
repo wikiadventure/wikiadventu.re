@@ -31,8 +31,8 @@ class LangTools {
         }
     }
 
-    public static function getURL(language:Lang):String {
-        return language + ".wikipedia.org";
+    public static function getURL(lang:Lang):String {
+        return lang + ".wikipedia.org";
     }
 
     public static function getTwitchVoteOpen(l:Lang):String {

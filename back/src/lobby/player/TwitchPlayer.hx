@@ -16,8 +16,8 @@ class TwitchPlayer extends Player {
     public var authProvider:AuthProvider;
     public var twitchLobby:TwitchLobby;
     
-    public function new(pseudo:String, twitchUser:HelixPrivilegedUser, authProvider:AuthProvider, language:Lang) {
-        super(twitchUser.name, language);
+    public function new(pseudo:String, twitchUser:HelixPrivilegedUser, authProvider:AuthProvider, lang:Lang) {
+        super(twitchUser.name, lang);
         this.twitchUser = twitchUser;
         twitchBot = new ChatClient(authProvider, { channels: [twitchUser.name] });
 
@@ -36,7 +36,7 @@ class TwitchPlayer extends Player {
                 var title = msg.substr(6);
                 twitchLobby.suggestionList.push(title);
                 twitchBot.say(twitchUser.name, "You voted " + title);
-                if (twitchLobby.suggestionList.length == TwitchLobby.suggestionLimit) twitchBot.say(channel, LangTools.getTwitchVoteCap(twitchLobby.language));
+                if (twitchLobby.suggestionList.length == TwitchLobby.suggestionLimit) twitchBot.say(channel, LangTools.getTwitchVoteCap(twitchLobby.lang));
                 twitchLobby.log(title, Info);
             }
             return;

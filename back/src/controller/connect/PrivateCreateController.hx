@@ -26,7 +26,7 @@ class PrivateCreateController {
         try {
             var player = new Player(form.pseudo,form.lang);
             var passwordHash = Sha256.encode(form.password);
-            var lobby = new Lobby(player.language, Private, passwordHash, form.slot);
+            var lobby = new Lobby(player.lang, Private, passwordHash, form.slot);
             lobby.connect(player, passwordHash);
             lobby.select(form.gameLoop, form.config);
             lobby.gameLoop.start();
@@ -36,7 +36,7 @@ class PrivateCreateController {
                 slot: lobby.slot,
                 gameLoop: lobby.gameLoop.type,
                 playerID: player.uuid,
-                lang: lobby.language           
+                lang: lobby.lang           
             };
             new SuccessResponse(im, sr, Json.stringify(json));
         } catch (e:ConnectError) {

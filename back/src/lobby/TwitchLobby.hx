@@ -16,7 +16,7 @@ class TwitchLobby extends Lobby {
     public var suggestionList:Array<String>;
 
     public function new(player:TwitchPlayer, passwordHash:String, slot:Int=15) {
-        super(player.language, Twitch, passwordHash, slot);
+        super(player.lang, Twitch, passwordHash, slot);
         id = 0;
         twitchPlayerList = new Array<TwitchPlayer>();
         suggestionList = new Array<String>();

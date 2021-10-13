@@ -36,7 +36,7 @@ class Lobby {
     }
 
     public var passwordHash:String;
-    public var language:Lang;
+    public var lang:Lang;
     public var players:Array<Player>;
     public var ownerId:Int = 0;//we could meaby have multiple owner
     public var owner(get, never):Player;
@@ -46,11 +46,11 @@ class Lobby {
     public static var privateLimit:Int = 2000;
     public static var lobbyList:Array<Lobby> = [];
 
-    public function new(language:Lang, type:LobbyType, ?passwordHash:String, slot:Int=15) {
+    public function new(lang:Lang, type:LobbyType, ?passwordHash:String, slot:Int=15) {
         if (lobbyList.length >= lobbyLimit) throw ConnectError.LobbyLimitReached;
         else if (getPrivateLobbyLength() >= privateLimit) throw ConnectError.PrivateLobbyLimitReached;
         players = new Array<Player>();
-        this.language = language;
+        this.lang = lang;
         this.type = type;
         this.slot = slot;
         this.passwordHash = passwordHash;
@@ -228,7 +228,7 @@ class Lobby {
     public static function joinPublicFree(player:Player, gameLoop:GameLoopType):Lobby {
         for (l in lobbyList) {
             if (l.type == Public && (l.players.length < l.slot)) {
-                if ( l.language == player.language ) {
+                if ( l.lang == player.lang ) {
                     if ( gameLoop == null || (l.gameLoop.type == gameLoop)) {
                         return l;
                     }
@@ -236,7 +236,7 @@ class Lobby {
             }
         }
         // if no free slot are find create a new public lobby
-        var lobby = new Lobby(player.language, Public);
+        var lobby = new Lobby(player.lang, Public);
         lobby.select(gameLoop);
         lobby.gameLoop.start();
         return lobby;
