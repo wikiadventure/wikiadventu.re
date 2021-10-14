@@ -58,10 +58,10 @@ class Random extends GameLoop {
         this.playDuration = new PhaseDuration(c.playDuration, 600);
         this.type = VanillaGameLoopType.Random;
         this.packetHandlers = [
-            new ClientMessageHandler(),
-            new ClientStartHandler(),
-            new ClientValidateHandler(),
-            new ClientVoteSkipHandler()
+            ClientMessageHandler.instance,
+            ClientStartHandler.instance,
+            ClientValidateHandler.instance,
+            ClientVoteSkipHandler.instance
         ];
         
     }

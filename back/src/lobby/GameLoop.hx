@@ -21,7 +21,7 @@ class GameLoop {
     public var round:Int;
     public var currentRound:Int;
     public var packetEventSubscribers:Array<PacketEventSubscriber>;
-    public var packetHandlers:Array<PacketHandler>;
+    public var packetHandlers:Array<IPacketHandler>;
 
     public function new() {
         packetEventSubscribers = [];

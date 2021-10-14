@@ -65,12 +65,12 @@ class Classic extends GameLoop {
         this.playDuration = new PhaseDuration(c.playDuration, 600);
         this.type = VanillaGameLoopType.Classic;
         this.packetHandlers = [
-            new ClientMessageHandler(),
-            new ClientResetVoteHandler(),
-            new ClientStartHandler(),
-            new ClientValidateHandler(),
-            new ClientVoteHandler(),
-            new ClientVoteSkipHandler()
+            ClientMessageHandler.instance,
+            ClientResetVoteHandler.instance,
+            ClientStartHandler.instance,
+            ClientValidateHandler.instance,
+            ClientVoteHandler.instance,
+            ClientVoteSkipHandler.instance
         ];
         
     }

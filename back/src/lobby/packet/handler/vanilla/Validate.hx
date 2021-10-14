@@ -1,5 +1,6 @@
 package lobby.packet.handler.vanilla;
 
+import lobby.packet.PacketHandler.IPacketHandler;
 import lobby.packet.PacketEventSubscriber.InternalPacket;
 import lobby.packet.PacketEventSubscriber.InternalPacketType;
 import lobby.wikiAPI.WikiTools;
@@ -10,13 +11,17 @@ typedef ClientValidate = ClientPacket & {
     page:String
 }
 
-class ClientValidateHandler extends PacketHandler {
+class ClientValidateHandler implements IPacketHandler {
 
     final type = VanillaClientPacketType.Validate;
 
-    override function canProcess(c:ClientPacket) return c.type == type;
+    function new(){}
 
-    override function process(lobby:Lobby, player:Player, c:ClientPacket) {
+    public static final instance = new ClientValidateHandler();
+
+    public function canProcess(c:ClientPacket) return c.type == type;
+
+    public function process(lobby:Lobby, player:Player, c:ClientPacket) {
         var json:ClientValidate = cast c;
         if (json.page == null) return;
         var toValidate = json.page;

@@ -8,23 +8,20 @@ using Lambda;
 /**
  * An interface that define an object that can check if he can process the packet
  */
- class PacketHandler {
-    public function new() {
-        
-    }
+interface IPacketHandler  {
+
     /**
      * A type guard that verify if packet type match given one
      */
-    public function canProcess(p: ClientPacket):Bool {
-       return false; 
-    }
+    public function canProcess(p: ClientPacket):Bool;
     /**
      * A function that process the data of the packet
      */
-    public function process(lobby:Lobby,  player:Player, p: ClientPacket) {
-        
-    }
+    public function process(lobby:Lobby,  player:Player, p:ClientPacket):Void;
 
+
+}
+class Packethandler {
     public static function handle(lobby:Lobby, player:Player, data:String) {
         var packet:ClientPacket;
         try {
@@ -38,5 +35,4 @@ using Lambda;
         handler.process(lobby, player, packet);
         lobby.gameLoop.onPacket(player, packet);
     }
-
 }
