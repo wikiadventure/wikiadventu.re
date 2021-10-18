@@ -50,7 +50,6 @@ class Phase {
 
     inline function log(data : Dynamic, logType:LogType, ?pos : haxe.PosInfos) {
         lobby.log(data, logType, pos);
-        var d:PhaseType;
     }
 
 }
