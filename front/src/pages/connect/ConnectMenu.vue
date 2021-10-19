@@ -1,4 +1,5 @@
 <template>
+<!--TODO: rename to connect-menu-->
   <q-layout class="tabMenu">
     <div class="tabPanel">
       <q-tab-panels class="tabContent" v-model="tab" animated :swipeable="$q.platform.has.touch" infinite>
@@ -46,8 +47,9 @@
           </q-tab-panels>
 
           <q-tabs v-model="twitchTab" dense class="connect-sub-tabs" align="justify" narrow-indicator>
-            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : t('join') " name="TwitchJoin" :icon="'svguse:'+require('assets/icons/twitch.svg')+'#join'"></q-tab>
-            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : t('create') " name="TwitchCreate" :icon="'svguse:'+require('assets/icons/twitch.svg')+'#create'"></q-tab>
+          <!-- TODO: Fix back this icon-->
+            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : t('join') " name="TwitchJoin" :icon="'svguse:images/twitch.svg#join'"></q-tab>
+            <q-tab class="twitchTab" :label="$q.screen.lt.sm ? '' : t('create') " name="TwitchCreate" :icon="'svguse:images/twitch.svg#create'"></q-tab>
           </q-tabs>
 
         </q-tab-panel>
@@ -87,9 +89,7 @@
     flex: 0 1 36px;
   }
 }
-.q-tab--active, .q-tab__indicator {
-  color: var(--clr-dark-teal)!important;
-}
+
 .q-tab--active.twitchTab, .twitchTab .q-tab__indicator {
   color: #6441A4!important;
 }

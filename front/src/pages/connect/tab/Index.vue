@@ -98,8 +98,7 @@
     left: -2%;
     width: 104%;
     height: 50em;
-    border-top: 1px solid var(--clr-light);
-    box-shadow: 0 0 50px rgba(18, 230, 238, 0.54);
+    border-top: 1px solid #fff;
     transform-origin: top left;
     transform: skewY(var(--w-angle));
   }
@@ -114,12 +113,6 @@
     @media screen and (max-width: 600px) {
       //margin-top: 0;
     }
-  }
-  #HowToPlay, #Contribution{
-    color: $clr-accent-alt;
-  }
-  #News {
-    color: $clr-accent;
   }
   #Contribution {
     pointer-events: all;
@@ -151,46 +144,42 @@
   }
   .kofi {
     background: #29abe0;
-    color: var(--clr-light);
+    color: #fff;
   }
   .nano {
-    background: var(--clr-light);
+    background: #fff;
     color: #4a90e2;
   }
   .github, .discord, .nano, .kofi {
     margin: 0 15px 5px;
     border-radius: 5px;
   }
-  .skewLineContainer.first {
-    .skewLine {
-      background: $clr-main;
-    }
+
+  .wrapper.second, .skewLineContainer.second .skewLine {
+    background: var(--clr-alt);
+    color: var(--clr-contrast);
   }
-  .skewLineContainer.second {
-    .skewLine {
-      background: $clr-alt;
-    }
+
+  .wrapper.first, .wrapper.third, 
+  .skewLineContainer.first .skewLine, 
+  .skewLineContainer.third .skewLine {
+    background: var(--clr-main);
+    color: var(--clr-reverse);
   }
-  .skewLineContainer.third {
-    .skewLine {
-      background: $clr-main;
-    }
-  }
-  .wrapper.first, .wrapper.third {
-    background: $clr-main;
-  }
-  .wrapper.second {
-    background: $clr-alt;
-  }
-}
-.body--dark {
   .skewLine {
     box-shadow: 0 0 50px rgba(18, 230, 238, 1);
   }
+
+}
+.body--dark {
+  .main-menu-index {
+    background: radial-gradient(circle, #000 0%, #222 100%) fixed;
+  }
+
 }
 .body--light {
-  .skewLine {
-    box-shadow: 0 0 50px rgb(3, 151, 157);
+  .main-menu-index {
+    background: radial-gradient(circle, #99fcff 0%, var(--clr-main) 75%) fixed;
   }
 }
 </style>
