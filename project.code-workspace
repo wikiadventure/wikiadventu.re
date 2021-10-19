@@ -1,5 +1,4 @@
 {
-	"extensions": {},
 	"folders": [
 		{
 			"name": "back",
@@ -166,5 +165,10 @@
 	},
 	"settings": {
 		"haxe.configurations": []
+	},
+	"extensions": {
+		"recommendations": [
+			"hediet.vscode-drawio"
+		]
 	}
 }
