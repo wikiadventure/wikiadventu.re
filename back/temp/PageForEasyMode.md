@@ -12,6 +12,25 @@ write down the page title from url bar
 Minecraft
 Wikipedia
 Popcorn
+Rainbow
+Ferrari
+Barbie
+The Simpsons
+Pizza
+Marvel
+Lamborghini
+Star Wars
+Dragon ball
+Friends
+Strawberry
+Lego
+Breaking Bad
+Harry Potter
+Sushi
+Playmobil
+Lakers
+One Piece
+Chocolate
 
 
 # wiki français
