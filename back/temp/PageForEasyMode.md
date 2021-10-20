@@ -16,6 +16,7 @@ Rainbow
 Mario
 Ferrari
 Statue of Liberty
+Pokémon
 Barbie
 Fortnite
 Chopin
@@ -24,6 +25,7 @@ The Simpsons
 Taj Mahal
 Pizza
 Marvel
+Digimon
 Lamborghini
 Overwatch
 Eiffel Tower
@@ -35,6 +37,7 @@ Friends
 Spider-Man
 Naruto
 Anime
+Dorayaki
 Zelda
 Skrillex
 Swimming
@@ -44,6 +47,7 @@ Jazz
 Breaking Bad
 Alhambra
 Basketball
+Doraemon
 Mozart
 Among Us
 Harry Potter
@@ -59,7 +63,8 @@ Vivaldi
 Deadpool
 Ozuna
 Disney
-
+Transformers
+Bubble tea
 
 
 # wiki français
