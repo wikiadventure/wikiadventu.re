@@ -71,28 +71,28 @@ class Lobby {
         lobbyList.insert(pos,this);
         log("create the lobby", Info);
     }
-
-    public inline static function search(id:Int) {
-        return s(id,0,lobbyList.length-1);
-    }
-
-    /**
-     * #Recursive - Binary search of a lobby by his id should be called with search
-     * @param id of the lobby to search
-     * @param l INTERNAL left limit position in the lobbyList
-     * @param r INTERNAL right limit position in the lobbyList
-     * @return The index of the found lobby in the lobbyList.
-     * If not found return a negative index of where it should be.
-     */
-    private static function s(id:Int,l:Int, r:Int):Int {
-        if (lobbyList[r].id >= lobbyList[l].id) {
-            var mid = l + Math.floor((r - l) / 2);
-            return  lobbyList[mid].id == id ? mid :
-                    lobbyList[mid].id > id ? s(id, l, mid - 1) :
-                    s(id, mid + 1, r);
+    
+    //A advanced binary search
+    public static function search(id:Int){
+        var start = 0;
+        var len = lobbyList.length-1;
+        var i=0x80000000;
+        while (i!=0) {
+            i >>>= 1;
+            if ((len & i)!=0) {
+                var noCBit = len & ~(i-1);
+                len ^= (
+                (len ^ (noCBit-1)) & 
+                ((lobbyList[start+noCBit].id <= id ? 1 : 0) - 1 >>>0)
+                );
+            }
         }
-        return -r;
-    }
+        if (lobbyList[start+len].id != id) {
+          return -1 - start - len |0;
+        }
+        return start + len |0;
+      }
+
     /**
      * Find a lobby by his id ( can throw a connection Error)
      * @param id of the lobby
