@@ -67,18 +67,18 @@ export enum InfoStatus {
 }
 
 export enum ErrorCode {
-    NoInternet = 0,
-    InvalidMethod = 100, //client error
-    InvalidForm,
-    InvalidID,
-    InvalidLobbyType,
-    NoLobbyFoundWithID,
-    NoLobbyFoundWithChannelName,
-    LobbyFull,
-    InvalidPassword,
-    InvalidGameLoop,
-    InvalidTwitchCode,
-    LobbyLimitReached = 200, //server error
-    PrivateLobbyLimitReached,
-    TwitchConnectionError
+    noInternet = 0,
+    invalidMethod = 100, //client error
+    invalidForm,
+    invalidID,
+    invalidLobbyType,
+    noLobbyFoundWithID,
+    noLobbyFoundWithChannelName,
+    lobbyFull,
+    invalidPassword,
+    invalidGameLoop,
+    invalidTwitchCode,
+    lobbyLimitReached = 200, //server error
+    privateLobbyLimitReached,
+    twitchConnectionError
 }

@@ -176,7 +176,7 @@ export default defineComponent({
             }
           }
       }).catch(e => {
-        notifyError(ErrorCode.NoInternet, e);
+        notifyError(ErrorCode.noInternet, e);
       });
     }
     return {

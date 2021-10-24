@@ -97,7 +97,7 @@ export async function connect(options:RequestInit, twitch?:boolean) {
         })
         .catch(e => {
             connecting.value = false;
-            notifyError(ErrorCode.NoInternet, e);
+            notifyError(ErrorCode.noInternet, e);
     });
 }
 
@@ -126,5 +126,5 @@ export async function notifyError(n:number, message?:string) {
 
 export function translate(e:ErrorCode):string {
     // @ts-expect-error: Can't access error Code with k of type string, it should be number
-    return "connectError." + (Object.keys(ErrorCode).find(k => ErrorCode[k] === e) || "UnknowError" );
+    return "connectError." + (Object.keys(ErrorCode).find(k => ErrorCode[k] === e) || "unknowError" );
 }

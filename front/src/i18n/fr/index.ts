@@ -128,21 +128,21 @@ const fr:MessageSchema = {
     tipsContentMobile: "Vous pouvez ouvrir le menu du jeu avec le bouton en haut à gauche ou en faisant glisser vers la droite. Vous pouvez aussi ouvrir la page de fin en faisant glisser vers la gauche.",
   },
   connectError: {
-    UnknowError: "??? Erreur inconnue",
-    NoInternet: "Problème de connexion avec le serveur",
-    InvalidMethod: "??? méthode de la requête http invalide",
-    InvalidForm: "??? Erreur de format du formulaire",
-    InvalidLobbyType: "??? Type de partie inexistant",
-    InvalidID: "L'identifiant de partie est invalide",
-    NoLobbyFoundWithID: "Aucune partie trouvée avec l'identifiant",
-    NoLobbyFoundWithChannelName: "Aucune partie trouvée avec Le nom de chaîne",
-    LobbyFull: "La partie que vous voulez rejoindre est remplie",
-    InvalidPassword: "Mot de passe invalide",
-    InvalidGameLoop: "??? Mode de jeu inexistant",
-    InvalidTwitchCode: "Erreur du client lors la connection twitch",
-    LobbyLimitReached: "La limite de partie a été atteinte!",
-    PrivateLobbyLimitReached: "La limite de partie privé a été atteinte",
-    TwitchConnectionError: "Erreur du serveur lors de la connection twitch"
+    unknowError: "??? Erreur inconnue",
+    noInternet: "Problème de connexion avec le serveur",
+    invalidMethod: "??? méthode de la requête http invalide",
+    invalidForm: "??? Erreur de format du formulaire",
+    invalidLobbyType: "??? Type de partie inexistant",
+    invalidID: "L'identifiant de partie est invalide",
+    noLobbyFoundWithID: "Aucune partie trouvée avec l'identifiant",
+    noLobbyFoundWithChannelName: "Aucune partie trouvée avec Le nom de chaîne",
+    lobbyFull: "La partie que vous voulez rejoindre est remplie",
+    invalidPassword: "Mot de passe invalide",
+    invalidGameLoop: "??? Mode de jeu inexistant",
+    invalidTwitchCode: "Erreur du client lors la connection twitch",
+    lobbyLimitReached: "La limite de partie a été atteinte!",
+    privateLobbyLimitReached: "La limite de partie privé a été atteinte",
+    twitchConnectionError: "Erreur du serveur lors de la connection twitch"
   }
 };
 
