@@ -9,62 +9,62 @@ write down the page title from url bar
 
 # english wiki
 
+Alhambra
+Among Us
+Anime
+Barbie
+Basketball
+Beethoven
+Breaking Bad
+Bubble tea
+Chocolate
+Chopin
+Colosseum
+Deadpool
+Digimon
+Disney
+Doraemon
+Dorayaki
+Dragon ball
+Eiffel Tower
+Ferrari
+Football
+Fortnite
+Friends
+Harry Potter
+Jazz
+Lakers
+Lamborghini
+League of Legends
+Lego
+Manga
+Mario
+Marvel
 Minecraft
-Wikipedia
+Mozart
+Naruto
+One Piece
+Overwatch
+Ozuna
+Pizza
+Playmobil
+Pokémon
 Popcorn
 Rainbow
-Mario
-Ferrari
-Statue of Liberty
-Pokémon
-Barbie
-Fortnite
-Chopin
-Football
-The Simpsons
-Taj Mahal
-Pizza
-Marvel
-Digimon
-Lamborghini
-Overwatch
-Eiffel Tower
-Beethoven
-Manga
-Star Wars
-Dragon ball
-Friends
-Spider-Man
-Naruto
-Anime
-Dorayaki
-Zelda
-Skrillex
-Swimming
-Strawberry
-Lego
-Jazz
-Breaking Bad
-Alhambra
-Basketball
-Doraemon
-Mozart
-Among Us
-Harry Potter
-Sushi
-Playmobil
-Lakers
 Rihanna
-One Piece
-Colosseum
-Chocolate
-League of Legends
-Vivaldi
-Deadpool
-Ozuna
-Disney
+Skrillex
+Spider-Man
+Star Wars
+Statue of Liberty
+Strawberry
+Sushi
+Swimming
+Taj Mahal
+The Simpsons
 Transformers
-Bubble tea
+Vivaldi
+Wikipedia
+Zelda
 
 
 # wiki français
