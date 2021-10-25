@@ -26,4 +26,5 @@ jobs:
         with:
           use-quiet-mode: 'no'
           use-verbose-mode: 'yes'
-          config-file: '/tests/mlc_config.json'
+          check-modified-files-only: 'yes'
+          config-file: '.github/workflows/mlc_config.json'
