@@ -26,4 +26,4 @@ jobs:
         with:
           use-quiet-mode: 'no'
           use-verbose-mode: 'yes'
-          config-file: '/tests/.mlc_config.json'
+          config-file: '/tree/tests/.mlc_config.json'
