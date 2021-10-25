@@ -26,4 +26,4 @@ jobs:
         with:
           use-quiet-mode: 'no'
           use-verbose-mode: 'yes'
-          config-file: 'sacramentix/wikiadventure/${GITHUB_REF#refs/heads/}tests/.mlc_config.json'
+          config-file: 'origin/${GITHUB_HEAD_REF}/tests/.mlc_config.json'
