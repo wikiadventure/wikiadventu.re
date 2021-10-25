@@ -16,14 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         with:
           submodules: recursive
-      - name: Branch name
-        run: echo running on branch ${GITHUB_REF#refs/heads/}
       - name: Monitor Links
         uses: gaurav-nelson/github-action-markdown-link-check@1.0.13
         with:
           use-quiet-mode: 'no'
           use-verbose-mode: 'yes'
-          config-file: 'origin/${GITHUB_HEAD_REF}/tests/.mlc_config.json'
+          config-file: '/tests/.mlc_config.json'
