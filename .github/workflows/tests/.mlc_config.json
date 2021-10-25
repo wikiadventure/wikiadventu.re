@@ -1,0 +1,17 @@
+{
+    "ignorePatterns": [
+		{
+			"pattern": "^https:\/\/ko-fi\.com\b"
+		}
+	],
+    "replacementPatterns": [
+        {
+            "pattern": "^/",
+            "replacement": "/github/workspace/"
+        },
+        {
+            "pattern": "^./",
+            "replacement": "/github/workspace/"
+        }
+    ]
+}
