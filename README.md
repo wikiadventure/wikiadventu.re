@@ -3,11 +3,14 @@
 </h1>
 
 <p align="center">
-    <a href="https://discord.gg/wRN6Dam">
-        <img src="https://img.shields.io/discord/724622557554147348?logo=discord" alt="join me on Discord">
+    	<a href="https://discord.gg/wRN6Dam">
+        	<img src="https://img.shields.io/discord/724622557554147348?logo=discord" alt="join me on Discord">
 	</a>
-    <a href="https://wikiadventu.re">
-        <img src="https://img.shields.io/endpoint?url=https://wikiadventu.re/api/badge" alt="number of people onlines on the game">
+   	<a href="https://wikiadventu.re">
+        	<img src="https://img.shields.io/endpoint?url=https://wikiadventu.re/api/badge" alt="number of people onlines on the game">
+	</a>
+	<a href="https://github.com/Sacramentix/WikiAdventure/actions/workflows/tests-monitor-links.yml">
+        	<img src="https://github.com/Sacramentix/WikiAdventure/actions/workflows/tests-monitor-links.yml/badge.svg?branch=master)" alt="Link Monitoring State">
 	</a>
 </p>
 <h4 align="center">
@@ -50,9 +53,7 @@ The project is Web app made out of a backend and a frontend:
 ## 🖋️ Contributing
 
 <p align="center">
-    <a href="https://github.com/Sacramentix/WikiAdventure/actions/workflows/tests-monitor-links.yml">
-        <img src="https://github.com/Sacramentix/WikiAdventure/actions/workflows/tests-monitor-links.yml/badge.svg?branch=master)" alt="Link Monitoring State">
-	</a>
+
 </p>
 
 Want to help with Wiki Adventure? Well first, Thank you so much for your interest! We are always appreciate for improvements to the project and contributions from open-source developers are greatly appreciated.
