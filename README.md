@@ -49,6 +49,12 @@ The project is Web app made out of a backend and a frontend:
 
 ## 🖋️ Contributing
 
+<p align="center">
+    <a href="https://github.com/Sacramentix/WikiAdventure/actions/workflows/tests-monitor-links.yml">
+        <img src="https://github.com/Sacramentix/WikiAdventure/actions/workflows/tests-monitor-links.yml/badge.svg?branch=master)" alt="Link Monitoring State">
+	</a>
+</p>
+
 Want to help with Wiki Adventure? Well first, Thank you so much for your interest! We are always appreciate for improvements to the project and contributions from open-source developers are greatly appreciated.
 What you can do to help:
 - Make the game available in your language, check this guide (WIP).
