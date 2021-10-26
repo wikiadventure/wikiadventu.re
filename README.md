@@ -10,7 +10,7 @@
         	<img src="https://img.shields.io/endpoint?url=https://wikiadventu.re/api/badge" alt="number of people onlines on the game">
 	</a>
 	<a href="https://github.com/Sacramentix/WikiAdventure/actions/workflows/tests-monitor-links.yml">
-        	<img src="https://github.com/Sacramentix/WikiAdventure/actions/workflows/tests-monitor-links.yml/badge.svg?branch=master)" alt="Link Monitoring State">
+        	<img src="https://github.com/Sacramentix/WikiAdventure/actions/workflows/tests-monitor-links.yml/badge.svg?branch=master" alt="Link Monitoring State">
 	</a>
 </p>
 <h4 align="center">
