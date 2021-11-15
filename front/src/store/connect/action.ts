@@ -7,7 +7,7 @@ import { ConnectEvent, ConnectResponse, ConnectType, ErrorCode, loginQuery } fro
 import { i18n } from 'src/boot/i18n';
 import { Router } from 'src/router';
 import { randomizePseudo } from './randomPseudo/generator';
-import { TWITCH_CLIENT_ID } from './twitch/state';
+import { TWITCH_CLIENT_ID, twitchName } from './twitch/state';
 import { setConfig } from './extra/state';
 
 const WithId = [ConnectType.PrivateJoin, ConnectType.PublicJoin];
@@ -16,6 +16,7 @@ const Create = [ConnectType.PrivateCreate, ConnectType.TwitchCreate];
 const ChooseGameLoop = [ConnectType.PrivateCreate, ConnectType.TwitchCreate, ConnectType.PublicJoin];
 const NoPassword = [ConnectType.PublicJoin];
 const WithTwitch = [ConnectType.TwitchCreate, ConnectType.TwitchJoinWith];
+const twicthJoin = [ConnectType.TwitchJoinWith, ConnectType.TwitchJoinWithout];
 
 export function login(event:ConnectEvent) {
     if(connecting.value) return;
@@ -46,6 +47,10 @@ export function login(event:ConnectEvent) {
         return;
       }
     }
+    if (twicthJoin.includes(event.type)) {
+        query.lobby = twitchName.value;
+    }
+
     if (Create.includes(event.type)) {
         query.slot = slot.value;
         query.config = setConfig();
@@ -86,6 +91,7 @@ export function login(event:ConnectEvent) {
 }
 
 export async function connect(options:RequestInit, twitch?:boolean) {
+    console.log(options);
     return fetch("/api/"+ (twitch ? "twitch" : "connect"), options)
         .then(async r => {return { json: await r.json(), res: r}})
         .then(r => {

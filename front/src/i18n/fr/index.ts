@@ -34,6 +34,7 @@ const fr:MessageSchema = {
   input: {
     langSelect: "Langue du wiki",
     lobbyID: "ID de la Partie",
+    twitchName: "Pseudo Twitch",
     pseudo: "Pseudo",
     password: "Mot de passe",
     gameLoop: "Mode de jeu",

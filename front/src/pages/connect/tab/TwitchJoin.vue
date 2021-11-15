@@ -1,6 +1,6 @@
 <template>
   <connect-form :title="t('menu.joinTwitchLobby')">
-    <id-input/>
+    <twitch-name-input/>
     <password-input v-model="password"/>
     <pseudo-input/>
     <template v-slot:button>
@@ -15,7 +15,7 @@ import TwitchBtn from 'src/components/form/TwitchButton.vue';
 import ConnectForm from 'src/components/form/ConnectForm.vue';
 import PasswordInput from 'src/components/form/PasswordInput.vue';
 import PseudoInput from 'src/components/form/PseudoInput.vue';
-import IdInput from 'src/components/form/IdInput.vue';
+import TwitchNameInput from 'src/components/form/TwitchNameInput.vue';
 import { ConnectEvent, ConnectType } from 'store/connect/type';
 import { login } from 'store/connect/action';
 
@@ -24,7 +24,7 @@ import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   name: 'TwitchJoin',
-  components: { ConnectForm, ConnectBtn, TwitchBtn, PasswordInput, PseudoInput, IdInput },
+  components: { ConnectForm, ConnectBtn, TwitchBtn, PasswordInput, PseudoInput, TwitchNameInput },
   setup() {
     const { t } = useI18n({ useScope: 'global' });
     const password = ref("");

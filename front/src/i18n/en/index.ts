@@ -32,6 +32,7 @@ export default {
   input: {
     langSelect: "Wiki language",
     lobbyID: "Party ID",
+    twitchName: "Twitch username",
     pseudo: "Username",
     password: "Password",
     gameLoop: "Game mode",
