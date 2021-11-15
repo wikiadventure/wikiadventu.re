@@ -34,7 +34,6 @@
 * One Piece
 * Pizza
 * Playmobil
-* Pokémon
 * Popcorn
 * Rainbow
 * Rihanna
@@ -55,18 +54,33 @@
 ## Video games
 
 * Agar.io
+* Age of Empires
 * Among Us
+* Assassin's Creed
+* Castlevania
+* Crash Bandicoot
+* Dota 2
+* Dead Cells
+* Dragon Quest
 * Fortnite
+* Grand Theft Auto
 * League of Legends
 * Mario Kart
 * Minecraft
+* Mortal Kombat
 * Overwatch
 * Pac-Man
+* Pokémon
 * Pong
+* Rocket League
+* Sonic the Hedgehog
+* StarCraft
 * Street Fighter
 * The Legend of Zelda
+* Wii Sports
 * World of Warcraft
-* StarCraft
+* Worms W.M.D
+
 
 
 
