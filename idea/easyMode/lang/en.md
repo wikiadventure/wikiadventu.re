@@ -1,5 +1,4 @@
 * Alhambra
-* Among Us
 * Anime
 * Australia
 * Barbie
@@ -13,33 +12,26 @@
 * Chopin
 * Colosseum
 * Deadpool
-* Digimon
 * Disney
-* Doraemon
-* Dorayaki
 * Dragon ball
 * Eiffel Tower
 * Ferrari
+* Fireworks
 * Football
-* Fortnite
 * Friends
+* Halloween
 * Harry Potter
 * India
 * Jazz
 * Law of Gravity
 * Lakers
 * Lamborghini
-* League of Legends
 * Lego
 * Manga
-* Mario
 * Marvel
-* Minecraft
 * Mozart
 * Naruto
 * One Piece
-* Overwatch
-* Ozuna
 * Pizza
 * Playmobil
 * Pokémon
@@ -59,4 +51,22 @@
 * United States of America
 * Vivaldi
 * Wikipedia
-* Zelda
+
+## Video games
+
+* Agar.io
+* Among Us
+* Fortnite
+* League of Legends
+* Mario Kart
+* Minecraft
+* Overwatch
+* Pac-Man
+* Pong
+* Street Fighter
+* The Legend of Zelda
+* World of Warcraft
+* StarCraft
+
+
+
