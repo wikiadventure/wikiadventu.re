@@ -91,7 +91,7 @@ class Lobby {
           return -1 - start - len |0;
         }
         return start + len |0;
-      }
+    }
 
     /**
      * Find a lobby by his id ( can throw a connection Error)
