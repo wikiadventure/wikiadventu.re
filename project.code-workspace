@@ -12,7 +12,10 @@
 			"name": "bin",
 			"path": "bin"
 		},
-
+		{
+			"name": "idea",
+			"path": "idea"
+		},
 		{
 			"name": "local",
 			"path": "local"

@@ -1,14 +1,3 @@
-# Share your page idea for Easy mode
-
-The page should be something well known by most
-But not Super easy to find either
-feel free to add your language section
-
-write down the page title from url bar
-
-
-# english wiki
-
 * Alhambra
 * Among Us
 * Anime
@@ -26,6 +15,7 @@ write down the page title from url bar
 * Deadpool
 * Digimon
 * Disney
+* dazdvdzhdadbazjdk
 * Doraemon
 * Dorayaki
 * Dragon ball
@@ -71,6 +61,4 @@ write down the page title from url bar
 * Vivaldi
 * Wikipedia
 * Zelda
-
-
-# wiki français
+* afvtqhbjdkazhfdhq
