@@ -16,16 +16,17 @@ class TwitchLobby extends Lobby {
     public var suggestionList:Array<String>;
 
     public function new(player:TwitchPlayer, passwordHash:String, slot:Int=15) {
-        super(player.lang, Twitch, passwordHash, slot);
         id = 0;
         twitchPlayerList = new Array<TwitchPlayer>();
         suggestionList = new Array<String>();
         name = player.twitchUser.name;
+        super(player.lang, Twitch, passwordHash, slot);
     }
 
     public override function insert() {
-        var pos = -search(name);
-        if (pos >= 0) return lobbyList.insert(pos,this);
+        var pos = lobbyList.length == 0 ? 0 : -search(name);
+        //trick to also check -0
+        if (1/(pos*0)==1/0) return lobbyList.insert(pos,this);
         throw ConnectError.TwitchIdAlreadyUsed;
     }
     
@@ -50,18 +51,25 @@ class TwitchLobby extends Lobby {
         } catch(e:Dynamic) {
         }
     }
-     public inline static function search(name:String) {
-        return s(name,0,lobbyList.length-1);
-    }   
-
-    private static function s(name:String,l:Int, r:Int) {
-        if (r >= l) {
-            var mid = l + Math.floor((r - l) / 2);
-            if (lobbyList[mid].name == name) return mid;
-            if (lobbyList[mid].name > name) return s(name, l, mid - 1);
-            return s(name, mid + 1, r);
+    //A advanced binary search
+    public static function search(name:String){
+        var start = 0;
+        var len = lobbyList.length-1;
+        var i=0x80000000;
+        while (i!=0) {
+            i >>>= 1;
+            if ((len & i)!=0) {
+                var noCBit = len & ~(i-1);
+                len ^= (
+                (len ^ (noCBit-1)) & 
+                ((lobbyList[start+noCBit] != null && lobbyList[start+noCBit].name <= name ? 1 : 0) - 1 >>>0)
+                );
+            }
         }
-        return -r;
+        if (lobbyList[start+len].name != name) {
+          return -1 - start - len |0;
+        }
+        return start + len |0;
     }
 
     public static function find(name:String) {
