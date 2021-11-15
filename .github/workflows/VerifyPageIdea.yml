@@ -2,10 +2,12 @@ name: Verify page title idea
 on:
   push:
     branches: [ master ]
-    paths: "idea/easyMode/lang"
+    paths:
+      - "idea/easyMode/lang/**"
   pull_request:
     branches: [ master ]
-    paths: "idea/easyMode/lang"
+    paths:
+      - "idea/easyMode/lang/**"
 
   workflow_dispatch:
   
