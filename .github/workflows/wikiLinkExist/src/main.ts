@@ -19,7 +19,7 @@ for await (const entry of Deno.readDir(dir)) {
     } 
     const text = await Deno.readTextFile(dir+"/"+entry.name);
     console.log(C.white("Start validating "+dir+"/"+entry.name));
-    const array =  text.split("\r\n");
+    const array =  text.split(/\r?\n/);
     for (const l of array) {
         if (l.startsWith("* ")) {
             const title = l.substring(2);
