@@ -1,5 +1,15 @@
 @forward './fr';
 .wikiContent {
+
+  img {
+    overflow: hidden;
+    filter: drop-shadow(0 0 1px #fff);
+  }
+
+  .navbar {
+    display: none!important;
+  }
+
   .infobox,
   .infobox_v2,
   .infobox_v3 {
@@ -114,9 +124,17 @@
   .floatleft,
   .tright,
   .floatright {
-    float: left;
+    margin: 1.2em;
+  }
+  .tleft,
+  .floatleft {
     clear: left;
-    margin: 0 1.2em 1.2em;
+    float: left;
+  }
+  .tright,
+  .floatright {
+    clear: right;
+    float: right;
   }
   .tleft {
     margin-left: -3.75em;
@@ -148,7 +166,7 @@
     max-width: 100%;
     margin: 15px;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 5px #aaa5;
     img {
       width: 100%!important;
     }
