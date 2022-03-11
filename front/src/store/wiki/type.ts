@@ -10,6 +10,7 @@ export interface WikiRawSuggestion  {
       width: number,
       height: number
     }
+    missing?: string
 }
 
 export const wikiHeaders = new Headers({
