@@ -1,3 +1,5 @@
+import controller.daily.DailyPage;
+import controller.daily.DailyController;
 import controller.info.BadgeController;
 import utils.crypto.RandomBase32;
 import config.admin.Guard;
@@ -38,6 +40,7 @@ class App {
             var server = Http.createServer(handle);
         #end
         TwitchCredential.init();
+        DailyController.init();
         server.listen(Env.get("PORT"));// take the port mentionned in the port compilation flag otherwise take the env one
         WS.init(server);
         console.log("server start");
@@ -69,6 +72,7 @@ class App {
                     case "info": new InfoController(im,sr);
                     case "connect": new ConnectController(im, sr, body);
                     case "twitch": new TwitchController(im, sr, body);
+                    case "daily": new DailyController(im, sr, body);
                     case "log": new LogController(im, sr, body);
                     case "stat": new StatController(im, sr, body);
                     case "announce": new AnnounceController(im, sr, body);
