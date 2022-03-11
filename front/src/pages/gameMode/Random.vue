@@ -23,14 +23,13 @@
   transform: translate3d(100%,0,0);
 }
 </style>
-<script lang="ts">
+<script lang="ts" setup>
 import RandomSlideMenu from 'src/layouts/lobby/gameMode/Random.vue';
 import WikiPage from 'src/layouts/lobby/WikiPage.vue';
 import RoundWin from 'src/layouts/lobby/screen/RoundWin.vue';
 import Leaderboard from 'src/layouts/lobby/screen/Leaderboard.vue';
 import Wait from 'src/layouts/lobby/screen/Wait.vue';
 import PageHistory from 'src/layouts/lobby/screen/PageHistory.vue';
-
 import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { Notify, useQuasar } from 'quasar';
 import { gameLayoutManagerSetup } from 'store/gameLayoutManager';
@@ -51,130 +50,115 @@ import { playerLeftHandler } from 'store/ws/packetHandler/vanilla/playerLeft';
 import { setOwnerHandler } from 'store/ws/packetHandler/vanilla/setOwner';
 import { updateScoreHandler } from 'store/ws/packetHandler/vanilla/updateScore';
 import { voteSkipHandler } from 'store/ws/packetHandler/vanilla/voteSkip';
+import { sendValidate } from 'store/ws/packetSender/vanilla/validate';
 
-export default defineComponent({
-  name: 'ClassicMode',
-  components: { RandomSlideMenu, WikiPage, RoundWin, Leaderboard, Wait, PageHistory },
-  setup() {
-    PacketHandlers.splice(0, PacketHandlers.length);
-    PacketHandlers.push(
-      messageHandler,
-      gamePhaseHandler,
-      pathHandler,
-      playerJoinHandler,
-      playerLeftHandler,
-      rollbackHandler,
-      setOwnerHandler,
-      updateScoreHandler,
-      voteResultHandler,
-      voteSkipHandler,
-      winRoundHandler);
+PacketHandlers.splice(0, PacketHandlers.length);
+PacketHandlers.push(
+  messageHandler,
+  gamePhaseHandler,
+  pathHandler,
+  playerJoinHandler,
+  playerLeftHandler,
+  rollbackHandler,
+  setOwnerHandler,
+  updateScoreHandler,
+  voteResultHandler,
+  voteSkipHandler,
+  winRoundHandler);
 
-    connect();
-    const { t } = useI18n({ useScope: 'global' });
-    var $q = useQuasar();
-    var {
-      showGameMenu,
-      showRoundWin,
-      showPageHistory,
-      showLeaderboard,
-      showWikiEndPage,
-      gameMenuTab
-    } = gameLayoutManagerSetup();
+connect();
+const { t } = useI18n({ useScope: 'global' });
+var $q = useQuasar();
+var {
+  showGameMenu,
+  showRoundWin,
+  showPageHistory,
+  showLeaderboard,
+  showWikiEndPage,
+  gameMenuTab
+} = gameLayoutManagerSetup();
 
-    var {
-      gamePhase,
-      round
-    } = lobbySetup();
-    
+var {
+  gamePhase,
+  round
+} = lobbySetup();
 
-    var wikiPage = ref<InstanceType<typeof WikiPage>>();
-    var wikiEndPage = ref<InstanceType<typeof WikiPage>>();
-    
-    var game = ref<InstanceType<typeof RandomSlideMenu>>();
 
-    function gamePhaseEvent(payload:WsGamePhase) {
-      switch (payload.phase) {
-        case VanillaPhaseType.GameFinish:
-          showLeaderboard.value = true;
-          setTimeout(() => {showLeaderboard.value = false}, payload.time*1000);
-          return;
-        case VanillaPhaseType.Playing:
-          Notify.create({
-            type: 'annonce',
-            position: 'bottom-right',
-            message: t('phase.notify.'+payload.phase) as string
-          });
-          return;
-      }
-    }
+var wikiPage = ref<InstanceType<typeof WikiPage> | null>(null);
+var wikiEndPage = ref<InstanceType<typeof WikiPage> | null>(null);
 
-    var unsubGamePhase = onGamePhase.subscribe(gamePhaseEvent);
+var game = ref<InstanceType<typeof RandomSlideMenu>>();
 
-    function winRoundEvent(payload:WsWinRound) {
-      showRoundWin.value = true;
-      setTimeout(() => showRoundWin.value = false, 5000);
+function gamePhaseEvent(payload: WsGamePhase) {
+  switch (payload.phase) {
+    case VanillaPhaseType.GameFinish:
+      showLeaderboard.value = true;
+      setTimeout(() => { showLeaderboard.value = false }, payload.time * 1000);
       return;
-    }
-
-    var unsubWinRound = onWinRound.subscribe(winRoundEvent);
-
-    function voteResultEvent(payload:WsVoteResult) {
-      wikiPage.value?.requestWikiPage(payload.start);
-      wikiEndPage.value?.requestWikiPage(payload.end);
+    case VanillaPhaseType.Playing:
       Notify.create({
         type: 'annonce',
-        position: 'top',
-        message: t('gameTab.end') as string + " : " + payload.end
+        position: 'bottom-right',
+        message: t('phase.notify.' + payload.phase) as string
       });
-    }
-
-    var unsubVoteResult = onVoteResult.subscribe(voteResultEvent);
-
-    function rollbackEvent(payload:WsRollback) {
-      wikiPage.value?.requestWikiPage(payload.page);
-      //TODO: notify user of rollback (we chould put it in store)
-      /*Notify.create({
-        type: 'error',
-        position: 'top',
-        message: t('gameTab.endPage') + " : " + payload.end
-      });*/
-    }
-
-    var unsubRollback = onRollback.subscribe(rollbackEvent);
-
-    var touchSurfaceHandler:TouchSurfaceHandler;
-
-    onMounted(() => {
-      touchSurfaceHandler = new TouchSurfaceHandler(document.documentElement, showGameMenu, showWikiEndPage, game.value?.menu?.$el as any, wikiEndPage.value?.$el);
-      if (wikiPage.value) {
-        wikiPage.value.title = t("wikiPage.tipsTitle");
-        wikiPage.value.content = t("wikiPage.tipsContent"+ ($q.platform.is.mobile ? "Mobile" : ""));
-      }
-      if (wikiEndPage.value) {
-         wikiEndPage.value.title = t("wikiPage.noEndPageYet");
-      }
-    });
-
-    onUnmounted(() => {
-        touchSurfaceHandler.destroy();   
-        unsubGamePhase();
-        unsubWinRound();
-        unsubVoteResult();
-        unsubRollback();  
-    });
-
-    return {
-      showGameMenu,
-      showRoundWin,
-      showPageHistory,
-      showLeaderboard,
-      showWikiEndPage,
-      gamePhase,
-      wikiPage,
-      wikiEndPage,
-      t
-    };
+      return;
   }
+}
+
+const unsubGamePhase = onGamePhase.subscribe(gamePhaseEvent);
+
+function winRoundEvent(payload: WsWinRound) {
+  showRoundWin.value = true;
+  setTimeout(() => showRoundWin.value = false, 5000);
+  return;
+}
+
+const unsubWinRound = onWinRound.subscribe(winRoundEvent);
+
+function voteResultEvent(payload: WsVoteResult) {
+  wikiPage.value?.requestWikiPage(payload.start);
+  wikiEndPage.value?.requestWikiPage(payload.end);
+  Notify.create({
+    type: 'annonce',
+    position: 'top',
+    message: t('gameTab.end') as string + " : " + payload.end
+  });
+}
+
+const unsubVoteResult = onVoteResult.subscribe(voteResultEvent);
+
+function rollbackEvent(payload: WsRollback) {
+  wikiPage.value?.requestWikiPage(payload.page);
+  //TODO: notify user of rollback (we chould put it in store)
+  /*Notify.create({
+    type: 'error',
+    position: 'top',
+    message: t('gameTab.endPage') + " : " + payload.end
+  });*/
+}
+
+const unsubRollback = onRollback.subscribe(rollbackEvent);
+
+var touchSurfaceHandler: TouchSurfaceHandler;
+
+onMounted(() => {
+  touchSurfaceHandler = new TouchSurfaceHandler(document.documentElement, showGameMenu, showWikiEndPage, game.value?.menu?.$el as any, wikiEndPage.value?.$el);
+  if (!wikiPage.value || !wikiEndPage.value) return;
+  wikiPage.value.onWikiLink
+  wikiPage.value.title = t("wikiPage.tipsTitle");
+  wikiPage.value.content = t("wikiPage.tipsContent" + ($q.platform.is.mobile ? "Mobile" : ""));
+  wikiEndPage.value.title = t("wikiPage.noEndPageYet");
+});
+
+onUnmounted(() => {
+  touchSurfaceHandler.destroy();
+        touchSurfaceHandler.destroy();   
+  touchSurfaceHandler.destroy();
+  unsubGamePhase();
+  unsubWinRound();
+  unsubVoteResult();
+  unsubRollback();
+        unsubRollback();  
+  unsubRollback();
 });
 </script>
