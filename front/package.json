@@ -12,13 +12,13 @@
   "dependencies": {
     "@quasar/extras": "^1.11.2",
     "core-js": "^3.18.2",
-    "quasar": "^2.1.0",
+    "quasar": "^2.5.5",
     "uuid": "^8.3.2",
-    "vue-i18n": "^9.2.0-beta.11"
+    "vue-i18n": "^9.2.0-beta.32"
   },
   "devDependencies": {
     "@quasar/app": "^3.1.2",
-    "@types/node": "^10.17.15",
+    "@types/node": "^12.20.21",
     "@types/uuid": "^8.3.1",
     "image-webpack-loader": "^8.0.1",
     "workbox-webpack-plugin": "^6.2.4"
