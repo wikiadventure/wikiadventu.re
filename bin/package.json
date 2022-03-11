@@ -4,12 +4,12 @@
   "description": "Wikipedia race game",
   "main": "App.js",
   "dependencies": {
+    "node-cron": "^3.0.0",
     "twitch": "^4.5.5",
     "twitch-chat-client": "^4.5.5",
     "uuid": "^8.3.1",
     "ws": "^7.4.6"
   },
-  "devDependencies": {},
   "scripts": {
     "build": "cd ../back; npm run build; cd ../front; npm run build",
     "start": "node App.js"
