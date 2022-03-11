@@ -3,8 +3,8 @@ import { Ref } from "vue";
 
 export default class TouchSurfaceHandler {
     touchSurface:HTMLElement;
-    leftOpen:Ref<boolean>;
-    rightOpen:Ref<boolean>;
+    leftOpen?:Ref<boolean>;
+    rightOpen?:Ref<boolean>;
     leftElement:any;
     rightElement:any;
     startX:number = 0;
@@ -13,7 +13,7 @@ export default class TouchSurfaceHandler {
     min:number;//minimum swipe amount of the touch surface to start transform
     isTouch:boolean;
     destroy:()=>void;
-    constructor(touchSurface:HTMLElement, leftOpen:Ref<boolean>, rightOpen:Ref<boolean>, left:any, right:any) {
+    constructor(touchSurface:HTMLElement, leftOpen?:Ref<boolean>, rightOpen?:Ref<boolean>, left?:any, right?:any) {
         this.touchSurface = touchSurface;
         this.leftOpen = leftOpen;
         this.rightOpen = rightOpen;
@@ -35,13 +35,14 @@ export default class TouchSurfaceHandler {
         };
     }
     handleswipe(isRight:boolean, isLeft:boolean) {
-        if (isRight && this.rightOpen.value) this.rightOpen.value = false;
-        else if (isLeft && this.leftOpen.value) {
+
+        if (isRight && this.rightOpen?.value) this.rightOpen.value = false;
+        else if (isLeft && this.leftOpen?.value) {
             this.leftOpen.value = false;
-        } else if (!this.rightOpen.value && !this.leftOpen.value) {
+        } else if (!this.rightOpen?.value && !this.leftOpen?.value) {
             if (isLeft) {
-                this.rightOpen.value = true;
-            } else if (isRight) this.leftOpen.value = true;
+                if (this.rightOpen != null) this.rightOpen.value = true;
+            } else if (isRight) if (this.leftOpen != null) this.leftOpen.value = true;
         }
     }
     resetStyle(e:HTMLElement) {
@@ -65,21 +66,21 @@ export default class TouchSurfaceHandler {
       var tmin = this.touchSurface.clientWidth*this.min;
       if ( this.distX > tmin ) {
         var dist = this.distX-tmin;
-        if (this.rightOpen.value) {
+        if (this.rightOpen && this.rightOpen.value) {
             if ( dist < -this.rightElement.clientWidth ) dist = this.rightElement.clientWidth;
             this.rightElement.style.transform = "translate3d(" + (dist) + "px,0,0)";
         }
-        if (!this.leftOpen.value && !this.rightOpen.value) {
+        if (!this.leftOpen?.value && !this.rightOpen?.value) {
             if ( dist > this.leftElement.clientWidth ) dist = this.leftElement.clientWidth;
             this.leftElement.style.transform = "translate3d(" + (-this.leftElement.clientWidth+dist) + "px,0,0)"; 
         }
       } else if ( this.distX < -tmin ) {
         var dist = this.distX+tmin;
-        if (this.leftOpen.value) {
+        if (this.leftOpen && this.leftOpen.value) {
             if ( dist > this.leftElement.clientWidth ) dist = -this.leftElement.clientWidth;
             this.leftElement.style.transform = "translate3d(" + (dist) + "px,0,0)";
         }
-        if (!this.leftOpen.value && !this.rightOpen.value) {
+        if (!this.leftOpen?.value && !this.rightOpen?.value) {
             if ( dist > this.rightElement.clientWidth ) dist = -this.rightElement.clientWidth;
             this.rightElement.style.transform = "translate3d(" + (this.rightElement.clientWidth+dist) + "px,0,0)"; 
         }
