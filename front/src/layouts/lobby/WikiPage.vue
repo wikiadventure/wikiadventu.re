@@ -4,7 +4,11 @@
     <div class="wikiCore" ref="wiki">
       <h1 class="wikiTitle">{{ wikiArticle.title || title }}</h1>
       <div class="wikiMain">
-        <div class="wikiContent" v-html="wikiArticle.doc?.body.innerHTML || content" :class="{ safeMode: safeModeActive }"></div>
+        <div
+          class="wikiContent"
+          v-html="wikiArticle.doc?.body.innerHTML || content"
+          :class="{ safeMode: safeModeActive }"
+        ></div>
       </div>
     </div>
   </section>
@@ -60,7 +64,7 @@
   width: 100%;
   padding: 2em 4em;
   @media screen and (max-width: 1220px) {
-    padding: .5em 2em;
+    padding: 0.5em 2em;
   }
   @media screen and (max-width: 720px) {
     padding: 0 0;
@@ -121,147 +125,135 @@
   }
 }
 </style>
-<script lang="ts">
+<script lang="ts" setup>
 import { nextTick, reactive, ref } from 'vue';
-import ExitBtn from 'src/components/ExitButton.vue';
-import { defineComponent } from 'vue';
 import WikiArticle from 'store/wiki/wikiArticle';
 import { scrollToID } from 'src/script/scrollToID';
 import { settingSetup } from 'store/setting';
-import { sendValidate } from 'store/ws/packetSender/vanilla/validate';
 import { lang } from 'store/lobby/state';
 import { Notify, useMeta, useQuasar } from 'quasar';
 
-export default defineComponent({
-  name: 'WikiPage',
-  components: { ExitBtn },
-  props: {
-    disabled:Boolean,
-    //title:String,
-    //content:String
-  },
-  setup(props) {
-    const $q = useQuasar();
+const props = defineProps({
+  disabled: Boolean,
+  //title:String,
+  //content:String
+});
 
-    const {
-      safeModeInterrupted,
-      safeModeActive
-    } = settingSetup();
+const emit = defineEmits<{
+  (e: "wikiLink", value: string): void
+}>();
 
-    const wiki = ref<HTMLElement>();
-    const wikiArticle = reactive<WikiArticle>(new WikiArticle());
-    const loading = ref(false);
-    const fade = ref(false);
-    const title = ref("");
-    const content = ref("");
+const $q = useQuasar();
 
-    props.disabled || useMeta(() => {
-      return {
-        title: wikiArticle.title || "Wiki Adventure"
-      }
-    })
+const {
+  safeModeInterrupted,
+  safeModeActive
+} = settingSetup();
 
-    async function requestWikiPage(url:string) {
-      if (loading.value) return;
-      loading.value = true;
-      safeModeInterrupted.value = true;
-      await fetchArticle(url)
-        .then(a => {
-          fade.value = true;
-          setTimeout(() => {
-            nextTick().then(() => {
-              loading.value = false;
-              redirectLinks(wiki.value);
-            });
-            fade.value = false;
-          }, 100);
-        }
-      ).catch(e => {
-        loading.value  = false;
-        fade.value  = false;
-        //TODO: must translate this
-        Notify.create({
-          type: 'negative',
-          position: 'bottom-right',
-          message: 'A problem occurs when fetching wikipedia article : ' + e
+const wiki = ref<HTMLElement>();
+const wikiArticle = reactive<WikiArticle>(new WikiArticle());
+const loading = ref(false);
+const fade = ref(false);
+const title = ref("");
+const content = ref("");
+
+props.disabled || useMeta(() => {
+  return {
+    title: wikiArticle.title || "Wiki Adventure"
+  }
+})
+
+async function requestWikiPage(url: string) {
+  if (loading.value) return;
+  loading.value = true;
+  safeModeInterrupted.value = true;
+  await fetchArticle(url)
+    .then(a => {
+      fade.value = true;
+      setTimeout(() => {
+        nextTick().then(() => {
+          loading.value = false;
+          redirectLinks(wiki.value);
         });
-      }); 
+        fade.value = false;
+      }, 100);
     }
+    ).catch(e => {
+      loading.value = false;
+      fade.value = false;
+      //TODO: must translate this
+      Notify.create({
+        type: 'negative',
+        position: 'bottom-right',
+        message: 'A problem occurs when fetching wikipedia article : ' + e
+      });
+    });
+}
 
-    function redirectLinks(doc?:HTMLElement) {
-      if(!doc) return;
-      var links = doc.getElementsByTagName("a");
-      for (var i=0;i<links.length;i++) {
-        links[i].addEventListener("click",function(e){
-          e.preventDefault();
-          onLinkClick(this);
-        });
-        var href = links[i].getAttribute("href");
-        var classes = links[i].classList;
-        if (href == undefined) continue;
-        if (href!.startsWith("#")) {
-          classes.add("anchorLink");
-        } else if (href!.startsWith("/wiki/")) {
-          if (href!.indexOf(":") != -1) {
-            var sub = href.substring(6);
-            var d = decodeURI(sub).replace( /\_/g, ' ' );
-            if (wikiArticle.links.find(l => l.title == d && l.ns == 0)) {
-              classes.add("wikiLink");
-            } else {
-              classes.add("portalLink");
-            }
-          } else {
-            classes.add("wikiLink");
-          }
+function redirectLinks(doc?: HTMLElement) {
+  if (!doc) return;
+  var links = doc.getElementsByTagName("a");
+  for (var i = 0; i < links.length; i++) {
+    links[i].addEventListener("click", function (e) {
+      e.preventDefault();
+      onLinkClick(this);
+    });
+    var href = links[i].getAttribute("href");
+    var classes = links[i].classList;
+    if (href == undefined) continue;
+    if (href!.startsWith("#")) {
+      classes.add("anchorLink");
+    } else if (href!.startsWith("/wiki/")) {
+      if (href!.indexOf(":") != -1) {
+        var sub = href.substring(6);
+        var d = decodeURI(sub).replace(/\_/g, ' ');
+        if (wikiArticle.links.find(l => l.title == d && l.ns == 0)) {
+          classes.add("wikiLink");
         } else {
-          classes.add("notWikiLink");
+          classes.add("portalLink");
         }
+      } else {
+        classes.add("wikiLink");
       }
-    }
-
-    function onLinkClick(link:HTMLAnchorElement) {
-      var linkHref = link.getAttribute("href");
-      if (linkHref == undefined) return;
-      //check if the link go to another wikipage and not info page or external
-      if (!props.disabled && link.classList.contains("wikiLink")) {
-        var url = linkHref.substring(6);
-        var anchor = url.indexOf("#");
-        if (anchor != -1) url = url.substring(0, anchor);
-        url = decodeURIComponent(url);
-        sendValidate(url);
-        requestWikiPage(url).then(() => {
-          if (anchor != -1) scrollToAnchor(url.substring(anchor+1));
-          else wiki.value?.scrollTo(0,0);
-        });
-      } else if (linkHref.startsWith("#")) {
-        scrollToAnchor(linkHref.substring(1));
-      }
-    }
-
-    async function fetchArticle(title:string) {
-      safeModeInterrupted.value = false;
-      return await wikiArticle.fetch(title, lang.value, $q.platform.is.mobile);
-    }
-    
-    function scrollToAnchor(id:string) {
-      scrollToID(id, wiki.value);
-    }
-
-    return {
-      safeModeActive,
-      wiki,
-      wikiArticle,
-      loading,
-      fade,
-      title,
-      content,
-      requestWikiPage,
-      redirectLinks,
-      onLinkClick,
-      fetchArticle,
-      scrollToAnchor
-
+    } else {
+      classes.add("notWikiLink");
     }
   }
-});
+}
+
+function onLinkClick(link: HTMLAnchorElement) {
+  var linkHref = link.getAttribute("href");
+  if (linkHref == undefined) return;
+  //check if the link go to another wikipage and not info page or external
+  if (!props.disabled && link.classList.contains("wikiLink")) {
+    var url = linkHref.substring(6);
+    var anchor = url.indexOf("#");
+    if (anchor != -1) url = url.substring(0, anchor);
+    url = decodeURIComponent(url);
+    console.log("emit");
+    emit("wikiLink", url);
+    requestWikiPage(url).then(() => {
+      if (anchor != -1) scrollToAnchor(url.substring(anchor + 1));
+      else wiki.value?.scrollTo(0, 0);
+    });
+  } else if (linkHref.startsWith("#")) {
+    scrollToAnchor(linkHref.substring(1));
+  }
+}
+
+async function fetchArticle(title: string) {
+  safeModeInterrupted.value = false;
+  return await wikiArticle.fetch(title, lang.value, $q.platform.is.mobile);
+}
+
+function scrollToAnchor(id: string) {
+  scrollToID(id, wiki.value);
+}
+
+defineExpose({
+  requestWikiPage,
+  title,
+  content
+})
+
 </script>
