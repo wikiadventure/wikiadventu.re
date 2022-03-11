@@ -12,7 +12,7 @@
       </q-card-section>
       <q-separator/>
       <q-card-actions align="center">
-        <div class="row items-end q-mx-sm"><p class="nanoAddress">{{ nanoAddress }}</p><q-btn round flat icon="mdi-content-copy" @click="clip()" /></div>
+        <div class="row items-end q-mx-sm"><p class="nanoAddress">{{ nanoAddress }}</p><q-btn round flat icon="mdi-content-copy" @click="CopyToClipboard(nanoAddress)" /></div>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -28,43 +28,9 @@
   font-size: 75%;
 }
 </style>
-<script lang="ts">
-import { copyToClipboard, Notify, openURL } from 'quasar';
+<script lang="ts" setup>
+import { openURL } from 'quasar';
+import { CopyToClipboard } from 'store/utils/CopyToClipboard';
 
-import { defineComponent } from 'vue';
-import { useI18n } from 'vue-i18n';
-
-export default defineComponent({
-  name: 'WalletDialog',
-  setup() {
-    const nanoAddress = "nano_3tobgnzzk9dgktg7gwiq94rwqcooeihgp8oz6s31xak798mgtgmn881t58cq";
-
-    function clip() {
-      const { t } = useI18n({ useScope: 'global' });
-      copyToClipboard(nanoAddress)
-      .then(() => {
-        Notify.create({
-          type: 'annonce',
-          timeout: 1000,
-          position: 'bottom-right',
-          message: t('copySuccess') as string
-        });
-      })
-      .catch(() => {
-        Notify.create({
-          type: 'error',
-          timeout: 1000,
-          position: 'bottom-right',
-          message: t('copyFail') as string
-        });
-      })
-    }
-
-    return {
-      nanoAddress,
-      openURL,
-      clip
-    }
-  }
-});
+const nanoAddress = "nano_3tobgnzzk9dgktg7gwiq94rwqcooeihgp8oz6s31xak798mgtgmn881t58cq";
 </script>
