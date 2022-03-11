@@ -55,19 +55,38 @@ export async function loadPreviews(titles:string[], lang:Lang) {
       wbptterms: 'description',
       origin: '*',
     }).toString();
-    const response = await fetch(url.toString(), { headers: wikiHeaders })
+    const response:PreviewsResponse = await fetch(url.toString(), { headers: wikiHeaders })
     .then((r) => r.json())
     .catch((error) => {
       console.log(error);
     })
     var previews:WikiPreview[] = [];
-    if (typeof response?.query?.pages === 'undefined') return previews;
+    if (typeof response?.query?.pages === 'undefined') return {previews, response};
     for (const page of Object.values(response.query.pages) as WikiRawSuggestion[]) {
+      if (page.missing != null) continue;
       previews.push({
         title: page.title,
         description: page?.terms?.description[0],
         thumbnail: page?.thumbnail
       });
     }
-    return previews;
+    return {previews,response};
+}
+
+export async function loadRandom() {
+  
+}
+
+type PreviewsResponse = {
+  query: {
+    redirects: {
+      from: string,
+      to: string
+    }[],
+    normalized: {
+      from: string,
+      to: string
+    }[],
+    pages:any
+  }
 }
