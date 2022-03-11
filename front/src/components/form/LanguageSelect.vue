@@ -1,5 +1,6 @@
 <template>
   <q-select
+    class="language-select"
     v-model="lang" name="lang" outlined hint=""
     :options="allLangOptions" :label="t('input.langSelect')" 
     :display-value="getLabel(lang)" emit-value map-options
@@ -7,6 +8,11 @@
   >
   </q-select>
 </template>
+<style lang="scss">
+.language-select {
+  min-width: 26ch;
+}
+</style>
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { allLangOptions, getLabel } from 'src/i18n';
