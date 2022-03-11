@@ -45,6 +45,18 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/daily',
+    component: () => {
+      return import('pages/gameMode/Daily.vue');
+    }
+  },
+  {
+    path: '/daily/result/:lang',
+    component: () => {
+      return import('pages/gameMode/daily/DailyResult.vue');
+    }
+  },
+  {
     path: '/api/:data',
     component: () => {},
     beforeEnter: (to, from, next) => {
