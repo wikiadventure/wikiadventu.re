@@ -1,22 +1,18 @@
 <template>
-  <q-input outlined v-model="twitchName" name="twitchName" :label="t('input.twitchName')" 
+  <q-input outlined v-model="twitchName" name="twitchName" :label="t('twitchName')" 
     spellcheck="false" v-bind="$attrs"
     hint="" :dense="$q.screen.lt.sm">
   </q-input>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
 import { twitchName } from 'store/connect/twitch/state';
-import { defineComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-export default defineComponent({
-  name: 'IdInput',
-  setup() {
-    const { t } = useI18n({ useScope: 'global' });
-    return {
-      twitchName,
-      t
-    }
-  }
-});
+const { t } = useI18n({ useScope: 'local' });
 </script>
+<i18n lang="yaml">
+  en:
+    twitchName: "Twitch username"
+  fr:
+    twitchName: "Pseudo Twitch"
+</i18n>

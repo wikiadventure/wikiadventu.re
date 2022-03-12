@@ -21,19 +21,9 @@
   }
 }
 </style>
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
 import { allLangOptions } from 'src/i18n';
 import { useI18n } from 'vue-i18n';
 
-export default defineComponent({
-  name: 'CompactLangSwitch',
-  setup() {
-    const { locale } = useI18n({ useScope: 'global' });
-    return {
-      locale,
-      allLangOptions
-    }
-  }
-});
+const { locale } = useI18n({ useScope: 'global' });
 </script>

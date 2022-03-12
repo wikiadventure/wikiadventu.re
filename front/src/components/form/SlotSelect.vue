@@ -5,16 +5,6 @@
     :dense="$q.screen.lt.sm" v-bind="$attrs">
   </q-input>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
 import { slot } from 'store/connect/state';
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'SlotSelect',
-  setup() {
-    return {
-      slot
-    }
-  }
-});
 </script>

@@ -7,7 +7,7 @@
     <q-input ref="input" 
             @focus="voteInputFocus = true" @blur="unfocus()"
             @keydown.enter.prevent="blur();sendVote(vote.input)" 
-            v-model="voteInput" :label="t('gameTab.vote.submitVote')" 
+            v-model="voteInput" :label="t('submitVote')" 
             maxlength="255" outlined dense class="q-ma-sm" spellcheck="false" >
       <template v-slot:after>
           <q-btn round dense flat icon="mdi-send" @click="blur();searchVote(voteInput)"/>
@@ -52,51 +52,36 @@
   }
 }
 </style>
-<script lang="ts">
+<script lang="ts" setup>
 import preview from "./WikiPreview.vue";
-
-import { defineComponent, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { voteSetup } from 'store/vote';
 import { sendVote } from 'store/ws/packetSender/vanilla/vote';
 import { useI18n } from "vue-i18n";
 
-export default defineComponent({
-  name: "VoteInput",
-  components: { preview },
-  setup() {
-    const { t } = useI18n({ useScope: 'global' });
-    const {
-      vote,
-      voteInput,
-      voteInputFocus,
-      suggestions,
-      deleteVote,
-      searchVote,
-      submitSuggestion,
-      loadInputSuggestions
-    } = voteSetup();
+const { t } = useI18n({ useScope: 'local' });
+const {
+  vote,
+  voteInput,
+  voteInputFocus,
+  suggestions,
+  deleteVote,
+  searchVote,
+  submitSuggestion,
+  loadInputSuggestions
+} = voteSetup();
 
-    watch(voteInput, (v)=>loadInputSuggestions(v));
+watch(voteInput, v=>loadInputSuggestions(v));
 
-    const input = ref<HTMLElement>();
-    //the set time out is a hack to prevent vue from remove (v-if) the suggestions before it handle the click event on it
-    //nextTick don't work for some reason
-    function unfocus(){setTimeout(() => voteInputFocus.value = false,250)};
-    function blur(){input.value?.blur()};
-    
-    return {
-      vote,
-      voteInput,
-      voteInputFocus,
-      suggestions,
-      deleteVote,
-      searchVote,
-      submitSuggestion,
-      sendVote,
-      unfocus,
-      blur,
-      t
-    }
-  }
-})
+const input = ref<HTMLElement>();
+//the set time out is a hack to prevent vue from remove (v-if) the suggestions before it handle the click event on it
+//nextTick don't work for some reason
+function unfocus(){setTimeout(() => voteInputFocus.value = false,250)};
+function blur(){input.value?.blur()};
 </script>
+<i18n lang="yaml">
+  en:
+    submitVote: "Submit your vote"
+  fr:
+    submitVote: "Envoie ton vote"
+</i18n>

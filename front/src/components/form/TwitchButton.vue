@@ -7,13 +7,6 @@
   color: var(--clr-light);
 }
 </style>
-<script lang="ts">
+<script lang="ts" setup>
 import ConnectBtn from './ConnectButton.vue';
-
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'TwitchBtn',
-  components: { ConnectBtn }
-});
 </script>

@@ -63,58 +63,41 @@
     text-align: center;
   }
 </style>
-<script lang="ts">
-import { i18n } from "src/boot/i18n";
+<script lang="ts" setup>
 import ExitBtn from "src/components/ExitButton.vue";
 import { GameLoopType, VanillaLoopType } from "store/lobby/game/loop/type";
 import { gameLoop } from "store/lobby/state";
-
-import { defineComponent, ref, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useI18n } from "vue-i18n";
 
-export default defineComponent({
-  name: 'ShortcutDialog',
-  components: { ExitBtn },
-  setup() {
-    const { t } = useI18n({ useScope: 'global' });
-    const open = ref(false);
+const { t } = useI18n({ useScope: 'parent' });
+const open = ref(false);
 
-    const shortcuts = computed(() => {
-      var shortcuts = [];
-      shortcuts.push(
-        {
-          combo: "ctrl + alt + shift",
-          desc: t("shortcut.openMenu")
-        },
-        {
-          combo: "ctrl + alt + Q",
-          desc: t("shortcut.disableSafeMode")
-        }
-      );
-      if (hasEndPage.includes(gameLoop.value)) {
-        shortcuts.push(
-          {
-            combo: "ctrl + alt + " + t("shortcut.spaceKey"),
-            desc: t("shortcut.openEndPage") as string
-          }
-        )
-      }
-      return shortcuts;
-    });
-
-    return {
-      open,
-      shortcuts,
-      t
+const shortcuts = computed(() => {
+  var shortcuts = [];
+  shortcuts.push(
+    {
+      combo: "ctrl + alt + shift",
+      desc: t("shortcut.openMenu")
+    },
+    {
+      combo: "ctrl + alt + Q",
+      desc: t("shortcut.disableSafeMode")
     }
+  );
+  if (hasEndPage.includes(gameLoop.value)) {
+    shortcuts.push(
+      {
+        combo: "ctrl + alt + " + t("shortcut.spaceKey"),
+        desc: t("shortcut.openEndPage") as string
+      }
+    )
   }
+  return shortcuts;
 });
-
 const hasEndPage:GameLoopType[] = [VanillaLoopType.Classic, VanillaLoopType.Random];
-
 interface Shortcut {
   combo:string,
   desc:string
 }
-
 </script>

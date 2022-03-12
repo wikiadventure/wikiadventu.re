@@ -16,22 +16,11 @@
   }
 }
 </style>
-<script lang="ts">
+<script lang="ts" setup>
 import { settingSetup } from 'store/setting';
-import { defineComponent } from 'vue';
 
-export default defineComponent({
-  name: 'VolumeSlider',
-  setup() {
-    var {
-       volume,
-       mute
-    } = settingSetup();
-
-    return {
-      volume,
-      mute
-    }
-  }
-});
+const {
+  volume,
+  mute
+} = settingSetup();
 </script>

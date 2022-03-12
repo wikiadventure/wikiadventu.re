@@ -3,29 +3,22 @@
     <q-btn class="action-btn" push
         @click="dialog && (dialog.open = true)"
         icon="mdi-keyboard"
-        :label="t('shortcut.title')"
+        :label="t('shortcuts')"
         />
     <shortcut-dialog ref="dialog"/>
   </div>
 </template>
-<style lang="scss">
-</style>
-<script lang="ts">
+<script lang="ts" setup>
 import ShortcutDialog from './ShortcutDialog.vue';
-
-import { defineComponent, ref } from 'vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-export default defineComponent({
-  name: 'ShortcutButton',
-  components: { ShortcutDialog },
-  setup() {
-    const { t } = useI18n({ useScope: 'global' });
-    const dialog = ref<InstanceType<typeof ShortcutDialog>>();
-    return {
-      t,
-      dialog
-    }
-  }
-});
+const { t } = useI18n({ useScope: 'local' });
+const dialog = ref<InstanceType<typeof ShortcutDialog>>();
 </script>
+<i18n lang="yaml">
+  en:
+    shortcuts: "Shortcuts"
+  fr:
+    shortcuts: "Raccourcis"
+</i18n>

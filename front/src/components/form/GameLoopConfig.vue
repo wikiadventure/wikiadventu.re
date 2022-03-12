@@ -1,6 +1,6 @@
 <template>
   <q-expansion-item class="extra-config" switch-toggle-side expand-separator
-    :label="t('input.gameModeConfig')" expand-icon="mdi-cog">
+    :label="t('gameLoopConfig')" expand-icon="mdi-cog">
     <component :is="config" />
   </q-expansion-item>
 </template>
@@ -21,16 +21,13 @@
   }
 }
 </style>
-<script lang="ts">
-import { defineComponent, defineAsyncComponent, ref, Component, watch } from 'vue';
+<script lang="ts" setup>
+import { defineAsyncComponent, ref, Component, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { gameLoop } from "store/connect/state";
 import { VanillaLoopType, ModLoopType, GameLoopType } from "store/lobby/game/loop/type";
 
-export default defineComponent({
-  name: 'ExtraConfig',
-  setup() {
-    const { t } = useI18n({ useScope: 'global' });
+const { t } = useI18n({ useScope: 'local' });
 
     function setConfig(gameLoop:GameLoopType):Component {
       var isMod = false;
@@ -39,10 +36,10 @@ export default defineComponent({
     }
     const config = ref(setConfig(gameLoop.value));
     watch(gameLoop,() => config.value = setConfig(gameLoop.value));
-    return {
-      t,
-      config
-    }
-  }
-});
 </script>
+<i18n lang="yaml">
+  en:
+    gameLoopConfig: "Game mode configuration"
+  fr:
+    gameLoopConfig: "Configuration du mode de jeu"
+</i18n>

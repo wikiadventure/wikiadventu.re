@@ -11,10 +11,5 @@
   filter: drop-shadow(2px 2px 3px black);
 }
 </style>
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'ExitBtn',
-});
+<script lang="ts" setup>
 </script>

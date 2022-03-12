@@ -10,16 +10,6 @@
   }
 }
 </style>
-<script lang="ts">
+<script lang="ts" setup>
 import { connecting } from 'store/connect/state';
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'ConnectBtn',
-  setup() {
-    return {
-      connecting
-    }
-  }
-});
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <q-input class="pseudo-input" outlined v-model="pseudo" :label="t('input.pseudo')"
+  <q-input class="pseudo-input" outlined v-model="pseudo" :label="t('pseudo')"
           name="pseudo" spellcheck="false" :dense="$q.screen.lt.sm"
           v-bind="$attrs"
           >
@@ -22,25 +22,19 @@
   }
 }
 </style>
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script lang="ts" setup>
 import { connectSetup } from 'store/connect'
 import { useI18n } from 'vue-i18n';
 
-export default defineComponent({
-  name: 'PseudoInput',
-  setup() {
-    const { t } = useI18n({ useScope: 'global' });
-    var {
-      pseudo,
-      randomizePseudo
-    } = connectSetup();
-    
-    return {
-      pseudo,
-      randomizePseudo,
-      t
-    }
-  }
-});
+const { t } = useI18n({ useScope: 'local' });
+const {
+  pseudo,
+  randomizePseudo
+} = connectSetup();
 </script>
+<i18n lang="yaml">
+  en:
+    pseudo: "Pseudo"
+  fr:
+    pseudo: "Pseudo"
+</i18n>

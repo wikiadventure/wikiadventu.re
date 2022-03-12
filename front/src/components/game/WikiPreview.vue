@@ -61,21 +61,18 @@
   }
 }
 </style>
-<script lang="ts">
+<script lang="ts" setup>
 import { WikiPreview } from 'store/vote/type';
-import { defineComponent, PropType } from 'vue';
+import { PropType } from 'vue';
 
-export default defineComponent({
-  name: "WikiPreview",
-  props: {
-    wikiPreview: {
-      type: Object as PropType<WikiPreview>,
-      required: true
-    },
-    beforeTitle: {
-      type: String,
-      default: ''
-    }
+defineProps({
+  wikiPreview: {
+    type: Object as PropType<WikiPreview>,
+    required: true
+  },
+  beforeTitle: {
+    type: String,
+    default: ''
   }
-})
+});
 </script>

@@ -6,7 +6,7 @@
             size="lg"
             color="black">
     <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-      {{ t("settingTab.safeModeTooltip") }}
+      {{ t("safeModeTooltip") }}
     </q-tooltip>
   </q-toggle>
 </template>
@@ -21,19 +21,15 @@
   }
 }
 </style>
-<script lang="ts">
+<script lang="ts" setup>
 import { safeMode } from 'store/setting/state';
-import { defineComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-export default defineComponent({
-  name: 'SafeModeSwitch',
-  setup() {
-    const { t } = useI18n({ useScope: 'global' });
-    return {
-      safeMode,
-      t
-    }
-  }
-});
+const { t } = useI18n({ useScope: 'global' });
 </script>
+<i18n lang="yaml">
+  en:
+    safeModeTooltip: "SafeMode will blur image of wikipedia, you can unblur image for the current page with ctrl + alt + Q"
+  fr:
+    safeModeTooltip: "SafeMode vas flouter les images de wikipédia, vous pouvez les défloutés pour la page en cours avec ctrl + alt + Q"
+</i18n>

@@ -33,14 +33,9 @@
     text-align: center;
 }
 </style>
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'ContentPannel',
-  props: {
+<script lang="ts" setup>
+defineProps({
     head: String,
     subhead: String,
-  }
 });
 </script>
