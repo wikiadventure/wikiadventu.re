@@ -17,11 +17,19 @@
   }
 }
 </style>
-<script lang="ts" setup>
+<script lang="ts">
 import { Dark } from 'quasar';
-import { computed } from "vue";
-const theme = computed(() => ({
-  get() { return Dark.isActive },
-  set(v:boolean) { Dark.set(v) }
-}));
+export default {
+name: 'ThemeSwitch',
+computed: {
+    theme: {
+      get() {
+        return Dark.isActive;
+      },
+      set(v:boolean) {
+        Dark.set(v);
+      }
+    }
+  },
+};
 </script>
