@@ -6,21 +6,18 @@
       </label>
       <q-tab-panels keep-alive class="content" v-model="gameMenuTab" animated>
 
-        <q-tab-panel name="chat" class="q-pa-none">
+        <!-- <q-tab-panel name="chat" class="q-pa-none">
           <chat-tab ref="chatTab" />
-        </q-tab-panel>
+        </q-tab-panel> -->
+        <chat-tab name="chat" ref="chatTab" />
 
-        <q-tab-panel name="score" class="q-pa-none">
-          <score-tab ref="scoreTab" />
-        </q-tab-panel>
+        <score-tab name="score" ref="scoreTab" />
 
         <q-tab-panel name="game" class="q-pa-none">
           <slot name="gameTab"></slot>
         </q-tab-panel>
         
-        <q-tab-panel name="setting" class="q-pa-none">
-          <setting-tab ref="settingTab" />
-        </q-tab-panel>
+        <setting-tab name="setting" ref="settingTab" />
 
         <slot name="extraTab"></slot>
 
@@ -113,33 +110,16 @@
   }
 }
 </style>
-<script lang="ts">
+<script lang="ts" setup>
 import ChatTab from './tab/Chat.vue';
-import GameTab from './tab/game/Classic.vue';
 import ScoreTab from './tab/Score.vue';
 import SettingTab from './tab/Setting.vue';
-
-import { defineComponent } from 'vue';
 import { gameLayoutManagerSetup } from 'store/gameLayoutManager';
 import { unseenMessagesNumber } from 'store/chat/computed'
 import { seenMessages } from 'store/chat/state';
 
-export default defineComponent({
-  name: 'SlideMenu',
-  components: { ChatTab, GameTab, ScoreTab, SettingTab },
-  setup() {
-    
-    var {
-      showGameMenu,
-      gameMenuTab
-    } = gameLayoutManagerSetup();
-    
-    return {
-      showGameMenu,
-      gameMenuTab,
-      seenMessages,
-      unseenMessagesNumber
-    }
-  }
-});
+const {
+  showGameMenu,
+  gameMenuTab
+} = gameLayoutManagerSetup();
 </script>

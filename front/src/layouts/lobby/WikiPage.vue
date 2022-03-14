@@ -257,3 +257,10 @@ defineExpose({
 })
 
 </script>
+<i18n lang="yaml">
+  en:
+    noEndPageYet: "No End Page yet"
+    tips: "Tips"
+    tipsContent: "You can open the game menu with top left button or with ctrl + alt + shift. You can also open the end page with ctrl + alt + space"
+    tipsContentMobile: "You can open the game menu with top left button or by swiping to the right. You can also open the end page by swiping to the left."
+</i18n>

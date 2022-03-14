@@ -1,7 +1,8 @@
 <template>
-  <div class="score-tab">
-    <h3 class="row items-baseline justify-evenly q-my-xs">{{ t('scoreTab.title') }}</h3>
-    <div class="row items-baseline justify-evenly"><q-btn class="action-btn" push :label="t('scoreTab.leaderboard')" icon="mdi-format-list-bulleted" @click="showLeaderboard = !showLeaderboard"/></div>
+  <q-tab-panel name="score" class="score-tab">
+    <h3 class="row items-baseline justify-evenly q-my-xs">{{ t('score') }}</h3>
+    <!--TODO: move leaderboard button to component-->
+    <div class="row items-baseline justify-evenly"><q-btn class="action-btn" push :label="t('leaderboard')" icon="mdi-format-list-bulleted" @click="showLeaderboard = !showLeaderboard"/></div>
     <q-separator spaced="md"/>
     <q-list separator>
       <q-item v-for="player in playersByScore" :key="player.id">
@@ -13,10 +14,11 @@
         <q-item-section>{{ player.score }}</q-item-section>
       </q-item>
     </q-list>
-  </div>
+  </q-tab-panel>
 </template>
 <style lang="scss">
 .score-tab {
+  padding: 0;
   .self, .owner {
     color: var(--clr-contrast)!important;
   }
@@ -25,29 +27,23 @@
   }
 }
 </style>
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
 import { showLeaderboard } from 'store/gameLayoutManager/state';
 import { playerSetup } from 'store/player';
 import { useI18n } from 'vue-i18n';
 
-export default defineComponent({
-  name: 'ScoreTab',
-  setup() {
-    const { t } = useI18n({ useScope: 'global' });
-    const {
-      playersByScore,
-      ownerId,
-      selfId
-    } = playerSetup();
-
-    return {
-      showLeaderboard,
-      playersByScore,
-      ownerId,
-      selfId,
-      t
-    }
-  }
-});
+const { t } = useI18n({ useScope: 'global' });
+const {
+  playersByScore,
+  ownerId,
+  selfId
+} = playerSetup();
 </script>
+<i18n lang="yaml">
+  en:
+    score: "Score"
+    leaderboard: "Leaderboard"
+  fr:
+    send: "Scores"
+    leaderboard: "Classement"
+</i18n>

@@ -180,21 +180,8 @@
     }
 }
 </style>
-<script lang="ts">
+<script lang="ts" setup>
 import ExitBtn from 'src/components/ExitButton.vue';
 import { showLeaderboard } from 'store/gameLayoutManager/state';
 import { playersByScore } from 'store/player/computed';
-
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'Leaderboard',
-  components: { ExitBtn },
-  setup() {
-    return {
-      showLeaderboard,
-      playersByScore
-    }
-  }
-});
 </script>

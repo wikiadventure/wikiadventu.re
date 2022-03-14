@@ -17,6 +17,7 @@
       <div class="wait-action justify-evenly">
         <q-btn push class="action-btn-alt" :label="t('invite')" @click="invite()" icon="mdi-link-variant"/>
         <div><!--Only to display tooltip over the disabled q btn -->
+        <!--TODO: translate this -->
           <q-btn :disable="!isOwner" push class="action-btn-alt" :label="t('start')" @click="sendStart()" icon="mdi-check-bold"/>
           <q-tooltip v-if="!isOwner"  anchor="top middle" self="bottom middle" :offset="[10, 10]">
             Only <q-icon size="xs" class="owner" name="mdi-crown"/> {{ owner?.pseudo }} can choose to start
@@ -91,57 +92,23 @@
   }
 }
 </style>
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { copyToClipboard, Notify } from 'quasar';
+<script lang="ts" setup>
 import { playerSetup } from 'store/player';
 import { slot } from 'store/lobby/state';
 import { useI18n } from 'vue-i18n';
 import { sendStart } from 'store/ws/packetSender/vanilla/start';
+import { CopyToClipboard } from 'store/utils/CopyToClipboard';
 
-export default defineComponent({
-  name: 'Wait',
-  setup() {
-    const { t } = useI18n({ useScope: 'global' });
-    var {
-      players,
-      selfId,
-      ownerId,
-      owner,
-      isOwner
-    } = playerSetup();
+const { t } = useI18n({ useScope: 'global' });
 
-    function invite() {
-      copyToClipboard(window.location.href)
-      .then(() => {
-        Notify.create({
-          type: 'annonce',
-          position: 'bottom-right',
-          timeout: 1000,
-          message: t('copySuccess')
-        });
-      })
-      .catch(() => {
-        Notify.create({
-          type: 'error',
-          position: 'bottom-right',
-          timeout: 1000,
-          message: t('copyFail')
-        });
-      });
-    }
+const {
+  players,
+  selfId,
+  ownerId,
+  owner,
+  isOwner
+} = playerSetup();
 
-    return {
-      players,
-      selfId,
-      ownerId,
-      owner,
-      isOwner,
-      slot,
-      invite,
-      sendStart,
-      t
-    }
-  }
-});
+const invite = () => CopyToClipboard(window.location.href);
+
 </script>

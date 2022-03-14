@@ -5,22 +5,11 @@
     </template>
   </slide-menu>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
 import Random from './tab/game/Random.vue';
 import SlideMenu from './slideMenu.vue';
+import { ref } from 'vue';
 
-import { defineComponent, ref } from 'vue';
-
-export default defineComponent({
-  name: 'RandomSlideMenu',
-  components: { SlideMenu, Random },
-    setup() {
-    const menu = ref<InstanceType<typeof SlideMenu>>();
-    const tab = ref<InstanceType<typeof Random>>();
-    return {
-      menu,
-      tab
-    }
-  }
-});
+const menu = ref<InstanceType<typeof SlideMenu>>();
+const tab = ref<InstanceType<typeof Random>>();
 </script>

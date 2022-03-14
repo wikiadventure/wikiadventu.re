@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-tab">
+  <q-tab-panel name="chat" class="chat-tab">
     <q-list class="chatOutput" bordered padding>
       <q-item v-for="mes in messages" :key="mes.playerID" class="q-pa-none">
         <q-item-section>
@@ -12,19 +12,20 @@
       </q-item>
     </q-list>
     <q-form class="chatForm">
-      <q-input dense class="chatInput" maxlength="512" outlined v-model="messageInput" @keydown.enter.prevent="submitMessage()" :label="t('chatTab.send')">
+      <q-input dense class="chatInput" maxlength="512" outlined v-model="messageInput" @keydown.enter.prevent="submitMessage()" :label="t('send')">
         <template v-slot:after>
           <q-btn round dense flat icon="mdi-send" class="chatSubmit" @click="submitMessage()"/>
         </template>
       </q-input>
     </q-form>
-  </div>
+  </q-tab-panel>
 </template>
 <style lang="scss">
 .chat-tab {
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding: 0;
 }
 .chatOutput {
   overflow: auto scroll;
@@ -62,10 +63,9 @@
   }
 }
 </style>
-<script lang="ts">
+<script lang="ts" setup>
 import { date } from 'quasar';
-
-import { defineComponent, onUnmounted } from 'vue';
+import { onUnmounted } from 'vue';
 import { onMessage, WsMessage } from 'store/ws/packetHandler/vanilla/message';
 import { notifSound } from 'store/audio/vanilla/notif';
 import { gameMenuTab, showGameMenu } from 'store/gameLayoutManager/state';
@@ -73,41 +73,36 @@ import { chatSetup } from 'store/chat';
 import { players } from 'store/player/state';
 import { useI18n } from 'vue-i18n';
 
-export default defineComponent({
-  name: 'ChatTab',
-  setup() {
-    const { t } = useI18n({ useScope: 'global' });
-    function messageEvent(payload:WsMessage) {
-      if (!(showGameMenu.value && gameMenuTab.value == "chat")) {
-        notifSound.play();
-      } 
-    }
-    var unsubMessage =  onMessage.subscribe(messageEvent);
+const { t } = useI18n({ useScope: 'local' });
 
-    onUnmounted(unsubMessage);
+function messageEvent(payload:WsMessage) {
+  if (!(showGameMenu.value && gameMenuTab.value == "chat")) {
+    notifSound.play();
+  } 
+}
 
-    function getPseudo(id:number) {
-      return id == -1 ? "" : players.value.find(p=>p.id==id)?.pseudo || "";
-    }
+const unsubMessage =  onMessage.subscribe(messageEvent);
 
-    function getFormatTime(timeStamp:number):string {
-      return date.formatDate(timeStamp, 'HH:mm');
-    }
-    
-    var {
-      messages,
-      messageInput,
-      submitMessage
-    } = chatSetup();
+onUnmounted(unsubMessage);
 
-    return {
-      messages,
-      messageInput,
-      submitMessage,
-      getPseudo,
-      getFormatTime,
-      t
-    }
-  }
-});
+function getPseudo(id:number) {
+  return id == -1 ? "" : players.value.find(p=>p.id==id)?.pseudo || "";
+}
+
+function getFormatTime(timeStamp:number):string {
+  return date.formatDate(timeStamp, 'HH:mm');
+}
+
+const {
+  messages,
+  messageInput,
+  submitMessage
+} = chatSetup();
 </script>
+<i18n lang="yaml">
+  en:
+    send: "Send a message"
+  fr:
+    send: "Envoyer un message"
+</i18n>
+

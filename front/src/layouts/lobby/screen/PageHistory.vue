@@ -2,6 +2,7 @@
   <div class="page-history row justify-center absolute-full">
     <div class="page-history-container shadow-6">
       <exit-btn @click="showPageHistory = false"/>
+      <!--TODO: Translation-->
       <div class="page-history-title justify-center">
         {{ winner?.pseudo || "no winner Yet" }}
       </div>
@@ -71,27 +72,23 @@
   }
 }
 </style>
-<script lang="ts">
+<script lang="ts" setup>
 import ExitBtn from 'src/components/ExitButton.vue';
-
-import { defineComponent } from 'vue';
 import { showPageHistory } from 'store/gameLayoutManager/state';
 import { winnerPageHistory } from 'store/player/state';
 import { playerSetup } from 'store/player';
+import { useI18n } from 'vue-i18n';
 
-export default defineComponent({
-  name: 'PageHistory',
-  components: { ExitBtn },
-  setup() {
-    var {
-      winner,
-      winnerPageHistory
-    } = playerSetup();
-    return {
-      showPageHistory,
-      winner,
-      winnerPageHistory
-    }
-  }
-});
+const { t } = useI18n({ useScope: 'local' });
+
+const {
+  winner,
+  winnerPageHistory
+} = playerSetup();
 </script>
+<i18n lang="yaml">
+  en:
+    noWinnerYet: "No winner yet!"
+  fr:
+    noWinnerYet: "Pas encore de gagnant!"
+</i18n>
