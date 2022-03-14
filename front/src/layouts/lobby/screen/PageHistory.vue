@@ -4,7 +4,7 @@
       <exit-btn @click="showPageHistory = false"/>
       <!--TODO: Translation-->
       <div class="page-history-title justify-center">
-        {{ winner?.pseudo || "no winner Yet" }}
+        {{ winner?.pseudo || t('noWinnerYet') }}
       </div>
       <q-separator/>
       <div class="page-history-page">
@@ -75,7 +75,6 @@
 <script lang="ts" setup>
 import ExitBtn from 'src/components/ExitButton.vue';
 import { showPageHistory } from 'store/gameLayoutManager/state';
-import { winnerPageHistory } from 'store/player/state';
 import { playerSetup } from 'store/player';
 import { useI18n } from 'vue-i18n';
 

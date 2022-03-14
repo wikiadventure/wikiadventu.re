@@ -99,7 +99,7 @@ import { useI18n } from 'vue-i18n';
 import { sendStart } from 'store/ws/packetSender/vanilla/start';
 import { CopyToClipboard } from 'store/utils/CopyToClipboard';
 
-const { t } = useI18n({ useScope: 'global' });
+const { t } = useI18n({ useScope: 'local' });
 
 const {
   players,
@@ -110,5 +110,12 @@ const {
 } = playerSetup();
 
 const invite = () => CopyToClipboard(window.location.href);
-
 </script>
+<i18n lang="yaml">
+  en:
+    invite: "invite"
+    start: "start"
+  fr:
+    invite: "inviter"
+    start: "commencer"
+</i18n>
