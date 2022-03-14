@@ -17,9 +17,13 @@
   }
 }
 </style>
+
+
 <script lang="ts">
 import { Dark } from 'quasar';
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
 name: 'ThemeSwitch',
 computed: {
     theme: {
@@ -30,6 +34,6 @@ computed: {
         Dark.set(v);
       }
     }
-  },
-};
+  }
+});
 </script>
