@@ -1,5 +1,5 @@
 <template>
-    <q-btn icon="mdi-close" round class="exit-btn q-ma-xs" size="xs" v-bind="$attrs"></q-btn>
+    <q-btn icon="mdi-close" round class="exit-btn q-ma-xs" size="xs" v-bind="$attrs"/>
 </template>
 <style>
 .exit-btn {
