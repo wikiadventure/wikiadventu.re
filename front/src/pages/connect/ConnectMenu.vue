@@ -118,12 +118,6 @@
   }
 }
 </style>
-<script lang="ts">
-export default {
-name: 'ConnectMenu',
-};
-</script>
-
 <script lang="ts" setup>
 import PrivateCreate from './tab/PrivateCreate.vue';
 import PrivateJoin from './tab/PrivateJoin.vue';
