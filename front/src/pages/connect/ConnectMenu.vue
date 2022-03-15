@@ -119,6 +119,12 @@
 }
 </style>
 <script lang="ts">
+export default {
+name: 'ConnectMenu',
+};
+</script>
+
+<script lang="ts" setup>
 import PrivateCreate from './tab/PrivateCreate.vue';
 import PrivateJoin from './tab/PrivateJoin.vue';
 import PublicJoin from './tab/PublicJoin.vue';
@@ -127,8 +133,7 @@ import TwitchJoin from './tab/TwitchJoin.vue';
 import Index from './tab/Index.vue';
 import { useRoute } from "vue-router";
 import { ErrorCode, InfoStatus, InfoResponse, isSucess } from "store/connect/type";
-
-import { defineComponent, ref } from 'vue';
+import { ref } from 'vue';
 import { LobbyType } from 'store/lobby/type';
 import { Notify } from 'quasar';
 import { id } from 'store/connect/state';
@@ -136,55 +141,64 @@ import { twitchName } from 'store/connect/twitch/state';
 import { notifyError } from 'store/connect/action';
 import { useI18n } from 'vue-i18n';
 
-export default defineComponent({
-  name: 'ConnectMenu',
-  components: { PrivateCreate, PrivateJoin, PublicJoin, TwitchCreate, TwitchJoin, Index },
-  setup() {
-    const tab = ref('Home');
-    const privateTab = ref('PrivateCreate');
-    const twitchTab = ref('TwitchCreate');
-    //check if the lobby provided in the url exist, auto complete field and switch to correct tab
-    const route = useRoute();
-    const { t } = useI18n({ useScope: 'global' });
-    const vm = this;
-    if (route.params.id != undefined) {
-      const isTwitch = route.path.startsWith("/twitchConnect/")
-      fetch('/api/info/'+(isTwitch ? "twitch:":"")+ route.params.id)
-        .then(r=> r.json())
-        .then((res:InfoResponse<unknown>) => {
-          if (isSucess(res)) {
-            if ([LobbyType.Public, LobbyType.Private].includes(res.lobbyType)) {
-              id.value = res.lobbyID;
-              if (res.lobbyType == LobbyType.Public) {
-                tab.value = "PublicJoin";
-              } else if (res.lobbyType == LobbyType.Private) {
-                tab.value = "Private";
-                privateTab.value = "PrivateJoin";
-              }
-            } else if (res.lobbyType == LobbyType.Twitch) {
-              twitchName.value = res.lobbyID
-              tab.value = "Twitch";
-              twitchTab.value = "TwitchJoin";
-            }
-          } else {
-            if (res.status == InfoStatus.NotFound) {
-              Notify.create({
-                type: 'negative',
-                position: 'top',
-                message: t('connectError.'+(isTwitch ? 'noLobbyFoundWithChannelName' : 'noLobbyFoundWithID')) + ' ' + id.value
-              });
-            }
+const route = useRoute();
+const { t } = useI18n({ useScope: 'local' });
+
+const tab = ref('Home');
+const privateTab = ref('PrivateCreate');
+const twitchTab = ref('TwitchCreate');
+
+/**
+ * check if the lobby provided in the url exist, auto complete field and switch to correct tab
+ */
+
+if (route.params.id != undefined) {
+  const isTwitch = route.path.startsWith("/twitchConnect/")
+  fetch('/api/info/'+(isTwitch ? "twitch:":"")+ route.params.id)
+    .then(r=> r.json())
+    .then((res:InfoResponse<unknown>) => {
+      if (isSucess(res)) {
+        if ([LobbyType.Public, LobbyType.Private].includes(res.lobbyType)) {
+          id.value = res.lobbyID;
+          if (res.lobbyType == LobbyType.Public) {
+            tab.value = "PublicJoin";
+          } else if (res.lobbyType == LobbyType.Private) {
+            tab.value = "Private";
+            privateTab.value = "PrivateJoin";
           }
-      }).catch(e => {
-        notifyError(ErrorCode.noInternet, e);
-      });
-    }
-    return {
-      tab,
-      privateTab,
-      twitchTab,
-      t
-    }
-  }
-});
+        } else if (res.lobbyType == LobbyType.Twitch) {
+          twitchName.value = res.lobbyID
+          tab.value = "Twitch";
+          twitchTab.value = "TwitchJoin";
+        }
+      } else {
+        if (res.status == InfoStatus.NotFound) {
+          Notify.create({
+            type: 'negative',
+            position: 'top',
+            message: t('connectError.'+(isTwitch ? 'noLobbyFoundWithChannelName' : 'noLobbyFoundWithID')) + ' ' + id.value
+          });
+        }
+      }
+  }).catch(e => {
+    notifyError(ErrorCode.noInternet, e);
+  });
+}
 </script>
+<i18n lang="yaml">
+  en:
+    home: "Home"
+    publicLobby: "Public party"
+    privateLobby: "Private party"
+    twitchLobby: "Twitch party"
+    create: "Create"
+    join: "Join"
+  fr:
+    home: "Accueil"
+    publicLobby: "Partie publique"
+    privateLobby: "Partie privée"
+    twitchLobby: "Partie Twitch"
+    create: "Créer"
+    join: "Rejoindre"
+</i18n>
+
