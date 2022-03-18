@@ -70,7 +70,7 @@ export default class WikiArticle {
 
   formatHTML(html:string) {
     this.doc = new DOMParser().parseFromString(html, 'text/html');
-    const selectors = '.navbox, .ambox, .sistersitebox, .mw-empty-elt';
+    const selectors = '.navbox, .navbar, .ambox, .sistersitebox, .mw-empty-elt';
     const elementsToRemove = [...this.doc.querySelectorAll(selectors)];
     elementsToRemove.forEach(e => e.parentElement!.removeChild(e));
   }

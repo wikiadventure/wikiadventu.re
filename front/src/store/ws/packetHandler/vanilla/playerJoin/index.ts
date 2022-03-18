@@ -19,7 +19,7 @@ export function canProcess(p:Packet<unknown>): p is Packet<WsPlayerJoin> {
 }
 
 export async function process(p:WsPlayerJoin) {
-    var player:Player<unknown> = {
+    const player:Player = {
         pseudo: p.pseudo,
         id: p.id,
         score: p.score,
