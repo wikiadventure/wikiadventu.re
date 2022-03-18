@@ -76,8 +76,8 @@ watch(voteInput, v=>loadInputSuggestions(v));
 const input = ref<HTMLElement>();
 //the set time out is a hack to prevent vue from remove (v-if) the suggestions before it handle the click event on it
 //nextTick don't work for some reason
-function unfocus(){setTimeout(() => voteInputFocus.value = false,250)};
-function blur(){input.value?.blur()};
+function unfocus(){setTimeout(() => voteInputFocus.value = false,250)}
+function blur(){input.value?.blur()}
 </script>
 <i18n lang="yaml">
   en:
