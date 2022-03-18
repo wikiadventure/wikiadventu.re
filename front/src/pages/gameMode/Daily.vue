@@ -11,7 +11,6 @@
             ref="wikiEndPage"
             class="right-panel"
             :class="{ 'hideEndPage': !showWikiEndPage }"
-            endPage
         >
             <exit-btn class="q-ma-md" @click="showWikiEndPage = false" />
         </wiki-page>
@@ -57,7 +56,7 @@ import { lang as connectLang } from 'store/connect/state';
 import { useRouter } from "vue-router";
 import { notifyError } from 'store/connect/action';
 
-const { t } = useI18n({ useScope: 'global' });
+const { t } = useI18n({ useScope: 'local' });
 var $q = useQuasar();
 const router = useRouter();
 
@@ -125,9 +124,8 @@ function start() {
 onMounted(() => {
     touchSurfaceHandler = new TouchSurfaceHandler(document.documentElement, undefined, showWikiEndPage, undefined, wikiEndPage.value?.$el);
     if (!wikiPage.value || !wikiEndPage.value) return;
-    wikiPage.value.title = t("wikiPage.tipsTitle");
-    wikiPage.value.content = t("wikiPage.tipsContent" + ($q.platform.is.mobile ? "Mobile" : ""));
-    wikiEndPage.value.title = t("wikiPage.noEndPageYet");
+    wikiPage.value.setTips();
+    wikiEndPage.value.setNoEndPage();
 
 });
 
@@ -137,3 +135,11 @@ onUnmounted(() => {
 });
 
 </script>
+<i18n lang="yaml">
+  en:
+    start: "Start"
+    noDaily: "No daily available for this language"
+  fr:
+    start: "Commencer"
+    noDaily: "Pas de daily disponible pour cette langue"
+</i18n>

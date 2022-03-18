@@ -30,7 +30,7 @@ import RoundWin from 'src/layouts/lobby/screen/RoundWin.vue';
 import Leaderboard from 'src/layouts/lobby/screen/Leaderboard.vue';
 import Wait from 'src/layouts/lobby/screen/Wait.vue';
 import PageHistory from 'src/layouts/lobby/screen/PageHistory.vue';
-import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { Notify, useQuasar } from 'quasar';
 import { gameLayoutManagerSetup } from 'store/gameLayoutManager';
 import { VanillaPhaseType } from 'store/lobby/game/phase/type';
@@ -144,21 +144,15 @@ var touchSurfaceHandler: TouchSurfaceHandler;
 onMounted(() => {
   touchSurfaceHandler = new TouchSurfaceHandler(document.documentElement, showGameMenu, showWikiEndPage, game.value?.menu?.$el as any, wikiEndPage.value?.$el);
   if (!wikiPage.value || !wikiEndPage.value) return;
-  wikiPage.value.onWikiLink
-  wikiPage.value.title = t("wikiPage.tipsTitle");
-  wikiPage.value.content = t("wikiPage.tipsContent" + ($q.platform.is.mobile ? "Mobile" : ""));
-  wikiEndPage.value.title = t("wikiPage.noEndPageYet");
+  wikiPage.value.setTips();
+  wikiEndPage.value.setNoEndPage();
 });
 
 onUnmounted(() => {
   touchSurfaceHandler.destroy();
-        touchSurfaceHandler.destroy();   
-  touchSurfaceHandler.destroy();
   unsubGamePhase();
   unsubWinRound();
   unsubVoteResult();
-  unsubRollback();
-        unsubRollback();  
   unsubRollback();
 });
 </script>

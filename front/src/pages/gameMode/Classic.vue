@@ -2,13 +2,24 @@
   <div class="game-mode-classic absolute-full">
     <wait v-if="gamePhase == 0" />
     <wiki-page ref="wikiPage" v-else />
-    <wiki-page ref="wikiEndPage" class="right-panel" :class="{ 'hideEndPage': !showWikiEndPage }" endPage>
-      <exit-btn class="q-ma-md" @click="showWikiEndPage = false"/>
+    <wiki-page
+      ref="wikiEndPage"
+      class="right-panel"
+      :class="{ 'hideEndPage': !showWikiEndPage }"
+      endPage
+    >
+      <exit-btn class="q-ma-md" @click="showWikiEndPage = false" />
     </wiki-page>
-    <transition name="fade"><page-history v-show="showPageHistory" /></transition>
-    <transition name="fade"><leaderboard v-show="showLeaderboard" /></transition>
-    <transition name="fade"><round-win v-show="showRoundWin" /></transition>
-    <classic-slide-menu ref="game"/>
+    <transition name="fade">
+      <page-history v-show="showPageHistory" />
+    </transition>
+    <transition name="fade">
+      <leaderboard v-show="showLeaderboard" />
+    </transition>
+    <transition name="fade">
+      <round-win v-show="showRoundWin" />
+    </transition>
+    <classic-slide-menu ref="game" />
   </div>
 </template>
 <style lang="scss">
@@ -20,7 +31,7 @@
   filter: drop-shadow(3px 3px 15px black);
 }
 .hideEndPage {
-  transform: translate3d(100%,0,0);
+  transform: translate3d(100%, 0, 0);
 }
 </style>
 <script lang="ts" setup>
@@ -31,7 +42,7 @@ import RoundWin from 'src/layouts/lobby/screen/RoundWin.vue';
 import Leaderboard from 'src/layouts/lobby/screen/Leaderboard.vue';
 import Wait from 'src/layouts/lobby/screen/Wait.vue';
 import PageHistory from 'src/layouts/lobby/screen/PageHistory.vue';
-import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { Notify, useQuasar } from 'quasar';
 import { gameLayoutManagerSetup } from 'store/gameLayoutManager';
 import { VanillaPhaseType } from 'store/lobby/game/phase/type';
@@ -53,7 +64,6 @@ import { setOwnerHandler } from 'store/ws/packetHandler/vanilla/setOwner';
 import { updateScoreHandler } from 'store/ws/packetHandler/vanilla/updateScore';
 import { voteSkipHandler } from 'store/ws/packetHandler/vanilla/voteSkip';
 import { sendValidate } from 'store/ws/packetSender/vanilla/validate';
-import type WikiPageType from 'src/layouts/lobby/WikiPage.vue';
 
 PacketHandlers.splice(0, PacketHandlers.length);
 PacketHandlers.push(
@@ -71,7 +81,7 @@ PacketHandlers.push(
 
 connect();
 const { t } = useI18n({ useScope: 'global' });
-var $q = useQuasar();
+const $q = useQuasar();
 const {
   showGameMenu,
   showRoundWin,
@@ -128,6 +138,7 @@ const unsubWinRound = onWinRound.subscribe(winRoundEvent);
 function voteResultEvent(payload: WsVoteResult) {
   wikiPage.value?.requestWikiPage(payload.start);
   wikiEndPage.value?.requestWikiPage(payload.end);
+  //TODO: move out from notify to create a custom pop up
   Notify.create({
     type: 'annonce',
     position: 'top',
@@ -153,25 +164,15 @@ var touchSurfaceHandler: TouchSurfaceHandler;
 onMounted(() => {
   touchSurfaceHandler = new TouchSurfaceHandler(document.documentElement, showGameMenu, showWikiEndPage, game.value?.menu?.$el as any, wikiEndPage.value?.$el);
   if (!wikiPage.value || !wikiEndPage.value) return;
-  wikiPage.value.onWikiLink = sendValidate
-  wikiPage.value.title = t("wikiPage.tipsTitle");
-  wikiPage.value.content = t("wikiPage.tipsContent" + ($q.platform.is.mobile ? "Mobile" : ""));
-  wikiEndPage.value.title = t("wikiPage.noEndPageYet");
+  wikiPage.value.setTips();
+  wikiEndPage.value.setNoEndPage();
 });
 
 onUnmounted(() => {
   touchSurfaceHandler.destroy();
-        touchSurfaceHandler.destroy();   
-  touchSurfaceHandler.destroy();
-        touchSurfaceHandler.destroy();   
-  touchSurfaceHandler.destroy();
   unsubGamePhase();
   unsubWinRound();
   unsubVoteResult();
-  unsubRollback();
-        unsubRollback();  
-  unsubRollback();
-        unsubRollback();  
   unsubRollback();
 });
 </script>

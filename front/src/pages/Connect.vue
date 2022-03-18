@@ -3,13 +3,6 @@
 </template>
 <style>
 </style>
-<script lang="ts">
+<script lang="ts" setup>
 import ConnectMenu from './connect/ConnectMenu.vue';
-
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'Connect',
-  components: { ConnectMenu }
-});
 </script>

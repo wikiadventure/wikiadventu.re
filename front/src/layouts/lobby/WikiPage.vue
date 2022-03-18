@@ -132,6 +132,9 @@ import { scrollToID } from 'src/script/scrollToID';
 import { settingSetup } from 'store/setting';
 import { lang } from 'store/lobby/state';
 import { Notify, useMeta, useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n({ useScope: 'local' });
 
 const props = defineProps({
   disabled: Boolean,
@@ -250,8 +253,20 @@ function scrollToAnchor(id: string) {
   scrollToID(id, wiki.value);
 }
 
+function setTips() {
+  title.value = t("tips");
+  content.value = t("tipsContent" + ($q.platform.is.mobile ? "Mobile" : ""));
+  
+}
+
+function setNoEndPage() {
+  title.value = t("noEndPageYet");  
+}
+
 defineExpose({
   requestWikiPage,
+  setTips,
+  setNoEndPage,
   title,
   content
 })
@@ -263,4 +278,6 @@ defineExpose({
     tips: "Tips"
     tipsContent: "You can open the game menu with top left button or with ctrl + alt + shift. You can also open the end page with ctrl + alt + space"
     tipsContentMobile: "You can open the game menu with top left button or by swiping to the right. You can also open the end page by swiping to the left."
+  fr:
+
 </i18n>

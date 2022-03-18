@@ -32,21 +32,18 @@
 }
 
 </style>
-<script lang="ts">
-/**
- * @todo Make a custom error page 
- * @body The error page should follow the design of the connection page
- */
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
 import { useI18n } from 'vue-i18n';
 
-export default defineComponent({
-  name: 'Error404',
-  setup() {
-    const { t } = useI18n({ useScope: 'global' });
-    return {
-      t
-    }
-  }
-});
+const { t } = useI18n({ useScope: 'local' });
 </script>
+<i18n lang="yaml">
+  en:
+    error404: 
+      content: "Hey! How did you get here? There is nothing to see. You should return home."
+      button: "Home"
+  fr:
+    error 404: 
+      content: "Hey! Comment est vous arrivé là? Il n'y a rien à voir. Vous devriez retourner à l'accueil."
+      button: "Accueil"
+</i18n>

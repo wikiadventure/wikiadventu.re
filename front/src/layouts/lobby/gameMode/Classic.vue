@@ -12,4 +12,9 @@ import { ref } from 'vue';
 
 const menu = ref<InstanceType<typeof SlideMenu>>();
 const tab = ref<InstanceType<typeof Classic>>();
+
+defineExpose({
+  menu,
+  tab
+})
 </script>
