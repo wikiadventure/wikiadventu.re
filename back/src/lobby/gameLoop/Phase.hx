@@ -9,7 +9,6 @@ using lobby.player.PlayersExtension;
 using lobby.packet.emitter.vanilla.GamePhase.GamePhaseEmitter;
 using Lambda;
 
-@:build(hxasync.AsyncMacro.build())
 class Phase {
 
     public var lobby:Lobby;
@@ -18,25 +17,27 @@ class Phase {
     
     public var type:PhaseType;
     
-    @async public function start() {
+    public function start(?data:Any):Promise<Any> {
         lobby.players.iter(function(p:Player) {p.voteSkip = false;});
         lobby.gameLoop.timestamp = Timer.stamp();
         lobby.players.emitGamePhase(type, lobby.gameLoop.currentRound, duration);
         lobby.log("New phase init : " + type +"|" + lobby.gameLoop.currentRound + "|" + duration, Info);
-        @await onStart();
-        if (duration > 0) lobby.gameLoop.loop = Timers.setTimeout(end, duration*1000);
+        return onStart().then(data-> {
+            if (duration > 0) lobby.gameLoop.loop = Timers.setTimeout(end, duration*1000);
+        });
     }
-    @async public function end() {
+    public function end(?data:Any) {
         Timers.clearTimeout(lobby.gameLoop.loop);
-        var data = @await onEnd();
-        if (lobby.id != null) lobby.gameLoop.next(data);
+        return onEnd().then(data->{
+            if (lobby.id != null) lobby.gameLoop.next(data);
+        });
     }
-    @async public function onStart():Any {
-        return null;
+    public function onStart(?data:Any):Promise<Any> {
+        return Promise.resolve();
     }
 
-    @async public function onEnd():Any {
-        return null;
+    public function onEnd(?data:Any):Promise<Any> {
+        return Promise.resolve();
     }
 
     public function sendState(player:Player) {

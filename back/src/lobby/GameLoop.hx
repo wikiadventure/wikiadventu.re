@@ -1,5 +1,6 @@
 package lobby;
 
+import js.lib.Promise;
 import lobby.packet.PacketHandler;
 import lobby.packet.handler.ClientPacket;
 import response.connect.ConnectionError.ConnectError;
@@ -28,28 +29,29 @@ class GameLoop {
         packetHandlers = [];
     }
 
-    public function start(?data:Any) {
+    public function start(?data:Any):Promise<Any> {
         currentRound = 1;
-        onStart(data);
+        return onStart(data);
     }
 
-    public function onStart(?data:Any) {
-
+    public function onStart(?data:Any):Promise<Any> {
+        return Promise.resolve();
     }
-    public function end(?data:Any) {
+
+    public function end(?data:Any):Promise<Any> {
         onEnd(data);
-        start();
+        return start();
     }
-    public function onEnd(?data:Any) {
-        
+    public function onEnd(?data:Any):Promise<Any> {
+        return Promise.resolve();
     }
     /**
      * an abstract function that should start a new phase depending on the previous one
      * you can pass any data to it
      * @param data 
      */
-    public function next(?data:Any) {
-        
+    public function next(?data:Any):Promise<Any> {
+        return Promise.resolve();
     }
 
     /**

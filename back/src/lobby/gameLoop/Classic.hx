@@ -1,5 +1,6 @@
 package lobby.gameLoop;
 
+import js.lib.Promise;
 import lobby.GameLoop.PhaseDuration;
 import lobby.GameLoop.Round;
 import haxe.macro.Expr.TypeDefinition;
@@ -29,19 +30,20 @@ class Classic extends GameLoop {
 
     public override function onStart(?data:Any) {
         phase = lobby.type != Public ? new Waiting(lobby) : new Voting(lobby, voteDuration);
-        phase.start();
+        return phase.start();
     }
 
-    public override function onEnd(?data:Any) {
-    }
+    // public override function onEnd(?data:Any) {
+    // }
 
-    public override function next(?data:Any) {
-        if (lobby.players.length == 0) return;
+    public override function next(?data:Any):Promise<Any> {
+        if (lobby.players.length == 0) return Promise.resolve();
         switch phase.type {
             case VanillaPhaseType.Waiting:
                 phase = new Voting(lobby, voteDuration);
             case VanillaPhaseType.Voting:
                 var v:VoteResult = data;
+                if (v == null) return Promise.resolve();
                 phase = new Playing(v.startPage, v.endPage, lobby, playDuration);
             case VanillaPhaseType.Playing:
                 phase = new RoundFinish(lobby);
@@ -54,7 +56,10 @@ class Classic extends GameLoop {
             case VanillaPhaseType.GameFinish:
                 return end();
         }
-        if (phase != null) phase.start();
+        if (phase != null) {
+            return phase.start();
+        }
+        return Promise.resolve();
     }
 
     public override function new(lobby:Lobby, c:ClassicConfig) {

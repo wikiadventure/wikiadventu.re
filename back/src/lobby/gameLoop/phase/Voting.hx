@@ -1,5 +1,6 @@
 package lobby.gameLoop.phase;
 
+import js.lib.Promise;
 import lobby.gameLoop.Phase.VanillaPhaseType;
 import config.Lang.LangTools;
 import lobby.Lobby.LobbyType;
@@ -10,26 +11,25 @@ using lobby.player.PlayersExtension;
 using config.twitch.TwitchBotExtension;
 using Lambda;
 
-@:build(hxasync.AsyncMacro.build())
 class Voting extends Phase {
     
-    @async public override function onStart():Any {
+    public override function onStart(?data:Any) {
         if (lobby.type == Twitch) {
             var l = cast(lobby, TwitchLobby);
             l.twitchPlayerList.sayAll(LangTools.getTwitchVoteOpen(l.lang));
         }
         lobby.players.voteReset();
         lobby.players.pageHistoryReset();
-        return null;
+        return Promise.resolve();
     }
     //call the next phase with an end and start page picked from player vote
     
-    @async public override function onEnd():Any {
+    public override function onEnd(?data:Any) {
         if (lobby.type == Twitch) {
             var l = cast(lobby, TwitchLobby);
             l.twitchPlayerList.sayAll(LangTools.getTwitchVoteClose(l.lang));
         }
-        return @await WikiTools.selectPage(lobby.players.map(p -> p.vote), lobby.lang);
+        return WikiTools.selectPage(lobby.players.map(p -> p.vote), lobby.lang);
         
     }
     

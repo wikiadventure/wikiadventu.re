@@ -1,6 +1,7 @@
 package lobby.gameLoop;
 
 
+import js.lib.Promise;
 import lobby.GameLoop.Round;
 import lobby.GameLoop.PhaseDuration;
 import lobby.GameLoop.VanillaGameLoopType;
@@ -24,32 +25,34 @@ class Random extends GameLoop {
     public override function onStart(?data:Any) {
         if (lobby.type != Public) {
             phase = new Waiting(lobby);
-            phase.start();
-        } else randomPagePlaying();
+            return phase.start();
+        }
+        return randomPagePlaying();
     }
 
-    public override function onEnd(?data:Any) {
-    }
+    // public override function onEnd(?data:Any) {
+    // }
 
     public override function next(?data:Any) {
-        if (lobby.players.length == 0) return;
+        if (lobby.players.length == 0) return Promise.resolve();
         switch phase.type {
             case VanillaPhaseType.Waiting:
-                randomPagePlaying();
+                 return randomPagePlaying();
             case VanillaPhaseType.Playing:
                 phase = new RoundFinish(lobby);
-                phase.start();
+                return phase.start();
             case VanillaPhaseType.RoundFinish:
                 if (lobby.gameLoop.round >= lobby.gameLoop.currentRound) {
                     phase = new GameFinish(lobby);
-                    phase.start();
+                    return phase.start();
                 } else {
                     currentRound++;
-                    randomPagePlaying();
+                    return randomPagePlaying();
                 }
             case GameFinish:
                 return end();
         }
+        return Promise.resolve();
     }
     public function new(lobby:Lobby, c:RandomConfig) {
         super();
