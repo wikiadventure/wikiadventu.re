@@ -1,12 +1,11 @@
 <template>
   <div class="game-mode-classic absolute-full">
     <wait v-if="gamePhase == 0" />
-    <wiki-page ref="wikiPage" v-else />
+    <wiki-page ref="wikiPage" @wikiLink="onWikiLink" v-else />
     <wiki-page
       ref="wikiEndPage"
       class="right-panel"
       :class="{ 'hideEndPage': !showWikiEndPage }"
-      endPage
     >
       <exit-btn class="q-ma-md" @click="showWikiEndPage = false" />
     </wiki-page>
@@ -160,6 +159,12 @@ function rollbackEvent(payload: WsRollback) {
 const unsubRollback = onRollback.subscribe(rollbackEvent);
 
 var touchSurfaceHandler: TouchSurfaceHandler;
+
+function onWikiLink(s:string) {
+  if (gamePhase.value == VanillaPhaseType.Playing) {
+    sendValidate(s);
+  }
+}
 
 onMounted(() => {
   touchSurfaceHandler = new TouchSurfaceHandler(document.documentElement, showGameMenu, showWikiEndPage, game.value?.menu?.$el as any, wikiEndPage.value?.$el);
