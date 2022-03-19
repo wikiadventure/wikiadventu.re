@@ -9,7 +9,7 @@
         <!-- <div class="absolute-full z-top"></div> -->
         <wiki-page @wikiLink="onWikiLink" ref="wikiPage">
             <template v-slot:page>
-                <h2 class="game-mode-daily-objectif">{{ startPage }} → {{ endPage }}</h2>
+                <h2 class="game-mode-daily-objectif">{{ startPageF }} → {{ endPageF }}</h2>
             </template>
         </wiki-page>
         <wiki-page
@@ -40,7 +40,7 @@
         z-index: 2;
         position: absolute;
         top: 0;
-        right: 0;
+        left: 0;
         color: var(--clr-reverse);
         margin: 0;
         padding: 15px;
@@ -66,7 +66,7 @@ import WikiPage from 'src/layouts/lobby/WikiPage.vue';
 import ExitBtn from 'src/components/ExitButton.vue';
 import RoundWin from 'src/layouts/lobby/screen/RoundWin.vue';
 import type { Ref } from "vue";
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, computed } from 'vue';
 import { Notify, useQuasar } from 'quasar';
 import { gameLayoutManagerSetup } from 'store/gameLayoutManager';
 import TouchSurfaceHandler from 'src/script/touchSurfaceHandler';
@@ -99,6 +99,9 @@ var timeLeft = ref(0);
 
 const startPage = ref("");
 const endPage = ref("");
+
+const startPageF = computed(()=> decodeURI(startPage.value).replace(/_/g," "));
+const endPageF = computed(()=> decodeURI(endPage.value).replace(/_/g," "));
 
 const history: Ref<string[]> = ref([]);
 

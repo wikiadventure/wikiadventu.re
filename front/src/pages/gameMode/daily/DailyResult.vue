@@ -1,11 +1,12 @@
 <template>
     <div class="daily-result">
         <theme-switch class="absolute-top-right q-ma-sm" />
-        <h2>Wiki Adventure Daily</h2>
+        <img src="~assets/svg/title.svg" alt="wikipedia adventure"/>
+        <h2>Daily</h2>
         <h3>{{ startPage }} → {{ endPage }}</h3>
         <p>{{ path.length-1 }} links in {{ time }} s</p>
         <div>
-           <q-btn push class="action-btn" @click="CopyToClipboard(route.fullPath)" label="Partager" icon="mdi-share-variant"/>
+           <q-btn push class="action-btn" @click="CopyToClipboard(shareURL)" label="Partager" icon="mdi-share-variant"/>
            <q-btn push class="action-btn" to="/daily" label="Rejouer" icon="mdi-play"/>
         </div>
         <section>
@@ -27,6 +28,12 @@
     align-items: center;
     padding: 15px;
     gap: 15px;
+
+    >img {
+        font-size: 6rem;
+        width: 16ch;
+        max-width: 100%;
+    }
     
     >div {
         display: flex;
@@ -90,12 +97,11 @@
 }
 </style>
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { Lang } from "src/i18n";
 import WikiPreview from "src/components/game/WikiPreview.vue";
 import { loadPreviews } from "store/wiki/action";
-import { ref } from "vue";
 import { WikiPreview as WikiPagePreview } from "store/vote/type";
 import ThemeSwitch from "src/components/setting/ThemeSwitch.vue";
 import { CopyToClipboard } from "store/utils/CopyToClipboard";
@@ -129,8 +135,10 @@ loadPreviews(path50, lang.value).then(x=>{
     loading.value = false;
 });
 
-const startPage = computed(()=> pageList.value[0]?.title || path[0].replace("_"," "));
-const endPage = computed(()=> pageList.value[pageList.value.length-1]?.title || path[path.length-1].replace("_"," "));
+const shareURL = window.location.origin+route.fullPath
+
+const startPage = computed(()=> pageList.value[0]?.title || path[0].replace(/_/g," "));
+const endPage = computed(()=> pageList.value[pageList.value.length-1]?.title || path[path.length-1].replace(/_/g," "));
 
 const wikiUrl = (t:string) => `https://${lang.value}.wikipedia.org/wiki/${encodeURIComponent(t)}`;
 
