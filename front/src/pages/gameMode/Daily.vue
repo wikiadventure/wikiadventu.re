@@ -3,11 +3,17 @@
         <lang-select />
         <q-btn push class="action-btn" :label="t('start')" @click="start()" icon="mdi-check-bold" />
     </div>
-    <div v-else class="game-mode-daily">
-        <p class="absolute-top-right z-top q-pa-sm text-white">{{ timeLeft }}</p>
+    <div v-show="!isMenu" class="game-mode-daily">
+        
+        <p>{{ timeLeft }}</p>
         <!-- <div class="absolute-full z-top"></div> -->
-        <wiki-page @wikiLink="onWikiLink" ref="wikiPage" />
+        <wiki-page @wikiLink="onWikiLink" ref="wikiPage">
+            <template v-slot:page>
+                <h2 class="game-mode-daily-objectif">{{ startPage }} → {{ endPage }}</h2>
+            </template>
+        </wiki-page>
         <wiki-page
+            disable
             ref="wikiEndPage"
             class="right-panel"
             :class="{ 'hideEndPage': !showWikiEndPage }"
@@ -24,6 +30,21 @@
     overflow: hidden;
     position: absolute;
     inset: 0;
+    .game-mode-daily-objectif {
+        text-align: center;
+        color: var(--clr-reverse);
+        margin: 0;
+        padding: 15px;
+    }
+    >p {
+        z-index: 2;
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: var(--clr-reverse);
+        margin: 0;
+        padding: 15px;
+    }
     &.menu {
         display: grid;
         place-content: center;
@@ -112,12 +133,12 @@ function start() {
             isMenu.value = false;
             startPage.value = json.start;
             endPage.value = json.end;
-            wikiPage.value?.requestWikiPage(startPage.value)
+            wikiPage.value?.requestWikiPage(decodeURI(startPage.value))
                 .then(() => {
                     history.value.push(startPage.value);
                     startDynamicTimer(timeController, timeStamp, timeLeft);
                 });
-            wikiEndPage.value?.requestWikiPage(endPage.value);
+            wikiEndPage.value?.requestWikiPage(decodeURI(endPage.value));
         })
 }
 
