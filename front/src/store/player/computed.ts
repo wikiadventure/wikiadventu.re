@@ -1,6 +1,6 @@
 import { computed } from "vue";
 import { ownerId, players, selfId, winnerId } from "./state";
-import { NoData, Player } from "./type";
+import { Player } from "./type";
 
 export const isOwner = computed(() => selfId.value == ownerId.value);
 
