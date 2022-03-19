@@ -1,13 +1,14 @@
 <template>
     <div class="daily-result">
+        <compact-lang-switch  class="absolute-top-left q-ma-sm"/>
         <theme-switch class="absolute-top-right q-ma-sm" />
         <img src="~assets/svg/title.svg" alt="wikipedia adventure"/>
         <h2>Daily</h2>
         <h3>{{ startPage }} → {{ endPage }}</h3>
         <p>{{ path.length-1 }} links in {{ time }} s</p>
         <div>
-           <q-btn push class="action-btn" @click="CopyToClipboard(shareURL)" label="Partager" icon="mdi-share-variant"/>
-           <q-btn push class="action-btn" to="/daily" label="Rejouer" icon="mdi-play"/>
+           <q-btn push class="action-btn" @click="CopyToClipboard(shareURL)" :label="t('share')" icon="mdi-share-variant"/>
+           <q-btn push class="action-btn" to="/daily" :label="t('play')" icon="mdi-play"/>
         </div>
         <section>
             <div v-if="loading" loader></div>
@@ -105,6 +106,10 @@ import { loadPreviews } from "store/wiki/action";
 import { WikiPreview as WikiPagePreview } from "store/vote/type";
 import ThemeSwitch from "src/components/setting/ThemeSwitch.vue";
 import { CopyToClipboard } from "store/utils/CopyToClipboard";
+import { useI18n } from "vue-i18n";
+import CompactLangSwitch from "src/components/setting/CompactLangSwitch.vue";
+
+const { t } = useI18n({ useScope: 'local' });
 
 const route = useRoute();
 
@@ -143,3 +148,12 @@ const endPage = computed(()=> pageList.value[pageList.value.length-1]?.title || 
 const wikiUrl = (t:string) => `https://${lang.value}.wikipedia.org/wiki/${encodeURIComponent(t)}`;
 
 </script>
+<i18n lang="yaml">
+  en:
+    share: "Share"
+    play: "Play"
+  fr:
+    share: "Partager"
+    play: "Jouer"
+</i18n>
+

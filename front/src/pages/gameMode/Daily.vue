@@ -1,5 +1,7 @@
 <template>
     <div v-if="isMenu" class="game-mode-daily menu">
+        <compact-lang-switch  class="absolute-top-left q-ma-sm"/>
+        <theme-switch class="absolute-top-right q-ma-sm" />
         <img src="~assets/svg/title.svg" alt="wikipedia adventure"/>
        
         <h2>Daily</h2>
@@ -88,6 +90,8 @@ import { lang as lobbyLang } from 'store/lobby/state';
 import { lang as connectLang } from 'store/connect/state';
 import { useRouter } from "vue-router";
 import { notifyError } from 'store/connect/action';
+import CompactLangSwitch from 'src/components/setting/CompactLangSwitch.vue';
+import ThemeSwitch from 'src/components/setting/ThemeSwitch.vue';
 
 const { t } = useI18n({ useScope: 'local' });
 var $q = useQuasar();
