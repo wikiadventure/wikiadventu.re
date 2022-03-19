@@ -1,7 +1,5 @@
 import { GameLoopType, VanillaLoopType } from "src/store/lobby/game/loop/type";
 
-export type NoData = Record<string, never>;
-
 /**
  * add an interface in the conditionnal type chain
  * to add custom player data for your mod
