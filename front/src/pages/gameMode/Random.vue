@@ -1,7 +1,7 @@
 <template>
   <div class="game-mode-random absolute-full">
     <wait v-if="gamePhase == 0" />
-    <wiki-page ref="wikiPage" v-else />
+    <wiki-page ref="wikiPage" @wikiLink="onWikiLink" v-else />
     <wiki-page ref="wikiEndPage" class="right-panel" :class="{ 'hideEndPage': !showWikiEndPage }" endPage>
       <exit-btn class="q-ma-md" @click="showWikiEndPage = false"/>
     </wiki-page>
@@ -110,7 +110,6 @@ const unsubGamePhase = onGamePhase.subscribe(gamePhaseEvent);
 function winRoundEvent(payload: WsWinRound) {
   showRoundWin.value = true;
   setTimeout(() => showRoundWin.value = false, 5000);
-  return;
 }
 
 const unsubWinRound = onWinRound.subscribe(winRoundEvent);
@@ -140,6 +139,12 @@ function rollbackEvent(payload: WsRollback) {
 const unsubRollback = onRollback.subscribe(rollbackEvent);
 
 var touchSurfaceHandler: TouchSurfaceHandler;
+
+function onWikiLink(s:string) {
+  if (gamePhase.value == VanillaPhaseType.Playing) {
+    sendValidate(s);
+  }
+}
 
 onMounted(() => {
   touchSurfaceHandler = new TouchSurfaceHandler(document.documentElement, showGameMenu, showWikiEndPage, game.value?.menu?.$el as any, wikiEndPage.value?.$el);

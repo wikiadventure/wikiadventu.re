@@ -16,17 +16,17 @@ import { playerReset } from 'store/player/state';
 import { voteReset } from 'store/vote/state';
 
 chatReset();
-    gameLayoutManagerReset();
-    lobbyReset();
-    playerReset();
-    voteReset();
-    const { t } = useI18n({ useScope: 'local' });
-    const gameLoopName = computed(() => VanillaLoopType[gameLoop.value] || ModLoopType[gameLoop.value] );
-    const isMod = computed(() => ModLoopType[gameLoop.value] != null );
+gameLayoutManagerReset();
+lobbyReset();
+playerReset();
+voteReset();
+const { t } = useI18n({ useScope: 'local' });
+const gameLoopName = computed(() => VanillaLoopType[gameLoop.value] || ModLoopType[gameLoop.value] );
+const isMod = computed(() => ModLoopType[gameLoop.value] != null );
 
-    onBeforeRouteLeave((to, from, next) => next(window.confirm(t('exitWarn'))));
+onBeforeRouteLeave((to, from, next) => next(window.confirm(t('exitWarn'))));
 
-    const gameComponent = computed(() => defineAsyncComponent(()=>import(`./gameMode/${(isMod.value ? "mod/" :"") + gameLoopName.value}.vue`)));
+const gameComponent = computed(() => defineAsyncComponent(()=>import(`./gameMode/${(isMod.value ? "mod/" :"") + gameLoopName.value}.vue`)));
 </script>
 <i18n lang="yaml">
   en:
