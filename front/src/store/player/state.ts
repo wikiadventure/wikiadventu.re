@@ -16,4 +16,4 @@ export function playerReset() {
     winnerId.value = -3;
     winnerPageHistory.value = [];
     winnerTime.value = -1;
-};
+}
