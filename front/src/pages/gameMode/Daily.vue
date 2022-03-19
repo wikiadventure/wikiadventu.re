@@ -124,7 +124,7 @@ const history: Ref<string[]> = ref([]);
 function onWikiLink(url: string) {
     history.value.push(url);
     console.log(url, wikiEndPage.value?.title, url == wikiEndPage.value?.title)
-    if (url == endPage.value) {
+    if (url == endPageF.value) {
         console.log(history.value);
         router.push(`/daily/result/${lobbyLang.value}?time=${timeLeft.value}&path=${history.value.map(s=>encodeURIComponent(s)).join("|")}`)
     }
