@@ -11,7 +11,7 @@
     "ws": "^7.4.6"
   },
   "scripts": {
-    "build": "cd ../back; npm run build; cd ../front; npm run build",
+
     "start": "node App.js"
   },
   "repository": {
