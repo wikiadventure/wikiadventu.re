@@ -47,16 +47,20 @@ jobs:
           npm i @quasar/cli
           npx quasar build -m pwa
       - name: Deploy to heroku
-        uses: Sacramentix/heroku-deploy@30f0b7e30306900d74c1d7fd5414e1f8421652ba
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "wiki-adventure"
-          heroku_email: ${{secrets.HEROKU_EMAIL}}
-          appdir: "bin"
-        env:
-          HD_ADMIN_PASSWORD: ${{secrets.ADMIN_PASSWORD}}
-          HD_TWITCH_BOT_USERNAME: ${{secrets.TWITCH_BOT_USERNAME}}
-          HD_TWITCH_BOT_PASSWORD: ${{secrets.TWITCH_BOT_PASSWORD}}
-          HD_TWITCH_CLIENT_ID: ${{secrets.TWITCH_CLIENT_ID}}
-          HD_TWITCH_CLIENT_SECRET: ${{secrets.TWITCH_CLIENT_SECRET}}
-          HD_TWITCH_REDIRECT_URL: ${{secrets.TWITCH_REDIRECT_URL}}
+        run: |
+          cd bin
+          npx heroku
+          cat > ~/.netrc << EOF
+          machine api.heroku.com
+            login ${{secrets.HEROKU_EMAIL}}
+            password ${{secrets.HEROKU_API_KEY}}
+          machine git.heroku.com
+            login ${{secrets.HEROKU_EMAIL}}
+            password ${{secrets.HEROKU_API_KEY}}
+          EOF
+          npx heroku login
+          git init
+          heroku git:remote -a wiki-adventure
+          git add .
+          git commit -m "Deploy from github action"
+          git push heroku master -f
