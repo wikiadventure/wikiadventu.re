@@ -12,7 +12,7 @@ export interface WsPath {
 export const onPath:EventSubscriber<WsPath> = new EventSubscriber();
 
 export function canProcess(p:Packet<unknown>): p is Packet<WsPath> {
-    return p.type == VanillaPacketTypeId.UpdateScore;
+    return p.type == VanillaPacketTypeId.Path;
 }
 
 export async function process(p:WsPath) {
