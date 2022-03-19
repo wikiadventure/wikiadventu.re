@@ -9,7 +9,7 @@ export interface WsRollback {
 export const onRollback:EventSubscriber<WsRollback> = new EventSubscriber();
 
 export function canProcess(p:Packet<unknown>): p is Packet<WsRollback> {
-    return p.type == VanillaPacketTypeId.UpdateScore;
+    return p.type == VanillaPacketTypeId.Rollback;
 }
 
 export async function process(r:WsRollback) {
