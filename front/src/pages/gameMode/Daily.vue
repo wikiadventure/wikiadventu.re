@@ -1,5 +1,8 @@
 <template>
     <div v-if="isMenu" class="game-mode-daily menu">
+        <img src="~assets/svg/title.svg" alt="wikipedia adventure"/>
+       
+        <h2>Daily</h2>
         <lang-select />
         <q-btn push class="action-btn" :label="t('start')" @click="start()" icon="mdi-check-bold" />
     </div>
@@ -46,9 +49,18 @@
         padding: 15px;
     }
     &.menu {
+        overflow-y: auto;
+        padding: 15px;
+        gap: 15px;
         display: grid;
-        place-content: center;
-        // place-items: center;
+        min-height: min-content;
+        justify-items: center;
+        align-content: center;
+        >img {
+            font-size: 6rem;
+            width: 16ch;
+            max-width: 100%;
+        }
     }
 }
 .right-panel {
