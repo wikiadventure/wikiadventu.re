@@ -3,6 +3,7 @@
     <wait v-if="gamePhase == 0" />
     <wiki-page ref="wikiPage" @wikiLink="onWikiLink" v-else />
     <wiki-page
+      disable
       ref="wikiEndPage"
       class="right-panel"
       :class="{ 'hideEndPage': !showWikiEndPage }"

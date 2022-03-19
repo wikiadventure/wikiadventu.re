@@ -1,7 +1,8 @@
 <template>
-  <section class="wiki-page absolute-full" :class="{ wikifade: fade, disabled: disabled }">
+  <section class="wiki-page absolute-full" :class="{ wikifade: fade, disable: disable }">
     <slot></slot>
     <div class="wikiCore" ref="wiki">
+      <slot name="page"></slot>
       <h1 class="wikiTitle">{{ wikiArticle.title || title }}</h1>
       <div class="wikiMain">
         <div
@@ -19,7 +20,7 @@
 .wikiFade {
   opacity: 0;
 }
-.disabled a:not(.anchorLink) {
+.wiki-page.disable a:not(.anchorLink) {
   cursor: not-allowed;
 }
 .wiki-page {
@@ -137,7 +138,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n({ useScope: 'local' });
 
 const props = defineProps({
-  disabled: Boolean,
+  disable: Boolean,
   //title:String,
   //content:String
 });
@@ -160,7 +161,7 @@ const fade = ref(false);
 const title = ref("");
 const content = ref("");
 
-props.disabled || useMeta(() => {
+props.disable || useMeta(() => {
   return {
     title: wikiArticle.title || "Wiki Adventure"
   }
@@ -228,7 +229,7 @@ function onLinkClick(link: HTMLAnchorElement) {
   var linkHref = link.getAttribute("href");
   if (linkHref == undefined) return;
   //check if the link go to another wikipage and not info page or external
-  if (!props.disabled && link.classList.contains("wikiLink")) {
+  if (!props.disable && link.classList.contains("wikiLink")) {
     var url = linkHref.substring(6);
     var anchor = url.indexOf("#");
     if (anchor != -1) url = url.substring(0, anchor);

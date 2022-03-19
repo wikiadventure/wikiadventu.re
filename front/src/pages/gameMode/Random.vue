@@ -2,7 +2,7 @@
   <div class="game-mode-random absolute-full">
     <wait v-if="gamePhase == 0" />
     <wiki-page ref="wikiPage" @wikiLink="onWikiLink" v-else />
-    <wiki-page ref="wikiEndPage" class="right-panel" :class="{ 'hideEndPage': !showWikiEndPage }" endPage>
+    <wiki-page ref="wikiEndPage" class="right-panel" :class="{ 'hideEndPage': !showWikiEndPage }" disable>
       <exit-btn class="q-ma-md" @click="showWikiEndPage = false"/>
     </wiki-page>
     <transition name="fade"><page-history v-show="showPageHistory" /></transition>
