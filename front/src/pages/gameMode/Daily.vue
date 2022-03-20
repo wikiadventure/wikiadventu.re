@@ -7,10 +7,12 @@
         <h2>Daily</h2>
         <lang-select />
         <q-btn push class="action-btn" :label="t('start')" @click="start()" icon="mdi-check-bold" />
+        <p>{{ t('explanation') }}</p>
+        <p>{{ t("shortcut"+($q.platform.is.mobile ? "Mobile" : ""))  }}</p>
     </div>
     <div v-show="!isMenu" class="game-mode-daily">
         
-        <p>{{ timeLeft }}</p>
+        <p class="timeleft">{{ timeLeft }}</p>
         <!-- <div class="absolute-full z-top"></div> -->
         <wiki-page @wikiLink="onWikiLink" ref="wikiPage">
             <template v-slot:page>
@@ -41,7 +43,7 @@
         margin: 0;
         padding: 15px;
     }
-    >p {
+    >.timeleft {
         z-index: 2;
         position: absolute;
         top: 0;
@@ -51,6 +53,12 @@
         padding: 15px;
     }
     &.menu {
+        p {
+            text-align: center;
+            font-size: 1.3em;
+            max-width: 95%;
+            width: Max(60%, 500px);
+        }
         overflow-y: auto;
         padding: 15px;
         gap: 15px;
@@ -92,6 +100,7 @@ import { useRouter } from "vue-router";
 import { notifyError } from 'store/connect/action';
 import CompactLangSwitch from 'src/components/setting/CompactLangSwitch.vue';
 import ThemeSwitch from 'src/components/setting/ThemeSwitch.vue';
+import { decode } from 'punycode';
 
 const { t } = useI18n({ useScope: 'local' });
 var $q = useQuasar();
@@ -123,8 +132,8 @@ const history: Ref<string[]> = ref([]);
 
 function onWikiLink(url: string) {
     history.value.push(url);
-    console.log(url, wikiEndPage.value?.title, url == wikiEndPage.value?.title)
-    if (url == endPageF.value) {
+    console.log(url, url == endPageF.value)
+    if (url == decodeURI(endPage.value)) {
         console.log(history.value);
         router.push(`/daily/result/${lobbyLang.value}?time=${timeLeft.value}&path=${history.value.map(s=>encodeURIComponent(s)).join("|")}`)
     }
@@ -177,9 +186,19 @@ onUnmounted(() => {
 </script>
 <i18n lang="yaml">
   en:
-    start: "Start"
-    noDaily: "No daily available for this language"
+    explanation: |
+        Welcome to Wiki Adventure Daily! The goal is to go from 1 wikipedia page to an other by following link.
+        Try to finish this daily challenge as fast you can with the fewest link possible and share you adventure with your friend!
+
+    shortcut: "You can see the goal page with ctrl + alt + space ."
+    shortcutMobile: "You can swipe to the left to see the goal page."
   fr:
-    start: "Commencer"
-    noDaily: "Pas de daily disponible pour cette langue"
+    explanation: |
+        Bienvenue sur Wiki Adventure Daily! Le but est d'aller d'une page wikipédia à une autre en suivant uniquement les liens.
+        Essayer de finir le challenge quotidien le plus rapidement possible avec le moins de liens possible et partager votre aventure avec vos amis!
+        Welcome to Wiki Adventure Daily, the goal is to go from 1 wikipedia page to an other by only following link.
+        Try to finish this daily challenge as fast you can with the fewest link possible, 
+        
+    shortcut: "Vous pouvez consulter la page cible avec ctrl + alt + space ."
+    shortcutMobile: "Vous pouvez consulter la page cible en glissant vers la gauche."
 </i18n>
