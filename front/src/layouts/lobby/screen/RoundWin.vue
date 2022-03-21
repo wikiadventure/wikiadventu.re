@@ -1,7 +1,7 @@
 <template>
   <div class="round-win absolute-full">
     <!--TODO: Translation -->
-    <logo-show-in :title="winner?.pseudo || t('noWinner')" :class="{ lose: !isWinner }" ></logo-show-in>
+    <logo-show-in :title="title" :class="{ lose: !win }" ></logo-show-in>
     <exit-btn @click="showRoundWin = false"/>
   </div>
 </template>
@@ -14,9 +14,9 @@
 }
 </style>
 <script lang="ts" setup>
-import ExitBtn from 'src/components/ExitButton.vue';
+import ExitBtn from 'src/components/ExitButton.vue';  
 import LogoShowIn from 'src/components/art/LogoShowIn.vue';
-import { watch } from 'vue';
+import { computed, watch } from 'vue';
 import { playerSetup } from 'store/player';
 import { loseSound } from 'store/audio/vanilla/lose';
 import { winSound } from 'store/audio/vanilla/win';
@@ -24,6 +24,10 @@ import { showRoundWin } from 'store/gameLayoutManager/state';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n({ useScope: 'local' });
+
+const props = defineProps({
+  overrideWin: Boolean // show win with a message without relying on playersetup
+})
 
 const {
   isWinner,
@@ -38,6 +42,14 @@ watch(showRoundWin,(s) => {
     a.currentTime = 0;
   }
 });
+
+const title = computed(()=>
+  props.overrideWin ? "GG!" :
+    winner.value?.pseudo || t('noWinner')
+);
+
+const win = computed(()=> props.overrideWin ? true : isWinner.value);
+
 </script>
 <i18n lang="yaml">
   en:

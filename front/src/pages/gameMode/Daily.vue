@@ -28,7 +28,7 @@
             <exit-btn class="q-ma-md" @click="showWikiEndPage = false" />
         </wiki-page>
         <transition name="fade">
-            <round-win v-show="showRoundWin" />
+            <round-win v-show="showRoundWin" override-win />
         </transition>
     </div>
 </template>
@@ -100,7 +100,6 @@ import { useRouter } from "vue-router";
 import { notifyError } from 'store/connect/action';
 import CompactLangSwitch from 'src/components/setting/CompactLangSwitch.vue';
 import ThemeSwitch from 'src/components/setting/ThemeSwitch.vue';
-import { decode } from 'punycode';
 
 const { t } = useI18n({ useScope: 'local' });
 var $q = useQuasar();
@@ -132,11 +131,17 @@ const history: Ref<string[]> = ref([]);
 
 function onWikiLink(url: string) {
     history.value.push(url);
-    console.log(url, url == endPageF.value)
     if (url == decodeURI(endPage.value)) {
-        console.log(history.value);
-        router.push(`/daily/result/${lobbyLang.value}?time=${timeLeft.value}&path=${history.value.map(s=>encodeURIComponent(s)).join("|")}`)
+        onWin();
     }
+}
+
+function onWin() {
+    showRoundWin.value = true;
+    setTimeout(()=>{
+        showRoundWin.value = false;
+        router.push(`/daily/result/${lobbyLang.value}?time=${timeLeft.value}&path=${history.value.map(s=>encodeURIComponent(s)).join("|")}`)
+    }, 5000)
 }
 
 function start() {
@@ -154,7 +159,7 @@ function start() {
                 return Notify.create({
                     type: 'negative',
                     position: 'top',
-                    message: "Pas de daily disponible pour cette langue"
+                    message: t('noDaily')
                     // message: i18n.global.t(translate(n)) + (message ? (' : ' + message) : "")
                 });
             }
@@ -186,6 +191,8 @@ onUnmounted(() => {
 </script>
 <i18n lang="yaml">
   en:
+    start: "Start"
+    noDaily: "No daily available for this language"
     explanation: |
         Welcome to Wiki Adventure Daily! The goal is to go from 1 wikipedia page to an other by following link.
         Try to finish this daily challenge as fast you can with the fewest link possible and share you adventure with your friend!
@@ -193,6 +200,8 @@ onUnmounted(() => {
     shortcut: "You can see the goal page with ctrl + alt + space ."
     shortcutMobile: "You can swipe to the left to see the goal page."
   fr:
+    start: "Commencer"
+    noDaily: "Pas de daily disponible pour cette langue"
     explanation: |
         Bienvenue sur Wiki Adventure Daily! Le but est d'aller d'une page wikipédia à une autre en suivant uniquement les liens.
         Essayer de finir le challenge quotidien le plus rapidement possible avec le moins de liens possible et partager votre aventure avec vos amis!
