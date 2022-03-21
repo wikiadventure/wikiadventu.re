@@ -5,7 +5,7 @@
         <img src="~assets/svg/title.svg" alt="wikipedia adventure"/>
         <h2>Daily</h2>
         <h3>{{ startPage }} → {{ endPage }}</h3>
-        <p>{{ path.length-1 }} links in {{ time }} s</p>
+        <p>{{ path.length-1 }} {{ t('linkInTime', path.length-1) }} {{ time }} s</p>
         <div>
            <q-btn push class="action-btn" @click="CopyToClipboard(shareURL)" :label="t('share')" icon="mdi-share-variant"/>
            <q-btn push class="action-btn" to="/daily" :label="t('play')" icon="mdi-play"/>
@@ -113,9 +113,9 @@ const { t } = useI18n({ useScope: 'local' });
 
 const route = useRoute();
 
-const lang = ref(route.params.lang as Lang);
-const time = ref(route.query.time);
-const path = (route.query.path as string).split("|").map(s=>decodeURIComponent(s));
+const lang = ref(route.params.lang as Lang || Lang.en);
+const time = ref(parseInt(route.query.time as string || "0"));
+const path = (route.query.path as string || "").split("|").map(s=>decodeURIComponent(s));
 const path50 = path.length > 50 ? path.slice(0,25).concat(path.slice(path.length-25)) : path;
 console.log(path50.length);
 const pageList = ref<WikiPagePreview[]>([]);
@@ -132,7 +132,7 @@ loadPreviews(path50, lang.value).then(x=>{
         var t = normalizedMap.get(title) || title;
         t =  redirectsMap.get(t) || t;
         return previews.find(p => p.title == t) 
-        || 
+                            || 
         ( { title: decodeURIComponent(title),
             description: "Page not found on wikipedia" } );
     });
@@ -152,8 +152,12 @@ const wikiUrl = (t:string) => `https://${lang.value}.wikipedia.org/wiki/${encode
   en:
     share: "Share"
     play: "Play"
+    links: "link | links"
+    linkInTime: '@:links in'
   fr:
     share: "Partager"
     play: "Jouer"
+    links: "lien | liens"
+    linkInTime: '@:links en'
 </i18n>
 
