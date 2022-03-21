@@ -61,6 +61,7 @@ class App {
     }
 
     function new(im : IncomingMessage, sr : ServerResponse, body : String) {
+        sr.setHeader("Access-Control-Allow-Origin","*");
         var idx1 = im.url.indexOf("/", 1);
         var route1 : String = idx1 == -1 ? im.url : im.url.substring(1, idx1);
         switch (route1) {
