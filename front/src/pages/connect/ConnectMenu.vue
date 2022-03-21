@@ -134,6 +134,7 @@ import { id } from 'store/connect/state';
 import { twitchName } from 'store/connect/twitch/state';
 import { notifyError } from 'store/connect/action';
 import { useI18n } from 'vue-i18n';
+import { apiRoot } from 'store/utils/ApiRoot';
 
 const route = useRoute();
 const { t } = useI18n({ useScope: 'local' });
@@ -148,7 +149,7 @@ const twitchTab = ref('TwitchCreate');
 
 if (route.params.id != undefined) {
   const isTwitch = route.path.startsWith("/twitchConnect/")
-  fetch('/api/info/'+(isTwitch ? "twitch:":"")+ route.params.id)
+  fetch(apiRoot+'/api/info/'+(isTwitch ? "twitch:":"")+ route.params.id)
     .then(r=> r.json())
     .then((res:InfoResponse<unknown>) => {
       if (isSucess(res)) {

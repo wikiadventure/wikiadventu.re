@@ -9,6 +9,7 @@ import { Router } from 'src/router';
 import { randomizePseudo } from './randomPseudo/generator';
 import { TWITCH_CLIENT_ID, twitchName } from './twitch/state';
 import { setConfig } from './extra/state';
+import { apiRoot } from 'store/utils/ApiRoot';
 
 const WithId = [ConnectType.PrivateJoin, ConnectType.PublicJoin];
 const IdOptionnal = [ConnectType.PublicJoin];
@@ -92,7 +93,7 @@ export function login(event:ConnectEvent) {
 
 export async function connect(options:RequestInit, twitch?:boolean) {
     console.log(options);
-    return fetch("/api/"+ (twitch ? "twitch" : "connect"), options)
+    return fetch(apiRoot+"/api/"+ (twitch ? "twitch" : "connect"), options)
         .then(async r => {return { json: await r.json(), res: r}})
         .then(r => {
             if (!r.res.ok) {

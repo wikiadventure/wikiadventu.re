@@ -100,6 +100,7 @@ import { useRouter } from "vue-router";
 import { notifyError } from 'store/connect/action';
 import CompactLangSwitch from 'src/components/setting/CompactLangSwitch.vue';
 import ThemeSwitch from 'src/components/setting/ThemeSwitch.vue';
+import { apiRoot } from 'store/utils/ApiRoot';
 
 const { t } = useI18n({ useScope: 'local' });
 var $q = useQuasar();
@@ -146,7 +147,7 @@ function onWin() {
 
 function start() {
     lobbyLang.value = connectLang.value;
-    fetch("/api/daily", {
+    fetch(apiRoot+"/api/daily", {
         method: "POST",
         body: JSON.stringify({
             lang: lobbyLang.value
