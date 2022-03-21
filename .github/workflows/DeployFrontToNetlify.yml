@@ -35,3 +35,4 @@ jobs:
         uses: nwtgck/actions-netlify@v1.2.3
         with:
           publish-dir: "../bin/front"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
