@@ -36,4 +36,6 @@ jobs:
         with:
           publish-dir: "../bin/front"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          netlify-site-id: "acf54590-90aa-40c2-a8d5-078e315cdebe"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
