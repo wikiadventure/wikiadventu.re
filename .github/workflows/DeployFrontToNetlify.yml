@@ -29,3 +29,9 @@ jobs:
           cd front
           npm i @quasar/cli
           npx quasar build -m pwa
+      - name: Netlify Actions
+        # You may pin to the exact commit or the version.
+        # uses: nwtgck/actions-netlify@b7c1504e00c6b8a249d1848cc1b522a4865eed99
+        uses: nwtgck/actions-netlify@v1.2.3
+        with:
+          publish-dir: "../bin/front"
