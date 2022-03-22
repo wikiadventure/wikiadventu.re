@@ -3,43 +3,50 @@
     <logo-show-in class="absolute" ></logo-show-in>
     <compact-lang-switch class="topLeft text-uppercase" />
     <theme-switch class="topRight" />
-    <div class="skewLineContainer first"><div class="skewLine"></div></div>
-    <div class="row wrapper first">
+    <div class="skewLineContainer t1"><div class="skewLine"></div></div>
+    <div class="row wrapper t1">
       <content-pannel id="HowToPlay" :head="t('howToPlay.title')">
-        <div class="col">
-          <p>
+          <p class="center-text">
             {{ t('howToPlay.content') }}
           </p>
-        </div>
       </content-pannel>
-      <div class="skewLineContainer second"><div class="skewLine"></div></div>
-      <div class="wrapper second">
-        <content-pannel id="News" :head="t('news.title')">
-          <div class="col">
-            <p>{{ t('news.content') }}</p>
+      <div class="skewLineContainer t2"><div class="skewLine"></div></div>
+      <div class="wrapper t2">
+        <content-pannel id="solo" head="Daily">
+          <div>
+            <p>{{ t('daily.content') }}</p>
+            <q-btn class="action-btn" to="/daily" label="Daily" push  />
           </div>
         </content-pannel>
-        <div class="skewLineContainer third"><div class="skewLine"></div></div>
-        <div class="wrapper third">
-          <content-pannel id="Contribution" head="Contribution">
-            <div class="q-ma-xs">
-              <p>{{ t('contribution.discord') }}</p>
-              <q-btn push icon="mdi-discord" class="discord" size="xl" label="discord" @click="openURL('https://discord.gg/wRN6Dam')" />
+        <div class="skewLineContainer t3"><div class="skewLine"></div></div>
+        <div class="wrapper t3">
+          <content-pannel id="News" :head="t('news.title')">
+            <div class="col">
+              <p>{{ t('news.content') }}</p>
             </div>
-            <div class="q-ma-xs">
-              <p>{{ t('contribution.github') }}</p>
-              <q-btn push icon="mdi-github" class="github" size="xl" label="Github" @click="openURL('https://github.com/Sacramentix/WikiAdventure')"/>
-            </div>
-            <div class="q-ma-xs">
-              <p>{{ t('contribution.kofi') }}</p>  
-              <q-btn push :icon="'img:'+require('assets/icons/kofi.svg')" class="kofi" size="xl" label="Ko-fi" @click="openURL('https://ko-fi.com/sacramentix')"/>
-            </div>
-            <div class="q-ma-xs">
-              <p>{{ t('contribution.nano') }}</p>
-              <q-btn push :icon="'img:'+require('assets/icons/nano.svg')" class="nano" size="xl" label="Nano" @click="showNano = true" />
-            </div>
-            <wallet-dialog v-model="showNano"/>
           </content-pannel>
+          <div class="skewLineContainer t4"><div class="skewLine"></div></div>
+          <div class="wrapper t4">
+            <content-pannel id="Contribution" head="Contribution">
+              <div class="q-ma-xs">
+                <p>{{ t('contribution.discord') }}</p>
+                <q-btn push icon="mdi-discord" class="discord" size="xl" label="discord" @click="openURL('https://discord.gg/wRN6Dam')" />
+              </div>
+              <div class="q-ma-xs">
+                <p>{{ t('contribution.github') }}</p>
+                <q-btn push icon="mdi-github" class="github" size="xl" label="Github" @click="openURL('https://github.com/Sacramentix/WikiAdventure')"/>
+              </div>
+              <div class="q-ma-xs">
+                <p>{{ t('contribution.kofi') }}</p>  
+                <q-btn push :icon="'img:'+require('assets/icons/kofi.svg')" class="kofi" size="xl" label="Ko-fi" @click="openURL('https://ko-fi.com/sacramentix')"/>
+              </div>
+              <div class="q-ma-xs">
+                <p>{{ t('contribution.nano') }}</p>
+                <q-btn push :icon="'img:'+require('assets/icons/nano.svg')" class="nano" size="xl" label="Nano" @click="showNano = true" />
+              </div>
+              <wallet-dialog v-model="showNano"/>
+            </content-pannel>
+          </div>
         </div>
       </div>
     </div>
@@ -50,6 +57,11 @@
   --w-angle: -5deg;
   --w-slope-ratio: 11.66vw;
   pointer-events: all;
+  .center-text {
+    text-align: center;
+    max-width: 95%;
+    width: Max(60%, 500px);
+  }
   .first {
     z-index: 3;
     pointer-events: none;
@@ -72,27 +84,21 @@
     position: relative;
     width: 100%;
   }
-  .skewLineContainer.first {
+  .skewLineContainer.t1 {
     height: calc(65vmin + var(--w-slope-ratio) + 5px);
     .skewLine {
       top: calc(65vmin + var(--w-slope-ratio));
     }
   }
 
-  .skewLineContainer.second {
+  .skewLineContainer {
     height: calc(var(--w-slope-ratio) + 55px);
     margin-top: -50px;
     .skewLine {
       top: calc(var(--w-slope-ratio) + 50px );
     }
   }
-  .skewLineContainer.third {
-    height: calc(var(--w-slope-ratio) + 55px);
-    margin-top: -50px;
-    .skewLine {
-      top: calc(var(--w-slope-ratio) + 50px );
-    }
-  }
+  
   .skewLine {
     position: absolute;
     left: -2%;
@@ -155,14 +161,15 @@
     border-radius: 5px;
   }
 
-  .wrapper.second, .skewLineContainer.second .skewLine {
+  .wrapper.t2, .wrapper.t4, .skewLineContainer.t2 .skewLine, 
+  .skewLineContainer.t4 .skewLine {
     background: var(--clr-alt);
     color: var(--clr-contrast);
   }
 
-  .wrapper.first, .wrapper.third, 
-  .skewLineContainer.first .skewLine, 
-  .skewLineContainer.third .skewLine {
+  .wrapper.t1, .wrapper.t3, 
+  .skewLineContainer.t1 .skewLine, 
+  .skewLineContainer.t3 .skewLine {
     background: var(--clr-main);
     color: var(--clr-reverse);
   }
@@ -205,6 +212,10 @@ const showNano = ref(false);
         but you can only navigate with the link on the Wikipedia page. During the voting phase 
         you can suggest Wikipedia page title. At the end of the voting phase the game will randomly 
         pick a start page and an end page and the game will begin.
+    daily:
+      content: |
+        Want challenge in solo? Try the daily challenge. Go to one wikipedia page to an other as 
+        fast as you can with the fewest links possible and share your performance with your friend!
     news:
       title: "News"
       content: "beta"
@@ -222,6 +233,11 @@ const showNano = ref(false);
         mais on ne peut naviguer qu'avec les liens sur la page Wikipédia de départ. 
         Pendant la phase de vote, vous pouvez suggérer le titre de la page Wikipedia de départ ou d'arrivée. 
         À la fin de la phase de vote, le jeu choisira au hasard une page de démarrage et une page de fin et le jeu commencera.
+    daily:
+      content: |
+        Envie de challenge en solo? Essayer le challenge quotidien. Aller d'une page wikipédia à 
+        une autre aussi vite que vous pouvez avec le moins de liens possible et partager votre performance
+        avec vos amis!
     news:
       title: "News"
       content: "beta"
