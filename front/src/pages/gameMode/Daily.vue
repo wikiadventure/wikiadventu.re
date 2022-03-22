@@ -205,7 +205,7 @@ onUnmounted(() => {
     noDaily: "Pas de daily disponible pour cette langue"
     explanation: |
         Bienvenue sur Wiki Adventure Daily! Le but est d'aller d'une page wikipédia à une autre en suivant uniquement les liens.
-        Essayer de finir le challenge quotidien le plus rapidement possible avec le moins de liens possible et partager votre aventure avec vos amis! 
+        Essayer de finir le challenge quotidien aussi vite que vous pouvez avec le moins de liens possible et partager votre aventure avec vos amis! 
         
     shortcut: "Vous pouvez consulter la page cible avec ctrl + alt + space ."
     shortcutMobile: "Vous pouvez consulter la page cible en glissant vers la gauche."
