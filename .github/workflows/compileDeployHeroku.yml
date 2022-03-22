@@ -8,6 +8,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     env:
+      API_ROOT: ""
       ADMIN_PASSWORD: ${{secrets.ADMIN_PASSWORD}}
       TWITCH_BOT_USERNAME: ${{secrets.TWITCH_BOT_USERNAME}}
       TWITCH_BOT_PASSWORD: ${{secrets.TWITCH_BOT_PASSWORD}}
