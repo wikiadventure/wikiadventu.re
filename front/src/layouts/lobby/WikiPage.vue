@@ -37,7 +37,7 @@
   height: 100%;
   padding: 15px;
   h1 {
-    font-size: 4rem;
+    font-size: calc(2rem + 3vw);
     margin: 20px auto;
   }
   h2 {
