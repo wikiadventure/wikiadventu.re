@@ -72,7 +72,10 @@ module.exports = configure(function (ctx) {
       chainWebpack (chain) {
         chain
           .plugin("env")
-            .use(new webpack.EnvironmentPlugin(['TWITCH_CLIENT_ID','API_ROOT']))
+            .use(new webpack.EnvironmentPlugin({
+              "TWITCH_CLIENT_ID": "",
+              "API_ROOT": ""
+            }))
             .end()
           .resolve
             .alias
