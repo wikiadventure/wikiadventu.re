@@ -67,22 +67,26 @@ export default class TouchSurfaceHandler {
       if ( this.distX > tmin ) {
         var dist = this.distX-tmin;
         if (this.rightOpen && this.rightOpen.value) {
-            if ( dist < -this.rightElement.clientWidth ) dist = this.rightElement.clientWidth;
+            if ( dist > this.rightElement.clientWidth ) dist = this.rightElement.clientWidth;
             this.rightElement.style.transform = "translate3d(" + (dist) + "px,0,0)";
+            this.leftElement.style.transform = ""; 
         }
         if (!this.leftOpen?.value && !this.rightOpen?.value) {
             if ( dist > this.leftElement.clientWidth ) dist = this.leftElement.clientWidth;
-            this.leftElement.style.transform = "translate3d(" + (-this.leftElement.clientWidth+dist) + "px,0,0)"; 
+            this.leftElement.style.transform = "translate3d(" + (-this.leftElement.clientWidth+dist) + "px,0,0)";
+            this.rightElement.style.transform = ""; 
         }
       } else if ( this.distX < -tmin ) {
         var dist = this.distX+tmin;
         if (this.leftOpen && this.leftOpen.value) {
-            if ( dist > this.leftElement.clientWidth ) dist = -this.leftElement.clientWidth;
+            if ( dist < -this.leftElement.clientWidth ) dist = -this.leftElement.clientWidth;
             this.leftElement.style.transform = "translate3d(" + (dist) + "px,0,0)";
+            this.rightElement.style.transform = ""; 
         }
         if (!this.leftOpen?.value && !this.rightOpen?.value) {
-            if ( dist > this.rightElement.clientWidth ) dist = -this.rightElement.clientWidth;
-            this.rightElement.style.transform = "translate3d(" + (this.rightElement.clientWidth+dist) + "px,0,0)"; 
+            if ( dist < -this.rightElement.clientWidth ) dist = -this.rightElement.clientWidth;
+            this.rightElement.style.transform = "translate3d(" + (this.rightElement.clientWidth+dist) + "px,0,0)";
+            this.leftElement.style.transform = ""; 
         }
       }
     }
