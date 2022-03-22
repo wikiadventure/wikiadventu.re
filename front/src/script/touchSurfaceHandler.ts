@@ -42,12 +42,16 @@ export default class TouchSurfaceHandler {
         } else if (!this.rightOpen?.value && !this.leftOpen?.value) {
             if (isLeft) {
                 if (this.rightOpen != null) this.rightOpen.value = true;
-            } else if (isRight) if (this.leftOpen != null) this.leftOpen.value = true;
+            } else if (isRight) {
+                if (this.leftOpen != null) this.leftOpen.value = true;
+            }
         }
     }
     resetStyle(e:HTMLElement) {
-        e.style.transition = "all ease-in-out 0.2s";
-        e.style.transform = "";
+        if (e) {
+            e.style.transition = "all ease-in-out 0.2s";
+            e.style.transform = "";
+        }
     }
     touchEnd(e:TouchEvent) {
         var touchobj = e.changedTouches[0];
@@ -69,24 +73,24 @@ export default class TouchSurfaceHandler {
         if (this.rightOpen && this.rightOpen.value) {
             if ( dist > this.rightElement.clientWidth ) dist = this.rightElement.clientWidth;
             this.rightElement.style.transform = "translate3d(" + (dist) + "px,0,0)";
-            this.leftElement.style.transform = ""; 
+            if (this.leftElement) this.leftElement.style.transform = ""; 
         }
         if (!this.leftOpen?.value && !this.rightOpen?.value) {
             if ( dist > this.leftElement.clientWidth ) dist = this.leftElement.clientWidth;
             this.leftElement.style.transform = "translate3d(" + (-this.leftElement.clientWidth+dist) + "px,0,0)";
-            this.rightElement.style.transform = ""; 
+            if (this.rightElement) this.rightElement.style.transform = ""; 
         }
       } else if ( this.distX < -tmin ) {
         var dist = this.distX+tmin;
         if (this.leftOpen && this.leftOpen.value) {
             if ( dist < -this.leftElement.clientWidth ) dist = -this.leftElement.clientWidth;
             this.leftElement.style.transform = "translate3d(" + (dist) + "px,0,0)";
-            this.rightElement.style.transform = ""; 
+            if (this.rightElement) this.rightElement.style.transform = ""; 
         }
         if (!this.leftOpen?.value && !this.rightOpen?.value) {
             if ( dist < -this.rightElement.clientWidth ) dist = -this.rightElement.clientWidth;
             this.rightElement.style.transform = "translate3d(" + (this.rightElement.clientWidth+dist) + "px,0,0)";
-            this.leftElement.style.transform = ""; 
+            if (this.leftElement) this.leftElement.style.transform = ""; 
         }
       }
     }
@@ -96,8 +100,8 @@ export default class TouchSurfaceHandler {
         var touchobj = e.changedTouches[0];
         this.distX = 0;
         this.startX = touchobj.pageX;
-        this.leftElement.style.transition = "all ease-in-out 0.0s";
-        this.rightElement.style.transition = "all ease-in-out 0.0s";
+        if (this.leftElement) this.leftElement.style.transition = "";
+        if (this.rightElement) this.rightElement.style.transition = "";
     }
 
 }
