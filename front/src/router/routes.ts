@@ -47,7 +47,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/daily',
     component: () => {
-      return import('pages/gameMode/Daily.vue');
+      return import('pages/gameMode/daily/Daily.vue');
     }
   },
   {
