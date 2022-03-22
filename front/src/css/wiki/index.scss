@@ -155,7 +155,7 @@
   .thumb {
     @media (max-width: 720px) {
       float: none!important;
-      max-width: 100%!important;
+      max-width: min(100%, calc(100vw - 30px))!important;
       display: flex;
       justify-content: center;
       margin: 0;
@@ -168,7 +168,7 @@
     border-radius: 10px;
     box-shadow: 0 0 5px #aaa5;
     img {
-      width: 100%!important;
+      // width: 100%!important;
     }
     @media (max-width: 720px) {
       max-width: 100% !important;

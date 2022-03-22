@@ -32,6 +32,7 @@
   text-align: center;
 }
 .wikiCore {
+  overflow-x: hidden;
   overflow-y: scroll;
   width: 100%;
   height: 100%;
@@ -64,6 +65,12 @@
 .wikiMain {
   width: 100%;
   padding: 2em 4em;
+  table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
   @media screen and (max-width: 1220px) {
     padding: 0.5em 2em;
   }
@@ -196,7 +203,7 @@ async function requestWikiPage(url: string) {
 
 function redirectLinks(doc?: HTMLElement) {
   if (!doc) return;
-  var links = doc.getElementsByTagName("a");
+  var links = doc.querySelectorAll("a, area");
   for (var i = 0; i < links.length; i++) {
     links[i].addEventListener("click", function (e) {
       e.preventDefault();
