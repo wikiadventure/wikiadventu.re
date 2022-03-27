@@ -21,6 +21,7 @@ import controller.admin.AnnounceController;
 import lobby.Lobby;
 import js.Node.console;
 import js.Node.process;
+import haxe.http.HttpStatus;
 #if https
 import js.node.Https;
 #end
@@ -62,6 +63,11 @@ class App {
 
     function new(im : IncomingMessage, sr : ServerResponse, body : String) {
         sr.setHeader("Access-Control-Allow-Origin","*");
+        if (im.method == Options) {
+            sr.writeHead(OK);
+            sr.end();
+            return;
+        }
         var idx1 = im.url.indexOf("/", 1);
         var route1 : String = idx1 == -1 ? im.url : im.url.substring(1, idx1);
         switch (route1) {
