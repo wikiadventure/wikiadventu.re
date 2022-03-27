@@ -63,7 +63,7 @@ class App {
 
     function new(im : IncomingMessage, sr : ServerResponse, body : String) {
         sr.setHeader("Access-Control-Allow-Origin","*");
-        // sr.setHeader("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+        sr.setHeader("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type');
         sr.setHeader("Access-Control-Allow-Methods","GET, POST, OPTIONS");
         if (im.method == Options) {
             sr.writeHead(OK);
