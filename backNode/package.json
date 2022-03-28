@@ -1,0 +1,25 @@
+{
+  "name": "wiki-adventure-back",
+  "version": "1.0.0",
+  "description": "A node backend for wiki-adventure multiplayer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@coobaha/typed-fastify": "^0.6.0",
+    "base32-decode": "^1.0.0",
+    "base32-encode": "^2.0.0",
+    "fastify": "^3.27.4",
+    "node-cron": "^3.0.0",
+    "uuid": "^8.3.2",
+    "ws": "^8.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.26",
+    "@types/uuid": "^8.3.4",
+    "@types/ws": "^8.5.3"
+  }
+}
