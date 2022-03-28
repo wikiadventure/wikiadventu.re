@@ -14,7 +14,7 @@ export function connect() {
   if(process.env.DEV) {
     var wsURL = protocol + "localhost:5000" + "/" + lobbyType + "/" + id.value + "/" + uuid.value;
   } else {
-    var wsURL = protocol + (apiRoot || ("//"+loc.host)) + "/" + lobbyType + "/" + id.value+ "/" + uuid.value;
+    var wsURL = protocol + (apiRoot != "" ? apiRoot : ("//"+loc.host)) + "/" + lobbyType + "/" + id.value+ "/" + uuid.value;
   }
   ws.value  = new WebSocket(wsURL);
   ws.value.onopen = onOpen;
