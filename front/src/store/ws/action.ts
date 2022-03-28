@@ -1,3 +1,4 @@
+import { apiRoot } from 'store/utils/ApiRoot';
 import { id, type } from "../lobby/state";
 import { LobbyType } from "../lobby/type";
 import { uuid } from "../player/state";
@@ -7,13 +8,13 @@ import { ws } from "./state";
 
 
 export function connect() {
-  var loc = window.location;
-  var protocol = loc.protocol == "https:" ? "wss://" : "ws://";
-  var lobbyType = type.value == LobbyType.Twitch ? "twitchLobby" : "lobby";
+  const loc = window.location;
+  const protocol = loc.protocol == "https:" ? "wss:" : "ws:";
+  const lobbyType = type.value == LobbyType.Twitch ? "twitchLobby" : "lobby";
   if(process.env.DEV) {
     var wsURL = protocol + "localhost:5000" + "/" + lobbyType + "/" + id.value + "/" + uuid.value;
   } else {
-    var wsURL = protocol + loc.host + "/" + lobbyType + "/" + id.value+ "/" + uuid.value;
+    var wsURL = protocol + (apiRoot || ("//"+loc.host)) + "/" + lobbyType + "/" + id.value+ "/" + uuid.value;
   }
   ws.value  = new WebSocket(wsURL);
   ws.value.onopen = onOpen;
