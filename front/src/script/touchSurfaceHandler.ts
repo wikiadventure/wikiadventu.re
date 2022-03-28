@@ -49,7 +49,7 @@ export default class TouchSurfaceHandler {
     }
     resetStyle(e:HTMLElement) {
         if (e) {
-            e.style.transition = "all ease-in-out 0.2s";
+            e.style.transition = "transform ease-in-out 0.2s";
             e.style.transform = "";
         }
     }
@@ -100,8 +100,8 @@ export default class TouchSurfaceHandler {
         var touchobj = e.changedTouches[0];
         this.distX = 0;
         this.startX = touchobj.pageX;
-        if (this.leftElement) this.leftElement.style.transition = "";
-        if (this.rightElement) this.rightElement.style.transition = "";
+        if (this.leftElement) this.leftElement.style.transitionDuration = "0s";
+        if (this.rightElement) this.rightElement.style.transitionDuration = "0s";
     }
 
 }
