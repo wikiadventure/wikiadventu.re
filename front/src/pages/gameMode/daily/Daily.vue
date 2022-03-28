@@ -96,7 +96,7 @@ import { useI18n } from 'vue-i18n';
 import { startDynamicTimer } from 'src/script/timer';
 import { lang as lobbyLang } from 'store/lobby/state';
 import { lang as connectLang } from 'store/connect/state';
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { notifyError } from 'store/connect/action';
 import CompactLangSwitch from 'src/components/setting/CompactLangSwitch.vue';
 import ThemeSwitch from 'src/components/setting/ThemeSwitch.vue';
@@ -105,6 +105,7 @@ import { apiRoot } from 'store/utils/ApiRoot';
 const { t } = useI18n({ useScope: 'local' });
 var $q = useQuasar();
 const router = useRouter();
+const route = useRoute();
 
 var {
     showRoundWin,
@@ -124,6 +125,9 @@ var timeLeft = ref(0);
 
 const startPage = ref("");
 const endPage = ref("");
+
+const apiUrl = route.query.apiUrl as string;
+console.log("ApiUrl", apiUrl);
 
 const startPageF = computed(()=> decodeURI(startPage.value).replace(/_/g," "));
 const endPageF = computed(()=> decodeURI(endPage.value).replace(/_/g," "));
@@ -147,7 +151,7 @@ function onWin() {
 
 function start() {
     lobbyLang.value = connectLang.value;
-    fetch(apiRoot+"/api/daily", {
+    fetch(apiUrl || (apiRoot+"/api/daily"), {
         method: "POST",
         body: JSON.stringify({
             lang: lobbyLang.value
@@ -161,7 +165,13 @@ function start() {
                     type: 'negative',
                     position: 'top',
                     message: t('noDaily')
-                    // message: i18n.global.t(translate(n)) + (message ? (' : ' + message) : "")
+                });
+            }
+            if (apiUrl != null && (typeof json.start === 'string' || typeof json.end === 'string')) {
+                return Notify.create({
+                    type: 'negative',
+                    position: 'top',
+                    message: t('noDaily')
                 });
             }
             isMenu.value = false;
@@ -194,6 +204,7 @@ onUnmounted(() => {
   en:
     start: "Start"
     noDaily: "No daily available for this language"
+    apiError: "The custom daily provider doesn't repect the format"
     explanation: |
         Welcome to Wiki Adventure Daily! The goal is to go from 1 wikipedia page to an other by following link.
         Try to finish this daily challenge as fast you can with the fewest link possible and share you adventure with your friend!
@@ -203,6 +214,7 @@ onUnmounted(() => {
   fr:
     start: "Commencer"
     noDaily: "Pas de daily disponible pour cette langue"
+    apiError: "Le fournisseur de daily personnalisé ne respecte pas le format"
     explanation: |
         Bienvenue sur Wiki Adventure Daily! Le but est d'aller d'une page wikipédia à une autre en suivant uniquement les liens.
         Essayer de finir le challenge quotidien aussi vite que vous pouvez avec le moins de liens possible et partager votre aventure avec vos amis! 
