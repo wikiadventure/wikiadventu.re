@@ -287,5 +287,8 @@ defineExpose({
     tipsContent: "You can open the game menu with top left button or with ctrl + alt + shift. You can also open the end page with ctrl + alt + space"
     tipsContentMobile: "You can open the game menu with top left button or by swiping to the right. You can also open the end page by swiping to the left."
   fr:
-
+    noEndPageYet: "Pas encore de page de fin"
+    tips: "Astuce"
+    tipsContent: "Vous pouvez ouvrir le menu du jeu avec le bouton en haut à gauche ou avec ctrl + alt + shift. Vous pouvez aussi ouvrir la page de fin avec ctrl + alt + espace"
+    tipsContentMobile: "Vous pouvez ouvrir le menu du jeu avec le bouton en haut à gauche ou en glissant vers la droite. Vous pouvez aussi ouvrir la page de fin en glissant vers la gauche."
 </i18n>
