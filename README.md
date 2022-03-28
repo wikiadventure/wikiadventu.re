@@ -7,7 +7,7 @@
         	<img src="https://img.shields.io/discord/724622557554147348?logo=discord" alt="join me on Discord">
 	</a>
    	<a href="https://wikiadventu.re">
-        	<img src="https://img.shields.io/endpoint?url=https://wikiadventu.re/api/badge" alt="number of people onlines on the game">
+        	<img src="https://img.shields.io/endpoint?url=https://api.wikiadventu.re/api/badge" alt="number of people onlines on the game">
 	</a>
 	<a href="https://github.com/Sacramentix/WikiAdventure/actions/workflows/tests-monitor-links.yml">
         	<img src="https://github.com/Sacramentix/WikiAdventure/actions/workflows/tests-monitor-links.yml/badge.svg?branch=master" alt="Link Monitoring State">
