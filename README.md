@@ -36,10 +36,12 @@
 
 <p align="center">
 	<a href="https://haxe.org"><img width=32 height=32 src="https://haxe.org/img/haxe-logo.svg" alt="Haxe logo"></a>
-    <a href="https://nodejs.org"><img width=32 height=32 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/nodejs/nodejs.png" alt="Node js logo"></a> 
-    <a href="https://quasar.dev"><img width=32 height=32 src="https://cdn.quasar.dev/logo-v2/svg/logo.svg" alt="Quasar js logo"></a>  
-    <a href="https://v3.vuejs.org"><img width=32 height=32 src="https://v3.vuejs.org/logo.png" alt="Vue js logo"></a>  
-    <a href="https://vue-i18n.intlify.dev"><img width=36.57 height=32 src="https://vue-i18n.intlify.dev/vue-i18n-logo.png" alt="Vue js logo"></a>
+	<a href="https://nodejs.org"><img width=32 height=32 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/nodejs/nodejs.png" alt="Node js logo"></a> 
+	<a href="https://quasar.dev"><img width=32 height=32 src="https://cdn.quasar.dev/logo-v2/svg/logo.svg" alt="Quasar js logo"></a>  
+	<a href="https://v3.vuejs.org">
+	    <svg viewBox="0 0 128 128" width="32" height="32"><path fill="#42b883" d="M78.8,10L64,35.4L49.2,10H0l64,110l64-110C128,10,78.8,10,78.8,10z" data-v-5f26462c=""></path><path fill="#35495e" d="M78.8,10L64,35.4L49.2,10H25.6L64,76l38.4-66H78.8z" data-v-5f26462c=""></path></svg>
+	</a>  
+    	<a href="https://vue-i18n.intlify.dev"><img width=36.57 height=32 src="https://vue-i18n.intlify.dev/vue-i18n-logo.png" alt="Vue js logo"></a>
 	<a href="https://www.typescriptlang.org"><img width=32 height=32 src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="Typescript logo"></a>
 </p>
 
