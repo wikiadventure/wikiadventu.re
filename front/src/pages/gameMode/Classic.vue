@@ -141,8 +141,8 @@ function voteResultEvent(payload: WsVoteResult) {
   //TODO: move out from notify to create a custom pop up
   Notify.create({
     type: 'annonce',
-    position: 'top',
-    message: t('gameTab.end') as string + " : " + payload.end
+    position: 'bottom-right',
+    message: "→ " + payload.end
   });
 }
 

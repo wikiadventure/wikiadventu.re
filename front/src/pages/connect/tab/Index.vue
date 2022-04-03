@@ -13,7 +13,7 @@
       <div class="skewLineContainer t2"><div class="skewLine"></div></div>
       <div class="wrapper t2">
         <content-pannel id="solo" head="Daily">
-          <div>
+          <div class="q-pb-md">
             <p>{{ t('daily.content') }}</p>
             <q-btn class="action-btn" to="/daily" label="Daily" push  />
           </div>
@@ -86,6 +86,7 @@
   }
   .skewLineContainer.t1 {
     height: calc(65vmin + var(--w-slope-ratio) + 5px);
+    pointer-events: none;
     .skewLine {
       top: calc(65vmin + var(--w-slope-ratio));
     }
