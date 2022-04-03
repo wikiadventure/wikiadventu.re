@@ -5,7 +5,7 @@ import { hashPassword, Password, verifyPassWord } from 'src/crypto/password';
 
 import type { Lang } from "src/lang";
 import type { Player } from './player/class';
-import type { GameLoopType } from './gameLoop/types';
+import { GameLoopType, VanillaGameLoopType } from './gameLoop/types';
 import { LobbyType } from "./types";
 import encode from "base32-encode";
 import decode from "base32-decode";
@@ -120,6 +120,10 @@ export class Lobby {
         })
     }
 
+    get formatId() {
+        return Lobby.encodeId(this.id);
+    }
+
     /**
      * remove a player from the lobby,
      * send the new owner if he get remove
@@ -159,7 +163,7 @@ export class Lobby {
         this.gameLoop = gameLoopSelect(type, config);
     }
 
-    static joinPublicFree(lang:Lang, gameLoop:GameLoopType) {
+    static joinPublicFree(lang:Lang, gameLoop?:GameLoopType) {
         for (const [ _, l ] of this.map.entries()) {
             if (l.type == LobbyType.Public && (l.players.length < l.slot)) {
                 if ( l.lang == lang ) {
@@ -170,8 +174,8 @@ export class Lobby {
             }
         }
         // if no free slot are find create a new public lobby
-        var lobby = new Lobby(lang, LobbyType.Public);
-        lobby.selectGameLoop(gameLoop);
+        const lobby = new Lobby(lang, LobbyType.Public);
+        lobby.selectGameLoop(gameLoop || VanillaGameLoopType.Classic);
         lobby.gameLoop.start();
         return lobby;
     }
