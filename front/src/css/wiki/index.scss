@@ -111,6 +111,10 @@
       flex-basis: 100%;
       text-align: center;
     }
+    p {
+      display: flex;
+      flex-wrap: wrap;
+    }
   }
   .hatnote {
     display: inline-block;
