@@ -35,9 +35,9 @@ const {
 } = playerSetup();
 
 watch(showRoundWin,(s) => {
-  if (s) isWinner.value ? winSound.play() : loseSound.play();
+  if (s) win.value ? winSound.play() : loseSound.play();
   else {
-    const a = isWinner.value ? winSound : loseSound;
+    const a = win.value ? winSound : loseSound;
     a.pause();
     a.currentTime = 0;
   }
