@@ -2,6 +2,6 @@
 bin/App.js
 bin/App.js.map
 bin/front
-
+**/node_modules
 local
 dump
