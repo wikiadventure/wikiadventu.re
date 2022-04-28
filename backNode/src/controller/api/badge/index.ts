@@ -1,10 +1,11 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-export const getBadgeUrl = '/api/info/:lobbyId';
+export const getBadgeUrl = '/api/badge';
 
 export async function getBadge(req: FastifyRequest, rep: FastifyReply) {
     //TODO
     // const n = WS.server.clients.size;
+    console.log("JAAJ");
     const n = 1;
     const x:BadgeReply = {
         schemaVersion: 1,

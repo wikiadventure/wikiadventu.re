@@ -1,0 +1,39 @@
+{
+    "module": {
+        "type": "commonjs"
+    },
+    "exclude": [
+        "(.*).(spec|test).(j|t)s$"
+    ],
+    "jsc": {
+        "baseUrl": "src",
+        "paths": {
+            "@controller": ["controller/index.ts"],
+            "@controller/*": ["controller/*"],
+            "@crypto": ["crypto/index.ts"],
+            "@crypto/*": ["crypto/*"],
+            "@game": ["game/index.ts"],
+            "@game/*": ["game/*"],
+            "@lang": ["lang/index.ts"],
+            "@lang/*": ["lang/*"],
+            "@reply": ["reply/index.ts"],
+            "@reply/*": ["reply/*"],
+            "@utils": ["utils/index.ts"],
+            "@utils/*": ["utils/*"]
+        },
+        "target": "es2022",
+        "parser": {
+            "syntax": "typescript"
+        },
+        "minify": {
+            "mangle": true,
+            "compress": true
+        }
+    },
+    "minify": true,
+    "env": {
+        "targets": {
+            "node": 16
+        }
+    }
+}

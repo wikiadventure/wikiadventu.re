@@ -1,14 +1,14 @@
-import { GameLoop, gameLoopSelect } from './gameLoop/class';
-import { ConnectError } from './../../reply/ConnectError';
+import { GameMode, GameModeSelect } from './gameMode/class';
 import { randomInt } from 'crypto';
-import { hashPassword, Password, verifyPassWord } from 'src/crypto/password';
+import { hashPassword, Password, verifyPassWord } from "@crypto/password";
 
-import type { Lang } from "src/lang";
+import type { Lang } from "@lang";
 import type { Player } from './player/class';
-import { GameLoopType, VanillaGameLoopType } from './gameLoop/types';
+import { GameModType, VanillaGameModType } from './gameMode/types';
 import { LobbyType } from "./types";
 import encode from "base32-encode";
 import decode from "base32-decode";
+import { ConnectError } from '@reply/ConnectError';
 
 // public var totalPlayer:Int = 0; //use to give an id to player when sending info with socket io
 // public var slot:Int;
@@ -57,7 +57,7 @@ export class Lobby {
     players: Player[] = [];
     ownerId = 0;
 
-    gameLoop!: GameLoop;
+    gameMode!: GameMode;
 
     hearbeat = setInterval(this.checkAlive, 60000);
 
@@ -159,15 +159,15 @@ export class Lobby {
         this.id = -1;
     }
 
-    selectGameLoop(type: GameLoopType, config?:any) {
-        this.gameLoop = gameLoopSelect(type, config);
+    selectGameMode(type: GameModType, config?:any) {
+        this.gameMode = GameModeSelect(type, config);
     }
 
-    static joinPublicFree(lang:Lang, gameLoop?:GameLoopType) {
+    static joinPublicFree(lang:Lang, gameMode?:GameModType) {
         for (const [ _, l ] of this.map.entries()) {
             if (l.type == LobbyType.Public && (l.players.length < l.slot)) {
                 if ( l.lang == lang ) {
-                    if ( gameLoop == null || (l.gameLoop.type == gameLoop)) {
+                    if ( gameMode == null || (l.gameMode.type == gameMode)) {
                         return l
                     }
                 }
@@ -175,8 +175,8 @@ export class Lobby {
         }
         // if no free slot are find create a new public lobby
         const lobby = new Lobby(lang, LobbyType.Public);
-        lobby.selectGameLoop(gameLoop || VanillaGameLoopType.Classic);
-        lobby.gameLoop.start();
+        lobby.selectGameMode(gameMode || VanillaGameModType.Classic);
+        lobby.gameMode.start();
         return lobby;
     }
 

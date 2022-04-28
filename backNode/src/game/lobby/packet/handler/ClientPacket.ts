@@ -12,6 +12,7 @@ export enum ModClientPacketType {
 }
 type ClientPacketType = VanillaClientPacketType | ModClientPacketType;
 
-typedef ClientPacket = {
+//@ts-ignore
+type ClientPacket = {
     type:ClientPacketType
 }

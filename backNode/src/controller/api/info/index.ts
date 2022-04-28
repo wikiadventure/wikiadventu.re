@@ -1,8 +1,8 @@
-import type { PhaseType } from 'src/game/lobby/gameLoop/phase/types';
-import type { GameLoopType } from 'src/game/lobby/gameLoop/types';
+import type { PhaseType } from "@game/lobby/gameMode/phase/types";
+import type { GameModType } from "@game/lobby/gameMode/types";
+import type { LobbyType } from "@game/lobby/types";
+import type { Lang } from "@lang";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type { LobbyType } from "src/game/lobby/types";
-import type { Lang } from 'src/lang';
 
 export const getInfoUrl = '/api/info/:lobbyId';
 
@@ -33,7 +33,7 @@ type InfoReply = {
     status:InfoStatusSuccess,
     lobbyID:string,
     lobbyType:LobbyType,
-    gameMode:GameLoopType,
+    gameMode:GameModType,
     gamePhase:PhaseType,
     lobbyLang:Lang,
     slot:number,

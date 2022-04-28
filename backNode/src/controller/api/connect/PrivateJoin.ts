@@ -4,7 +4,7 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 import { connectErrorReply, connectReply } from ".";
 import type { ConnectError, ConnectRequest } from "./type";
 
-export function PublicJoin(req: FastifyRequest, rep: FastifyReply) {
+export function PrivateJoin(req: FastifyRequest, rep: FastifyReply) {
     try {
         const form = req.body as ConnectRequest;
         if (form.lobby != null && form.lobby != "") {

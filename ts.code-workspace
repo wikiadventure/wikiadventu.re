@@ -1,0 +1,135 @@
+{
+	"folders": [
+		{
+			"name": "back",
+			"path": "back"
+		},
+		{
+			"name": "front",
+			"path": "front"
+		},
+		{
+			"name": "idea",
+			"path": "idea"
+		},
+		{
+			"name": ".git",
+			"path": ".git"
+		},
+		{
+			"name": ".github",
+			"path": ".github"
+		},
+		{
+			"name": "backnode",
+			"path": "backNode"
+		}
+	],
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "Quasar build",
+				"type": "shell",
+				"options": {
+					"cwd": "${workspaceFolder:front}"
+				},
+				"command": "quasar build -m ${input:QuasarMode}",
+				"problemMatcher": [
+					"$ts-webpack"
+				]
+			},
+			{
+				"label": "Quasar dev",
+				"type": "shell",
+				"isBackground": true,
+				"options": {
+					"cwd": "${workspaceFolder:front}"
+				},
+				"command": "quasar dev -m ${input:QuasarMode}",
+				"problemMatcher": [
+					"$ts-webpack-watch",
+					{
+						"base": "$ts-webpack-watch",
+						"background": {
+							"activeOnStart": true,
+							"beginsPattern": " App •  WAIT  •",
+							"endsPattern": " App •  READY  •"
+						}
+					}
+				]
+			},
+			{
+				"label": "debug npm dev",
+				"options": {
+					"cwd": "${workspaceFolder:backnode}"
+				},
+				"type": "shell",
+				"command": "npm run dev",
+				"isBackground": true,
+				"problemMatcher": [
+					{
+						"base": "$tsc",
+						"fileLocation":["relative", "${workspaceFolder:backnode}/src"],
+						"background": {
+							"activeOnStart": true,
+							"beginsPattern": "[nodemon] starting",
+							"endsPattern": "Debugger listening"
+						}
+					}
+				]
+			}
+		],
+		"inputs": [
+			{
+				"id": "QuasarMode",
+				"description": "Choose Quasar app mode :",
+				"default": "pwa",
+				"type": "pickString",
+				"options": ["spa","pwa","electron"]
+			}
+		]
+	},
+	"launch": {
+		"configurations": [
+			{
+				"name": "Debug Quasar front",
+				"type": "pwa-chrome",
+				"request": "launch",
+				"url": "http://localhost:5001",
+				"webRoot": "${workspaceFolder:front}/src",
+				"preLaunchTask": "Quasar dev",
+				"breakOnLoad": true,
+				"sourceMaps": true,
+				"sourceMapPathOverrides": {
+					"webpack:///./src/*": "${webRoot}/*"
+				}
+			},
+			{
+				"name": "Debug ts-nodemon back",
+				"type": "node",
+				"request": "attach",
+				"restart": true,
+				"port": 9229,
+				"sourceMaps": true,
+				"localRoot": "${workspaceRoot:backnode}",
+				"remoteRoot": "${workspaceRoot:backnode}",
+				"preLaunchTask": "debug npm dev"
+			}
+		],
+		"compounds": [
+			{
+				"name": "Debug back & front",
+				"configurations": [
+					"Debug ts-nodemon back",
+					"Debug Quasar front"
+				]
+			}
+		]
+	},
+	"extensions": {
+		"recommendations": [
+			"hediet.vscode-drawio"
+		]
+	}
+}

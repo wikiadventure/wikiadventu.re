@@ -1,7 +1,6 @@
-import { PlayerMod, PlayerMod1 } from './types';
-import { Lang } from "src/lang";
+import type { PlayerMod } from './types';
 import type  Ws from "ws";
-import { v4 as uuid } from "uuid";
+import { randomUUID as uuid } from "node:crypto";
 
 export class Player<T extends PlayerMod | never = never > {
 

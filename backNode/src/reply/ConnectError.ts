@@ -15,7 +15,7 @@ export enum ConnectError {
     NoLobbyFoundWithChannelName,
     LobbyFull,
     InvalidPassword,
-    InvalidGameLoop,
+    InvalidGameMode,
 	InvalidTwitchCode,
     InvalidPseudo,
     TwitchIdAlreadyUsed,

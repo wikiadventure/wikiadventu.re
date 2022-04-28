@@ -2,24 +2,33 @@
   "name": "wiki-adventure-back",
   "version": "1.0.0",
   "description": "A node backend for wiki-adventure multiplayer",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch-error": "tsc -w --noEmit",
+    "dev": "nodemon --config nodemon.json",
+    "build": "swc src -d build",
+    "start": "node build"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Sacramentix",
+  "license": "MIT",
   "dependencies": {
-    "@coobaha/typed-fastify": "^0.6.0",
     "base32-decode": "^1.0.0",
-    "base32-encode": "^2.0.0",
+    "base32-encode": "^1.2.0",
     "fastify": "^3.27.4",
+    "fastify-cors": "^6.0.3",
+    "fastify-helmet": "^7.0.1",
+    "fluent-json-schema": "^3.1.0",
     "node-cron": "^3.0.0",
-    "uuid": "^8.3.2",
     "ws": "^8.5.0"
   },
   "devDependencies": {
     "@types/node": "^16.11.26",
     "@types/uuid": "^8.3.4",
-    "@types/ws": "^8.5.3"
+    "@types/ws": "^8.5.3",
+    "nodemon": "^2.0.15",
+    "swc": "^1.0.11",
+    "ts-node": "^10.7.0",
+    "tsconfig-paths": "^3.14.1",
+    "typescript": "^4.6.3"
   }
 }

@@ -3,30 +3,49 @@
   "display": "Node 16 + Strictest",
   "compilerOptions": {
     "lib": [
-      "es2021"
+      "esnext"
     ],
-    "module": "commonjs",
-    "target": "es2021",
+    "module": "CommonJS",
+    "target": "ES2022",
+    "moduleResolution": "Node",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "alwaysStrict": true,
-    "allowUnusedLabels": false,
-    "allowUnreachableCode": false,
-    "exactOptionalPropertyTypes": true,
-    "noFallthroughCasesInSwitch": true,
+    // "allowUnusedLabels": false,
+    // "allowUnreachableCode": false,
+    // "exactOptionalPropertyTypes": true,
+    // "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
     "importsNotUsedAsValues": "error",
     "checkJs": true,
-    "baseUrl": ".",
-    "outDir": "dist"
+    "baseUrl": "src",
+    "outDir": "build",
+    "paths": {
+      "@controller": ["controller/index.ts"],
+      "@controller/*": ["controller/*"],
+      "@crypto": ["crypto/index.ts"],
+      "@crypto/*": ["crypto/*"],
+      "@game": ["game/index.ts"],
+      "@game/*": ["game/*"],
+      "@lang": ["lang/index.ts"],
+      "@lang/*": ["lang/*"],
+      "@reply": ["reply/index.ts"],
+      "@reply/*": ["reply/*"],
+      "@utils": ["utils/index.ts"],
+      "@utils/*": ["utils/*"]
+    }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"],
-  "exclude": ["/dist", "node_modules", ".vscode"]
+  "exclude": ["/build", "node_modules", ".vscode"],
+  "ts-node": {
+    "files": true
+    // "esm": true
+  } 
 }
