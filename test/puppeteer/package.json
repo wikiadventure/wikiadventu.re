@@ -1,0 +1,14 @@
+{
+  "name": "wiki-adventure-puppeteer-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Create a private lobby.js",
+  "scripts": {
+    "test": "node script/Play_in_public_lobby.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^13.7.0"
+  }
+}
