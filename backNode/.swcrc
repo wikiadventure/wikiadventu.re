@@ -24,13 +24,15 @@
         "target": "es2022",
         "parser": {
             "syntax": "typescript"
-        },
-        "minify": {
-            "mangle": true,
-            "compress": true
         }
+        // we remove minify it seems to impact perf a lot x100 on foreach loop with null verification
+        // ,
+        // "minify": {
+        //     "mangle": true,
+        //     "compress": true
+        // }
     },
-    "minify": true,
+    // "minify": true,
     "env": {
         "targets": {
             "node": 16
