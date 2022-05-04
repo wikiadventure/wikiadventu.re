@@ -2,7 +2,7 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 
 export const getBadgeUrl = '/api/badge';
 
-export async function getBadge(req: FastifyRequest, rep: FastifyReply) {
+export async function Badge(req: FastifyRequest, rep: FastifyReply) {
     //TODO
     // const n = WS.server.clients.size;
     console.log("JAAJ");

@@ -15,7 +15,6 @@ export function PublicJoin(req: FastifyRequest, rep: FastifyReply) {
         addPlayer(player);
         return connectReply(lobby, player, rep);
     } catch (e) {
-        connectErrorReply(e as ConnectError, rep);
-        return 
+        return connectErrorReply(e as ConnectError, rep);
     }
 }

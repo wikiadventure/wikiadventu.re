@@ -27,9 +27,9 @@ export type ConnectRequestBase = {
     type: LoginType,
     lang: Lang,
     pseudo: string,
-    slot?: number,
-    gameMod?: GameModType,
-    password?: string,
+    slot: number,
+    gameMod: GameModType,
+    password: string,
     // lobby?: string,
     config: any
 }

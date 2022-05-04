@@ -7,8 +7,7 @@ import type { Player } from "@game/lobby/player/class";
 
 export const postConnectUrl = "/api/connect";
 
-
-export function connect(req: FastifyRequest, rep: FastifyReply) {
+export function Connect(req: FastifyRequest, rep: FastifyReply) {
     const form = req.body as ConnectRequest;
     switch (form.type) {
         case LoginType.PrivateCreate: return PublicJoin(req, rep);
@@ -32,6 +31,6 @@ export function connectReply(lobby: Lobby, player: Player, rep: FastifyReply) {
 }
 
 export function connectErrorReply(code: ConnectError, rep: FastifyReply) {
-    rep.code(400);
-    rep.send({ code })
+    rep.code(400)
+        .send({ code });
 }
