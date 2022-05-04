@@ -1,4 +1,4 @@
-export enum VanillaPhaseType {
+export enum VanillaGamePhaseType {
     Waiting,
     Voting,
     Playing,
@@ -7,8 +7,8 @@ export enum VanillaPhaseType {
 }
 
 // Register your mod phase here and on the front.
-export enum ModPhaseType {
+export enum ModGamePhaseType {
     Default = 1000
 }
 
-export type PhaseType = VanillaPhaseType | ModPhaseType;
+export type GamePhaseType = VanillaGamePhaseType | ModGamePhaseType;

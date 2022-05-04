@@ -17,6 +17,7 @@ export class Player<T extends PlayerMod | never = never > {
     alive = false;
     validationBuffer:Array<Promise<string>> = [];//used to store validation of visited
     validationList:Array<PageValidation> = [];
+    get pageList() {return this.validationList.map(v => v.page)};
     get currentValidation() { return this.validationList.at(-1) }
     get currentPage() { return this.validationList.at(-1)?.page || "" }
     set currentPage(s:string) { this.validationList.push({page: s, validated: false}) }
@@ -29,12 +30,16 @@ export class Player<T extends PlayerMod | never = never > {
         this.uuid = uuid();
     }
 
-    assignSocket(socket:Ws):boolean {
-        if (this.socket != null) return false;
+    assignSocket(socket:Ws) {
+        var firstConnection = true;
+        if (this.socket != null) {
+            firstConnection = false;
+            this.socket.close(1006, "New socket connected");
+        }
         this.socket = socket;
         this.socket.on('pong', () => this.alive = true);
         this.alive = true;
-        return true;
+        return firstConnection;
     }
 
 }

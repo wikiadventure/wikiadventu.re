@@ -1,7 +1,6 @@
 import { GameMode, GameModeSelect } from './gameMode/class';
 import { randomInt } from 'crypto';
 import { hashPassword, Password, verifyPassWord } from "@crypto/password";
-
 import type { Lang } from "@lang";
 import type { Player } from './player/class';
 import { GameModType, VanillaGameModType } from './gameMode/types';
@@ -9,39 +8,12 @@ import { LobbyType } from "./types";
 import encode from "base32-encode";
 import decode from "base32-decode";
 import { ConnectError } from '@reply/ConnectError';
-
-// public var totalPlayer:Int = 0; //use to give an id to player when sending info with socket io
-// public var slot:Int;
-// public var id:Int;
-
-// public var formatId(get,never):String;
-// public function get_formatId():String {
-//     return RandomBase32.encode(id);
-// }
-
-// public var passwordHash:String;
-// public var lang:Lang;
-// public var players:Array<Player>;
-// public var ownerId:Int = 0;//we could meaby have multiple owner
-// public var owner(get, never):Player;
-// public function get_owner() return players.find(p->p.id==ownerId);
-
-// public static var lobbyLimit:Int = 10000;
-// public static var privateLimit:Int = 2000;
-// public static var lobbyList:Array<Lobby> = [];
-
-// public function new(lang:Lang, type:LobbyType, ?passwordHash:String, slot:Int=15) {
-//     if (lobbyList.length >= lobbyLimit) throw ConnectError.LobbyLimitReached;
-//     else if (getPrivateLobbyLength() >= privateLimit) throw ConnectError.PrivateLobbyLimitReached;
-//     players = new Array<Player>();
-//     this.lang = lang;
-//     this.type = type;
-//     this.slot = slot;
-//     this.passwordHash = passwordHash;
-//     heartbeat = Timers.setInterval(checkAlive, 30000);
-//     insert();
-// }
-
+import type  Ws from "ws";
+import { emitGamePhase } from './packet/emitter/vanilla/GamePhase';
+import { emitPlayerJoin, sendCurrentPlayers } from './packet/emitter/vanilla/PlayerJoin';
+import { emitSetOwner } from './packet/emitter/vanilla/SetOwner';
+import { emitPlayerLeft } from './packet/emitter/vanilla/PlayerLeft';
+import { handlePacket } from './packet/handler';
 export class Lobby {
 
     static map = new Map<number, Lobby>();
@@ -67,7 +39,6 @@ export class Lobby {
         this.password = hashPassword(password);
         this.slot = slot;
         this.insert();
-
     }
 
     insert() {
@@ -89,7 +60,7 @@ export class Lobby {
         this.players.push(player);
         player.id = this.totalPlayers;
         this.totalPlayers++;
-        // kickOnTimeout(player);
+        this.kickOnTimeout(player);
         // log("new player registered : " + player.uuid + " --> " + player.pseudo, PlayerData);
     }
 
@@ -103,7 +74,7 @@ export class Lobby {
     connect(password:string = "") {
         if (this.type == LobbyType.Public || verifyPassWord(password, this.password)) return this.checkForSlot();
         // log("connection rejected : " + player.uuid + " --> " + player.pseudo + "provide a wrong password", PlayerData);
-        throw ""// ConnectError.InvalidPassword;
+        throw ConnectError.InvalidPassword;
     }
 
     checkAlive() {
@@ -132,7 +103,7 @@ export class Lobby {
      */
     removePlayer(player: Player) {
         // // log("player left : " + player.uuid + " --> " + player.pseudo, PlayerData);
-        // // this.players.emitPlayerLeft(player);
+        emitPlayerLeft(this.players, player);
         const i = this.players.indexOf(player);
         if (i == -1) return;
         this.players.splice(i, 1);
@@ -142,21 +113,69 @@ export class Lobby {
             this.destroy();
             return;
         }
-        // checkVoteSkip();
+        this.checkVoteSkip();
         if (doOwnerChange) {
             this.ownerId = this.players[0]!.id;
-            // players.emitSetOwner(ownerId);
+            emitSetOwner(this.players, this.ownerId)
         }
 
     }
 
+    getPlayerFromUUID(uuid:String) {
+        return this.players.find(p=>p.uuid===uuid);
+    }
+
+    /**
+     * Websocket part
+     * 
+     */
+
+    onWsAuth(ws:Ws, uuid:String) {
+        const player = this.getPlayerFromUUID(uuid);
+        if ( player != null ) {
+            if (player.assignSocket(ws) ) {
+                return this.onPlayerConnection(player);
+            }
+        }
+        return ws.close(1008, 'Connection rejected because playerID is not registered in the lobby');
+    }
+
+    onPlayerConnection(player:Player) {
+        emitPlayerJoin(this.players, player);
+        emitSetOwner([player], this.ownerId);
+        this.sendState(player);
+        player.socket!.on('message', (data:string) => handlePacket(this, player, data));//handle is method from the static extension packet/PacketHandler.hx
+        player.socket!.on('close', (data) => this.websocketDisconnect(player));
+    }
+
+    sendState(player:Player) {
+        const timeLeft = this.gameMode.gamePhase.duration - (Date.now()- this.gameMode.timestamp);
+        emitGamePhase([player], this.gameMode.gamePhase.type, this.gameMode.currentRound, timeLeft);
+        sendCurrentPlayers(this.players, player);
+        this.gameMode.sendState(player);
+        this.gameMode.gamePhase.sendState(player);
+    }
+
+    websocketDisconnect(player:Player) {
+        player.socket = undefined;
+        this.kickOnTimeout(player);
+    }
+
     kickOnTimeout(player: Player) {
-        return setTimeout(() => player.socket != null || this.removePlayer(player), 120000);
+        return setTimeout(() => player.socket == null && this.removePlayer(player), 120000);
+    }
+
+    checkVoteSkip() {
+        // if (this.players.every(p=>p.voteSkip||!p.socket)) this.gameMode.gamePhase.end();
     }
 
     destroy() {
         Lobby.map.delete(this.id);
         this.id = -1;
+    }
+
+    isDetroyed() {
+        return this.id == -1;
     }
 
     selectGameMode(type: GameModType, config?:any) {
@@ -193,12 +212,12 @@ export class Lobby {
         return encode(new Uint8Array(a), "Crockford").replace(/^0+/, "");
     }
 
-    static decodeId(s: string) {
+    static decodeId(id: string) {
         try {
-            if (s.length > 7) throw "s is too long"
-            while (s.length < 7) s = "0" + s;
+            if (id.length > 7) throw "id is too long"
+            while (id.length < 7) id = "0" + id;
             const v = new DataView(new ArrayBuffer(32), 0);
-            const u = new Uint8Array(decode(s, "Crockford"));
+            const u = new Uint8Array(decode(id, "Crockford"));
             for (var i = 0; i < 4; i++) v.setUint8(i, u[i] as number);
             return v.getUint32(0);
         } catch(e) {
