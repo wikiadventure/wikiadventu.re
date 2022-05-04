@@ -26,5 +26,5 @@ export function getLangName(l:Lang) {
 }
 
 export function getWikiUrl(l:Lang) {
-    return l + ".wikipedia.org";
+    return "https://" + l + ".wikipedia.org";
 }
