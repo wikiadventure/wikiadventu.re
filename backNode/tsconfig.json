@@ -28,16 +28,22 @@
     "baseUrl": "src",
     "outDir": "build",
     "paths": {
-      "@controller": ["controller/index.ts"],
       "@controller/*": ["controller/*"],
-      "@crypto": ["crypto/index.ts"],
+
       "@crypto/*": ["crypto/*"],
-      "@game": ["game/index.ts"],
-      "@game/*": ["game/*"],
+
+      "@lobby/class": ["game/lobby/class.ts"],
+      "@wikiApi/*": ["game/wikiApi/*"],
+      "@gameMode/*": ["game/lobby/gameMode/*"],
+      "@gamePhase/*": ["game/lobby/gameMode/gamePhase/*"],
+      "@packet/*": ["game/lobby/packet/*"],
+      "@player/*": ["game/lobby/player/*"],
+
       "@lang": ["lang/index.ts"],
       "@lang/*": ["lang/*"],
-      "@reply": ["reply/index.ts"],
+
       "@reply/*": ["reply/*"],
+
       "@utils": ["utils/index.ts"],
       "@utils/*": ["utils/*"]
     }

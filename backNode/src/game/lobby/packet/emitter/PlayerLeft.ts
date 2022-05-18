@@ -1,5 +1,6 @@
+import { ServerPacket, ServerPacketType } from './types';
 import type { Player } from "@game/lobby/player/class";
-import { wsEmit } from "../emit";
+import { wsEmit } from ".";
 
 type ServerPlayerLeft = ServerPacket & {
     id: number
@@ -7,7 +8,7 @@ type ServerPlayerLeft = ServerPacket & {
 
 export function emitPlayerLeft(players: Player[], player: Player) {
     const data:ServerPlayerLeft = {
-        type: VanillaServerPacketType.PlayerLeft,
+        type: ServerPacketType.PlayerLeft,
         id: player.id,
     }
     wsEmit(players, data);

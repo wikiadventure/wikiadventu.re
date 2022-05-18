@@ -1,3 +1,4 @@
+import type { WikiPage } from './pagePicker';
 import type { WikiResponse } from './WikiResponse';
 import { wikiRequestInit } from './WikiApi';
 import { getWikiUrl, Lang } from "@lang";
@@ -5,7 +6,7 @@ import fetch from "node-fetch";
 import type { WikiRequest } from "./WikiRequest";
 import Querystring from "node:querystring";
 
-export const randomTitleCacheMap = new Map<Lang, string[]>();
+export const randomTitleCacheMap = new Map<Lang, WikiPage[]>();
 
 export async function getNewRandomTitle(lang:Lang):Promise<void> {
     const param:WikiRequest = {
@@ -19,12 +20,12 @@ export async function getNewRandomTitle(lang:Lang):Promise<void> {
     const encodedParam = "/w/api.php?" + Querystring.encode(param);
     const json = await fetch(getWikiUrl(lang)+encodedParam, wikiRequestInit)
                         .then(res=>res.json() as Promise<WikiResponse>);
-    const titles = json.query.random.map(p=>p.title);
+    const wikiPages:WikiPage[] = json.query.random.map(p=>({id: p.pageid, title: p.title}));
     var cache = randomTitleCacheMap.get(lang);
-    randomTitleCacheMap.set(lang, cache == null ? titles : cache.concat(titles));
+    randomTitleCacheMap.set(lang, cache == null ? wikiPages : cache.concat(wikiPages));
 }
 
-export async function getRandomTitle(lang:Lang):Promise<string> {
+export async function getRandomTitle(lang:Lang):Promise<WikiPage> {
     const cache = randomTitleCacheMap.get(lang);
     if (cache == null || cache.length == 0) {
         await getNewRandomTitle(lang);
@@ -33,7 +34,7 @@ export async function getRandomTitle(lang:Lang):Promise<string> {
     return cache!.pop()!;
 }
 
-export async function getRandomTitleNotIn(lang:Lang, titles:string[]):Promise<string> {
+export async function getRandomTitleNotIn(lang:Lang, wikiPages:WikiPage[]):Promise<WikiPage> {
     var cache = randomTitleCacheMap.get(lang);
     if (cache == null || cache.length == 0) {
         await getNewRandomTitle(lang);
@@ -45,7 +46,7 @@ export async function getRandomTitleNotIn(lang:Lang, titles:string[]):Promise<st
             await getNewRandomTitle(lang);
             cache = randomTitleCacheMap.get(lang)!;
         }
-        if (titles.findIndex(t=>t==cache![i]) == -1) return cache.splice(i,1)[0]!;
+        if (wikiPages.findIndex(p=>p.id==cache![i]?.id) == -1) return cache.splice(i,1)[0]!;
         i++;
     }
 }

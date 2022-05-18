@@ -1,5 +1,6 @@
+import { ServerPacket, ServerPacketType } from './types';
 import type { Player } from "@game/lobby/player/class";
-import { wsEmit } from "../emit";
+import { wsEmit } from ".";
 
 type ServerUpdateScore = ServerPacket & {
     id: number,
@@ -8,7 +9,7 @@ type ServerUpdateScore = ServerPacket & {
 
 export function emitUpdateScore(players: Player[], player: Player) {
     const data:ServerUpdateScore = {
-        type: VanillaServerPacketType.UpdateScore,
+        type: ServerPacketType.UpdateScore,
         id: player.id,
         score: player.score
     }

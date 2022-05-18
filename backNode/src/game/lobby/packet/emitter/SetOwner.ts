@@ -1,5 +1,6 @@
+import { ServerPacket, ServerPacketType } from './types';
 import type { Player } from "@game/lobby/player/class";
-import { wsEmit } from "../emit";
+import { wsEmit } from ".";
 
 type ServerSetOwner = ServerPacket & {
     id: number
@@ -7,7 +8,7 @@ type ServerSetOwner = ServerPacket & {
 
 export function emitSetOwner(players: Player[], ownerId: number) {
     const data:ServerSetOwner = {
-        type: VanillaServerPacketType.SetOwner,
+        type: ServerPacketType.SetOwner,
         id: ownerId
     }
     wsEmit(players, data);

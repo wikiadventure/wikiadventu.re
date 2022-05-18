@@ -1,10 +1,11 @@
-import type { GamePhaseType } from './types';
-import type { Lobby } from "@game/lobby/class";
-import type { Player } from '@game/lobby/player/class';
-import { emitGamePhase } from '@game/lobby/packet/emitter/vanilla/GamePhase';
-import { setTimeout } from "node:timers/promises"
-import type { InternalPacketType } from '@game/lobby/packet/handler/type';
-import { PacketSubscriberCallback, subscribe } from '@game/lobby/packet/handler/PacketSubscriber';
+import { setTimeout } from 'node:timers/promises';
+import type { Lobby } from "@lobby/class";
+import { emitState } from "@packet/emitter/State";
+import type { PacketHandler } from "@packet/handler";
+import { PacketSubscriberCallback, subscribe } from "@packet/handler/PacketSubscriber";
+import type { ClientPacketType } from "@packet/handler/type";
+import type { Player } from "@player/class";
+import type { GamePhaseType } from "./types";
 
 export class GamePhase {
 
@@ -16,43 +17,67 @@ export class GamePhase {
 
     ended = false;
 
-    packetEventSubscribers:Map<InternalPacketType, PacketSubscriberCallback[]> = new Map();
+    timestamp = -1;
+    timer!:AbortController;
+
+    packetEventSubscribers:Map<ClientPacketType, PacketSubscriberCallback[]> = new Map();
+    packetHandlers:Map<ClientPacketType, PacketHandler> = new Map();
+    
+    get players() {return this.lobby.players};
 
     constructor(lobby:Lobby, duration:number) {
         this.lobby = lobby;
         this.duration = duration;
     }
+
+    startTimer() {
+        this.timestamp = Date.now();
+        if (this.duration > 0) {
+            this.timer = new AbortController();
+            try {
+                setTimeout(this.duration*1000, undefined, { signal: this.timer.signal }).then(this.end).catch();
+            } catch {}
+            
+        }
+    }
     
-    start(data?:any):Promise<any> {
+
+    
+    async start(data?:any):Promise<any> {
         this.lobby.players.forEach(p=>p.voteSkip = false);
         // this.lobby.log("New phase init : " + this.type +"|" + this.lobby.gameLoop.currentRound + "|" + this.duration, Info);
-        return this.onStart().then(data=> {
-            this.lobby.gameMode.timestamp = Date.now();
-            emitGamePhase(this.lobby.players, this.type, this.lobby.gameMode.currentRound, this.duration);
-            if (this.duration > 0) this.lobby.gameMode.loop = setTimeout(this.duration*1000, data).then(this.end);
+        return this.onStart().then(startData=> {
+            this.emitState(this.lobby.players, startData);
+            this.startTimer();
         });
     }
-    end(data?:any) {
+    
+    async end(data?:any) {
         if (this.ended) return;
         this.ended = true;
+        this.timer.abort();
         return this.onEnd().then(data=>{
             if (!this.lobby.isDetroyed()) this.lobby.gameMode.next(data);
         });
     }
-    onStart(data?:any):Promise<any> {
-        return Promise.resolve();
+    async onStart(data?:any):Promise<any> {
+        return;
     }
 
-    onEnd(data?:any):Promise<any> {
-        return Promise.resolve();
+    async onEnd(data?:any):Promise<any> {  
+        return;
     }
 
     sendState(player:Player) {
-        
+        this.emitState([player])
     }
 
-    subscribePacket(type:InternalPacketType, callback: PacketSubscriberCallback) {
+    subscribePacket(type:ClientPacketType, callback: PacketSubscriberCallback) {
         subscribe(this.packetEventSubscribers, type, callback);
+    }
+    
+    emitState(players:Player[], data?:any) {
+        emitState(players, this.lobby.gameMode.type, this.type, this.lobby.gameMode.currentRound, data);
     }
 
     // inline function log(data : Dynamic, logType:LogType, ?pos : haxe.PosInfos) {

@@ -1,19 +1,19 @@
-import { GameMode, GameModeSelect } from './gameMode/class';
-import { randomInt } from 'crypto';
-import { hashPassword, Password, verifyPassWord } from "@crypto/password";
-import type { Lang } from "@lang";
-import type { Player } from './player/class';
-import { GameModType, VanillaGameModType } from './gameMode/types';
-import { LobbyType } from "./types";
-import encode from "base32-encode";
 import decode from "base32-decode";
-import { ConnectError } from '@reply/ConnectError';
-import type  Ws from "ws";
-import { emitGamePhase } from './packet/emitter/vanilla/GamePhase';
-import { emitPlayerJoin, sendCurrentPlayers } from './packet/emitter/vanilla/PlayerJoin';
-import { emitSetOwner } from './packet/emitter/vanilla/SetOwner';
-import { emitPlayerLeft } from './packet/emitter/vanilla/PlayerLeft';
-import { handlePacket } from './packet/handler';
+import encode from "base32-encode";
+import type Ws from "ws";
+import { type Password, hashPassword, verifyPassWord } from "@crypto/password";
+import type { GameMode } from "@gameMode/class";
+import { GameModType } from "@gameMode/types";
+import type { Lang } from "@lang";
+import { emitCurrentPlayers } from "@packet/emitter/CurrentPlayer";
+import { emitPlayerJoin } from "@packet/emitter/PlayerJoin";
+import { emitPlayerLeft } from "@packet/emitter/PlayerLeft";
+import { emitSetOwner } from "@packet/emitter/SetOwner";
+import { handlePacket } from "@packet/handler";
+import type { Player } from "@player/class";
+import { ConnectError } from "@reply/ConnectError";
+import { randomInt } from "crypto";
+
 export class Lobby {
 
     static map = new Map<number, Lobby>();
@@ -142,7 +142,6 @@ export class Lobby {
 
     onPlayerConnection(player:Player) {
         emitPlayerJoin(this.players, player);
-        emitSetOwner([player], this.ownerId);
         this.sendState(player);
         player.socket!.on('message', (data:string) => handlePacket(this, player, data));//handle is method from the static extension packet/PacketHandler.hx
         player.socket!.on('close', (data) => this.websocketDisconnect(player));
@@ -150,8 +149,8 @@ export class Lobby {
 
     sendState(player:Player) {
         const timeLeft = this.gameMode.gamePhase.duration - (Date.now()- this.gameMode.timestamp);
-        emitGamePhase([player], this.gameMode.gamePhase.type, this.gameMode.currentRound, timeLeft);
-        sendCurrentPlayers(this.players, player);
+        emitSetOwner([player], this.ownerId);
+        emitCurrentPlayers(this.players, player);
         this.gameMode.sendState(player);
         this.gameMode.gamePhase.sendState(player);
     }
@@ -166,10 +165,14 @@ export class Lobby {
     }
 
     checkVoteSkip() {
-        // if (this.players.every(p=>p.voteSkip||!p.socket)) this.gameMode.gamePhase.end();
+        if (this.players.every(p=>p.voteSkip||!p.socket)) {
+            this.gameMode.gamePhase.end();
+            return true;
+        } return false;
     }
 
     destroy() {
+        this.gameMode.gamePhase.timer.abort();
         Lobby.map.delete(this.id);
         this.id = -1;
     }
@@ -179,7 +182,7 @@ export class Lobby {
     }
 
     selectGameMode(type: GameModType, config?:any) {
-        this.gameMode = GameModeSelect(type, config);
+        // this.gameMode = GameModeSelect(type, config);
     }
 
     static joinPublicFree(lang:Lang, gameMode?:GameModType) {
@@ -194,7 +197,7 @@ export class Lobby {
         }
         // if no free slot are find create a new public lobby
         const lobby = new Lobby(lang, LobbyType.Public);
-        lobby.selectGameMode(gameMode || VanillaGameModType.Classic);
+        lobby.selectGameMode(gameMode || GameModType.Classic);
         lobby.gameMode.start();
         return lobby;
     }
@@ -225,4 +228,10 @@ export class Lobby {
         }
     }
 
+}
+
+export enum LobbyType {
+    Public,
+    Private,
+    Twitch
 }

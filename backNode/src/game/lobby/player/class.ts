@@ -1,32 +1,18 @@
-import type { PlayerMod } from './types';
 import type  Ws from "ws";
 import { randomUUID as uuid } from "node:crypto";
 
-export class Player<T extends PlayerMod | never = never > {
-
-    mod:T;
+export class Player {
 
     socket?:Ws;
     pseudo:string;
     uuid:string;//for authentification
     score=0;
-    numberOfJump=0;
-    vote:String = "";
     voteSkip = false;
     id = -1;//for client identification
     alive = false;
-    validationBuffer:Array<Promise<string>> = [];//used to store validation of visited
-    validationList:Array<PageValidation> = [];
-    get pageList() {return this.validationList.map(v => v.page)};
-    get currentValidation() { return this.validationList.at(-1) }
-    get currentPage() { return this.validationList.at(-1)?.page || "" }
-    set currentPage(s:string) { this.validationList.push({page: s, validated: false}) }
 
-    validationListReset() { this.validationList = [] }
-
-    constructor(pseudo:string , ...[mod]: T extends never ? [] : [T]) {
+    constructor(pseudo:string) {
         this.pseudo = pseudo.substring(30);
-        this.mod = mod as T;
         this.uuid = uuid();
     }
 
@@ -42,9 +28,8 @@ export class Player<T extends PlayerMod | never = never > {
         return firstConnection;
     }
 
-}
+    reset() {
+        this.score=0;        
+    }
 
-type PageValidation = {
-    page:string,
-    validated:boolean
 }

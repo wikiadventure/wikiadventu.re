@@ -1,5 +1,6 @@
+import { ServerPacket, ServerPacketType } from './types';
 import type { Player } from "@game/lobby/player/class";
-import { wsEmit } from "../emit";
+import { wsEmit } from ".";
 
 type ServerMessage = ServerPacket & {
     id: number,
@@ -8,7 +9,7 @@ type ServerMessage = ServerPacket & {
 
 export function emitMessage(players: Player[], message:string, from?:Player) {
     const data:ServerMessage = {
-        type: VanillaServerPacketType.Message,
+        type: ServerPacketType.Message,
         id: from == null ? -1 : from.id,
         data: message
     }

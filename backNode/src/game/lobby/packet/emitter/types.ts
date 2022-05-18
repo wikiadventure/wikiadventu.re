@@ -1,23 +1,19 @@
-enum VanillaServerPacketType {
-    PlayerJoin,
+export enum ServerPacketType {
+    CurrentPlayers,
+    PlayerJoin, 
     PlayerLeft,
-    VoteResult,
-    GamePhase,
+    State,
     UpdateScore,
-    WinRound,
     Message,
     SetOwner,
-    Path,
     VoteSkip,
-    Rollback,
+    UpdateTimer,
+
+    GameMode,//current gameMode specific packet
+    GamePhase,//current gamePhase specific packet
+
 }
 
-enum ModServerPacketType {
-
-}
-
-type ServerPacketType = VanillaServerPacketType | ModServerPacketType;
-
-type ServerPacket = {
+export type ServerPacket = {
     type:ServerPacketType
 }

@@ -1,8 +1,8 @@
-import type { Lobby } from "@game/lobby/class";
-import type { Player } from "@game/lobby/player/class";
+import type { Lobby } from "@lobby/class";
+import type { Player } from "@player/class";
 import type { ClientPacket } from "./type";
 
-export type IPacketHandler =   (lobby:Lobby,  player:Player, p:ClientPacket)=>void
+export type PacketHandler = (lobby:Lobby,  player:Player, p:ClientPacket) => void;
 
 export function handlePacket(lobby:Lobby, player:Player, data:string) {
     var packet:ClientPacket;

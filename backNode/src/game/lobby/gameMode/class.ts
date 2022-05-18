@@ -1,47 +1,46 @@
-import { PacketSubscriberCallback, subscribe } from './../packet/handler/PacketSubscriber';
-import type { InternalPacket, InternalPacketType } from './../packet/handler/type';
-import type { IPacketHandler } from './../packet/handler/index';
-import type { ClientPacketType } from '../packet/handler/type';
-import type { GamePhase } from './gamePhase/class';
-import type { Lobby } from './../class';
-import { ConnectError } from '@reply/ConnectError';
-import type { GameModType, VanillaGameModType } from './types';
-import {} from "node:timers/promises";
-import type { Player } from '../player/class';
+import type { Lobby } from "@lobby/class";
+import type { PacketHandler } from "@packet/handler";
+import { type PacketSubscriberCallback, subscribe } from "@packet/handler/PacketSubscriber";
+import type { ClientPacketType, ClientPacket } from "@packet/handler/type";
+import type { Player } from "@player/class";
+import type { roundCount } from "./config/type";
+import type { GamePhase } from "./gamePhase/class";
+import type { GameModType } from "./types";
+
+
 
 export class GameMode {
 
     type!:GameModType;
     lobby:Lobby;
     gamePhase!:GamePhase;
-    loop!:Promise<any>;
     timestamp:number = 0;
-    round:number = 0;
+    round:roundCount = 3 as roundCount;
     currentRound:number = 0;
-    packetEventSubscribers:Map<InternalPacketType, PacketSubscriberCallback[]> = new Map();
-    packetHandlers:Map<ClientPacketType, IPacketHandler> = new Map();
+    packetEventSubscribers:Map<ClientPacketType, PacketSubscriberCallback[]> = new Map();
+    packetHandlers:Map<ClientPacketType, PacketHandler> = new Map();
+    get players() {return this.lobby.players};
   
     constructor(type: GameModType, lobby: Lobby) {
         this.type = type;
         this.lobby = lobby;
     }
     
-    start(data?:any):Promise<any> {
+    async start(data?:any):Promise<any> {
+        this.timestamp = Date.now();
         this.currentRound = 1;
         return this.onStart(data);
     }
 
-    onStart(data?:any):Promise<any> {
-        return Promise.resolve();
+    async onStart(data?:any):Promise<any> {
     }
 
-    end(data?:any):Promise<any> {
-        this.onEnd(data);
+    async end(data?:any):Promise<any> {
+        await this.onEnd(data);
         return this.start();
     }
 
-    onEnd(data?:any):Promise<any> {
-        return Promise.resolve();
+    async onEnd(data?:any):Promise<any> {
     }
 
     /**
@@ -61,7 +60,7 @@ export class GameMode {
         
     }
 
-    onPacket(player:Player, p:InternalPacket) {
+    onPacket(player:Player, p:ClientPacket) {
         this.packetEventSubscribers.get(p.type)?.forEach(h=>h(this.lobby, player, p));
         this.gamePhase.packetEventSubscribers.get(p.type)?.forEach(h=>h(this.lobby, player, p));
     }
@@ -77,7 +76,7 @@ export class GameMode {
         // }();
     }
 
-    subscribePacket(type:InternalPacketType, callback: PacketSubscriberCallback) {
+    subscribePacket(type:ClientPacketType, callback: PacketSubscriberCallback) {
         subscribe(this.packetEventSubscribers, type, callback);
     }
 
