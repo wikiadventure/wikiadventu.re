@@ -1,1 +1,0 @@
-export const apiRoot = process.env.API_ROOT || "";

@@ -1,4 +1,0 @@
-# @install: lix --silent download "gh://github.com/Sacramentix/hx-ws#1704f674a7ac449e041936507cf136dee2b3af3d" into hx-ws/7.2.7/github/1704f674a7ac449e041936507cf136dee2b3af3d
--lib hxnodejs
--cp ${HAXE_LIBCACHE}/hx-ws/7.2.7/github/1704f674a7ac449e041936507cf136dee2b3af3d/
--D hx-ws=7.2.7

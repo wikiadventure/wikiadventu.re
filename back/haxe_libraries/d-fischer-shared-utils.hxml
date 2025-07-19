@@ -1,3 +1,0 @@
-# @install: lix --silent download "gh://github.com/Sacramentix/hx-d-fischer-shared-utils#d44bbaaee9eb60354a4c91ad9ba135757f808038" into d-fischer-shared-utils/2.3.2/github/d44bbaaee9eb60354a4c91ad9ba135757f808038
--cp ${HAXE_LIBCACHE}/d-fischer-shared-utils/2.3.2/github/d44bbaaee9eb60354a4c91ad9ba135757f808038/
--D d-fischer-shared-utils=2.3.2

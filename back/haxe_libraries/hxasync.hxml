@@ -1,3 +1,0 @@
-# @install: lix --silent download "haxelib:/hxasync#1.1.1" into hxasync/1.1.1/haxelib
--cp ${HAXE_LIBCACHE}/hxasync/1.1.1/haxelib/src
--D hxasync=1.1.1

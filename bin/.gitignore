@@ -1,5 +1,0 @@
-#ignore log folder;
-log
-#ignore the npm module, you can install them : cd bin ; npm install ;
-node_modules
-.clever.json

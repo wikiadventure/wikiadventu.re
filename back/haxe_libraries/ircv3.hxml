@@ -1,8 +1,0 @@
-# @install: lix --silent download "gh://github.com/Sacramentix/hx-ircv3#662fc8a629ac996cdd69cc8e03fb1df571a251ef" into ircv3/0.26.0/github/662fc8a629ac996cdd69cc8e03fb1df571a251ef
--lib d-fischer-connection
--lib d-fischer-logger
--lib d-fischer-shared-utils
--lib d-fischer-typed-event-emitter
--lib hxnodejs
--cp ${HAXE_LIBCACHE}/ircv3/0.26.0/github/662fc8a629ac996cdd69cc8e03fb1df571a251ef/
--D ircv3=0.26.0
