@@ -1,0 +1,47 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100%;
+  font-family: sans-serif;
+}
+
+body {
+	--dark-back-color: #000;
+	--dark-back-focus-color: #222;
+	--dark-front-color: #eee;
+	--dark-box-shadow: 0 1px 5px rgba(0, 195, 205, 0.2),0 2px 2px rgba(0, 195, 205, 0.15),0 3px 1px -2px rgba(0, 195, 205, 0.125);
+
+	--light-back-color: #fff;
+	--dark-front-focus-color: #ddd;
+	--light-front-color: #000;
+	--light-box-shadow: 0 1px 5px #0003,0 2px 2px #00000024,0 3px 1px -2px #0000001f;
+}
+
+body[data-theme^="dark"] {
+  --back-color: var(--dark-back-color);
+  --back-focus-color: var(--dark-back-focus-color);
+  --front-color: var(--dark-front-color);
+  --box-shadow: var(--dark-box-shadow);
+}
+
+body[data-theme^="light"] {
+  --back-color: var(--light-back-color);
+  --back-focus-color: var(--light-back-focus-color);
+  --front-color: var(--light-front-color);
+  --box-shadow: var(--light-box-shadow);
+}
+
+body {
+	background: var(--back-color);
+	color: var(--front-color);
+}
+
+#app {
+  height: 100vh;
+  width: 100%;
+}

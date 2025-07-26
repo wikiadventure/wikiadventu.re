@@ -1,0 +1,39 @@
+.wiki-page {
+    --wiki-link-color: #2b2bc7;
+    --not-wiki-link-color: #8e3a45;
+    --portal-link-color: #168243;
+    --anchor-link-color: #2593ce;
+
+}
+
+[data-is-body].disable a {
+    cursor: not-allowed;
+}
+
+[data-is-html] {
+    background-color: var(--background-color-base, #f8f9fa);
+    color: var(--color-base, #202122);
+}
+
+[data-is-html]:not([data-is-mobile]) [data-is-body]  {
+    padding: 0 15px;
+}
+
+[data-is-body] {
+    min-height: 100vh;
+}
+
+.wikiLink {
+    /* color: var(--wiki-link-color)!important; */
+}
+.notWikiLink {
+    color: var(--not-wiki-link-color)!important;
+    cursor: not-allowed!important;
+}
+.portalLink {
+    color: var(--portal-link-color)!important;
+    cursor: not-allowed!important;
+}
+.anchorLink {
+    color: var(--anchor-link-color)!important;
+}
