@@ -17,8 +17,13 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250723.0",
+    "@iconify-json/hugeicons": "^1.2.6",
     "@iconify-json/material-symbols": "^1.2.30",
+    "@iconify-json/material-symbols-light": "^1.2.30",
+    "@iconify-json/mdi": "^1.2.3",
+    "@iconify-json/solar": "^1.2.2",
     "@vitejs/plugin-vue": "^6.0.0",
+    "@vue/compiler-sfc": "^3.5.18",
     "@vue/tsconfig": "^0.7.0",
     "browserslist": "^4.25.1",
     "lightningcss": "^1.30.1",

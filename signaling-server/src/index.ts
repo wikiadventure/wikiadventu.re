@@ -198,12 +198,23 @@ export class Room extends DurableObject {
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+
+		const corsHeaders = new Headers();
+		corsHeaders.set("Access-Control-Allow-Origin", "*");
+        corsHeaders.set("Access-Control-Allow-Methods", "GET, HEAD, POST, OPTIONS");
+        corsHeaders.set("Access-Control-Allow-Headers", "Content-Type");
+
 		const url = new URL(request.url);
 		const roomId = url.pathname.slice(1);
 
 		if (!roomId) {
-			return new Response("Not found", { status: 404 });
+			return new Response("Not found", { status: 404, headers: corsHeaders });
 		}
+
+		if (request.method == "HEAD" && roomId == "ping") {
+			return new Response('OK', { status: 200, headers: corsHeaders });
+		}
+
 
 		const id = env.ROOM.idFromName(roomId);
 		const stub = env.ROOM.get(id);

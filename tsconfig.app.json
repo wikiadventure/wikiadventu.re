@@ -2,9 +2,17 @@
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-
+    "types": [
+      "unplugin-icons/types/vue",
+    ],
     /* Linting */
     "strict": true,
+    "lib": [
+      "es2023",
+      "DOM",
+      "DOM.AsyncIterable",
+      "DOM.Iterable"
+    ],
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,

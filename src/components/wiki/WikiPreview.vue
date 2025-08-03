@@ -1,17 +1,18 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import type { WikiContentPreview } from '../../composables/useWiki';
+import WikiThumbnail from './WikiThumbnail.vue';
+import MdiOpenInNew from '~icons/material-symbols/open-in-new-rounded';
+
 const props = defineProps<{
   wikiContentPreview: WikiContentPreview | null;
   disableGotoWiki?: boolean;
 }>();
 
-const { wikiContentPreview, disableGotoWiki } = props;
-
-const wikiUrl = computed(()=>`https://${wikiContentPreview?.wikiLang}.wikipedia.org/wiki/${wikiContentPreview?.title?.replace(' ', '_')}`);
+const wikiUrl = computed(()=>`https://${props.wikiContentPreview?.wiki_lang}.wikipedia.org/wiki/${props.wikiContentPreview?.title?.replaceAll(' ', '_')}`);
 
 function openWiki() {
-  props.disableGotoWiki || wikiContentPreview != null && window.open(wikiUrl.value, "_blank");
+  props.disableGotoWiki || props.wikiContentPreview != null && window.open(wikiUrl.value, "_blank");
 }
 
 </script>
@@ -20,7 +21,7 @@ function openWiki() {
     :aria-roledescription="props.disableGotoWiki ? undefined : 'Goto the wikipedia page on enter key press'"
     @keypress.enter="openWiki"
     >
-    <wiki-thumbnail :thumbnail="wikiContentPreview?.thumbnail"/>
+    <WikiThumbnail :thumbnail="wikiContentPreview?.thumbnail"/>
     <!-- <wiki-thumbnail v-if="!loading" :thumbnail="wikiContentPreview.thumbnail"/>
     <SearchLoader v-else/> -->
     <h3>
@@ -65,7 +66,7 @@ function openWiki() {
   h3 {
     grid-area: t;
     font-weight: bolder;
-    -webkit-line-clamp: 2;
+    line-clamp: 2;
     max-height: 2em;
     > a {
       float: right;
@@ -101,12 +102,12 @@ function openWiki() {
   p {
     grid-area: d;
     margin-bottom: 2px;
-    -webkit-line-clamp: 3;
+    line-clamp: 3;
     max-height: 3em;
   }
 
   &:is(:hover, :focus, :focus-visible) :is(p, h3) {
-    -webkit-line-clamp: 100;
+    line-clamp: 100;
     max-height: 30rem;
   }
 }

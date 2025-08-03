@@ -21,7 +21,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    (e: 'wikiLink', value: string): void
+    (e: 'wikiLink', value: [title:string, id:number]): void
 }>();
 
 const wikiRef = ref<HTMLDivElement | null>(null);
@@ -44,9 +44,8 @@ const requestWikiPage = async (pageTitle: string) => {
         await fetchArticle(pageTitle, props.wikiLang);
         isRequestingWikiPage = false;
         wikiPage.value = Object.assign(new WikiPageContent(), wikiPage.value);
-
+        emit('wikiLink', [wikiPage.value.parsedTitle, wikiPage.value.pageid]);
         setTimeout(() => {
-            emit('wikiLink', wikiPage.value.title);
             shadowRootRef.value?.$el?.scrollTo({top: 0, left: 0, behavior: "instant"});
             loading.value = false;
         }, 25);
@@ -65,7 +64,7 @@ const onLinkClick = (link: HTMLAnchorElement) => {
         const url = linkHref.substring(6);
         props.onLinkClick?.(url, {
             anchorElement: link,
-            currentPageTitle: wikiPage.value.pageTitle,
+            currentPageTitle: wikiPage.value.parsedTitle,
             currentWikiLang: wikiPage.value.lang,
         });
     } else if (linkHref.startsWith("#")) {
@@ -243,7 +242,7 @@ onMounted(async () => {
             urls.map(async (url) => {
                 const response = await fetch(url);
                 let cssText = await response.text();
-                cssText = cssText.replace(/html.skin/g, 'div[data-is-html].skin');
+                cssText = cssText.replaceAll(/html.skin/g, 'div[data-is-html].skin');
                 const sheet = new CSSStyleSheet();
                 await sheet.replace(cssText);
                 return sheet;
@@ -264,7 +263,7 @@ onMounted(async () => {
                 :class="[...htmlClasses, 'wiki-page']" ref="wikiRef">
             <div data-is-body :class="['content', { disable: disable }]">
                 <h1 class="wiki-title" style="text-align: center">{{ title }}</h1>
-                <h2 class="wiki-title">{{ wikiPage.title }}</h2>
+                <h2 class="wiki-title">{{ wikiPage.parsedTitle }}</h2>
                 <div class="mw-parser-output" v-html="wikiPageHtml">
                 </div>    
             </div>

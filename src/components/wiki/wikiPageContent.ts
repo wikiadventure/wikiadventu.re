@@ -25,13 +25,14 @@ interface link {
     title: string
 }
 export default class WikiPageContent {
-    title = "";
+    parsedTitle = "";
     doc?: Document;
     head?: HTMLHeadElement | null;
     links: link[] = [];
-    pageTitle = "";
+    initialTitle = "";
     lang:LangCode = "en";
     isMobile = false;
+    pageid = -1;
     constructor() {
 
     }
@@ -56,7 +57,7 @@ export default class WikiPageContent {
 
     async fetch(title: string, lang: LangCode, isMobile:boolean) {
         this.lang = lang;
-        this.pageTitle = title;
+        this.initialTitle = title;
         this.isMobile = isMobile;
         const url = new URL('https://' + lang + '.wikipedia.org/w/api.php');
         url.search = new URLSearchParams({
@@ -76,8 +77,9 @@ export default class WikiPageContent {
         const response: wikiResponse = await fetch(url.toString(), { credentials: 'omit', headers: wikiHeaders })
             .then(r => r.json());
         // this.isMobile = isMobile;
-        this.title = response.parse.title;
+        this.parsedTitle = response.parse.title;
         this.links = response.parse.links;
+        this.pageid = response.parse.pageid;
         this.formatHead(response.parse.headhtml, lang);
         this.formatHTML(response.parse.text);
         console.log({title, lang, isMobile});

@@ -2,7 +2,7 @@
 import { player_id } from '../../stores/form';
 import { useGameStore } from '../../stores/useGameStore';
 
-const { isHost, store } = useGameStore();
+const { store } = useGameStore();
 </script>
 <template>
 <pre class="DEBUG">
@@ -13,6 +13,10 @@ Store:
 </template>
 <style>
 .DEBUG {
+    max-width: 100%;
     text-align: start;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 </style>

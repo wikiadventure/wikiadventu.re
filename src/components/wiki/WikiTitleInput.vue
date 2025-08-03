@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import preview from "./WikiPreview.vue";
 import { loadSuggestions, type WikiContentPreview } from "../../composables/useWiki";
-import { ref, useTemplateRef, watch } from 'vue';
-import { useVModels, watchDebounced } from '@vueuse/core'
+import { ref, useTemplateRef } from 'vue';
+import { watchDebounced } from '@vueuse/core'
 import type { LangCode } from "../../i18n/lang";
 
 const props = defineProps<{
-    wikiContentPreview: WikiContentPreview | null,
-    wikiLang: LangCode
+    wikiLang: LangCode,
+    placeholder: string
 }>()
 
 const emit = defineEmits(['update:wikiContentPreview']);
 
-const { wikiContentPreview, wikiLang } = useVModels(props, emit);
+const wikiContentPreview = defineModel<WikiContentPreview | null>({required: true});
 
 const input = ref("");
 
@@ -21,13 +21,15 @@ const suggestions = ref<WikiContentPreview[]>([]);
 const container = useTemplateRef<HTMLDivElement>('container');
 
 watchDebounced(input, async t => {
-    const s = await loadSuggestions(t, wikiLang.value);
+    const s = await loadSuggestions(t, props.wikiLang);
     s != null && (suggestions.value = s);
 }, { debounce: 250 });
 
 
 function handleSelect(w: WikiContentPreview) {
+    console.log(w);
     wikiContentPreview.value = w;
+    console.log(wikiContentPreview.value);
     input.value = w.title ?? "";
     if (container.value == null) return;
     // Find all focusable elements in the document
@@ -50,25 +52,14 @@ function handleSelect(w: WikiContentPreview) {
     }
 }
 
-function handleSuggestionClick(w: WikiContentPreview) {
-    handleSelect(w);
-}
-
-function handleSuggestionKeyPress(e: KeyboardEvent, w: WikiContentPreview) {
-    if (e.key === 'Enter') {
-        handleSelect(w);
-    }
-}
-
-
-
 function handleArrowNav(e: KeyboardEvent) {
+    console.log(e);
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
     if (container.value == null) return;
-
+    e.preventDefault();
     // The input and all the suggestion items are focusable.
     const focusableItems = Array.from(
-        container.value.querySelectorAll<HTMLElement>('input, .wiki-title-suggest [tabindex="0"]')
+        container.value.querySelectorAll<HTMLElement>('input, [wiki-title-suggest] [tabindex="0"]')
     );
 
     if (focusableItems.length <= 1) return; // No suggestions to navigate to
@@ -93,20 +84,19 @@ function handleArrowNav(e: KeyboardEvent) {
 
 </script>
 <template>
-    <div wiki-title-input ref="container">
-        <input v-model="input">
+    <div wiki-title-input ref="container" @keyup="handleArrowNav">
+        <input v-model="input" name="vote-input" :placeholder="props.placeholder" autocomplete="off" >
         <div wiki-title-suggest>
             <preview    v-for="s in suggestions" :wiki-content-preview="s" :key="s.id"
                         @keypress.enter="handleSelect(s);" @click.stop="handleSelect(s);" 
                         disable-goto-wiki accesskey="enter" />
         </div>
-        <preview :wiki-content-preview="wikiContentPreview" :key="wikiContentPreview?.id" tabindex="-1"/>
+        <preview :disableGotoWiki="true" :wiki-content-preview="wikiContentPreview" :key="wikiContentPreview?.id" tabindex="-1"/>
     </div>
 </template>
 <style >
 [wiki-title-input] {
-    --border: 1px solid rgba(var(--heat-rgb), .5);
-    --border-focus: 1px solid var(--heat-color);
+    --border: 1px solid #000;
     width: 100%;
     position: relative;
     backdrop-filter: blur(3px);
@@ -117,20 +107,24 @@ function handleArrowNav(e: KeyboardEvent) {
         height: 3em;
         font-size: 1.5em;
         text-align: center;
-        background: #0002;
-        color: #eee;
+        background: #eee;
+        color: #000;
         text-overflow: ellipsis;
         &:is(:focus, :focus-visible) {
-            outline: var(--border);
+            outline: 2 solid cyan;
+            /* outline: var(--border); */
             outline-offset: 1px;
             border: var(--border-focus);
         }
     }
     > [wiki-preview] {
-        background: #0002;
+        background: #eee;
     }
     &:focus-within [wiki-title-suggest] {
         display: flex;
+    }
+    &:has( > [wiki-preview]:is(:focus, :focus-visible)) [wiki-title-suggest] {
+        display: none;
     }
     [wiki-title-suggest] {
         z-index: 2;
@@ -141,7 +135,7 @@ function handleArrowNav(e: KeyboardEvent) {
         border: var(--border);
         border-top: none;
         border-radius: 0 0 10px 10px;
-        background: #000a;
+        background: #fffa;
         [wiki-preview] {
             border-bottom: var(--border);
             cursor: pointer;
@@ -149,8 +143,11 @@ function handleArrowNav(e: KeyboardEvent) {
                 border-bottom: none;
                 border-radius: 0 0 10px 10px;
             }
-            &:hover {
-                background: #000a;
+            &:is(:hover, :focus, :focus-visible) {
+                background: #fffa;
+            }
+            &:is(:focus, :focus-visible) {
+                outline: 2px solid cyan;
             }
         }
     }

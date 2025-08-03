@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import IconQuestionMark from '~icons/material-symbols/question-mark-rounded';
 
 const { thumbnail } = defineProps<{
     thumbnail?: {

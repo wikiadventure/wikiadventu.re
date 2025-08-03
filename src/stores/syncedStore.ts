@@ -31,7 +31,7 @@ export type FormPlayer = {
  * @param password an optionnal password used to access the room
  * @returns 
  */
-export function useSyncedStore<T extends object>(initialState:T, onJoin:(store:Reactive<T>, snapshot:T)=>void, room_name:string, password?:string) {
+export function useSyncedStore<T extends object>(initialState:T, room_name:string, password?:string) {
     // We initiate the reactive store with empty to set watchers before setting the initial state
     const store = reactive({}) as Reactive<T & { creation_timestamp: number }>;
 
@@ -39,6 +39,7 @@ export function useSyncedStore<T extends object>(initialState:T, onJoin:(store:R
     const ydoc  = new Y.Doc({
         autoLoad: true
     });
+
     const webRtcProvider = new WebrtcProvider(room_name, ydoc, {
         signaling: ["http://localhost:8787/"+room_name],
         password,
@@ -104,12 +105,35 @@ export function useSyncedStore<T extends object>(initialState:T, onJoin:(store:R
     const stopWatching = watch(store, (newValue, _oldValue) => {
         ydoc.transact(() => {
             syncToYjs(newValue, ymap);
+        }, {
+            creation_timestamp: store.creation_timestamp
         });
     }, { deep: true });
 
     // When the ydoc receive a update from peers
     // We sync the ydoc state with the reactive store
-    ymap.observeDeep(() => {
+    ydoc.on('beforeTransaction', (tr: Y.Transaction) => {
+        if (tr.local) {
+            return;
+        }
+        const remote_creation_timestamp = (tr.origin as any)?.creation_timestamp;
+        if (remote_creation_timestamp && remote_creation_timestamp > store.creation_timestamp) {
+            // This is a transaction from a new peer with its initial state.
+            // We don't want to apply it because our state is more up-to-date.
+            // By not applying the transaction, we prevent our ydoc from being overwritten.
+            // We can achieve this by manipulating the transaction's internal properties.
+            tr.deleteSet.clients.clear();
+            tr.changed.clear();
+            tr.changedParentTypes.clear();
+        }
+    });
+
+    ymap.observeDeep((_events, tr) => {
+        // Do not apply changes that originated from this client
+        if (tr.local) {
+            return;
+        }
+
         const snapshot = ymap.toJSON() as T & { creation_timestamp: number };
         // if the snapshot (the update we receive from peers)
         // have a creation_timestamp after the one we have locally,
@@ -117,8 +141,7 @@ export function useSyncedStore<T extends object>(initialState:T, onJoin:(store:R
         // we don't want to replace your up to date state with the initial state
         // of a new peers
         // It should be resolve with the onJoin function
-        if (snapshot.creation_timestamp > store.creation_timestamp) {
-            onJoin(store, snapshot);
+        if ((tr.origin as any)?.creation_timestamp > store.creation_timestamp) {
             return;
         }
         for (const key in snapshot) {
@@ -149,3 +172,8 @@ export function useSyncedStore<T extends object>(initialState:T, onJoin:(store:R
         disconnect,
     };
 }
+1753702808688
+1753702810902
+
+1753703055352
+1753703055328

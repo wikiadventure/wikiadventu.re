@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import GameForm from './pages/gameForm.vue';
-import GamePlay from './pages/gamePlay.vue';
+import Playground from './pages/Playground.vue';
 import { inGame } from './stores/form';
 </script>
 
 <template>
 <GameForm v-if="!inGame"/>
-<GamePlay v-else/>
+<Playground v-else/>
 </template>
 

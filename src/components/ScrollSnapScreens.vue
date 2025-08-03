@@ -10,18 +10,15 @@
 .scroll-snap-screens {
     display: flex;
     overflow-x: scroll;
-    scroll-snap-type: both mandatory;
+    scroll-snap-type: x mandatory;
     height: 100%;
     width: 100%;
     overscroll-behavior-x: contain;
     > * {
+        overflow-y: scroll;
         scroll-snap-align: center;
         flex: 0 0 100%;
         height: 100%;
-        background: blue;
-        &:nth-child(2n) {
-            background: red;
-        }
     }
 }
 </style>

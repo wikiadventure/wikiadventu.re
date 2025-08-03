@@ -1,3 +1,5 @@
+import type { WikiContentPreview } from "../composables/useWiki";
+import type { LangCode } from "../i18n/lang";
 
 export type Game<Mode extends Gamemode = "Classic"> = {
     version: string,
@@ -5,60 +7,79 @@ export type Game<Mode extends Gamemode = "Classic"> = {
     players: Record<PlayerID, Player>,
     // messages: Message[],
     gamemode: Mode,
-    gamephase: Gamephase,
     gamedata: Gamedata<Mode>
 }
 
 export const all_gamemode = ["Classic"] as const;
 export type Gamemode = typeof all_gamemode[number];
 
-export type Gamephase = "Waiting" | "Playing" | "RoundEnd" | "Podium";
+export type Gamephase = "Waiting" | "Voting" | "Playing" | "RoundEnd" | "Podium";
+
+export type Timestamp = number;
+
+export type RoundNumber = number;
+
+/** Duration of a phase in seconds (-1 is infinite) */
+export type PhaseDuration = number;
 
 export type Gamedata<Mode extends Gamemode> = 
     Mode extends "Classic" ? {
         round: { 
-            current: number,
-            max: number
+            current: RoundNumber,
+            max: RoundNumber
         },
-        gamephase_start: number,
-        gamephase_duration: number,
+        playphase_duration: number,
+        votephase_duration: number,
+        wiki_page_pick_mode: WikiPagePickMode,
+        wiki_lang: LangCode,
         round_data: {
             [round : number]: {
+                wiki_lang: LangCode,
                 start: RoundWikiPage,
-                end: RoundWikiPage
+                end: RoundWikiPage,
+                winner?: PlayerID
             }
         },
+        gamephase: {
+            [start:Timestamp]: {
+                type: Gamephase,
+                round: RoundNumber,
+                duration: PhaseDuration
+            }
+        }
         player_data: {
             [id : PlayerID]: {
                 [round : number]: {
                     score: number,
-                    history: PageHistoryShard[]
+                    page_vote: VoteWikiPage | null,
+                    history: Record<Timestamp,PageHistoryShard>
                 }
             }
         },
-        syncWikiPage: string
     } : {}
 
 export type PageHistoryShard = {
-    timestamp: number,
     id: number,
-    title: string
+    title: string,
+    redirect?: true
 }
 
-export type RoundWikiPage = string; // title
+export const all_wiki_page_pick_mode = ["vote","random"] as const;
+export type WikiPagePickMode = typeof all_wiki_page_pick_mode[number];
+
+export type VoteWikiPage = WikiContentPreview;
+
+export type RoundWikiPage = WikiContentPreview;
 
 export type Player = {
     id: PlayerID,
     // peer_connection
     name: string,
     avatar: string,
+    joinedAt: Timestamp,
+
 
 }
 
 export type PlayerID = string;
 
-type Message = {
-    player_id:PlayerID,
-    timestamp:number,
-    content:string
-}
