@@ -220,8 +220,11 @@ onMounted(async () => {
             "ext.timeline.styles", "ext.uls.interlanguage", "ext.visualEditor.desktopArticleTarget.noscript",
             "ext.wikimediaBadges", "ext.wikimediamessages.styles", "mediawiki.page.gallery.styles",
             "mediawiki.hlist", "skins.vector.search.codex.styles", "skins.vector.styles",
-            "skins.vector.icons", "wikibase.client.init", "skins.vector.icons,styles", "site.styles"
+            "skins.vector.icons", "wikibase.client.init", "skins.vector.icons,styles", "site.styles",
+            // "ext.math.styles", // this broke on page https://en.wikipedia.org/wiki/Incomplete_Cholesky_factorization
+            "ext.pygments"
         ];
+        
 
         const mobileModules = [
             "ext.cite.styles", "ext.kartographer.style", "ext.timeline.styles", "ext.uls.interlanguage",
@@ -229,6 +232,8 @@ onMounted(async () => {
             "mobile.init.styles", "mediawiki.page.gallery.styles", "mediawiki.hlist",
             "wikibase.client.init", "site.styles", "skins.minerva.codex.styles",
             "skins.minerva.content.styles.images", "skins.minerva.icons,styles", "ext.gadget.Mobile",
+            // "ext.math.styles", 
+            "ext.pygments"
         ];
 
         const modules = isMobile.value ? mobileModules : desktopModules;
