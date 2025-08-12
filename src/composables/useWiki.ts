@@ -1,4 +1,3 @@
-import Bottleneck from "bottleneck";
 import type { LangCode } from "../i18n/lang";
 import { createSeededRandomGenerator, generateCloseNumbers } from "./numberUtils";
 

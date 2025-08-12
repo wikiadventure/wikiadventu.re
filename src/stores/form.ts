@@ -14,6 +14,5 @@ watch(inGame, (newValue,_oldValue) => {
     const params = new URLSearchParams({
         room: room_name.value
     });
-    console.log();
     window.history.pushState({}, "", "/#"+params.toString());
 })
