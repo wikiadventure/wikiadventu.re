@@ -82,7 +82,6 @@ export default class WikiPageContent {
         this.pageid = response.parse.pageid;
         this.formatHead(response.parse.headhtml, lang);
         this.formatHTML(response.parse.text);
-        console.log({title, lang, isMobile});
         return this;
     }
 

@@ -30,7 +30,6 @@ const phaseDurationComputed = computed({
 
 function handleInput(event: Event) {
     const input = event.target as HTMLInputElement;
-    console.log(input.value);
     rawInputRef.value = input.value; // Capture the raw input value
     const parsedValue = parseFloat(input.value);
     if (!isNaN(parsedValue)) {

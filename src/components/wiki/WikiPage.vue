@@ -142,7 +142,6 @@ onMounted(() => {
     const doc = wikiRef.value!;
     doc?.addEventListener("click", handleClick);
     const observer = new MutationObserver(() => {
-        console.log("REDIRECT LINK!");
         redirectLinks();
     });
     
@@ -200,7 +199,6 @@ const wikiPageHtml = computed(() => wikiPage.value.doc?.body.firstElementChild?.
 
 requestWikiPage(props.wikiPageTitle);
 watch(() => props.wikiPageTitle, (newValue, oldValue) => {
-  console.log(`wikiPageTitle prop changed from '${oldValue}' to '${newValue}'`);
   requestWikiPage(props.wikiPageTitle);
   // Perform actions here when the prop changes
 });

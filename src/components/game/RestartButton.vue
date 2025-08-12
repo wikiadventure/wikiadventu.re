@@ -12,9 +12,7 @@ const { isHost, store, wipeYjsDoc } = useGameStore();
 
 async function restart(_e:Event) {
     if (props.withGamemode == "Classic") {
-        console.log("START WIPE");
         await wipeYjsDoc();
-        console.log("COMPLETE WIPE");
         store.gamedata = classic_initial_gamedata();
     }
 }

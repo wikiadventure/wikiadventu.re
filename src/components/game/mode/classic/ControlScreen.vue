@@ -22,13 +22,7 @@ const { current_phase, store, open_podium, current_round } = useClassicGameStore
 const gamemode_for_restart = ref<Gamemode>("Classic");
 
 function openPodium() {
-    console.log("JJJJJJJJJAAAAAAAAAAAJJJJJJJJJJJJJ");
-    console.log("BEFORE");
-    console.log(open_podium.value);
-    open_podium.value = true;
-    console.log("AFTER");
-    console.log(open_podium.value);
-    
+    open_podium.value = true; 
 }
 
 </script>
