@@ -1,6 +1,6 @@
 import { computed, reactive } from "vue";
 import { password, player_id, room_name, username } from "./form";
-import type { Game, Timestamp } from "./game";
+import { VERSION, type Game, type Timestamp } from "./game";
 import { useSyncedStore } from "./syncedStore";
 import { classic_initial_gamedata } from "./mode/classic/initialGamedata";
 
@@ -17,7 +17,7 @@ function useInnerGameStore() {
     const timestamp = Date.now();
 
     const initialGameState:Game = {
-        version: "0.1.0",
+        version: VERSION,
         players: {
             [player_id.value]: {
                 avatar: "",
@@ -31,7 +31,12 @@ function useInnerGameStore() {
         host_id: player_id.value,
     };
 
-    const { store, ydoc, webRtcProvider, disconnect } = useSyncedStore(initialGameState, room_name.value, password.value);
+    const { store, ydoc, webRtcProvider, disconnect, wipeYjsDoc } = useSyncedStore(initialGameState, room_name.value, password.value);
+
+    webRtcProvider.awareness.setLocalState({
+        player_id: player_id.value,
+        username: username.value
+    });
 
     const connectedPlayerIds = reactive(new Set<string>([player_id.value]));
 
@@ -57,16 +62,20 @@ function useInnerGameStore() {
         get() {
             store.gamedata.player_data[player_id.value] ??= {};
             store.gamedata.player_data[player_id.value][store.gamedata.round.current] ??= {
+                twitch_votes: {},
                 history: {},
                 page_vote: null,
+                vote_skip: false,
                 score: 0
             }
             return store.gamedata.player_data[player_id.value][store.gamedata.round.current];
         },
         set(newValue) {
             const initial = {
+                twitch_votes: {},
                 history: {},
                 page_vote: null,
+                vote_skip: false,
                 score: 0
             };
             store.gamedata.player_data[player_id.value] ??= { [store.gamedata.round.current]: initial };
@@ -139,6 +148,7 @@ function useInnerGameStore() {
         ydoc,
         webRtcProvider,
         disconnect,
+        wipeYjsDoc,
         my_player_data,
         my_player_round_data,
         current_phase,

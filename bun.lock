@@ -12,6 +12,7 @@
       },
       "devDependencies": {
         "@cloudflare/workers-types": "^4.20250723.0",
+        "@iconify-json/game-icons": "^1.2.3",
         "@iconify-json/hugeicons": "^1.2.6",
         "@iconify-json/material-symbols": "^1.2.30",
         "@iconify-json/material-symbols-light": "^1.2.30",
@@ -95,6 +96,8 @@
     "@esbuild/win32-ia32": ["@esbuild/win32-ia32@0.25.7", "", { "os": "win32", "cpu": "ia32" }, "sha512-4qZ6NUfoiiKZfLAXRsvFkA0hoWVM+1y2bSHXHkpdLAs/+r0LgwqYohmfZCi985c6JWHhiXP30mgZawn/XrqAkQ=="],
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.25.7", "", { "os": "win32", "cpu": "x64" }, "sha512-FaPsAHTwm+1Gfvn37Eg3E5HIpfR3i6x1AIcla/MkqAIupD4BW3MrSeUqfoTzwwJhk3WE2/KqUn4/eenEJC76VA=="],
+
+    "@iconify-json/game-icons": ["@iconify-json/game-icons@1.2.3", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-JnrHQjNI/2nJxlnEAPlU4ta6S44XTX7RJnBUyBV27GbVhJhfwpY9kqzkTqmPs4nyAJaGUjZwOcnBUQ9Dc21nlA=="],
 
     "@iconify-json/hugeicons": ["@iconify-json/hugeicons@1.2.6", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-Sv+Oh7db6mAfgG9M/I5Do+eL8+978zuzxPEK8ogtX7wWVvYd0TfrWRESdNBf4COS4oav8pGaZDWr4tBMy+Qemg=="],
 

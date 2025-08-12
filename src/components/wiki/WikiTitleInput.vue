@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import preview from "./WikiPreview.vue";
 import { loadSuggestions, type WikiContentPreview } from "../../composables/useWiki";
-import { ref, useTemplateRef } from 'vue';
+import { ref, useTemplateRef, watch } from 'vue';
 import { watchDebounced } from '@vueuse/core'
 import type { LangCode } from "../../i18n/lang";
 
@@ -25,6 +25,9 @@ watchDebounced(input, async t => {
     s != null && (suggestions.value = s);
 }, { debounce: 250 });
 
+watch(() => props.wikiLang, (_newValue, _oldValue) => {
+    suggestions.value = [];
+});
 
 function handleSelect(w: WikiContentPreview) {
     console.log(w);
@@ -79,12 +82,14 @@ function handleArrowNav(e: KeyboardEvent) {
 
     if (nextIndex !== -1) {
         focusableItems[nextIndex]?.focus();
+    } else {
+        (document.activeElement as HTMLElement)?.blur();
     }
 }
 
 </script>
 <template>
-    <div wiki-title-input ref="container" @keyup="handleArrowNav">
+    <div class="wiki-title-input" ref="container" @keyup="handleArrowNav">
         <input v-model="input" name="vote-input" :placeholder="props.placeholder" autocomplete="off" >
         <div wiki-title-suggest>
             <preview    v-for="s in suggestions" :wiki-content-preview="s" :key="s.id"
@@ -95,8 +100,22 @@ function handleArrowNav(e: KeyboardEvent) {
     </div>
 </template>
 <style >
-[wiki-title-input] {
-    --border: 1px solid #000;
+body[theme^="dark"] {
+  .wiki-title-input {
+    --border-color: #eee;
+    --suggestion-focus-mix-color: #fff5;
+  }
+}
+
+body[theme^="light"] {
+  .wiki-title-input {
+    --border-color: #111;
+    --suggestion-mix-color: transparent;
+  }
+}
+
+.wiki-title-input {
+    --border: 1px solid var(--border-color);
     width: 100%;
     position: relative;
     backdrop-filter: blur(3px);
@@ -107,8 +126,8 @@ function handleArrowNav(e: KeyboardEvent) {
         height: 3em;
         font-size: 1.5em;
         text-align: center;
-        background: #eee;
-        color: #000;
+        background: var(--back-color);
+        color: var(--front-color);
         text-overflow: ellipsis;
         &:is(:focus, :focus-visible) {
             outline: 2 solid cyan;
@@ -118,7 +137,7 @@ function handleArrowNav(e: KeyboardEvent) {
         }
     }
     > [wiki-preview] {
-        background: #eee;
+        background:  var(--back-color);
     }
     &:focus-within [wiki-title-suggest] {
         display: flex;
@@ -135,7 +154,7 @@ function handleArrowNav(e: KeyboardEvent) {
         border: var(--border);
         border-top: none;
         border-radius: 0 0 10px 10px;
-        background: #fffa;
+        background: color-mix(in srgb, var(--back-color) 50%, transparent);
         [wiki-preview] {
             border-bottom: var(--border);
             cursor: pointer;
@@ -144,7 +163,7 @@ function handleArrowNav(e: KeyboardEvent) {
                 border-radius: 0 0 10px 10px;
             }
             &:is(:hover, :focus, :focus-visible) {
-                background: #fffa;
+                background: color-mix(in srgb, var(--back-color) 80%, var(--suggestion-focus-mix-color));
             }
             &:is(:focus, :focus-visible) {
                 outline: 2px solid cyan;

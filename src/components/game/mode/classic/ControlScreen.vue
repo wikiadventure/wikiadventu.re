@@ -8,42 +8,92 @@ import PlayersList from './PlayersList.vue';
 import CountDown from './CountDown.vue';
 import StartButton from './StartButton.vue';
 import RestartButton from '../../RestartButton.vue';
-import type { Gamemode } from '../../../../stores/game';
+import { VERSION, type Gamemode } from '../../../../stores/game';
 import { ref } from 'vue';
+import VoteSkipPlayPhase from './VoteSkipPlayPhase.vue';
+import DurationInput from '../../DurationInput.vue';
+import GameButton from '../../GameButton.vue';
+import PodiumIcon from '~icons/game-icons/podium'
+import ThemePicker from '../../../ThemePicker.vue';
+import WikiLangSelect from '../../WikiLangSelect.vue';
 
-const { current_phase, store } = useClassicGameStore();
+const { current_phase, store, open_podium, current_round } = useClassicGameStore();
 
 const gamemode_for_restart = ref<Gamemode>("Classic");
+
+function openPodium() {
+    console.log("JJJJJJJJJAAAAAAAAAAAJJJJJJJJJJJJJ");
+    console.log("BEFORE");
+    console.log(open_podium.value);
+    open_podium.value = true;
+    console.log("AFTER");
+    console.log(open_podium.value);
+    
+}
 
 </script>
 <template>
 <section class="control-screen mode-classic">
-   <h1>{{ store.gamemode }} mode</h1>
-   <h2>{{ current_phase.type }}</h2>
+    <ThemePicker/>
+    <span class="version">v{{ VERSION }}</span>
+    <h1>{{ store.gamemode }} mode</h1>
+    <h2>{{ current_phase.type }}</h2>
     <CountDown/>
     <span>
         restart with gamemode : <GameModeSelector v-model="gamemode_for_restart"/> <RestartButton :with-gamemode="gamemode_for_restart"/>
     </span>
+    <span class="duration-container">
+        <DurationInput v-model="store.gamedata.phase_duration.Playing" phase_display_name="Play"/>
+        <DurationInput v-model="store.gamedata.phase_duration.Voting"  phase_display_name="Vote"/>
+        <DurationInput v-model="store.gamedata.remaining_after_win_duration"  phase_display_name="Remaining after win"/>
+    </span>
+    <span class="wiki-lang-container">
+        <span>Wiki language : </span>
+        <WikiLangSelect/>
+        <span v-if="current_round?.wiki_lang != null">Current round Wiki language : {{ current_round?.wiki_lang }}</span>
+    </span>
     <WikiPagePickModeSelect/>
     <PageVoteInput/>
+    <GameButton @click="openPodium">Leaderboard <PodiumIcon/></GameButton>
     <StartButton/>
-   <PlayersList/>
-   <DEBUG/>
+    <VoteSkipPlayPhase/>
+    <PlayersList/>
+    <!-- <DEBUG/> -->
 </section>
 </template>
 <style>
 .control-screen.mode-classic {
+    position: relative;
+    > .theme-picker {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
     padding: 10px;
     display: grid;
+    grid-auto-rows: max-content;
+    grid-column: auto;
     gap: 10px;
     .page-vote-input {
         max-width: 75ch;
+    }
+    .wiki-lang-select {
+        max-width: 25ch;
     }
     > h1, > h2 {
         text-align: center;
     }
     .count-down {
         justify-self: center;
+    }
+    > .version {
+        text-align: center;
+    }
+    > .duration-container {
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 1ch;
     }
 }
 </style>

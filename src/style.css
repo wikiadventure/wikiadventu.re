@@ -22,14 +22,14 @@ body {
 	--light-box-shadow: 0 1px 5px #0003,0 2px 2px #00000024,0 3px 1px -2px #0000001f;
 }
 
-body[data-theme^="dark"] {
+body[theme^="dark"] {
   --back-color: var(--dark-back-color);
   --back-focus-color: var(--dark-back-focus-color);
   --front-color: var(--dark-front-color);
   --box-shadow: var(--dark-box-shadow);
 }
 
-body[data-theme^="light"] {
+body[theme^="light"] {
   --back-color: var(--light-back-color);
   --back-focus-color: var(--light-back-focus-color);
   --front-color: var(--light-front-color);
@@ -39,6 +39,7 @@ body[data-theme^="light"] {
 body {
 	background: var(--back-color);
 	color: var(--front-color);
+  overflow: hidden;
 }
 
 #app {

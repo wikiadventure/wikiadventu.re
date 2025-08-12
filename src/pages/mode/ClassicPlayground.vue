@@ -2,16 +2,16 @@
 import ScrollSnapScreens from '../../components/ScrollSnapScreens.vue';
 import WikiPage, { type LinkClickContext } from '../../components/wiki/WikiPage.vue';
 import ControlScreen from '../../components/game/mode/classic/ControlScreen.vue';
-import { nextTick } from 'vue';
+import { computed, nextTick } from 'vue';
 import { player_id } from '../../stores/form';
 import RoundWin from '../../components/game/RoundWin.vue';
 import { useClassicGameLifeCycle, useClassicGameStore } from '../../stores/mode/classic/useClassic';
 import Leaderboard from '../../components/game/Leaderboard.vue';
 import DesktopNav from '../../components/game/mode/classic/DesktopNav.vue';
+import CountDown from '../../components/game/mode/classic/CountDown.vue';
 
-const { store, current_phase, currentWikiPage, currentEndPage } = useClassicGameStore();
-const { open_podium } = useClassicGameLifeCycle();
-
+const { store, current_phase, currentWikiPage, currentEndPage, current_round, open_podium } = useClassicGameStore();
+useClassicGameLifeCycle();
 
 function onLinkClick(url:string, _ctx:LinkClickContext) {
   const [rawTitle, _anchor] = url.split("#");
@@ -40,27 +40,65 @@ async function onWikiLink([parsedTitle, pageid]:[title: string, id: number]) {
     store.gamedata.player_data[player_id.value][store.gamedata.round.current].history[latestTimestamp].id = pageid;
   }
 }
+
+const playAreaTitle = computed(()=>current_round.value.start.title + " → " + current_round.value.end.title);
+
 </script>
 <template>
 <DesktopNav/>
 <Leaderboard v-model="open_podium" />
+<RoundWin v-if="current_phase.type == 'RoundEnd'"/>
 <ScrollSnapScreens v-if="store.version != null">
   <ControlScreen id="control-area"/>
   <section id="play-area">
+    <CountDown/>
     <WikiPage v-if="current_phase.type == 'Playing'"  :wiki-lang="store.gamedata.wiki_lang" 
       :wiki-page-title="currentWikiPage.title" v-on:link-click="onLinkClick" v-on:wiki-link="onWikiLink"
-      :disable="false" :title="'JaaJ'"
+      :disable="false" :title="playAreaTitle"
     />
-    <RoundWin v-if="current_phase.type == 'RoundEnd'"/>
+    <span class="default-text" v-else>Wiki playground for play phase</span>
   </section>
   <section id="end-page-area">
+    <CountDown/>
     <WikiPage v-if="current_phase.type == 'Playing'" :wiki-lang="store.gamedata.wiki_lang" 
       :wiki-page-title="currentEndPage.title" v-on:link-click="() => {}"
-      :disable="true" :title="'JaaJ'" 
+      :disable="true" :title="'End page'" 
     />
+    <span class="default-text" v-else>Wiki end page preview for play phase</span>
   </section>
 </ScrollSnapScreens>
 </template>
 <style>
+body[theme^="dark"] {
+  #play-area, #end-page-area {
+    background: #101418;
+  }
+}
 
+body[theme^="light"] {
+  #play-area, #end-page-area {
+    background: #fff;
+  }
+}
+#play-area, #end-page-area {
+  
+  .wiki-page {
+    padding-top: 2lh;
+  }
+  > .count-down {
+    position: sticky;
+    width: fit-content;
+    height: min-content;
+    top: 15px;
+    left: 15px;
+  }
+  > .default-text {
+    font-size: 2em;
+    margin: auto;
+    padding-top: 2lh;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+  }
+}
 </style>

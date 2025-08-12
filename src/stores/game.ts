@@ -1,6 +1,8 @@
 import type { WikiContentPreview } from "../composables/useWiki";
 import type { LangCode } from "../i18n/lang";
 
+export const VERSION = "0.1.0";
+
 export type Game<Mode extends Gamemode = "Classic"> = {
     version: string,
     host_id: PlayerID,
@@ -15,6 +17,8 @@ export type Gamemode = typeof all_gamemode[number];
 
 export type Gamephase = "Waiting" | "Voting" | "Playing" | "RoundEnd" | "Podium";
 
+export type ClassicGamephase = "Waiting" | "Voting" | "Playing" | "RoundEnd" | "Podium";
+
 export type Timestamp = number;
 
 export type RoundNumber = number;
@@ -28,8 +32,10 @@ export type Gamedata<Mode extends Gamemode> =
             current: RoundNumber,
             max: RoundNumber
         },
-        playphase_duration: number,
-        votephase_duration: number,
+        phase_duration: {
+            [phase in ClassicGamephase]?: number
+        },
+        remaining_after_win_duration: number,
         wiki_page_pick_mode: WikiPagePickMode,
         wiki_lang: LangCode,
         round_data: {
@@ -37,7 +43,13 @@ export type Gamedata<Mode extends Gamemode> =
                 wiki_lang: LangCode,
                 start: RoundWikiPage,
                 end: RoundWikiPage,
-                winner?: PlayerID
+                remaining_after_win_duration: number,
+                winners: {
+                    [player_id: PlayerID]: {
+                        timestamp: Timestamp,
+                        score: number
+                    }
+                }
             }
         },
         gamephase: {
@@ -50,7 +62,9 @@ export type Gamedata<Mode extends Gamemode> =
         player_data: {
             [id : PlayerID]: {
                 [round : number]: {
+                    twitch_votes: Record<string/*username*/, string/*raw vote*/>,
                     score: number,
+                    vote_skip: boolean,
                     page_vote: VoteWikiPage | null,
                     history: Record<Timestamp,PageHistoryShard>
                 }

@@ -3,8 +3,9 @@ import { useGameStore } from '../../../../stores/useGameStore';
 import CrownIcon from '~icons/mdi/crown';
 import ConnectedIcon from '~icons/hugeicons/wifi-connected-03';
 import DisconnectedIcon from '~icons/hugeicons/wifi-disconnected-03';
+import SkipIcons from '~icons/material-symbols/skip-next-rounded';
 
-const { store, connectedPlayerIds } = useGameStore();
+const { store, connectedPlayerIds, my_player_round_data, current_phase } = useGameStore();
 
 </script>
 <template>
@@ -22,6 +23,11 @@ const { store, connectedPlayerIds } = useGameStore();
         </div>
 
         <div><CrownIcon v-if="player.id == store.host_id" :title="`${player.name} is the host`"/></div>
+
+        <div v-if="current_phase.type == 'Playing' && store.gamedata.player_data[player.id][store.gamedata.round.current].vote_skip">
+            <SkipIcons/> voted for skip
+        </div>
+        <div v-else></div>
     </li>
 </ul>
 </template>
@@ -33,14 +39,14 @@ const { store, connectedPlayerIds } = useGameStore();
     flex-direction: column;
     gap: 1px;
     > li {
-        border: 1px solid #000;
+        border: 1px solid var(--front-color);
         border-radius: 10px;
         display: grid;
         gap: 2px;
         padding: 4px;
 
         grid-template-areas: 
-            "c c c"
+            "c c v"
             "h n s";
         grid-template-columns: 1.2em 30fr 17fr;
         max-width: 70ch;
@@ -62,12 +68,23 @@ const { store, connectedPlayerIds } = useGameStore();
         }
         :nth-child(3) {
             grid-area: c;/*connected*/
+            > svg {
+                vertical-align: middle;
+            }
         }
         :nth-child(4) {
             grid-area: h;/*host*/
             width: 1.2em;
             height: 1.2em;
             color: goldenrod;
+        }
+        :nth-child(5) {
+            grid-area: v;/*voteskip*/
+            color: purple;
+            text-align: end;
+            > svg {
+                vertical-align: middle;
+            }
         }
     }
 }

@@ -58,3 +58,22 @@ export function hashStringToSeed(str: string): number {
     }
     return hash >>> 0; // Ensure it's an unsigned integer
 }
+
+
+export function shuffleObjectKeys<T extends Record<string, any>>(obj: T): T {
+    const keys = Object.keys(obj);
+    
+    // Fisher-Yates shuffle
+    for (let i = keys.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [keys[i], keys[j]] = [keys[j], keys[i]];
+    }
+
+    // Create a new object with shuffled keys
+    const shuffledObj: Record<string, any> = {};
+    for (const key of keys) {
+        shuffledObj[key] = obj[key];
+    }
+
+    return shuffledObj as T;
+}

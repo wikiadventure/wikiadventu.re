@@ -9,7 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@twurple/api": "^7.4.0",
+    "@twurple/chat": "^7.4.0",
     "@vueuse/core": "^13.5.0",
+    "bottleneck": "^2.19.5",
+    "reka-ui": "^2.4.1",
     "vue": "^3.5.17",
     "vue-shadow-dom": "^4.2.0",
     "y-webrtc": "^10.3.0",
@@ -17,6 +21,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250723.0",
+    "@iconify-json/game-icons": "^1.2.3",
     "@iconify-json/hugeicons": "^1.2.6",
     "@iconify-json/material-symbols": "^1.2.30",
     "@iconify-json/material-symbols-light": "^1.2.30",

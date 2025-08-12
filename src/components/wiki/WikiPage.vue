@@ -4,6 +4,7 @@ import { ShadowRoot } from "vue-shadow-dom";
 import WikiPageContent from "./wikiPageContent";
 import wikiPageCssString from "./wikiPage.css?inline";
 import type { LangCode } from "../../i18n/lang";
+import { theme } from "../../composables/useTheme";
 // import { useThemeStore } from "@/composables/useTheme";
 
 export type LinkClickContext = {
@@ -24,7 +25,7 @@ const emit = defineEmits<{
     (e: 'wikiLink', value: [title:string, id:number]): void
 }>();
 
-const wikiRef = ref<HTMLDivElement | null>(null);
+const wikiRef = useTemplateRef<HTMLDivElement | null>("wikiRef");
 const shadowRootRef = useTemplateRef<InstanceType<typeof ShadowRoot> | null>("shadowRootRef");
 const wikiPage = ref(new WikiPageContent());
 const styleSheets = ref<CSSStyleSheet[]>([]);
@@ -62,11 +63,15 @@ const onLinkClick = (link: HTMLAnchorElement) => {
 
     if (!props.disable && link.classList.contains("wikiLink")) {
         const url = linkHref.substring(6);
+        const doc = wikiRef.value;
+        doc?.setAttribute("data-has-been-redirected", "false");
         props.onLinkClick?.(url, {
             anchorElement: link,
             currentPageTitle: wikiPage.value.parsedTitle,
             currentWikiLang: wikiPage.value.lang,
         });
+        
+
     } else if (linkHref.startsWith("#")) {
         scrollToAnchor(decodeURI(linkHref.substring(1)));
     }
@@ -95,43 +100,38 @@ function redirectLinks() {
         setTimeout(redirectLinks, 0); // Retry after a short delay
         return;
     }
-
     if (doc.getAttribute("data-has-been-redirected") == "true") return;
     doc.setAttribute("data-has-been-redirected", "true");
     
-    const observer = new MutationObserver(() => {
-        const links = doc.querySelectorAll("a, area");
-        links.forEach((link) => {
-            const href = link.getAttribute("href");
-            const classes = link.classList;
-            if (!href) return;
+    const links = doc.querySelectorAll("a, area");
+    links.forEach((link) => {
+        const href = link.getAttribute("href");
+        const classes = link.classList;
+        if (!href) return;
 
-            if (href.startsWith("#")) {
-                classes.add("anchorLink");
-            } else if (href.startsWith("/wiki/")) {
-                if (href.includes(":")) {
-                    const sub = href.substring(6);
-                    const decoded = decodeURI(sub).replace(/_/g, " ");
-                    if (wikiPage.value.links.find((l) => l.title === decoded && l.ns === 0)) {
-                        classes.add("wikiLink");
-                    } else {
-                        classes.add("portalLink");
-                    }
-                } else {
+        if (href.startsWith("#")) {
+            classes.add("anchorLink");
+        } else if (href.startsWith("/wiki/")) {
+            if (href.includes(":")) {
+                const sub = href.substring(6);
+                const decoded = decodeURI(sub).replace(/_/g, " ");
+                if (wikiPage.value.links.find((l) => l.title === decoded && l.ns === 0)) {
                     classes.add("wikiLink");
+                } else {
+                    classes.add("portalLink");
                 }
             } else {
-                classes.add("notWikiLink");
+                classes.add("wikiLink");
             }
-        });
+        } else {
+            classes.add("notWikiLink");
+        }
     });
-    
-    observer.observe(doc, { childList: true, subtree: true });
 }
 
-const handleClick = (e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (target.tagName === "A" || target.tagName === "AREA") {
+function handleClick(e: MouseEvent) {
+    const target = (e.target as HTMLElement).closest("a, area") as HTMLAnchorElement | null;
+    if (target) {
         e.preventDefault();
         e.stopPropagation();
         onLinkClick(target as HTMLAnchorElement);
@@ -139,8 +139,14 @@ const handleClick = (e: MouseEvent) => {
 };
 
 onMounted(() => {
-    const doc = wikiRef.value;
+    const doc = wikiRef.value!;
     doc?.addEventListener("click", handleClick);
+    const observer = new MutationObserver(() => {
+        console.log("REDIRECT LINK!");
+        redirectLinks();
+    });
+    
+    observer.observe(doc, { childList: true, subtree: true });
 });
 
 onUnmounted(() => {
@@ -150,13 +156,10 @@ onUnmounted(() => {
 
 
 
-watch(wikiPage, () => {
-    redirectLinks();
-}, { deep: true });
+// watch(wikiPage, () => {
+//     redirectLinks();
+// }, { deep: true });
 
-
-// const usedTheme = useThemeStore.getState().theme;
-const usedTheme = "os";
 
 const htmlClasses = computed(() => {
     const vectorHtmlClasses = [
@@ -184,9 +187,9 @@ const htmlClasses = computed(() => {
     const classes = isMobile.value ? minervaHtmlClasses : vectorHtmlClasses;
     
     classes.push(
-        usedTheme == "os"    ? "skin-theme-clientpref-os" :
-        usedTheme == "dark"  ? "skin-theme-clientpref-night" :
-        usedTheme == "light" ? "skin-theme-clientpref-day" :
+        theme.value == "os"    ? "skin-theme-clientpref-os" :
+        theme.value == "dark"  ? "skin-theme-clientpref-night" :
+        theme.value == "light" ? "skin-theme-clientpref-day" :
         ""
     );
     return classes;
@@ -263,7 +266,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <ShadowRoot ref="shadowRootRef" :adopted-style-sheets="styleSheets">
+    <ShadowRoot class="wiki-page" ref="shadowRootRef" :adopted-style-sheets="styleSheets">
         <div data-is-html role="article" :data-is-mobile="isMobile ? true : undefined"
                 :class="[...htmlClasses, 'wiki-page']" ref="wikiRef">
             <div data-is-body :class="['content', { disable: disable }]">
@@ -275,10 +278,3 @@ onMounted(async () => {
         </div>
     </ShadowRoot>
 </template>
-
-<style scoped>
-.disable {
-    pointer-events: none;
-    opacity: 0.7;
-}
-</style>

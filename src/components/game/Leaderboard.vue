@@ -11,12 +11,6 @@ const { store } = useGameStore();
 
 const players_by_score = computed(() => {
     return Object.values(store.players)
-    .concat(Object.values(store.players))
-    .concat(Object.values(store.players))
-    .concat(Object.values(store.players))
-    .concat(Object.values(store.players))
-    .concat(Object.values(store.players))
-    .concat(Object.values(store.players))
     .map(p => ({
         player: p,
         total_score: 
@@ -59,8 +53,13 @@ const players_by_score = computed(() => {
     width: 100%;
     height: 100%;
     z-index: 10;
+    isolation: isolate;
+    inset: 0;
     overflow-y: scroll;
     padding: 10px;
+    background: var(--back-color);
+    color: var(--front-color);
+    border: none;
     > button {
         position: fixed;
         top: 15px;
@@ -94,7 +93,7 @@ const players_by_score = computed(() => {
             }
             &:nth-child(2n+4) {
                 > span {
-                    background: #0002;
+                    border: 1px solid var(--front-color);
                 }
             }
             > span {

@@ -1,8 +1,10 @@
 import { reactive, watch, type Reactive } from "vue";
 import { WebrtcProvider } from "y-webrtc";
 import * as Y from "yjs";
-import type { PlayerID } from "./game";
+import { VERSION, type PlayerID } from "./game";
 import { player_id, username } from "./form";
+
+const signaling_server = import.meta.env.VITE_SIGNALING_SERVER!;
 
 function toYType(v: any): any {
     if (v === null) return v;
@@ -31,7 +33,7 @@ export type FormPlayer = {
  * @param password an optionnal password used to access the room
  * @returns 
  */
-export function useSyncedStore<T extends object>(initialState:T, room_name:string, password?:string) {
+export function useSyncedStore<T extends object>(initialState:T, room_name:string, password:string) {
     // We initiate the reactive store with empty to set watchers before setting the initial state
     const store = reactive({}) as Reactive<T & { creation_timestamp: number }>;
 
@@ -39,18 +41,32 @@ export function useSyncedStore<T extends object>(initialState:T, room_name:strin
     const ydoc  = new Y.Doc({
         autoLoad: true
     });
+    // used to force encryption
+    if (password == "") password = room_name;
+
+    const searchParams = new URLSearchParams({
+        password
+    })
 
     const webRtcProvider = new WebrtcProvider(room_name, ydoc, {
-        signaling: ["http://localhost:8787/"+room_name],
+        signaling: [signaling_server+"/"+VERSION+"/"+room_name+"?"+searchParams.toString()],
         password,
 
     });
-    // TODO move it out
-    webRtcProvider.awareness.setLocalState({
-        player_id: player_id.value,
-        username: username.value
-    });
+
     const ymap = ydoc.getMap('store');
+
+    let forWipeToComplete = Promise.resolve();
+    let wipeToCompleteResolver = () => {};
+    // use to completely wipe the ydoc to restart game ro change gamemode
+    function wipeYjsDoc() {
+        forWipeToComplete = new Promise((res, _rej)=> wipeToCompleteResolver = res);
+        ydoc.transact(() => {
+
+        }, { wipe: true });
+        return forWipeToComplete;
+    }
+    
 
     /**
      * Recursively syncs a plain JavaScript object to a Y.Map.
@@ -93,11 +109,11 @@ export function useSyncedStore<T extends object>(initialState:T, room_name:strin
         }
 
         // Remove keys that exist in the target but not in the source
-        for (const key of target.keys()) {
-            if (!(key in source)) {
-                // target.delete(key);
-            }
-        }
+        // for (const key of target.keys()) {
+        //     if (!(key in source)) {
+        //         target.delete(key);
+        //     }
+        // }
     }
 
     // When the store change when create a new ydoc transaction
@@ -113,9 +129,29 @@ export function useSyncedStore<T extends object>(initialState:T, room_name:strin
     // When the ydoc receive a update from peers
     // We sync the ydoc state with the reactive store
     ydoc.on('beforeTransaction', (tr: Y.Transaction) => {
+
+        if ((tr.origin as any)?.wipe) {
+            for (const key of Object.keys(store)) {
+                delete store[key as keyof typeof store];
+            }
+            ydoc.transact(()=> {
+                for (const key of ymap.keys()) {
+                    ymap.delete(key);
+                }
+            }, { local_wipe: true });
+            wipeToCompleteResolver();
+            return;
+        }
         if (tr.local) {
             return;
         }
+        if ((tr.origin as any)?.local_wipe) {
+            tr.deleteSet.clients.clear();
+            tr.changed.clear();
+            tr.changedParentTypes.clear();
+            return 
+        }
+
         const remote_creation_timestamp = (tr.origin as any)?.creation_timestamp;
         if (remote_creation_timestamp && remote_creation_timestamp > store.creation_timestamp) {
             // This is a transaction from a new peer with its initial state.
@@ -125,6 +161,7 @@ export function useSyncedStore<T extends object>(initialState:T, room_name:strin
             tr.deleteSet.clients.clear();
             tr.changed.clear();
             tr.changedParentTypes.clear();
+            return;
         }
     });
 
@@ -147,11 +184,11 @@ export function useSyncedStore<T extends object>(initialState:T, room_name:strin
         for (const key in snapshot) {
             (store as any)[key] = snapshot[key as keyof typeof snapshot];
         }
-        for (const key in store) {
-            if (!(key in snapshot)) {
-                delete (store as any)[key];
-            }
-        }
+        // for (const key in store) {
+        //     if (!(key in snapshot)) {
+        //         delete (store as any)[key];
+        //     }
+        // }
     });
 
     // We set the initial state
@@ -169,11 +206,7 @@ export function useSyncedStore<T extends object>(initialState:T, room_name:strin
         store,
         webRtcProvider,
         ydoc,
+        wipeYjsDoc,
         disconnect,
     };
 }
-1753702808688
-1753702810902
-
-1753703055352
-1753703055328

@@ -1,20 +1,9 @@
-export const langs = {
-  en : "English",//English
-  fr : "Français",//French
-  de : "Deutsch",//German
-  // es : "Español",//Spanish
-  // it : "Italiano",//Italian
-  eo : "Esperanto",//Esperanto
-  // pt : "Português",//Portugues
-  // el : "Eλληνικά",//Greek
-  // sv : "Svenska",//Swedish
-} as const;
+import { endonym_to_langcode } from "../composables/wikiLang";
 
+export type LangType = typeof endonym_to_langcode;
 
-export type LangType = typeof langs;
+export type LangCode =  keyof LangType;
 
-export type LangLabel = LangType[keyof LangType];
+export type LangLabel = LangType[LangCode];
 
-export type LangCode = keyof LangType;
-
-export const langsKey = Object.keys(langs) as LangCode[];
+export const langsKey = Object.keys(endonym_to_langcode) as LangCode[];

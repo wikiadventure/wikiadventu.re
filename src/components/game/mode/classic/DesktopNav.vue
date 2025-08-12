@@ -34,6 +34,7 @@ function scrollToId(id:string) {
 <style>
 .desktop-nav {
     position: fixed;
+    z-index: 5;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
@@ -59,7 +60,8 @@ function scrollToId(id:string) {
         }
         button {
             border: none;
-            background: #eee;
+            background: var(--back-color);
+            color: var(--front-color);
             width: 100%;
             height: 100%;
             padding: 5px;

@@ -7,8 +7,12 @@ export function classic_initial_gamedata(timestamp?:Timestamp) {
             current: 1,
             max: 3,
         },
-        playphase_duration: 300,
-        votephase_duration: 30,
+        phase_duration: {
+            Playing: 300,
+            Voting: 30,
+            RoundEnd: 5,
+        },
+        remaining_after_win_duration: 0,
         gamephase: {
             [timestamp]: {
                 type: "Waiting",

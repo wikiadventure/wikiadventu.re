@@ -1,3 +1,4 @@
+import Bottleneck from "bottleneck";
 import type { LangCode } from "../i18n/lang";
 import { createSeededRandomGenerator, generateCloseNumbers } from "./numberUtils";
 
@@ -208,6 +209,72 @@ export async function loadSuggestions(input: string, wiki_lang: LangCode, n = 5)
             }));
     } catch (e) {
         return [];
+    }
+}
+
+export async function* findWikiPreviewStream(input: AsyncIterable<string> | Iterable<string>, wiki_lang: LangCode, abort:AbortController) {
+    const MAX_CONCURRENT = 5;
+    // const limiter = new Bottleneck({maxConcurrent: MAX_CONCURRENT});
+
+    const concurrentRequests:Promise<WikiPreviewResponse|null>[] = [];
+
+    for await (const title of input) {
+        const url = new URL(`https://${wiki_lang}.wikipedia.org/w/api.php`);
+        url.search = new URLSearchParams({
+            action: "query",
+            format: "json",
+            formatversion: "2",
+            gpssearch: title,
+            generator: "prefixsearch",
+            prop: "description|pageimages|pageviews",
+            redirects: "1",
+            piprop: "thumbnail",
+            pithumbsize: "160",
+            pilimit: "30",
+            gpslimit: "1",
+            origin: "*",
+        }).toString();
+        try {
+            concurrentRequests.push(
+                fetch(url.toString(), { credentials: 'omit', headers: wikiHeaders, signal: abort.signal })
+                    .then((r) => r.json() as Promise<WikiPreviewResponse>)
+                    .catch(_=>null)
+            );
+            if (concurrentRequests.length<MAX_CONCURRENT) continue;
+            const wrappedConcurrentRequests = concurrentRequests.map(p => p.then(_ => [p]));
+            const [request] = await Promise.race(wrappedConcurrentRequests);
+            const i = concurrentRequests.indexOf(request);
+            if (i != -1) concurrentRequests.splice(i, 1);
+            const response = await request;
+            if (typeof response?.query?.pages === 'undefined') continue;
+            const p = response.query.pages[0];
+            yield {
+                id: p.pageid,
+                title: p.title,
+                description: p.description,
+                thumbnail: p.thumbnail,
+                wiki_lang
+            } as WikiContentPreview; 
+        } catch (e) {
+            
+        }
+    }
+
+    while (concurrentRequests.length > 0) {
+        const wrappedConcurrentRequests = concurrentRequests.map(p => p.then(_ => [p]));
+        const [request] = await Promise.race(wrappedConcurrentRequests);
+        const i = concurrentRequests.indexOf(request);
+        if (i != -1) concurrentRequests.splice(i, 1);
+        const response = await request;
+        if (typeof response?.query?.pages === 'undefined') continue;
+        const p = response.query.pages[0];
+        yield {
+            id: p.pageid,
+            title: p.title,
+            description: p.description,
+            thumbnail: p.thumbnail,
+            wiki_lang
+        } as WikiContentPreview; 
     }
 }
 
