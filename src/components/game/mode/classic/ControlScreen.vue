@@ -16,6 +16,7 @@ import GameButton from '../../GameButton.vue';
 import PodiumIcon from '~icons/game-icons/podium'
 import ThemePicker from '../../../ThemePicker.vue';
 import WikiLangSelect from '../../WikiLangSelect.vue';
+import FullscreenButton from '../../FullscreenButton.vue';
 
 const { current_phase, store, open_podium, current_round } = useClassicGameStore();
 
@@ -48,6 +49,7 @@ function openPodium() {
     </span>
     <WikiPagePickModeSelect/>
     <PageVoteInput/>
+    <FullscreenButton/>
     <GameButton @click="openPodium">Leaderboard <PodiumIcon/></GameButton>
     <StartButton/>
     <VoteSkipPlayPhase/>
