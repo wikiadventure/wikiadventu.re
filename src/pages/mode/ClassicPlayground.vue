@@ -2,7 +2,7 @@
 import ScrollSnapScreens from '../../components/ScrollSnapScreens.vue';
 import WikiPage, { type LinkClickContext } from '../../components/wiki/WikiPage.vue';
 import ControlScreen from '../../components/game/mode/classic/ControlScreen.vue';
-import { computed, nextTick } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import { player_id } from '../../stores/form';
 import RoundWin from '../../components/game/RoundWin.vue';
 import { useClassicGameLifeCycle, useClassicGameStore } from '../../stores/mode/classic/useClassic';
@@ -13,14 +13,17 @@ import CountDown from '../../components/game/mode/classic/CountDown.vue';
 const { store, current_phase, currentWikiPage, currentEndPage, current_round, open_podium } = useClassicGameStore();
 useClassicGameLifeCycle();
 
+const anchorRef = ref<string|null>(null);
+
 function onLinkClick(url:string, _ctx:LinkClickContext) {
-  const [rawTitle, _anchor] = url.split("#");
+  const [rawTitle, anchor] = url.split("#");
   const title = decodeURIComponent(rawTitle).replaceAll("_", " ");
   const timestamp = Date.now();
   store.gamedata.player_data[player_id.value][store.gamedata.round.current].history[timestamp] = {
     id: -1,
     title
   };
+  anchorRef.value = anchor;
 }
 
 async function onWikiLink([parsedTitle, pageid]:[title: string, id: number]) {
@@ -52,7 +55,7 @@ const playAreaTitle = computed(()=>current_round.value.start.title + " → " + c
   <ControlScreen id="control-area"/>
   <section id="play-area">
     <CountDown/>
-    <WikiPage v-if="current_phase.type == 'Playing'"  :wiki-lang="store.gamedata.wiki_lang" 
+    <WikiPage :anchor="anchorRef" v-if="current_phase.type == 'Playing'"  :wiki-lang="store.gamedata.wiki_lang" 
       :wiki-page-title="currentWikiPage.title" v-on:link-click="onLinkClick" v-on:wiki-link="onWikiLink"
       :disable="false" :title="playAreaTitle"
     />
@@ -60,7 +63,7 @@ const playAreaTitle = computed(()=>current_round.value.start.title + " → " + c
   </section>
   <section id="end-page-area">
     <CountDown/>
-    <WikiPage v-if="current_phase.type == 'Playing'" :wiki-lang="store.gamedata.wiki_lang" 
+    <WikiPage :anchor="null" v-if="current_phase.type == 'Playing'" :wiki-lang="store.gamedata.wiki_lang" 
       :wiki-page-title="currentEndPage.title" v-on:link-click="() => {}"
       :disable="true" :title="'End page'" 
     />

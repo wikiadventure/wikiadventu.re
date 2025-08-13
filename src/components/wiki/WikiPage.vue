@@ -17,6 +17,7 @@ const props = defineProps<{
     disable: boolean;
     title: string;
     wikiPageTitle: string;
+    anchor:null | string;
     wikiLang: LangCode,
     onLinkClick?: (url:string, ctx:LinkClickContext) => void
 }>();
@@ -35,6 +36,8 @@ const safeModeInterrupted = ref(false);
 
 let isRequestingWikiPage = false;
 
+let called = 0;
+
 const requestWikiPage = async (pageTitle: string) => {
     if (isRequestingWikiPage) return;
     isRequestingWikiPage = true;
@@ -46,8 +49,11 @@ const requestWikiPage = async (pageTitle: string) => {
         isRequestingWikiPage = false;
         wikiPage.value = Object.assign(new WikiPageContent(), wikiPage.value);
         emit('wikiLink', [wikiPage.value.parsedTitle, wikiPage.value.pageid]);
+        called++;
+        console.log(`${pageTitle} called ${called}`)
         setTimeout(() => {
-            shadowRootRef.value?.$el?.scrollTo({top: 0, left: 0, behavior: "instant"});
+            if (props.anchor == null) (shadowRootRef.value?.$el as HTMLDivElement).parentElement?.scrollTo({top: 0, left: 0, behavior: "instant"});
+            else scrollToAnchor(props.anchor);
             loading.value = false;
         }, 25);
     } catch (error) {
@@ -82,14 +88,14 @@ const fetchArticle = async (title: string, wikiLang:LangCode) => {
 };
 
 const scrollToAnchor = (id: string) => {
-    if (shadowRootRef.value?.$el) {
-        scrollToID(id, shadowRootRef.value.$el);
+    if (wikiRef.value) {
+        scrollToID(id, wikiRef.value);
     }
 };
 
 const scrollToID = (id: string, scrollContainer?: HTMLElement | Document | ShadowRoot) => {
     if (!scrollContainer) scrollContainer = document;
-    const element = scrollContainer.querySelector(`[id='${id}']`);
+    const element = scrollContainer.querySelector(`#${id}`);
     if (element) element.scrollIntoView();
 };
 
