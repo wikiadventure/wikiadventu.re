@@ -52,11 +52,11 @@
 		]
 	},
 	"migrations": [
-		{
-			"tag": "v1",
-			"new_classes": [
-				"Room"
-			]
-		}
+	{
+		"tag": "v1",
+		"new_sqlite_classes": [
+		"Room"
+		]
+	}
 	]
 }

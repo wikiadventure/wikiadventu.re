@@ -38,7 +38,7 @@
 		"skipLibCheck": true,
 		"types": [
 			"./worker-configuration.d.ts",
-			"@cloudflare/workers-types"
+			// "@cloudflare/workers-types"
 		]
 	},
 	"exclude": ["node_modules", "test"],
