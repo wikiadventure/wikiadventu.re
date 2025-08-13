@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import logoSvg from "../../assets/svg/logoV1.svg";
 import titleSvg from "../../assets/svg/title.svg";
 
