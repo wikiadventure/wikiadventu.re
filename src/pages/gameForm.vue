@@ -55,7 +55,10 @@ onMounted(()=>{
 </template>
 <style>
 .game-form {
-  min-height: 100vh;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
