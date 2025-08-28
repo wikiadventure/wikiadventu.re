@@ -12,7 +12,6 @@
     "@twurple/api": "^7.4.0",
     "@twurple/chat": "^7.4.0",
     "@vueuse/core": "^13.5.0",
-    "bottleneck": "^2.19.5",
     "reka-ui": "^2.4.1",
     "vue": "^3.5.17",
     "vue-shadow-dom": "^4.2.0",
@@ -20,21 +19,27 @@
     "yjs": "^13.6.27"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250723.0",
+    "@iconify-json/codicon": "^1.2.26",
     "@iconify-json/game-icons": "^1.2.3",
     "@iconify-json/hugeicons": "^1.2.6",
+    "@iconify-json/ic": "^1.2.2",
     "@iconify-json/material-symbols": "^1.2.30",
     "@iconify-json/material-symbols-light": "^1.2.30",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/solar": "^1.2.2",
+    "@vite-pwa/assets-generator": "^1.0.0",
+    "@vitejs/plugin-basic-ssl": "^2.1.0",
     "@vitejs/plugin-vue": "^6.0.0",
+    "@vitejs/plugin-vue-jsx": "^5.1.0",
     "@vue/compiler-sfc": "^3.5.18",
     "@vue/tsconfig": "^0.7.0",
     "browserslist": "^4.25.1",
     "lightningcss": "^1.30.1",
+    "sharp": "^0.34.3",
     "typescript": "~5.8.3",
     "unplugin-icons": "^22.1.0",
     "vite": "^7.0.4",
+    "vite-plugin-pwa": "^1.0.3",
     "vue-tsc": "^3.0.3"
   }
 }
