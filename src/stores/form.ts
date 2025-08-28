@@ -1,5 +1,6 @@
 import { useLocalStorage } from "@vueuse/core";
 import { ref, watch } from "vue";
+import { getEnglishRandomUsername } from "./randomUsername/randomUsername";
 
 
 export const username  = useLocalStorage("username", "");
@@ -15,4 +16,12 @@ watch(inGame, (newValue,_oldValue) => {
         room: room_name.value
     });
     window.history.pushState({}, "", "/#"+params.toString());
-})
+});
+
+
+export function connect(e?:Event) {
+    e?.preventDefault();
+    if (username.value.trim() == "") username.value = getEnglishRandomUsername();
+    if (room_name.value.trim() == "") room_name.value = username.value + "-room";
+    inGame.value = true;
+}

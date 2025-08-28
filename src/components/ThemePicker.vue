@@ -15,7 +15,7 @@ import IconOs    from "~icons/material-symbols/settings-night-sight-outline-roun
 </script>
 <template>
 <select-root v-model="theme">
-    <select-trigger class="theme-picker select">
+    <select-trigger class="theme-picker select" aria-label="Theme picker">
         <select-value>
             <IconLight v-if="theme == 'light'"/>
             <IconDark  v-if="theme == 'dark'"/>

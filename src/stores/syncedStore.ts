@@ -2,7 +2,6 @@ import { reactive, watch, type Reactive } from "vue";
 import { WebrtcProvider } from "y-webrtc";
 import * as Y from "yjs";
 import { VERSION, type PlayerID } from "./game";
-import { player_id, username } from "./form";
 
 const signaling_server = import.meta.env.VITE_SIGNALING_SERVER!;
 

@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, computed, useTemplateRef, onUnmounted } from "vue";
+import { ref, onMounted, watch, computed, useTemplateRef, onUnmounted, toRef } from "vue";
 import { ShadowRoot } from "vue-shadow-dom";
 import WikiPageContent from "./wikiPageContent";
-import wikiPageCssString from "./wikiPage.css?inline";
 import type { LangCode } from "../../i18n/lang";
-import { theme } from "../../composables/useTheme";
+import { isMobile, theme } from "../../composables/useTheme";
+import SafemodeInterrupt from "../game/safemode/SafemodeInterrupt.vue";
+import { useSafemode } from "../game/safemode/useSafemode.tsx";
+import { useWikiStyleSheets } from "./useWikiPage.ts";
+import { computedAsync } from "@vueuse/core";
 // import { useThemeStore } from "@/composables/useTheme";
 
 export type LinkClickContext = {
@@ -12,6 +15,8 @@ export type LinkClickContext = {
     currentPageTitle:string,
     currentWikiLang:LangCode,
 }
+
+const currentPageIsMobile = ref(isMobile.value);
 
 const props = defineProps<{
     disable: boolean;
@@ -29,28 +34,37 @@ const emit = defineEmits<{
 const wikiRef = useTemplateRef<HTMLDivElement | null>("wikiRef");
 const shadowRootRef = useTemplateRef<InstanceType<typeof ShadowRoot> | null>("shadowRootRef");
 const wikiPage = ref(new WikiPageContent());
-const styleSheets = ref<CSSStyleSheet[]>([]);
-const isMobile = ref(window.innerWidth < 720);
 const loading = ref(false);
-const safeModeInterrupted = ref(false);
+
+const wikiLangRef = toRef(props, 'wikiLang');
+
+const { wikiStyleSheets, wikiHtmlClasses } = useWikiStyleSheets(wikiLangRef, currentPageIsMobile);
+
+const {
+    safemodeInterrupted, safemodeActiveState,
+    SharpEdgeBlurFilter, safemodeStyleSheet
+} = useSafemode();
+
+const shadowRootStyleSheets = computedAsync(async () => {
+    const [wikiSheets, safemodeSheets] = await Promise.all([wikiStyleSheets.value,safemodeStyleSheet]);
+    return wikiSheets.concat(safemodeSheets);
+}, []);
 
 let isRequestingWikiPage = false;
 
-let called = 0;
 
 const requestWikiPage = async (pageTitle: string) => {
     if (isRequestingWikiPage) return;
     isRequestingWikiPage = true;
     loading.value = true;
-    safeModeInterrupted.value = true;
+    safemodeInterrupted.value = false;
 
     try {
-        await fetchArticle(pageTitle, props.wikiLang);
+        await fetchArticle(pageTitle, wikiLangRef.value);
+        currentPageIsMobile.value = wikiPage.value.isMobile;
         isRequestingWikiPage = false;
         wikiPage.value = Object.assign(new WikiPageContent(), wikiPage.value);
         emit('wikiLink', [wikiPage.value.parsedTitle, wikiPage.value.pageid]);
-        called++;
-        console.log(`${pageTitle} called ${called}`)
         setTimeout(() => {
             if (props.anchor == null) (shadowRootRef.value?.$el as HTMLDivElement).parentElement?.scrollTo({top: 0, left: 0, behavior: "instant"});
             else scrollToAnchor(props.anchor);
@@ -159,126 +173,35 @@ onUnmounted(() => {
     doc?.removeEventListener("click", handleClick);
 })
 
-
-
-// watch(wikiPage, () => {
-//     redirectLinks();
-// }, { deep: true });
-
-
-const htmlClasses = computed(() => {
-    const vectorHtmlClasses = [
-        "vector-feature-language-in-header-enabled",
-        "vector-feature-language-in-main-page-header-disabled",
-        "vector-feature-page-tools-pinned-disabled",
-        "vector-feature-toc-pinned-clientpref-1",
-        "vector-feature-main-menu-pinned-disabled",
-        "vector-feature-limited-width-clientpref-1",
-        "vector-feature-limited-width-content-enabled",
-        "vector-feature-custom-font-size-clientpref-1",
-        "vector-feature-appearance-pinned-clientpref-1",
-        "vector-feature-night-mode-enabled",
-        "vector-toc-available",
-        "vector-animations-ready",
-        "ve-not-available",
-    ];
-
-    const minervaHtmlClasses = [
-        "mf-expand-sections-clientpref-0",
-        "mf-font-size-clientpref-small",
-        "mw-mf-amc-clientpref-0",
-    ];
-
-    const classes = isMobile.value ? minervaHtmlClasses : vectorHtmlClasses;
-    
-    classes.push(
-        theme.value == "os"    ? "skin-theme-clientpref-os" :
-        theme.value == "dark"  ? "skin-theme-clientpref-night" :
-        theme.value == "light" ? "skin-theme-clientpref-day" :
-        ""
-    );
-    return classes;
-});
-
 const wikiPageHtml = computed(() => wikiPage.value.doc?.body.firstElementChild?.innerHTML ?? "");
 
 
 requestWikiPage(props.wikiPageTitle);
-watch(() => props.wikiPageTitle, (newValue, oldValue) => {
+watch(() => props.wikiPageTitle, (_newValue, _oldValue) => {
   requestWikiPage(props.wikiPageTitle);
   // Perform actions here when the prop changes
 });
 
-onMounted(async () => {
-    
-    if (wikiRef.value) {
-        wikiRef.value.blur();
-    }
-
-    const convertToCSSStyleSheet = async (cssString: string): Promise<CSSStyleSheet> => {
-        const sheet = new CSSStyleSheet();
-        await sheet.replace(cssString);
-        return sheet;
-    };
-
-    const loadStyleSheets = async () => {
-        const desktopModules = [
-            "ext.cite.styles", "ext.relatedArticles.styles", "ext.kartographer.style",
-            "ext.timeline.styles", "ext.uls.interlanguage", "ext.visualEditor.desktopArticleTarget.noscript",
-            "ext.wikimediaBadges", "ext.wikimediamessages.styles", "mediawiki.page.gallery.styles",
-            "mediawiki.hlist", "skins.vector.search.codex.styles", "skins.vector.styles",
-            "skins.vector.icons", "wikibase.client.init", "skins.vector.icons,styles", "site.styles",
-            // "ext.math.styles", // this broke on page https://en.wikipedia.org/wiki/Incomplete_Cholesky_factorization
-            "ext.pygments"
-        ];
-        
-
-        const mobileModules = [
-            "ext.cite.styles", "ext.kartographer.style", "ext.timeline.styles", "ext.uls.interlanguage",
-            "ext.relatedArticles.styles", "ext.wikimediaBadges", "ext.wikimediamessages.styles",
-            "mobile.init.styles", "mediawiki.page.gallery.styles", "mediawiki.hlist",
-            "wikibase.client.init", "site.styles", "skins.minerva.codex.styles",
-            "skins.minerva.content.styles.images", "skins.minerva.icons,styles", "ext.gadget.Mobile",
-            // "ext.math.styles", 
-            "ext.pygments"
-        ];
-
-        const modules = isMobile.value ? mobileModules : desktopModules;
-        const skin = isMobile.value ? 'minerva' : 'vector-2022';
-
-        const styleApiUrl = `https://${props.wikiLang}.${isMobile.value ? "m." : ""}wikipedia.org/w/load.php?lang=${props.wikiLang}&only=styles&skin=${skin}&modules=`
-        const styleUrl = `${styleApiUrl}${encodeURIComponent(modules.join("|"))}`;
-        const urls = [styleUrl];
-
-        const sheets = await Promise.all(
-            urls.map(async (url) => {
-                const response = await fetch(url);
-                let cssText = await response.text();
-                cssText = cssText.replaceAll(/html.skin/g, 'div[data-is-html].skin');
-                const sheet = new CSSStyleSheet();
-                await sheet.replace(cssText);
-                return sheet;
-            })
-        );
-        const wikiPageCssStyleSheet = await convertToCSSStyleSheet(wikiPageCssString);
-        styleSheets.value = [wikiPageCssStyleSheet, ...sheets];
-    };
-
-    await loadStyleSheets();
-});
 
 </script>
-
 <template>
-    <ShadowRoot class="wiki-page" ref="shadowRootRef" :adopted-style-sheets="styleSheets">
-        <div data-is-html role="article" :data-is-mobile="isMobile ? true : undefined"
-                :class="[...htmlClasses, 'wiki-page']" ref="wikiRef">
-            <div data-is-body :class="['content', { disable: disable }]">
-                <h1 class="wiki-title" style="text-align: center">{{ title }}</h1>
-                <h2 class="wiki-title">{{ wikiPage.parsedTitle }}</h2>
-                <div class="mw-parser-output" v-html="wikiPageHtml">
-                </div>    
-            </div>
+<h1 class="wiki-title" style="text-align: center">{{ title }}</h1>
+<SafemodeInterrupt v-model="safemodeInterrupted"/>
+<h2 class="wiki-title">{{ wikiPage.parsedTitle }}</h2>
+<ShadowRoot class="wiki-page" ref="shadowRootRef" :adopted-style-sheets="shadowRootStyleSheets">
+    <SharpEdgeBlurFilter/>
+    <div data-is-html :data-is-mobile="isMobile ? true : undefined"  
+            :safemode="safemodeActiveState" role="article"
+            :class="[...wikiHtmlClasses, 'wiki-page']" ref="wikiRef">
+        <div data-is-body :class="['content', { disable: disable }]">
+            <div class="mw-parser-output" v-html="wikiPageHtml">
+            </div>    
         </div>
-    </ShadowRoot>
+    </div>
+</ShadowRoot>
 </template>
+<style>
+.wiki-title {
+    padding: 10px;
+}
+</style>

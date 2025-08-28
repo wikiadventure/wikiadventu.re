@@ -2,7 +2,7 @@
 import { useClassicGameStore } from '../../../../stores/mode/classic/useClassic';
 import CrownIcon from '~icons/mdi/crown';
 
-const { remainCountDownSeconds, countDown, current_phase, store } = useClassicGameStore();
+const { remainCountDownSeconds, current_phase, store } = useClassicGameStore();
 
 </script>
 <template>

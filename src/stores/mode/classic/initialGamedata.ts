@@ -21,6 +21,10 @@ export function classic_initial_gamedata(timestamp?:Timestamp) {
             }
         },
         wiki_page_pick_mode: "random",
+        wiki_random: {
+            grnminsize: -1,
+            grnmaxsize: -1,
+        },
         wiki_lang: "en",
         round_data: {
             

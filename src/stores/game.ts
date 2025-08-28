@@ -37,6 +37,10 @@ export type Gamedata<Mode extends Gamemode> =
         },
         remaining_after_win_duration: number,
         wiki_page_pick_mode: WikiPagePickMode,
+        wiki_random: {
+            grnminsize: number,
+            grnmaxsize: number,
+        },
         wiki_lang: LangCode,
         round_data: {
             [round : number]: {

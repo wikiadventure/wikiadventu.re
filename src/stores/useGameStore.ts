@@ -1,5 +1,5 @@
-import { computed, reactive } from "vue";
-import { password, player_id, room_name, username } from "./form";
+import { computed, reactive, ref } from "vue";
+import { password, player_id as form_player_id, room_name as form_room_name, username as form_username } from "./form";
 import { VERSION, type Game, type Timestamp } from "./game";
 import { useSyncedStore } from "./syncedStore";
 import { classic_initial_gamedata } from "./mode/classic/initialGamedata";
@@ -14,6 +14,11 @@ export function useGameStore() {
 
 
 function useInnerGameStore() {
+
+    const player_id = ref(form_player_id.value);
+    const room_name = ref(form_room_name.value);
+    const username  = ref(form_username.value);
+
     const timestamp = Date.now();
 
     const initialGameState:Game = {
@@ -154,6 +159,9 @@ function useInnerGameStore() {
         current_phase,
         current_phase_start,
         current_round,
-        latestTimestamp
+        latestTimestamp,
+        player_id,
+        room_name,
+        username
     }
 }

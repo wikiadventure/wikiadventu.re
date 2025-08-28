@@ -7,7 +7,6 @@ import { twitch_client_id, twitch_oauth_scope, twitch_oauth_token } from "../../
 import { ChatClient } from "@twurple/chat";
 import { StaticAuthProvider } from "@twurple/auth";
 import { ApiClient } from "@twurple/api";
-import { player_id } from "../../form";
 import { shuffleObjectKeys } from "../../../composables/numberUtils";
 
 let classicGameStore:ReturnType<typeof useClassicInnerGameStore> | null = null;
@@ -22,7 +21,7 @@ export function useClassicGameStore() {
 function useClassicInnerGameStore() {
     const gameStore = useGameStore();
     const { 
-        latestTimestamp, my_player_round_data, current_round, current_phase_start, current_phase, store, connectedPlayerIds
+        latestTimestamp, my_player_round_data, current_round, current_phase_start, current_phase, store, connectedPlayerIds, player_id
     } = gameStore;
 
     const currentWikiPage = computed(() => {
@@ -110,7 +109,11 @@ function useClassicInnerGameStore() {
             changeGamephase("Voting", timestamp);
             return;
         }
-        const [ start, end ] = await getRandomPage(store.gamedata.wiki_lang, 2);
+        const [ start, end ] = await getRandomPage(store.gamedata.wiki_lang, {
+            grnlimit: 2,
+            grnminsize: store.gamedata.wiki_random.grnminsize,
+            grnmaxsize: store.gamedata.wiki_random.grnmaxsize,
+        });
         current_round.value = {
             wiki_lang: store.gamedata.wiki_lang,
             remaining_after_win_duration: store.gamedata.remaining_after_win_duration,
@@ -153,7 +156,11 @@ function useClassicInnerGameStore() {
             }, []);
         if (votes.length < 2) {
             try {
-                const pages = await getRandomPage(round_wiki_lang,2 - votes.length);
+                const pages = await getRandomPage(round_wiki_lang, {
+                    grnlimit: 2 - votes.length,
+                    grnminsize: store.gamedata.wiki_random.grnminsize,
+                    grnmaxsize: store.gamedata.wiki_random.grnmaxsize,
+                });
                 votes.push(...pages);
             } catch(e) {
                 setTimeout(()=>is_startWithVote_running = false, 5000);
@@ -166,7 +173,11 @@ function useClassicInnerGameStore() {
         votes = votes.filter(v=>start.id!=v.id);
         if (votes.length < 1) {
             try {
-                const pages = await getRandomPage(round_wiki_lang,2 - votes.length);
+                const pages = await getRandomPage(round_wiki_lang, {
+                    grnlimit: 2 - votes.length,
+                    grnminsize: store.gamedata.wiki_random.grnminsize,
+                    grnmaxsize: store.gamedata.wiki_random.grnmaxsize,
+                });
                 votes.push(...pages);
             } catch(e) {
                 setTimeout(()=>is_startWithVote_running = false, 5000);
@@ -219,7 +230,11 @@ function useClassicInnerGameStore() {
             }
         }
         if (start == null || end == null) {
-           const [page1, page2] = await getRandomPage(current_round.value.wiki_lang, 2);
+           const [page1, page2] = await getRandomPage(current_round.value.wiki_lang, {
+                    grnlimit: 2,
+                    grnminsize: store.gamedata.wiki_random.grnminsize,
+                    grnmaxsize: store.gamedata.wiki_random.grnmaxsize,
+                });
            if (end == null) end = page1;
            start = end.id == page2.id ? page1 : page2;
         } else {
@@ -406,7 +421,7 @@ export function useClassicGameLifeCycle() {
 
 }
 
-async function useClassicTwich() {
+export async function useClassicTwich() {
     if (twitch_oauth_token.value == null) return;
 
     const {
@@ -425,7 +440,7 @@ async function useClassicTwich() {
 
     await chatClient.connect();
 
-    chatClient.onMessage((channel, user, message) => {
+    chatClient.onMessage((_channel, user, message) => {
         if (current_phase.value.type != "Voting") return;
         if (!message.startsWith("!vote ")) return;
         current_round_player_data.value.twitch_votes[user] = message.slice(6);

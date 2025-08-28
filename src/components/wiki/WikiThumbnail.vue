@@ -30,8 +30,8 @@ const { thumbnail } = defineProps<{
     &:not([no-img]) {
         filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff);
         &:hover {
-        z-index: 5;
-        isolation: isolate;
+            z-index: 5;
+            isolation: isolate;
         }
     }
 }
@@ -57,6 +57,6 @@ const { thumbnail } = defineProps<{
 
 [wiki-thumbnail][no-img] {
     border: 1px solid grey;
-    background: #0001;
+    
 }
 </style>

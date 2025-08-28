@@ -3,14 +3,13 @@ import ScrollSnapScreens from '../../components/ScrollSnapScreens.vue';
 import WikiPage, { type LinkClickContext } from '../../components/wiki/WikiPage.vue';
 import ControlScreen from '../../components/game/mode/classic/ControlScreen.vue';
 import { computed, nextTick, ref } from 'vue';
-import { player_id } from '../../stores/form';
 import RoundWin from '../../components/game/RoundWin.vue';
 import { useClassicGameLifeCycle, useClassicGameStore } from '../../stores/mode/classic/useClassic';
 import Leaderboard from '../../components/game/Leaderboard.vue';
 import DesktopNav from '../../components/game/mode/classic/DesktopNav.vue';
 import CountDown from '../../components/game/mode/classic/CountDown.vue';
 
-const { store, current_phase, currentWikiPage, currentEndPage, current_round, open_podium } = useClassicGameStore();
+const { store, current_phase, currentWikiPage, currentEndPage, current_round, open_podium, player_id } = useClassicGameStore();
 useClassicGameLifeCycle();
 
 const anchorRef = ref<string|null>(null);
@@ -23,7 +22,7 @@ function onLinkClick(url:string, _ctx:LinkClickContext) {
     id: -1,
     title
   };
-  anchorRef.value = anchor;
+  anchorRef.value = anchor ?? null;
 }
 
 async function onWikiLink([parsedTitle, pageid]:[title: string, id: number]) {
@@ -72,19 +71,8 @@ const playAreaTitle = computed(()=>current_round.value.start.title + " → " + c
 </ScrollSnapScreens>
 </template>
 <style>
-body[theme^="dark"] {
-  #play-area, #end-page-area {
-    background: #101418;
-  }
-}
-
-body[theme^="light"] {
-  #play-area, #end-page-area {
-    background: #fff;
-  }
-}
 #play-area, #end-page-area {
-  
+  background: var(--background-wiki-color);
   .wiki-page {
     padding-top: 2lh;
   }

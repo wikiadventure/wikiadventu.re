@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import { useClassicGameStore } from '../../stores/mode/classic/useClassic';
 
-const { isHost, store } = useClassicGameStore();
+const { isHost } = useClassicGameStore();
 
 const phase_duration = defineModel<number|undefined>({ required: true });
 
@@ -40,7 +40,7 @@ function handleInput(event: Event) {
 
 </script>
 <template>
-<div class="duration-input">
+<label class="duration-input">
     <span>{{ props.phase_display_name }} duration in seconds: </span>
     <span :data-value="phaseDurationComputed">
         <span aria-hidden="true">{{ rawInputRef }}</span>
@@ -50,7 +50,7 @@ function handleInput(event: Event) {
             @input="handleInput"
         >
     </span>
-</div>
+</label>
 </template>
 <style>
 .duration-input {

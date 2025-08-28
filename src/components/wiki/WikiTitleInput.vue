@@ -89,12 +89,12 @@ function handleArrowNav(e: KeyboardEvent) {
 
 </script>
 <template>
-    <div class="wiki-title-input" ref="container" @keyup="handleArrowNav">
+    <div role="combobox" class="wiki-title-input" ref="container" @keyup="handleArrowNav">
         <input v-model="input" name="vote-input" :placeholder="props.placeholder" autocomplete="off" >
-        <div wiki-title-suggest>
+        <div role="listbox" wiki-title-suggest>
             <preview    v-for="s in suggestions" :wiki-content-preview="s" :key="s.id"
                         @keypress.enter="handleSelect(s);" @click.stop="handleSelect(s);" 
-                        disable-goto-wiki accesskey="enter" />
+                        disable-goto-wiki accesskey="enter" role="option" />
         </div>
         <preview :disableGotoWiki="true" :wiki-content-preview="wikiContentPreview" :key="wikiContentPreview?.id" tabindex="-1"/>
     </div>

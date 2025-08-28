@@ -24,5 +24,5 @@ const my_player_vote = computed({
 
 </script>
 <template>
-<WikiTitleInput placeholder="Your wiki page" class="page-vote-input" v-if="round_wiki_lang != null && my_player_round_data != null" :wiki-lang="round_wiki_lang" v-model="my_player_vote"/>
+<WikiTitleInput placeholder="Your wiki page vote" class="page-vote-input" v-if="round_wiki_lang != null && my_player_round_data != null" :wiki-lang="round_wiki_lang" v-model="my_player_vote"/>
 </template>

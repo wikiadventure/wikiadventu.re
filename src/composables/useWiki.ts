@@ -110,7 +110,14 @@ export async function getSeededRandomPages(
     return pages;
 }
 
-export async function getRandomPage(lang: LangCode, quantity:number = 1) {
+
+export type WikiRandomGeneratorParams = {
+    grnminsize?:number,
+    grnmaxsize?:number,
+    grnlimit?:number,
+}
+
+export async function getRandomPage(lang: LangCode, gen_params?:WikiRandomGeneratorParams) {
     const url = new URL(`https://${lang}.wikipedia.org/w/api.php`);
     const params: Record<string, string> = {
         action: "query",
@@ -122,16 +129,17 @@ export async function getRandomPage(lang: LangCode, quantity:number = 1) {
         wbptterms: 'description',
         generator: "random",
         grnnamespace: "0",
-        grnlimit: quantity.toString(),
+        ...((gen_params?.grnminsize ?? -1) > 0 && { grnminsize: gen_params?.grnminsize?.toString() }),
+        ...((gen_params?.grnmaxsize ?? -1) > 0 && { grnmaxsize: gen_params?.grnmaxsize?.toString() }),
+        grnlimit: (gen_params?.grnlimit ?? 1).toString(),
         grnfilterredir: "nonredirects",
         origin: "*"
 
     };
-
+    
     Object.keys(params).forEach((key) => {
         url.searchParams.append(key, params[key]);
     });
-
     const response = await fetch(url.toString(), { credentials: 'omit', headers: wikiHeaders });
     const json = await response.json() as RandomResponse;
 
@@ -185,7 +193,7 @@ export async function loadSuggestions(input: string, wiki_lang: LangCode, n = 5)
         formatversion: "2",
         gpssearch: input,
         generator: "prefixsearch",
-        prop: "description|pageimages|pageviews",
+        prop: "description|pageimages",
         redirects: "1",
         piprop: "thumbnail",
         pithumbsize: "160",

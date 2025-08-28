@@ -43,14 +43,13 @@ function openWiki() {
     "i t t"
     "i d d";
   padding: 10px 0 10px 10px;
+  backdrop-filter: blur(2px);
+  background: #0001;
+
   &:last-child {
     border: none;
   }
-  backdrop-filter: blur(2px);
-  background: #0001;
-  /* @at-root .body--dark & {
-    background: #fff1;
-  } */
+
   &:hover, &:focus, &:focus-visible {
     z-index: 5;
   }
@@ -60,7 +59,7 @@ function openWiki() {
   }
 
   & > [wiki-thumbnail], & > [search-loader] {
-    grid: i;
+    grid-area: i;
   }
 
   h3 {

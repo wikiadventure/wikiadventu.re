@@ -1,0 +1,29 @@
+:root {
+    --img-filter: brightness(1); 
+}
+
+[data-is-html].skin-theme-clientpref-day {
+   --img-filter: brightness(1); 
+}
+
+[data-is-html].skin-theme-clientpref-night {
+    /* Wikipedia reduce brightness on image in dark mode*/
+    /* We put the filter in variable to merge it*/
+    --img-filter: brightness(.8);
+}
+
+[safemode="on"] img {
+    filter: blur(10px) url(#sharp-edge-blur-filter) var(--img-filter)!important;
+    transition: filter 2s linear;
+}
+
+[safemode="transition"] img {
+    filter: blur(10px) var(--img-filter)!important;
+    transition: filter 2s linear;
+}
+
+
+[safemode="off"] img {
+    filter: blur(0px) var(--img-filter)!important;
+    transition: filter 2s linear;
+}

@@ -27,6 +27,8 @@ body[theme^="dark"] {
   --back-focus-color: var(--dark-back-focus-color);
   --front-color: var(--dark-front-color);
   --box-shadow: var(--dark-box-shadow);
+
+  --background-wiki-color: #101418;
 }
 
 body[theme^="light"] {
@@ -34,6 +36,8 @@ body[theme^="light"] {
   --back-focus-color: var(--light-back-focus-color);
   --front-color: var(--light-front-color);
   --box-shadow: var(--light-box-shadow);
+
+  --background-wiki-color: #fff;
 }
 
 body {

@@ -8,7 +8,6 @@ const playgroundComponent = computed(() => {
   if (store.gamemode == "Classic") {
     return defineAsyncComponent(() => import("./mode/ClassicPlayground.vue"));
   } else {
-    alert("No playground defined for gamemode " + store.gamemode);
     return "div";
   }
 })

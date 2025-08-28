@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { useAttrs } from 'vue';
 
-const attrs = useAttrs();
+const rawAttrs = useAttrs();
+const { class: _drop, ...attrs } = rawAttrs; 
 </script>
 <template>
 <button class="game-button" v-bind="attrs">
@@ -11,9 +12,23 @@ const attrs = useAttrs();
 </button>
 </template>
 <style>
+body[theme^="dark"] {
+  --game-button-color1: lch(90.5% 55.25 181.75);
+  --game-button-color2: lch(50% 55.25 181.75);
+  --game-button-color3: lch(20% 55.25 181.75);
+  --game-button-color4: lch(10% 55.25 181.75);
+}
+
+body[theme^="light"] {
+  --game-button-color1: lch(10% 55.25 181.75);
+  --game-button-color2: #000;
+  --game-button-color3: #fff;
+  --game-button-color4: lch(44.59% 42.08 159.8);
+}
+
 .game-button {
-    --border: 3px solid var(--front-color);
-    color: var(--front-color);
+    --border: 3px solid var(--game-button-color2);
+    color: var(--game-button-color1);
     padding: 0;
     font-size: 1.5em;
     justify-self: center;
@@ -25,14 +40,17 @@ const attrs = useAttrs();
     cursor: pointer;
     transition: filter ease-in-out .2s;
     &:hover {
-        filter: drop-shadow(0 0 8px cyan);
+        filter: drop-shadow(0 0 8px --game-button-color1) drop-shadow(0 0 16px --game-button-color2);
     }
     > span {
         padding: 10px 20px;
-        background: var(--back-color);
+        background: var(--game-button-color3);
         border-radius: 8px;
         display: block;
         border: var(--border);
+        > svg {
+            vertical-align: middle;
+        }
     }
     &:active {
         transform: translateY(10px);
@@ -45,7 +63,7 @@ const attrs = useAttrs();
     }
     &:is(:focus, :focus-visible) {
      outline: none;
-     --border: 3px solid cyan;
+     --border: 3px solid var(--game-button-color1);
     }
     &::before {
         content: "";
@@ -55,7 +73,7 @@ const attrs = useAttrs();
         transform: translateY(10px);
         border-radius: 8px;
         border: var(--border);
-        background: var(--back-color);
+        background: var(--game-button-color4);
         filter: brightness(0.9);
     }
 }

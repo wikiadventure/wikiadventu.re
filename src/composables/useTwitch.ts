@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { inGame } from "../stores/form";
+import { connect } from "../stores/form";
 
 
 const current_url = new URL(window.location.toString());
@@ -48,7 +48,7 @@ export function openTwitchOauth(url: string) {
             twitch_oauth_token_type.value = event.data.token_type;
             window.removeEventListener('message', messageListener);
             authWindow.close();
-            inGame.value = true;
+            connect();
         }
     };
 

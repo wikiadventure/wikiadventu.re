@@ -39,10 +39,10 @@ const players_by_score = computed(() => {
             <span>{{ players_by_score[2]?.player.name ?? "" }}</span>
             <span>{{ players_by_score[2]?.total_score ?? "" }}</span>
         </li>
-        <li v-for="(player,i) in players_by_score.slice(3)">
+        <li v-for="(p,i) in players_by_score.slice(3)">
             <span>{{ i+4 }}</span>
-            <span>{{ players_by_score[i+3]?.player.name ?? "" }}</span>
-            <span>{{ players_by_score[i+3]?.total_score ?? "" }}</span>
+            <span>{{ p.player.name ?? "" }}</span>
+            <span>{{ p.total_score ?? "" }}</span>
         </li>
     </ol>
 </dialog>

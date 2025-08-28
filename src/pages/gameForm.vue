@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import ThemePicker from '../components/ThemePicker.vue';
-import { inGame, password, room_name, username } from '../stores/form';
+import { connect, inGame, password, room_name, username } from '../stores/form';
 import "../composables/useTwitch";
 import { twitchChatRead, twitchChatReadEdit, openTwitchOauth } from '../composables/useTwitch';
 import LogoShowIn from "../components/art/LogoShowIn.vue";
 import MdiTwitch from '~icons/mdi/twitch';
 import { onMounted } from 'vue';
-
-function connect(e:Event) {
-    e.preventDefault();
-    inGame.value = true;
-}
+import DiceIcon from '~icons/mdi/dice-3'
+import { getEnglishRandomUsername } from '../stores/randomUsername/randomUsername';
 
 onMounted(()=>{
   const current_url = new URL(window.location.toString());
@@ -22,6 +19,11 @@ onMounted(()=>{
 })
 
 
+function randomizeUsername(e:Event) {
+  e.preventDefault();
+  username.value = getEnglishRandomUsername();
+}
+
 </script>
 
 <template>
@@ -30,17 +32,18 @@ onMounted(()=>{
   <ThemePicker/>
   <LogoShowIn/>
   <form>
-    <label>
+    <label class="username">
       <span>username</span>
-      <input type="text" v-model="username">
+      <input type="text" v-model="username" name="username">
+      <button @click="randomizeUsername"><DiceIcon/></button>
     </label>
     <label>
       <span>room name</span>
-      <input type="text" v-model="room_name">
+      <input type="text" v-model="room_name"  name="room-name">
     </label>
     <label>
       <span>password</span>
-      <input type="password" v-model="password">
+      <input type="password" v-model="password" name="password">
     </label>
     <button :onclick="connect">Connect</button>
     <a class="twitch-button" :href="twitchChatRead" @click.prevent="openTwitchOauth(twitchChatRead)">
@@ -64,6 +67,45 @@ onMounted(()=>{
   align-items: center;
   justify-content: center;
   position: relative;
+
+  > form > .username {
+    display: grid;
+    column-gap: 1ch;
+    grid-template-areas: 
+      "s s"
+      "i b";
+    grid-template-columns: 1fr min-content;
+    > span {
+      grid-area: s;
+    }
+    > input {
+      grid-area: i;
+    }
+    > button {
+      grid-area: b;
+      width: min-content;
+      margin: 0;
+      aspect-ratio: 1;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: var(--front-color);
+      
+      > svg {
+        height: 100%;
+        width: auto;
+        aspect-ratio: 1;
+        transition: all ease-in-out .2s;
+      }
+      &:hover > svg {
+        transform: rotate(180deg) scale(1.2);
+      }
+      &:active > svg {
+        transform: rotate(-360deg) scale(1);
+      }
+    }
+  }
+
   > .logo-show-in {
     max-width: 500px;
     z-index: -1;

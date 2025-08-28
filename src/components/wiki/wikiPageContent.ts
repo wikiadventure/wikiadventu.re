@@ -91,7 +91,13 @@ export default class WikiPageContent {
         this.doc.querySelectorAll(selectors)
             .forEach(e => e.parentElement!.removeChild(e));
         this.doc.querySelectorAll("img")
-            .forEach(e => e.setAttribute("crossorigin","anonymous"));
+            .forEach(e =>{
+                e.setAttribute("crossorigin","anonymous");
+                // map.wikimedia.org don't allow cross origin so we disable it
+                if (e.src.startsWith("https://map.wikimedia.org/")) {
+                    e.src =""
+                }
+            });
         this.doc.querySelectorAll("noscript")
             .forEach(e => {
                 const temp = document.createElement('div');
