@@ -1,15 +1,18 @@
 <script lang="ts" setup>
 import { useAttrs } from 'vue';
+const props = defineProps<{
+    tag?: "a"
+}>();
 
 const rawAttrs = useAttrs();
-const { class: _drop, ...attrs } = rawAttrs; 
+const { class: _class, ...attrs } = rawAttrs; 
 </script>
 <template>
-<button class="game-button" v-bind="attrs">
+<component :is="props.tag ?? 'button'" :class="'game-button ' + _class" v-bind="attrs">
     <span>
         <slot></slot>
     </span>
-</button>
+</component>
 </template>
 <style>
 body[theme^="dark"] {

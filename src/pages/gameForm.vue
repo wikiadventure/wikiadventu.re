@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import ThemePicker from '../components/ThemePicker.vue';
-import { connect, inGame, password, room_name, username } from '../stores/form';
-import "../composables/useTwitch";
+import { connect, password, room_name, username } from '../stores/form';
 import { twitchChatRead, twitchChatReadEdit, openTwitchOauth } from '../composables/useTwitch';
 import LogoShowIn from "../components/art/LogoShowIn.vue";
 import MdiTwitch from '~icons/mdi/twitch';
 import { onMounted } from 'vue';
 import DiceIcon from '~icons/mdi/dice-3'
 import { getEnglishRandomUsername } from '../stores/randomUsername/randomUsername';
+import GameButton from '../components/game/GameButton.vue';
+import GithubIcon from '~icons/mdi/github';
+import KofiIcon from '~icons/simple-icons/kofi';
 
 onMounted(()=>{
   const current_url = new URL(window.location.toString());
@@ -53,6 +55,10 @@ function randomizeUsername(e:Event) {
       Connect with Twitch (Allow sending message in chat) <MdiTwitch/>
     </a>
   </form>
+  <div class="button-container">
+    <GameButton class="github-button" tag="a" href="https://github.com/wikiadventure/wikiadventu.re" target="_blank">Github <GithubIcon/></GameButton>
+    <GameButton class="ko-fi-button" tag="a" href="https://ko-fi.com/sacramentix" target="_blank">Support me on Ko-fi <KofiIcon/></GameButton>
+  </div>
 </main>
 
 </template>
@@ -148,5 +154,29 @@ function randomizeUsername(e:Event) {
       color: #eee;
     }
   }
+  .button-container {
+    margin-top: 35px;
+    padding: 1ch;
+    display: flex;
+    gap: 1ch;
+    .github-button {
+      text-decoration: none;
+      --game-button-color1: #fff;
+      --game-button-color2: #111;
+      --game-button-color3: #000;
+      --game-button-color4: #050505;
+    }
+    .ko-fi-button {
+      text-decoration: none;
+      --game-button-color1: #fff;
+      --game-button-color2: #4794ac;
+      --game-button-color3: #5bc0de;
+      --game-button-color4: #2e6f83;
+      svg {
+        color: #ff5f5f;
+      }
+    }
+  }
+
 }
 </style>
