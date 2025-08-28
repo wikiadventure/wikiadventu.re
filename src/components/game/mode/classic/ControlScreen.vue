@@ -17,7 +17,6 @@ import ThemePicker from '../../../ThemePicker.vue';
 import WikiLangSelect from '../../WikiLangSelect.vue';
 import FullscreenButton from '../../FullscreenButton.vue';
 import WikiRandomTypeSelect from '../../WikiRandomTypeSelect.vue';
-import SafemodeInterrupt from '../../safemode/SafemodeInterrupt.vue';
 import LocalSettingsScreen from '../../LocalSettingsScreen.vue';
 import SettingIcon from '~icons/ic/round-settings';
 
