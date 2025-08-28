@@ -3,7 +3,7 @@ import { ref, onMounted, watch, computed, useTemplateRef, onUnmounted, toRef } f
 import { ShadowRoot } from "vue-shadow-dom";
 import WikiPageContent from "./wikiPageContent";
 import type { LangCode } from "../../i18n/lang";
-import { isMobile, theme } from "../../composables/useTheme";
+import { isMobile } from "../../composables/useTheme";
 import SafemodeInterrupt from "../game/safemode/SafemodeInterrupt.vue";
 import { useSafemode } from "../game/safemode/useSafemode.tsx";
 import { useWikiStyleSheets } from "./useWikiPage.ts";
