@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev-signaling-server": "cd ./signaling-server && npm run dev"
   },
   "dependencies": {
     "@twurple/api": "^7.4.0",
@@ -26,6 +27,7 @@
     "@iconify-json/material-symbols": "^1.2.30",
     "@iconify-json/material-symbols-light": "^1.2.30",
     "@iconify-json/mdi": "^1.2.3",
+    "@iconify-json/simple-icons": "^1.2.49",
     "@iconify-json/solar": "^1.2.2",
     "@vite-pwa/assets-generator": "^1.0.0",
     "@vitejs/plugin-basic-ssl": "^2.1.0",
