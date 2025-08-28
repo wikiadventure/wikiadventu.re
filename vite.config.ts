@@ -48,19 +48,19 @@ export default defineConfig({
     }),
     // basicSsl({domains: ["dev.wikiadventu.re"]})
   ],
-  server: {
-    host: 'dev.wikiadventu.re',
-    port: 5882,
-    strictPort: true,
-    https: {
-      key:  readFileSync('certs/dev.key'),
-      cert: readFileSync('certs/dev.crt')
-    }
-  },
+  // server: {
+  //   host: 'dev.wikiadventu.re',
+  //   port: 5882,
+  //   strictPort: true,
+  //   https: {
+  //     key:  readFileSync('certs/dev.key'),
+  //     cert: readFileSync('certs/dev.crt')
+  //   }
+  // },
   css: {
     transformer: 'lightningcss',
     lightningcss: {
-      targets: browserslistToTargets(browserslist('>= 10%'))
+      targets: browserslistToTargets(browserslist('last 6 months'))
     }
   },
   build: {
