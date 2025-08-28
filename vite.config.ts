@@ -5,7 +5,7 @@ import browserslist from 'browserslist';
 import { browserslistToTargets } from 'lightningcss';
 import Icons from 'unplugin-icons/vite';
 import { VitePWA } from 'vite-plugin-pwa';
-import { readFileSync } from "node:fs";
+// import { readFileSync } from "node:fs";
 // import basicSsl from '@vitejs/plugin-basic-ssl';
 
 // https://vite.dev/config/
