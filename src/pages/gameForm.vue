@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ThemePicker from '../components/ThemePicker.vue';
-import { connect, password, room_name, username } from '../stores/form';
+import { connect, idleDisconnected, password, room_name, username } from '../stores/form';
 import { twitchChatRead, twitchChatReadEdit, openTwitchOauth } from '../composables/useTwitch';
 import LogoShowIn from "../components/art/LogoShowIn.vue";
 import MdiTwitch from '~icons/mdi/twitch';
@@ -55,6 +55,12 @@ function randomizeUsername(e:Event) {
       Connect with Twitch (Allow sending message in chat) <MdiTwitch/>
     </a>
   </form>
+  <dialog class="idle-disconnected-dialog" v-if="idleDisconnected" :open="idleDisconnected">
+    <section>
+      <span>You've been disconnected for being idle for 7min30</span>
+      <GameButton @click="idleDisconnected = false">OK</GameButton>
+    </section>
+  </dialog>
   <div class="button-container">
     <GameButton class="github-button" tag="a" href="https://github.com/wikiadventure/wikiadventu.re" target="_blank">Github <GithubIcon/></GameButton>
     <GameButton class="ko-fi-button" tag="a" href="https://ko-fi.com/sacramentix" target="_blank">Support me on Ko-fi <KofiIcon/></GameButton>
@@ -175,6 +181,36 @@ function randomizeUsername(e:Event) {
       svg {
         color: #ff5f5f;
       }
+    }
+  }
+  > .idle-disconnected-dialog {
+    position: absolute;
+    z-index: 1000;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    min-width: 100vw;
+    place-items: center;
+    background: #0000;
+    backdrop-filter: blur(2px) brightness(.75);
+    &[open] {
+        display: grid;
+    }
+    > section {
+        background: var(--back-color);
+        color: var(--front-color);
+        text-align: center;
+        border-radius: 10px;
+        padding: 30px;
+        border: 2px solid var(--front-color);
+        display: flex;
+        flex-direction: column;
+        gap: 35px;
+        align-items: center;
+        > span {
+          font-size: 2em;
+        }
     }
   }
 

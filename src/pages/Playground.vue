@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
-import { useClassicGameStore } from '../stores/mode/classic/useClassic';
+import { useGameStore } from '../stores/useGameStore';
+import IdleDialog from '../components/game/IdleDialog.vue';
 
-const { store } = useClassicGameStore();
+const { store } = useGameStore();
 
 const playgroundComponent = computed(() => {
   if (store.gamemode == "Classic") {
@@ -15,7 +16,7 @@ const playgroundComponent = computed(() => {
 </script>
 <template>
 <component :is="playgroundComponent" />
+<IdleDialog/>
 </template>
 <style>
-
 </style>
