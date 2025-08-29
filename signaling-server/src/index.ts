@@ -143,11 +143,10 @@ export default {
         }
 
         if (request.method == "HEAD" && room_name == "ping") {
-            return new Response('OK', { status: 200, headers: corsHeaders });
+            return new Response(Date.now().toString(), { status: 200, headers: corsHeaders });
         }
 
         const passwordHash = await hashPassword(password, room_name);
-
 
         const id = env.ROOM.idFromName(passwordHash);
         const stub = env.ROOM.get(id);
