@@ -1,9 +1,8 @@
-import { computed, reactive, ref, watch, type Reactive, type Ref } from "vue";
-import { password, player_id as form_player_id, room_name as form_room_name, username as form_username, inGame } from "./form";
+import { computed, reactive, ref, type Reactive, type Ref } from "vue";
+import { password, player_id as form_player_id, room_name as form_room_name, username as form_username } from "./form";
 import { VERSION, type Game, type PlayerID, type Timestamp } from "./game";
 import { getSyncedTimestamp, useSyncedStore } from "./syncedStore";
 import { classic_initial_gamedata } from "./mode/classic/initialGamedata";
-import { useIdle } from "@vueuse/core";
 
 let gameStore:ReturnType<typeof useInnerGameStore> | null = null;
 
