@@ -30,7 +30,7 @@ export default defineConfig({
         name: 'Wiki Adventure multiplayer',
         short_name: 'WikiAdventure',
         description: 'Play on the web of wikipedia with your friend.',
-        theme_color: '#ffffff',
+        theme_color: '#000000',
       },
 
       workbox: {
