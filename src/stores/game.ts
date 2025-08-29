@@ -19,7 +19,7 @@ export type Gamephase = "Waiting" | "Voting" | "Playing" | "RoundEnd" | "Podium"
 
 export type ClassicGamephase = "Waiting" | "Voting" | "Playing" | "RoundEnd" | "Podium";
 
-export type Timestamp = number;
+export type Timestamp = number &  { __brand: "Timestamp" };
 
 export type RoundNumber = number;
 

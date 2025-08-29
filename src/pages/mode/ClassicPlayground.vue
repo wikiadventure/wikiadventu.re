@@ -8,8 +8,9 @@ import { useClassicGameLifeCycle, useClassicGameStore } from '../../stores/mode/
 import Leaderboard from '../../components/game/Leaderboard.vue';
 import DesktopNav from '../../components/game/mode/classic/DesktopNav.vue';
 import CountDown from '../../components/game/mode/classic/CountDown.vue';
+import type { Timestamp } from '../../stores/game';
 
-const { store, current_phase, currentWikiPage, currentEndPage, current_round, open_podium, player_id } = useClassicGameStore();
+const { store, current_phase, currentWikiPage, currentEndPage, current_round, open_podium, player_id, getSyncedTimestamp } =  useClassicGameStore();
 useClassicGameLifeCycle();
 
 const anchorRef = ref<string|null>(null);
@@ -17,7 +18,7 @@ const anchorRef = ref<string|null>(null);
 function onLinkClick(url:string, _ctx:LinkClickContext) {
   const [rawTitle, anchor] = url.split("#");
   const title = decodeURIComponent(rawTitle).replaceAll("_", " ");
-  const timestamp = Date.now();
+  const timestamp = getSyncedTimestamp();
   store.gamedata.player_data[player_id.value][store.gamedata.round.current].history[timestamp] = {
     id: -1,
     title
@@ -28,12 +29,12 @@ function onLinkClick(url:string, _ctx:LinkClickContext) {
 async function onWikiLink([parsedTitle, pageid]:[title: string, id: number]) {
   await nextTick();
   const history = store.gamedata.player_data[player_id.value][store.gamedata.round.current].history;
-  const timestamps = Object.keys(history).map(Number);
-  const latestTimestamp = Math.max(...timestamps);
+  const timestamps = Object.keys(history).map(Number) as Timestamp[];
+  const latestTimestamp = Math.max(...timestamps) as Timestamp;
   
   if (store.gamedata.player_data[player_id.value][store.gamedata.round.current].history[latestTimestamp].title != parsedTitle) {
     store.gamedata.player_data[player_id.value][store.gamedata.round.current].history[latestTimestamp].redirect = true;
-    const timestamp = Date.now();
+    const timestamp = getSyncedTimestamp();
     store.gamedata.player_data[player_id.value][store.gamedata.round.current].history[timestamp] = {
       id: pageid,
       title: parsedTitle

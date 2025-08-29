@@ -1,7 +1,8 @@
 import type { Gamedata, Timestamp } from "../../game";
+import { getSyncedTimestamp } from "../../syncedStore";
 
 export function classic_initial_gamedata(timestamp?:Timestamp) {
-    timestamp ??= Date.now();
+    timestamp ??= getSyncedTimestamp();
     return {
         round: {
             current: 1,

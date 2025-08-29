@@ -1,7 +1,7 @@
 import { computed, ref, watch } from "vue";
 import { useGameStore } from "../../useGameStore";
 import { useTimestamp } from "@vueuse/core";
-import type { ClassicGamephase, PlayerID, VoteWikiPage } from "../../game";
+import type { ClassicGamephase, PlayerID, Timestamp, VoteWikiPage } from "../../game";
 import { findWikiPreviewStream, getRandomPage, type WikiContentPreview } from "../../../composables/useWiki";
 import { twitch_client_id, twitch_oauth_scope, twitch_oauth_token } from "../../../composables/useTwitch";
 import { ChatClient } from "@twurple/chat";
@@ -21,7 +21,8 @@ export function useClassicGameStore() {
 function useClassicInnerGameStore() {
     const gameStore = useGameStore();
     const { 
-        latestTimestamp, my_player_round_data, current_round, current_phase_start, current_phase, store, connectedPlayerIds, player_id
+        latestTimestamp, my_player_round_data, current_round, current_phase_start, current_phase,
+        store, connectedPlayerIds, player_id, getSyncedTimestamp
     } = gameStore;
 
     const currentWikiPage = computed(() => {
@@ -89,8 +90,8 @@ function useClassicInnerGameStore() {
     });
     
 
-    function changeGamephase(next_phase:ClassicGamephase, timestamp?:number, round?:number, duration?:number) {
-        timestamp ??= Date.now();
+    function changeGamephase(next_phase:ClassicGamephase, timestamp?:Timestamp, round?:number, duration?:number) {
+        timestamp ??= getSyncedTimestamp();
         store.gamedata.gamephase[timestamp] = {
             duration: duration ?? store.gamedata.phase_duration[next_phase] ?? -1,
             round: round ?? store.gamedata.round.current,
@@ -99,7 +100,7 @@ function useClassicInnerGameStore() {
     }
 
     async function start() {
-        const timestamp = Date.now();
+        const timestamp = getSyncedTimestamp();
         if (store.gamedata.wiki_page_pick_mode == "vote") {
             // TODO clean this
             // @ts-ignore
@@ -186,7 +187,7 @@ function useClassicInnerGameStore() {
             }
         }
         const end = votes[Math.floor(Math.random() * votes.length)];
-        const timestamp = Date.now();
+        const timestamp = getSyncedTimestamp();
         current_round.value = {
             wiki_lang: current_round.value.wiki_lang,
             remaining_after_win_duration: store.gamedata.remaining_after_win_duration,
@@ -240,7 +241,7 @@ function useClassicInnerGameStore() {
         } else {
             abort.abort();
         }
-        const timestamp = Date.now();
+        const timestamp = getSyncedTimestamp();
         current_round.value = {
             wiki_lang: current_round.value.wiki_lang,
             remaining_after_win_duration: store.gamedata.remaining_after_win_duration,
@@ -266,7 +267,7 @@ function useClassicInnerGameStore() {
         const entries = Object.entries(store.gamedata.round_data[store.gamedata.round.current].winners);
         // first winner
         if (entries.length == 0) {
-            const t = Date.now();
+            const t = getSyncedTimestamp();
             const score = 1000;
             store.gamedata.player_data[player_id][store.gamedata.round.current].score = score;
             store.gamedata.round_data[store.gamedata.round.current].winners[player_id] = {
@@ -282,7 +283,7 @@ function useClassicInnerGameStore() {
             }
         } else {
             if(store.gamedata.round_data[store.gamedata.round.current].winners[player_id] != null) return;
-            const time = Date.now();
+            const time = getSyncedTimestamp();
             const score_start = 750;
             const score_end   = 500;
             const time_start  = first_win_of_round_timestamp.value;
@@ -333,7 +334,7 @@ function useClassicInnerGameStore() {
 
 let is_startWithVote_running = false;
 
-export function useClassicGameLifeCycle() {
+export async function useClassicGameLifeCycle() {
     const {
         remainCountDownSeconds,
         isHost,
@@ -344,7 +345,7 @@ export function useClassicGameLifeCycle() {
         current_round_connected_player_data,
         changeGamephase,
         win
-    } = useClassicGameStore();
+    } = await useClassicGameStore();
 
     watch(remainCountDownSeconds, (_newValue, _oldValue) => {
         if (!isHost.value) return;
@@ -398,10 +399,10 @@ export function useClassicGameLifeCycle() {
             const history = player.history;
             if (!history) continue;
 
-            const timestamps = Object.keys(history).map(Number);
+            const timestamps = Object.keys(history).map(Number) as Timestamp[];
             if (timestamps.length === 0) continue;
 
-            const latestTimestamp = Math.max(...timestamps);
+            const latestTimestamp = Math.max(...timestamps) as Timestamp;
             const latestPage = history[latestTimestamp];
 
             if (latestPage && latestPage.title === endPageTitle) {
@@ -427,7 +428,7 @@ export async function useClassicTwich() {
     const {
         current_phase,
         current_round_player_data
-    } = useClassicGameStore();
+    } = await useClassicGameStore();
 
     const authProvider = new StaticAuthProvider(twitch_client_id, twitch_oauth_token.value, twitch_oauth_scope.value!);
     const apiClient = new ApiClient({ authProvider });

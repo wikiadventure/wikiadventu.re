@@ -1,7 +1,7 @@
 import { reactive, watch, type Reactive } from "vue";
 import { WebrtcProvider } from "y-webrtc";
 import * as Y from "yjs";
-import { VERSION, type PlayerID } from "./game";
+import { VERSION, type PlayerID, type Timestamp } from "./game";
 
 const signaling_server = import.meta.env.VITE_SIGNALING_SERVER!;
 
@@ -191,7 +191,7 @@ export function useSyncedStore<T extends object>(initialState:T, room_name:strin
     });
 
     // We set the initial state
-    for (const [k,v] of Object.entries({...initialState, creation_timestamp: Date.now()})) {
+    for (const [k,v] of Object.entries({...initialState, creation_timestamp: getSyncedTimestamp()})) {
         (store as any)[k] = v;
     }
 
@@ -208,4 +208,26 @@ export function useSyncedStore<T extends object>(initialState:T, room_name:strin
         wipeYjsDoc,
         disconnect,
     };
+}
+
+const syncedTimestamp = {
+    remote: -1,
+    local: -1
+};
+
+export async function initSyncedTimestamp() {
+    if (syncedTimestamp.remote != -1) return;
+    const localTimestamp   = performance.now();
+    const remoteTimestamp  = await fetch(import.meta.env.VITE_SIGNALING_SERVER!+"/ping", { method: "HEAD" })
+                        .then(r=>r.text().then(s=>Number(s)));
+    const receiveTimestamp = performance.now();
+    // we remove the packet travel time
+    const correctedRemoteTimestamp = remoteTimestamp - ((receiveTimestamp - localTimestamp) / 2);
+    // the offset
+    syncedTimestamp.local = localTimestamp;
+    syncedTimestamp.remote = correctedRemoteTimestamp;
+}
+
+export function getSyncedTimestamp():Timestamp {
+    return syncedTimestamp.remote + (performance.now() - syncedTimestamp.local) as Timestamp;
 }
