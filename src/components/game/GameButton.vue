@@ -8,7 +8,7 @@ const rawAttrs = useAttrs();
 const { class: _class, ...attrs } = rawAttrs; 
 </script>
 <template>
-<component :is="props.tag ?? 'button'" :class="'game-button ' + _class" v-bind="attrs">
+<component :is="props.tag ?? 'button'" :class="'game-button ' + (_class ?? '')" v-bind="attrs">
     <span>
         <slot></slot>
     </span>
@@ -34,6 +34,7 @@ body[theme^="light"] {
     color: var(--game-button-color1);
     padding: 0;
     font-size: 1.5em;
+    isolation: isolate;
     justify-self: center;
     position: relative;
     border-radius: 8px;
@@ -72,6 +73,7 @@ body[theme^="light"] {
         content: "";
         position: absolute;
         z-index: -1;
+        
         inset: 0;
         transform: translateY(10px);
         border-radius: 8px;
