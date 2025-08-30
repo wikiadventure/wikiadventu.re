@@ -52,7 +52,10 @@ const playAreaTitle = computed(()=>current_round.value.start.title + " → " + c
 <Leaderboard v-model="open_podium" />
 <RoundWin v-if="current_phase.type == 'RoundEnd'"/>
 <ScrollSnapScreens v-if="store.version != null">
-  <ControlScreen id="control-area"/>
+  <section id="control-area">
+    <ControlScreen />
+  </section>
+  
   <section id="play-area">
     <CountDown/>
     <WikiPage :anchor="anchorRef" v-if="current_phase.type == 'Playing'"  :wiki-lang="store.gamedata.wiki_lang" 
@@ -61,6 +64,7 @@ const playAreaTitle = computed(()=>current_round.value.start.title + " → " + c
     />
     <span class="default-text" v-else>Wiki playground for play phase</span>
   </section>
+
   <section id="end-page-area">
     <CountDown/>
     <WikiPage :anchor="null" v-if="current_phase.type == 'Playing'" :wiki-lang="store.gamedata.wiki_lang" 
@@ -69,6 +73,7 @@ const playAreaTitle = computed(()=>current_round.value.start.title + " → " + c
     />
     <span class="default-text" v-else>Wiki end page preview for play phase</span>
   </section>
+  
 </ScrollSnapScreens>
 </template>
 <style>
