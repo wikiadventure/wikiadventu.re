@@ -219,7 +219,7 @@ export async function initSyncedTimestamp() {
     if (syncedTimestamp.remote != -1) return;
     const localTimestamp   = performance.now();
     const remoteTimestamp  = await fetch(import.meta.env.VITE_SIGNALING_SERVER!+"/ping", { method: "HEAD" })
-                        .then(r=>r.text().then(s=>Number(s)));
+                        .then(r => Number(r.headers.get("server-timestamp"))).catch(_=>Date.now());
     const receiveTimestamp = performance.now();
     // we remove the packet travel time
     const correctedRemoteTimestamp = remoteTimestamp - ((receiveTimestamp - localTimestamp) / 2);

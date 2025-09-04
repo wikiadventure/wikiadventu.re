@@ -5,7 +5,7 @@ import browserslist from 'browserslist';
 import { browserslistToTargets } from 'lightningcss';
 import Icons from 'unplugin-icons/vite';
 import { VitePWA } from 'vite-plugin-pwa';
-// import { readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 // import basicSsl from '@vitejs/plugin-basic-ssl';
 
 // https://vite.dev/config/
@@ -48,15 +48,15 @@ export default defineConfig({
     }),
     // basicSsl({domains: ["dev.wikiadventu.re"]})
   ],
-  // server: {
-  //   host: 'dev.wikiadventu.re',
-  //   port: 5882,
-  //   strictPort: true,
-  //   https: {
-  //     key:  readFileSync('certs/dev.key'),
-  //     cert: readFileSync('certs/dev.crt')
-  //   }
-  // },
+  server: {
+    host: 'dev.wikiadventu.re',
+    port: 5882,
+    strictPort: true,
+    https: {
+      key:  readFileSync('certs/dev.key'),
+      cert: readFileSync('certs/dev.crt')
+    }
+  },
   css: {
     transformer: 'lightningcss',
     lightningcss: {
