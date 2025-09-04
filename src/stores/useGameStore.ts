@@ -195,7 +195,7 @@ function handleHostRotationAndNewPlayer(ctx:HandleHostRotationAndNewPlayerCtx) {
         });
         // Change host if host if not connected
         if (!connectedPlayerIds.has(store.host_id)) {
-            const url = new URL(webRtcProvider.signalingUrls[0]);
+            const url = new URL(import.meta.env.VITE_SIGNALING_SERVER!);
             url.pathname = "/ping";
             const isConnected = await fetch(url, {
                 method: "HEAD"
