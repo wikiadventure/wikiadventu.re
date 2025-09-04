@@ -143,6 +143,7 @@ export default {
         }
 
         if (request.method == "HEAD" && room_name == "ping") {
+            corsHeaders.set("Access-Control-Expose-Headers", "server-timestamp");
             corsHeaders.set("server-timestamp", Date.now().toString());
             return new Response("OK", { status: 200, headers: corsHeaders });
         }
