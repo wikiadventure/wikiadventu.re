@@ -1,7 +1,7 @@
 import type { Gamedata, RoundNumber, Timestamp } from "../../game";
 import { getSyncedTimestamp } from "../../syncedStore";
 
-export function classic_initial_gamedata(timestamp?:Timestamp):Gamedata<"Classic"> {
+export function epic_initial_gamedata(timestamp?:Timestamp):Gamedata<"Epic"> {
     timestamp ??= getSyncedTimestamp();
     return {
         round: {
@@ -26,6 +26,9 @@ export function classic_initial_gamedata(timestamp?:Timestamp):Gamedata<"Classic
             value: 0,
             unit: "seconds"
         },
+        pages_pool_size: 3,
+        pages_found_to_win: 3,
+        pages_pool_order_mandatory: true,
         gamephase: {
             [timestamp]: {
                 type: "Waiting",
@@ -45,5 +48,5 @@ export function classic_initial_gamedata(timestamp?:Timestamp):Gamedata<"Classic
         player_data: {
 
         },
-    };
+    } ;
 }

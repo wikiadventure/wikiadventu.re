@@ -12,16 +12,19 @@ export type Game<Mode extends Gamemode = "Classic"> = {
     gamedata: Gamedata<Mode>
 }
 
-export const all_gamemode = ["Classic"] as const;
+export const all_gamemode = ["Classic", "Epic"] as const;
 export type Gamemode = typeof all_gamemode[number];
 
 export type Gamephase = "Waiting" | "Voting" | "Playing" | "RoundEnd" | "Podium";
 
 export type ClassicGamephase = "Waiting" | "Voting" | "Playing" | "RoundEnd" | "Podium";
+export type EpicGamephase = ClassicGamephase;
 
-export type Timestamp = number &  { __brand: "Timestamp" };
+export type Timestamp = number & { __brand: "Timestamp" };
 
-export type RoundNumber = number;
+export type RoundNumber = number & { __brand: "RoundNumber" };
+
+export type WikiPageId = number & { __brand: "WikiPageId" };
 
 /** Duration of a phase in seconds (-1 is infinite) */
 export type PhaseDuration = number;
@@ -33,9 +36,9 @@ export type Gamedata<Mode extends Gamemode> =
             max: RoundNumber
         },
         phase_duration: {
-            [phase in ClassicGamephase]?: number
+            [phase in ClassicGamephase]?: DurationInput
         },
-        remaining_after_win_duration: number,
+        remaining_after_win_duration: DurationInput,
         wiki_page_pick_mode: WikiPagePickMode,
         wiki_random: {
             grnminsize: number,
@@ -43,7 +46,7 @@ export type Gamedata<Mode extends Gamemode> =
         },
         wiki_lang: LangCode,
         round_data: {
-            [round : number]: {
+            [round : RoundNumber]: {
                 wiki_lang: LangCode,
                 start: RoundWikiPage,
                 end: RoundWikiPage,
@@ -65,7 +68,59 @@ export type Gamedata<Mode extends Gamemode> =
         }
         player_data: {
             [id : PlayerID]: {
-                [round : number]: {
+                [round : RoundNumber]: {
+                    twitch_votes: Record<string/*username*/, string/*raw vote*/>,
+                    score: number,
+                    vote_skip: boolean,
+                    page_vote: VoteWikiPage | null,
+                    history: Record<Timestamp,PageHistoryShard>
+                }
+            }
+        },
+    } : Mode extends "Epic" ? {
+        round: { 
+            current: RoundNumber,
+            max: RoundNumber
+        },
+        phase_duration: {
+            [phase in EpicGamephase]?: DurationInput
+        },
+        remaining_after_win_duration: DurationInput,
+        wiki_page_pick_mode: WikiPagePickMode,
+        wiki_random: {
+            grnminsize: number,
+            grnmaxsize: number,
+        },
+        pages_pool_size: number,
+        pages_pool_order_mandatory: boolean,
+        pages_found_to_win: number,
+        wiki_lang: LangCode,
+        round_data: {
+            [round : RoundNumber]: {
+                wiki_lang: LangCode,
+                pages_pool_size: number,
+                pages_pool_order_mandatory: boolean,
+                pages_found_to_win: number,
+                pages_pool: RoundWikiPage[],
+                remaining_after_win_duration: number,
+                winners: {
+                    [player_id: PlayerID]: {
+                        timestamp: Timestamp,
+                        score: number
+                    }
+                }
+            }
+        },
+        gamephase: {
+            [start:Timestamp]: {
+                type: Gamephase,
+                round: RoundNumber,
+                duration: PhaseDuration
+            }
+        }
+        player_data: {
+            [id : PlayerID]: {
+                [round : RoundNumber]: {
                     twitch_votes: Record<string/*username*/, string/*raw vote*/>,
                     score: number,
                     vote_skip: boolean,
@@ -77,9 +132,14 @@ export type Gamedata<Mode extends Gamemode> =
     } : {}
 
 export type PageHistoryShard = {
-    id: number,
+    id: WikiPageId,
     title: string,
     redirect?: true
+}
+
+export type DurationInput = {
+    value: number,
+    unit: "seconds" | "minutes" | "hours"
 }
 
 export const all_wiki_page_pick_mode = ["vote","random"] as const;
@@ -99,5 +159,5 @@ export type Player = {
 
 }
 
-export type PlayerID = string;
+export type PlayerID = string & { __brand: "PlayerId" };;
 

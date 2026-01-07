@@ -1,27 +1,30 @@
 import { computed, reactive, ref, type Reactive, type Ref } from "vue";
 import { password, player_id as form_player_id, room_name as form_room_name, username as form_username } from "./form";
-import { VERSION, type Game, type PlayerID, type Timestamp } from "./game";
+import { VERSION, type DurationInput, type Game, type Gamemode, type PlayerID, type RoundNumber, type Timestamp } from "./game";
 import { getSyncedTimestamp, useSyncedStore } from "./syncedStore";
 import { classic_initial_gamedata } from "./mode/classic/initialGamedata";
 
 let gameStore:ReturnType<typeof useInnerGameStore> | null = null;
 
-export function useGameStore() {
-    if (gameStore != null) return gameStore;
-    gameStore = useInnerGameStore();
-    return gameStore;
+export function useGameStore<Mode extends Gamemode>() {
+    if (gameStore != null) return gameStore as ReturnType<typeof useInnerGameStore<Mode>>;
+    gameStore = useInnerGameStore<Mode>();
+    return gameStore as ReturnType<typeof useInnerGameStore<Mode>>;
 }
 
+export function resetGameStore() {
+    gameStore = null;
+}
 
-function useInnerGameStore() {
+function useInnerGameStore<Mode extends Gamemode>() {
 
-    const player_id = ref(form_player_id.value);
+    const player_id = ref(form_player_id.value as PlayerID);
     const room_name = ref(form_room_name.value);
     const username  = ref(form_username.value);
 
     const timestamp = getSyncedTimestamp();
 
-    const initialGameState:Game = {
+    const initialGameState = {
         version: VERSION,
         players: {
             [player_id.value]: {
@@ -34,16 +37,16 @@ function useInnerGameStore() {
         gamemode: "Classic",
         gamedata: classic_initial_gamedata(timestamp),
         host_id: player_id.value,
-    };
+    } as Game<Mode>;
 
-    const { store, ydoc, webRtcProvider, disconnect, wipeYjsDoc } = useSyncedStore(initialGameState, room_name.value, password.value);
+    const { store, ydoc, webRtcProvider, disconnect, wipeYjsDoc } = useSyncedStore<Game<Mode>>(initialGameState, room_name.value, password.value);
 
     webRtcProvider.awareness.setLocalState({
         player_id: player_id.value,
         username: username.value
     });
 
-    const connectedPlayerIds = reactive(new Set<string>([player_id.value]));
+    const connectedPlayerIds = reactive(new Set<PlayerID>([player_id.value]));
 
     const {
         latestTimestamp,
@@ -53,9 +56,17 @@ function useInnerGameStore() {
         current_phase,
         current_phase_start,
         current_round,
-    } = createComputedShortcut({ store, player_id });
+    } = createComputedShortcut<Mode>({ store, player_id });
 
     handleHostRotationAndNewPlayer({ webRtcProvider, connectedPlayerIds, store, isHost, player_id });
+
+    function durationInputToSeconds(durationInput?:DurationInput) {
+        if (durationInput == null) return -1;
+        return  durationInput.unit == "hours"   ? durationInput.value * 3600 :
+                durationInput.unit == "minutes" ? durationInput.value * 60 :
+                durationInput.unit == "seconds" ? durationInput.value :
+                                                  durationInput.value;
+    }
 
     return {
         store,
@@ -74,17 +85,18 @@ function useInnerGameStore() {
         player_id,
         room_name,
         username,
-        getSyncedTimestamp
+        getSyncedTimestamp,
+        durationInputToSeconds
     }
 }
 
-type CreateComputedShortcutCtx = {
-    store: Reactive<Game>,
+type CreateComputedShortcutCtx<Mode extends Gamemode> = {
+    store: Reactive<Game<Mode>>,
     player_id: Ref<PlayerID>
 }
 
-function createComputedShortcut(ctx:CreateComputedShortcutCtx) {
-    const { store, player_id } = ctx;
+function createComputedShortcut<Mode extends Gamemode>(ctx:CreateComputedShortcutCtx<Mode>) {
+    const { store, player_id } = ctx as CreateComputedShortcutCtx<Mode>;
 
     function latestTimestamp(record:Record<Timestamp, unknown>):Timestamp {
         return Object.keys(record).reduce<Timestamp>((acc,t) => {
@@ -97,15 +109,17 @@ function createComputedShortcut(ctx:CreateComputedShortcutCtx) {
 
     const my_player_data = computed({
         get() {
-            return store.gamedata.player_data[player_id.value];
+            if (store.gamedata == null) return {} as never;
+            return store.gamedata.player_data[player_id.value] as Game<Mode>["gamedata"]["player_data"][PlayerID];
         },
-        set(newValue) {
+        set(newValue: Game<Mode>["gamedata"]["player_data"][PlayerID]) {
             store.gamedata.player_data[player_id.value] = newValue;
         }
     });
 
     const my_player_round_data = computed({
         get() {
+            if (store.gamedata == null) return {} as never;
             store.gamedata.player_data[player_id.value] ??= {};
             store.gamedata.player_data[player_id.value][store.gamedata.round.current] ??= {
                 twitch_votes: {},
@@ -114,9 +128,9 @@ function createComputedShortcut(ctx:CreateComputedShortcutCtx) {
                 vote_skip: false,
                 score: 0
             }
-            return store.gamedata.player_data[player_id.value][store.gamedata.round.current];
+            return store.gamedata.player_data[player_id.value][store.gamedata.round.current] as Game<Mode>["gamedata"]["player_data"][PlayerID][RoundNumber];
         },
-        set(newValue) {
+        set(newValue: Game<Mode>["gamedata"]["player_data"][PlayerID][RoundNumber]) {
             const initial = {
                 twitch_votes: {},
                 history: {},
@@ -129,14 +143,15 @@ function createComputedShortcut(ctx:CreateComputedShortcutCtx) {
         }
     });
 
-    const current_phase_start = computed(() => latestTimestamp(store.gamedata.gamephase));
+    const current_phase_start = computed(() => latestTimestamp(store.gamedata?.gamephase ?? {}));
     
     const current_phase = computed({
         get() {
             if (current_phase_start.value == -1) return {} as never;
-            return store.gamedata.gamephase[current_phase_start.value];
+            if (store.gamedata == null) return {} as never;
+            return store.gamedata.gamephase[current_phase_start.value] as Game<Mode>["gamedata"]["gamephase"][Timestamp];
         },
-        set(newValue) {
+        set(newValue: Game<Mode>["gamedata"]["gamephase"][Timestamp]) {
             if (current_phase_start.value == -1) return;
             store.gamedata.gamephase[current_phase_start.value] = newValue;
         }
@@ -144,9 +159,10 @@ function createComputedShortcut(ctx:CreateComputedShortcutCtx) {
 
     const current_round = computed({
         get() {
-            return store.gamedata.round_data[store.gamedata.round.current];
+            if (store.gamedata == null) return {} as never;
+            return store.gamedata.round_data[store.gamedata.round.current] as Game<Mode>["gamedata"]["round_data"][RoundNumber];
         },
-        set(newValue) {
+        set(newValue: Game<Mode>["gamedata"]["round_data"][RoundNumber]) {
             store.gamedata.round_data[store.gamedata.round.current] = newValue;
         }
     });
@@ -171,7 +187,7 @@ type HandleHostRotationAndNewPlayerCtx =
 
 function handleHostRotationAndNewPlayer(ctx:HandleHostRotationAndNewPlayerCtx) {
     const { webRtcProvider, connectedPlayerIds, store, isHost, player_id } = ctx;
-    webRtcProvider.awareness.on("update", async () => {
+    async function onAwarnessUpdate() {
         connectedPlayerIds.clear();
         // We update connected player list
         webRtcProvider.awareness.getStates().forEach((player:unknown) => {
@@ -180,13 +196,13 @@ function handleHostRotationAndNewPlayer(ctx:HandleHostRotationAndNewPlayerCtx) {
                 player.player_id == null || 
                 !(typeof player.player_id === 'string')
             ) return;
-            connectedPlayerIds.add(player.player_id);
+            connectedPlayerIds.add(player.player_id as PlayerID);
             // Only the host add player to store to avoid duplicate
             if (isHost.value) {
                 if (!(typeof player === "object" && player !== null && "username" in player && typeof player.username === "string")) return;
-                const joinedAt = store.players[player.player_id]?.joinedAt ?? getSyncedTimestamp();
-                store.players[player.player_id] = {
-                    id: player.player_id,
+                const joinedAt = store.players[player.player_id as PlayerID]?.joinedAt ?? getSyncedTimestamp();
+                store.players[player.player_id as PlayerID] = {
+                    id: player.player_id as PlayerID,
                     name: player.username,
                     avatar: "",
                     joinedAt
@@ -207,5 +223,9 @@ function handleHostRotationAndNewPlayer(ctx:HandleHostRotationAndNewPlayerCtx) {
                 store.host_id = oldestConnectedPlayerId;
             }
         }
-    });
+    }
+    webRtcProvider.awareness.on("update", onAwarnessUpdate);
+    return {
+        unregister: () => webRtcProvider.awareness.off("update", onAwarnessUpdate)
+    };
 }

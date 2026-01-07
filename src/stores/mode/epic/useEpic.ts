@@ -1,7 +1,7 @@
-import { computed, getCurrentInstance, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useGameStore } from "../../useGameStore";
 import { useTimestamp } from "@vueuse/core";
-import type { ClassicGamephase, PlayerID, RoundNumber, Timestamp, VoteWikiPage } from "../../game";
+import type { EpicGamephase, PlayerID, RoundNumber, Timestamp, VoteWikiPage, WikiPageId } from "../../game";
 import { findWikiPreviewStream, getRandomPage, type WikiContentPreview } from "../../../composables/useWiki";
 import { twitch_client_id, twitch_oauth_scope, twitch_oauth_token } from "../../../composables/useTwitch";
 import { ChatClient } from "@twurple/chat";
@@ -9,22 +9,18 @@ import { StaticAuthProvider } from "@twurple/auth";
 import { ApiClient } from "@twurple/api";
 import { shuffleObjectKeys } from "../../../composables/numberUtils";
 
-let classicGameStore:ReturnType<typeof useClassicInnerGameStore> | null = null;
+let epicGameStore:ReturnType<typeof useEpicInnerGameStore> | null = null;
 
-export function resetClassicGameStore() {
-    classicGameStore = null;
-    is_startWithVote_running = false;
-}
-
-export function useClassicGameStore() {
-    if (classicGameStore != null) return classicGameStore;
-    classicGameStore = useClassicInnerGameStore();
-    return classicGameStore;
+export function useEpicGameStore() {
+    if (epicGameStore != null) return epicGameStore;
+    epicGameStore = useEpicInnerGameStore();
+    return epicGameStore;
 }
 
 
-function useClassicInnerGameStore() {
-    const gameStore = useGameStore<"Classic">();
+function useEpicInnerGameStore() {
+    const gameStore = useGameStore<"Epic">();
+
     const { 
         latestTimestamp, my_player_round_data, current_round, current_phase_start, current_phase,
         store, connectedPlayerIds, player_id, getSyncedTimestamp, durationInputToSeconds
@@ -33,10 +29,6 @@ function useClassicInnerGameStore() {
     const currentWikiPage = computed(() => {
         const t = latestTimestamp(my_player_round_data.value.history);
         return my_player_round_data.value.history[t];
-    });
-
-    const currentEndPage = computed(() => {
-        return current_round.value.end;
     });
 
     const timestamp = useTimestamp({ offset: 0 });
@@ -51,7 +43,7 @@ function useClassicInnerGameStore() {
 
     const current_round_all_player_data = computed(() => {
         return Object.entries(store.gamedata.player_data).map(([id,p])=>({
-            player_id: id,
+            player_id: id as PlayerID,
             ...(p[store.gamedata.round.current])
         }))
     });
@@ -74,7 +66,7 @@ function useClassicInnerGameStore() {
     });
 
     const current_round_connected_player_data = computed(() => {
-        return current_round_all_player_data.value.filter(({ player_id }) => connectedPlayerIds.has(player_id as PlayerID));
+        return current_round_all_player_data.value.filter(({ player_id }) => connectedPlayerIds.has(player_id));
     });
 
     const first_win_of_round_timestamp = computed(() => {
@@ -93,9 +85,13 @@ function useClassicInnerGameStore() {
     const remainCountDownSeconds = computed(() => {
         return Math.max(Math.ceil(remainCountDown.value / 1000), 0);
     });
+
+    const current_pages_pool = computed(() => {
+        return current_round.value.pages_pool;
+    })
     
 
-    function changeGamephase(next_phase:ClassicGamephase, timestamp?:Timestamp, round?:RoundNumber, duration?:number) {
+    function changeGamephase(next_phase:EpicGamephase, timestamp?:Timestamp, round?:RoundNumber, duration?:number) {
         timestamp ??= getSyncedTimestamp();
         store.gamedata.gamephase[timestamp] = {
             duration: duration ?? durationInputToSeconds(store.gamedata.phase_duration[next_phase]),
@@ -115,8 +111,11 @@ function useClassicInnerGameStore() {
             changeGamephase("Voting", timestamp);
             return;
         }
-        const [ start, end ] = await getRandomPage(store.gamedata.wiki_lang, {
-            grnlimit: 2,
+        const pages_found_to_win = store.gamedata.pages_found_to_win;
+        const pages_pool_size = store.gamedata.pages_pool_size;
+        const pages_pool_order_mandatory = store.gamedata.pages_pool_order_mandatory;
+        const random_pages_pool = await getRandomPage(store.gamedata.wiki_lang, {
+            grnlimit: pages_pool_size,
             grnminsize: store.gamedata.wiki_random.grnminsize,
             grnmaxsize: store.gamedata.wiki_random.grnmaxsize,
         });
@@ -124,8 +123,10 @@ function useClassicInnerGameStore() {
             wiki_lang: store.gamedata.wiki_lang,
             remaining_after_win_duration: durationInputToSeconds(store.gamedata.remaining_after_win_duration),
             winners: {},
-            start,
-            end
+            pages_found_to_win,
+            pages_pool_size,
+            pages_pool_order_mandatory,
+            pages_pool: random_pages_pool,
         }
         for (const player of Object.values(store.players)) {
             store.gamedata.player_data[player.id] ??= {};
@@ -133,8 +134,8 @@ function useClassicInnerGameStore() {
                 twitch_votes: {}, score: 0, vote_skip: false, page_vote: null, history: {}
             };
             store.gamedata.player_data[player.id][store.gamedata.round.current].history[timestamp] = {
-                id: start.id,
-                title: start.title,
+                id: random_pages_pool[0].id,
+                title: random_pages_pool[0].title,
             }
         }
         changeGamephase("Playing");
@@ -151,6 +152,9 @@ function useClassicInnerGameStore() {
             }
             return;
         }
+        const pages_found_to_win = store.gamedata.pages_found_to_win;
+        const pages_pool_size = store.gamedata.pages_pool_size;
+        const pages_pool_order_mandatory = store.gamedata.pages_pool_order_mandatory;
         const round_wiki_lang = store.gamedata.wiki_lang;
         let votes = Object.values(store.gamedata.player_data)
             .reduce<VoteWikiPage[]>((acc,p) => {
@@ -160,10 +164,11 @@ function useClassicInnerGameStore() {
                 acc.push(player_round_data.page_vote);
                 return acc;
             }, []);
-        if (votes.length < 2) {
+        const distinctVoteLength = new Set(votes.map(vote => vote.id)).size;
+        if (distinctVoteLength < pages_pool_size) {
             try {
                 const pages = await getRandomPage(round_wiki_lang, {
-                    grnlimit: 2 - votes.length,
+                    grnlimit: pages_pool_size - distinctVoteLength,
                     grnminsize: store.gamedata.wiki_random.grnminsize,
                     grnmaxsize: store.gamedata.wiki_random.grnmaxsize,
                 });
@@ -174,31 +179,44 @@ function useClassicInnerGameStore() {
                 return;
             }
         }
-        // pick random vote 
-        const start = votes[Math.floor(Math.random() * votes.length)];
-        votes = votes.filter(v=>start.id!=v.id);
-        if (votes.length < 1) {
-            try {
-                const pages = await getRandomPage(round_wiki_lang, {
-                    grnlimit: 2 - votes.length,
-                    grnminsize: store.gamedata.wiki_random.grnminsize,
-                    grnmaxsize: store.gamedata.wiki_random.grnmaxsize,
-                });
-                votes.push(...pages);
-            } catch(e) {
-                setTimeout(()=>is_startWithVote_running = false, 5000);
-                is_startWithVote_running = false;
-                return;
+
+        // TODO check collision between random pages and vote
+        const pickedPages = new Map<number,WikiContentPreview>();
+        let refillTries = 0;
+        while (pickedPages.size < pages_pool_size) {
+            if (votes.length == 0) {
+                try {
+                    refillTries++;
+                    if (refillTries > 3) throw "Can't fill pages pool with random page";
+                    const pages = await getRandomPage(round_wiki_lang, {
+                        grnlimit: pages_pool_size,
+                        grnminsize: store.gamedata.wiki_random.grnminsize,
+                        grnmaxsize: store.gamedata.wiki_random.grnmaxsize,
+                    });
+                    for (const page of pages) {
+                        if (!pickedPages.has(page.id)) votes.push(...pages);
+                    }
+                    if (votes.length == 0) continue;
+                } catch(e) {
+                    setTimeout(()=>is_startWithVote_running = false, 5000);
+                    is_startWithVote_running = false;
+                    return;
+                }
             }
+            const page = votes[Math.floor(Math.random() * votes.length)];
+            pickedPages.set(page.id, page);
+            votes = votes.filter(v=>page.id!=v.id);
         }
-        const end = votes[Math.floor(Math.random() * votes.length)];
         const timestamp = getSyncedTimestamp();
+        const pages_pool = [...pickedPages.values()];
         current_round.value = {
             wiki_lang: current_round.value.wiki_lang,
             remaining_after_win_duration: durationInputToSeconds(store.gamedata.remaining_after_win_duration),
             winners: {},
-            start,
-            end
+            pages_pool: pages_pool,
+            pages_found_to_win,
+            pages_pool_order_mandatory,
+            pages_pool_size
         }
         for (const player of Object.values(store.players)) {
             store.gamedata.player_data[player.id] ??= {};
@@ -206,8 +224,8 @@ function useClassicInnerGameStore() {
                 twitch_votes: {}, score: 0, vote_skip: false, page_vote: null, history: {}
             };
             store.gamedata.player_data[player.id][store.gamedata.round.current].history[timestamp] = {
-                id: start.id,
-                title: start.title,
+                id: pages_pool[0].id,
+                title: pages_pool[0].title,
             }
         }
         changeGamephase("Playing");
@@ -220,39 +238,46 @@ function useClassicInnerGameStore() {
                 .reduce<Record<string/*username*/,string/*raw vote*/>>((acc,x)=>({...acc,...(x.twitch_votes)}),{});
         const shuffled_twitch_votes = shuffleObjectKeys(all_twitch_vote);
         const abort = new AbortController();
-        let start:WikiContentPreview|null = null;
-        let end:WikiContentPreview|null = null;
+        const pickedPages = new Map<number,WikiContentPreview>();
+        const pages_found_to_win = store.gamedata.pages_found_to_win;
+        const pages_pool_size = store.gamedata.pages_pool_size;
+        const pages_pool_order_mandatory = store.gamedata.pages_pool_order_mandatory;
+        const round_wiki_lang = store.gamedata.wiki_lang;
         for await (const page of findWikiPreviewStream(Object.values(shuffled_twitch_votes), current_round.value.wiki_lang, abort)) {
-            if (end == null) {
-                end = page;
-                continue;
-            } else if (start == null) {
-                if (end.id != page.id) {
-                    start = page;
-                    continue;
-                }
-            } else {
-                break;
-            }
+            pickedPages.set(page.id, page);
+            if (pickedPages.size >= pages_pool_size) break;
         }
-        if (start == null || end == null) {
-           const [page1, page2] = await getRandomPage(current_round.value.wiki_lang, {
-                    grnlimit: 2,
+        let refillTries = 0;
+        fill_with_random_pages: while (pickedPages.size < pages_pool_size) {
+            if (pickedPages.size >= pages_pool_size) break;
+            try {
+                refillTries++;
+                if (refillTries > 3) throw "Can't fill pages pool with random page";
+                const pages = await getRandomPage(round_wiki_lang, {
+                    grnlimit: pages_pool_size,
                     grnminsize: store.gamedata.wiki_random.grnminsize,
                     grnmaxsize: store.gamedata.wiki_random.grnmaxsize,
                 });
-           if (end == null) end = page1;
-           start = end.id == page2.id ? page1 : page2;
-        } else {
-            abort.abort();
+                for (const page of pages) {
+                    pickedPages.set(page.id, page);
+                    if (pickedPages.size >= pages_pool_size) break fill_with_random_pages;
+                }
+            } catch(e) {
+                setTimeout(()=>is_startWithVote_running = false, 5000);
+                is_startWithVote_running = false;
+                return;
+            }
         }
+        const pages_pool = [...pickedPages.values()];
         const timestamp = getSyncedTimestamp();
         current_round.value = {
             wiki_lang: current_round.value.wiki_lang,
             remaining_after_win_duration: durationInputToSeconds(store.gamedata.remaining_after_win_duration),
             winners: {},
-            start,
-            end
+            pages_found_to_win,
+            pages_pool_order_mandatory,
+            pages_pool_size,
+            pages_pool
         }
         for (const player of Object.values(store.players)) {
             store.gamedata.player_data[player.id] ??= {};
@@ -260,8 +285,8 @@ function useClassicInnerGameStore() {
                 twitch_votes: {}, score: 0, vote_skip: false, page_vote: null, history: {}
             };
             store.gamedata.player_data[player.id][store.gamedata.round.current].history[timestamp] = {
-                id: start.id,
-                title: start.title,
+                id: pages_pool[0].id,
+                title: pages_pool[0].title,
             }
         }
         changeGamephase("Playing");
@@ -314,22 +339,82 @@ function useClassicInnerGameStore() {
 
     }
 
+
+    const current_pages_pool_id_map = computed(() => {
+        const map = new Map<number,WikiContentPreview>();
+        for (const page of current_pages_pool.value) {
+            map.set(page.id, page);
+        }
+        return map;
+    });
+
+    const current_round_players_progress = computed(() => {
+        if (current_round.value == null) return {};
+        
+        const pages_pool_order_mandatory = current_round.value.pages_pool_order_mandatory;
+        const players_progress = {} as Record<PlayerID, WikiPageId[]>;
+        if (pages_pool_order_mandatory) {
+            for (const player of current_round_connected_player_data.value) {
+                const history = player.history;
+                if (!history) continue;
+
+                const timestamps = Object.keys(history).map(Number) as Timestamp[];
+                if (timestamps.length === 0) continue;
+                const pages_found:WikiPageId[] = [];
+                const pages_pool = current_pages_pool.value;
+                const history_sorted = Object.entries(history).map(([t,p])=>[Number(t),p] as const).sort(([a], [b]) => a - b);
+                for (const [_t,page] of history_sorted) {
+                    if (page.id == pages_pool[pages_found.length]?.id) {
+                        pages_found.push(page.id);
+                    }
+                }
+                players_progress[player.player_id] = pages_found;
+            }
+        } else {
+
+            for (const player of current_round_connected_player_data.value) {
+                const history = player.history;
+                if (!history) continue;
+
+                const timestamps = Object.keys(history).map(Number) as Timestamp[];
+                if (timestamps.length === 0) continue;
+                const pages_found = new Set<WikiPageId>();
+                for (const page of Object.values(history)) {
+                    if (current_pages_pool_id_map.value.has(page.id)) {
+                        pages_found.add(page.id);
+                    }
+                }
+                players_progress[player.player_id] = [...pages_found];
+            }
+            
+        }
+        return players_progress;
+    });
+
+    const my_current_round_player_progress = computed(() => current_round_players_progress.value[player_id.value] ?? []);
+    const my_current_round_player_progress_set = computed(() => new Set(my_current_round_player_progress.value));
+
     const open_podium = ref(false);
 
     return {
         ...gameStore,
         currentWikiPage,
-        currentEndPage,
         rawCountDown,
         countDown,
         rawRemainCountDown,
         remainCountDown,
         remainCountDownSeconds,
+        current_pages_pool,
+        
         current_round_all_player_data,
         current_round_connected_player_data,
         first_win_of_round_timestamp,
         current_round_player_data,
         open_podium,
+        current_round_players_progress,
+        current_pages_pool_id_map,
+        my_current_round_player_progress_set,
+
         changeGamephase,
         startWithVote,
         start,
@@ -339,7 +424,7 @@ function useClassicInnerGameStore() {
 
 let is_startWithVote_running = false;
 
-export function useClassicGameLifeCycle() {
+export async function useEpicGameLifeCycle() {
     const {
         remainCountDownSeconds,
         isHost,
@@ -348,10 +433,11 @@ export function useClassicGameLifeCycle() {
         open_podium,
         store,
         current_round,
+        current_round_players_progress,
         current_round_connected_player_data,
         changeGamephase,
         win
-    } = useClassicGameStore();
+    } = await useEpicGameStore();
 
     watch(remainCountDownSeconds, (_newValue, _oldValue) => {
         if (!isHost.value) return;
@@ -372,8 +458,8 @@ export function useClassicGameLifeCycle() {
                 }
                 store.gamedata.round.current++;
                 changeGamephase("Waiting");
-                const controlScreen = document.querySelector(".control-screen.mode-classic");
-                controlScreen?.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
+                const controlScreen = document.querySelector(".control-screen.mode-epic");
+                controlScreen?.scrollIntoView({behavior: 'instant', block: 'start', inline: 'center'});
                 
             }
         }
@@ -382,40 +468,26 @@ export function useClassicGameLifeCycle() {
     watch(() => current_phase.value.type, (phase, _oldValue) => {
         if (phase == "Voting") {
             const controlScreen = document.querySelector(".control-screen.mode-classic");
-            controlScreen?.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
+            controlScreen?.scrollIntoView({behavior: 'instant', block: 'start', inline: 'center'});
         } else if (phase == "Playing") {
             const playArea = document.getElementById("play-area");
-            playArea?.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
+            playArea?.scrollIntoView({behavior: 'instant', block: 'start', inline: 'center'});
         } else if (phase == "Waiting") {
             const controlScreen = document.querySelector(".control-screen.mode-classic");
-            controlScreen?.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
+            controlScreen?.scrollIntoView({behavior: 'instant', block: 'start', inline: 'center'});
         } else if (phase == "Podium") {
             const controlScreen = document.querySelector(".control-screen.mode-classic");
-            controlScreen?.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
+            controlScreen?.scrollIntoView({behavior: 'instant', block: 'start', inline: 'center'});
         }
     });
 
-    watch(current_round_connected_player_data, (players_data, _oldValue) => {
+    watch(current_round_players_progress, (players_progress, _oldValue) => {
         if (current_phase.value.type !== "Playing" || !isHost.value) return;
-        const instance = getCurrentInstance();
-        console.log("Watch is associated with component:", instance?.type.name || "Unnamed Component");
-        console.log(instance);
-        const endPageTitle = current_round.value.end.title;
-
-        for (const player of players_data) {
-            const history = player.history;
-            if (!history) continue;
-
-            const timestamps = Object.keys(history).map(Number) as Timestamp[];
-            if (timestamps.length === 0) continue;
-
-            const latestTimestamp = Math.max(...timestamps) as Timestamp;
-            const latestPage = history[latestTimestamp];
-
-            if (latestPage && latestPage.title === endPageTitle) {
-                win(player.player_id as PlayerID);
-            }
+        const pages_found_to_win = current_round.value.pages_found_to_win;
+        for (const [player_id, progress] of Object.entries(players_progress)) {
+            if (progress.length >= pages_found_to_win) win(player_id as PlayerID);
         }
+
     }, { deep: true });
 
     watch(current_round_connected_player_data, (players_data, _oldValue) => {
@@ -428,13 +500,13 @@ export function useClassicGameLifeCycle() {
 
 }
 
-export async function useClassicTwich() {
+export async function useEpicTwich() {
     if (twitch_oauth_token.value == null) return;
 
     const {
         current_phase,
         current_round_player_data
-    } = await useClassicGameStore();
+    } = await useEpicGameStore();
 
     const authProvider = new StaticAuthProvider(twitch_client_id, twitch_oauth_token.value, twitch_oauth_scope.value!);
     const apiClient = new ApiClient({ authProvider });

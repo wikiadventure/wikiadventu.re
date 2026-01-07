@@ -1,56 +1,93 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import { useClassicGameStore } from '../../stores/mode/classic/useClassic';
+import { useGameStore } from '../../stores/useGameStore';
+import type { DurationInput } from '../../stores/game';
 
-const { isHost } = useClassicGameStore();
+const { isHost } = useGameStore();
+// duration is an object ref with a value and a unit field
+// need .value.value to access it
+const duration = defineModel<DurationInput>({ required: true });
 
-const phase_duration = defineModel<number|undefined>({ required: true });
+// Create computed refs for easier access to nested properties
+const durationValue = computed({
+    get: () => duration.value.value,
+    set: (val) => {
+        duration.value = {
+            value: val,
+            unit: unit.value
+        }
+    }
+});
+
+const unit = computed({
+    get: () => duration.value.unit,
+    set: (val) => {
+        duration.value = {
+            value: durationValue.value,
+            unit: val
+        }
+    }
+});
 
 const props = defineProps<{
-    phase_display_name:string
+    duration_display_name:string
 }>();
 
-const rawInputRef = ref((phase_duration.value??"").toString());
+const rawInputRef = ref((duration.value.value??"").toString());
 
-watch(phase_duration, (newValue) => {
-    const parsedValue = parseFloat(rawInputRef.value);
-    if (!isNaN(parsedValue)) {
-        if (newValue != parsedValue) rawInputRef.value = newValue?.toString()!;
-    }
+watch(duration, (newDuration:DurationInput) => {
+    rawInputRef.value = newDuration.value?.toString()!;
 })
 
-const phaseDurationComputed = computed({
-  get: () => phase_duration.value,
-  set: (value:number|""|null) => {
-    if (value != null && value !== "") {
-        phase_duration.value = value;
+const durationComputed = computed({
+    get: () => duration.value,
+    set: (value:number|""|null) => {
+        if (value == null || value === "") return;
+        durationValue.value = Number(value) < 0 ? -1 : Number(value);
     }
-  }
 });
 
 function handleInput(event: Event) {
+
     const input = event.target as HTMLInputElement;
-    rawInputRef.value = input.value; // Capture the raw input value
+    if (input.value.length > 8) {
+        input.value = input.value.slice(0, 8);
+    }
+    if (input.value === "") {
+
+    } else {
+        rawInputRef.value = input.value; // Capture the raw input value
+    }
     const parsedValue = parseFloat(input.value);
     if (!isNaN(parsedValue)) {
-        phaseDurationComputed.value = parsedValue; // Update the model only if the value is a valid number
+        durationComputed.value = parsedValue; // Update the model only if the value is a valid number
     }
 };
 
 
 </script>
 <template>
-<label class="duration-input">
-    <span>{{ props.phase_display_name }} duration in seconds: </span>
-    <span :data-value="phaseDurationComputed">
-        <span aria-hidden="true">{{ rawInputRef }}</span>
-        <input :name="props.phase_display_name+'-duration-input'" 
-            type="number" :disabled="!isHost" min="-1"
-            :value="rawInputRef"
-            @input="handleInput"
-        >
-    </span>
-</label>
+<div class="duration-input">
+    <label>
+        <span>{{ props.duration_display_name }} duration: </span>
+        <span :data-value="durationComputed">
+            <span aria-hidden="true">{{ rawInputRef }}</span>
+            <input :name="props.duration_display_name.replaceAll(/\s+/g,'-')+'-duration-input-value'" 
+                type="number" :disabled="!isHost" min="-1" max="99999999"
+                inputmode="decimal"
+                :value="rawInputRef"
+                onkeydown="return !['e', 'E'].includes(event.key)"
+                @input="handleInput"
+            >
+        </span>
+    </label>
+    <select :name="props.duration_display_name.replaceAll(/\s+/g,'-')+'-duration-input-unit'" 
+            v-model="unit" aria-label="Choose a duration unit" :disabled="!isHost">
+        <option value="seconds">seconds</option>
+        <option value="minutes">minutes</option>
+        <option value="hours">hours</option>
+    </select>
+</div>
 </template>
 <style>
 .duration-input {
@@ -59,38 +96,38 @@ function handleInput(event: Event) {
 
     [aria-hidden="true"] {
         color: transparent;
+        min-width: 4ch;
+        font-size: 1rem;
+        max-width: 60vw;
+        padding-right: 2ch;
+        display: inline-block;
     }
 
 
-    > span[data-value] {
+    label > span[data-value] {
         position: relative;
-        padding-right: 3ch;
+        padding-right: 2ch;
     }
-    > span > input {
+    label > span > input {
         position: absolute;
         left: 0;
         width: 100%;
+        font-size: 1rem;
         background: transparent;
         color: var(--front-color);
         border: 1px solid #8888;
         border-radius: 4px 0 0 4px;
+        min-width: 6ch;
     }
-    > span[data-value="-1"]  {
-
-        > input {
-            color: transparent;
-            user-select: none;
-            &::selection {
-                color: transparent;
-                background: transparent;
-            }
-        }
+    label > span[data-value="-1"]  {
         &::after {
-            content: "∞";
-            padding-left: .5ch;
-            position: absolute;
-            left: 0;
+            content: " (∞)";
         }
+    }
+    > select {
+        font-size: 1rem;
+        background: var(--back-color);
+        color: var(--front-color);
     }
 }
 </style>
