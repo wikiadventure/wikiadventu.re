@@ -1,4 +1,5 @@
 import type { LangCode } from "../i18n/lang";
+import type { WikiPageId } from "../stores/game";
 import { createSeededRandomGenerator, generateCloseNumbers } from "./numberUtils";
 
 export async function loadPreviews(titles: string[], wiki_lang: LangCode, signal?: AbortSignal) {
@@ -143,6 +144,7 @@ export async function getRandomPage(lang: LangCode, gen_params?:WikiRandomGenera
     const response = await fetch(url.toString(), { credentials: 'omit', headers: wikiHeaders });
     const json = await response.json() as RandomResponse;
 
+    // TODO assert that the number of pages return match the gen_params?.grnlimit
 
     return Object.values(json.query.pages).map(page=>({
         title: page?.title,
@@ -293,7 +295,7 @@ export interface WikiThumbnail {
 
 export interface WikiRawPreview {
     ns: number,
-    pageid: number,
+    pageid: WikiPageId,
     index: number,
     title: string,
     description: string,
@@ -310,7 +312,7 @@ export interface WikiPreviewResponse {
 
 
 export type WikiRawSuggestion = {
-    pageid: number,
+    pageid: WikiPageId,
     ns: number,
     index: number,
     title: string,
@@ -325,7 +327,7 @@ export interface WikiContentPreview {
     title: string,
     description?: string
     thumbnail?: WikiThumbnail,
-    id: number,
+    id: WikiPageId,
     wiki_lang: LangCode
 }
 
@@ -350,7 +352,7 @@ type PreviewsResponse = {
 type RandomResponse = {
     query: {
         pages: Record<number,{
-            pageid: number,
+            pageid: WikiPageId,
             ns: 0,
             index: number,
             title: string,
@@ -364,7 +366,7 @@ type RandomResponse = {
 
 
 type WikiPageInfo = {
-    pageid: number,
+    pageid: WikiPageId,
     ns: number,
     title: string,
     contentmodel: string,
@@ -376,6 +378,6 @@ type WikiPageInfo = {
     length: number,
     redirect?: true
 } | {
-    pageid: number,
+    pageid: WikiPageId,
     missing: true
 }

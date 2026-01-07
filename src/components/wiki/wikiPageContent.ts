@@ -1,4 +1,5 @@
 import type { LangCode } from "../../i18n/lang";
+import type { WikiPageId } from "../../stores/game";
 
 
 export const wikiHeaders = new Headers({
@@ -12,7 +13,7 @@ interface heading {
 interface wikiResponse {
     parse: {
         title: string,
-        pageid: number,
+        pageid: WikiPageId,
         text: any,
         links: link[],
         headhtml: string
@@ -32,7 +33,7 @@ export default class WikiPageContent {
     initialTitle = "";
     lang:LangCode = "en";
     isMobile = false;
-    pageid = -1;
+    pageid = -1 as WikiPageId;
     constructor() {
 
     }

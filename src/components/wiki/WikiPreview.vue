@@ -61,6 +61,20 @@ function openWiki() {
   & > [wiki-thumbnail], & > [search-loader] {
     grid-area: i;
   }
+  p, h3 {
+    margin: 0;
+    padding: 0 10px;
+    font-size: 1rem;
+    line-height: 1em;
+    display: inline;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    transition: .5s max-height;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
 
   h3 {
     grid-area: t;
@@ -73,7 +87,7 @@ function openWiki() {
       padding: 2px;
       border-radius: 2px;
       transition: all ease-in-out .2s;
-      color: white;
+      color: var(--front-color);
       &:hover {
         background: #fff3;
       }
@@ -81,21 +95,6 @@ function openWiki() {
         color: rgb(176, 0, 176);
       }
     }
-  }
-
-  p, h3 {
-    margin: 0;
-    padding: 0 10px;
-    font-size: 1rem;
-    line-height: 1em;
-    display: -webkit-box;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    transition: .5s max-height;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
   }
 
   p {

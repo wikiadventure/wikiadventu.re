@@ -5,6 +5,7 @@ import { classic_initial_gamedata } from '../../stores/mode/classic/initialGamed
 import { useGameStore } from '../../stores/useGameStore';
 import GameButton from './GameButton.vue';
 import RestartIcon from '~icons/codicon/debug-restart';
+import { epic_initial_gamedata } from '../../stores/mode/epic/initialGamedata';
 
 const props = defineProps<{
     withGamemode: Gamemode
@@ -16,16 +17,24 @@ const confirmOpen = ref(false);
 
 async function restart(_e:Event) {
     const { gamedata, ...old_store } = toRaw(store);
+    const gamemode = props.withGamemode;
     const old_store_clone = structuredClone(old_store);
-    if (props.withGamemode == "Classic") {
-        await wipeYjsDoc();
-        store.creation_timestamp = old_store_clone.creation_timestamp;
-        store.gamemode = "Classic";
-        store.host_id = old_store_clone.host_id;
-        store.version = old_store_clone.version;
-        store.players = old_store_clone.players;
-        store.gamedata = classic_initial_gamedata();
+    
+    await wipeYjsDoc();
+    const newStoreData = {
+        creation_timestamp: old_store_clone.creation_timestamp,
+        host_id: old_store_clone.host_id,
+        version: old_store_clone.version,
+        players: old_store_clone.players,
+        gamemode: gamemode,
+        gamedata: {}
+    };
+    if (gamemode == "Classic") {
+        newStoreData.gamedata = classic_initial_gamedata();
+    } else if (gamemode == "Epic") {
+        newStoreData.gamedata = epic_initial_gamedata();
     }
+    Object.assign(store, newStoreData);
     confirmOpen.value = false;
 }
 

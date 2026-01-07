@@ -1,10 +1,13 @@
 <script lang="ts" setup>
+import { useMagicKeys, whenever } from '@vueuse/core';
 import { useAttrs } from 'vue';
 import DeblurIcon from '~icons/material-symbols/deblur';
 const model = defineModel<boolean>();
 
 const rawAttrs = useAttrs();
-const { class: _class, name, ...attrs } = rawAttrs; 
+const { class: _class, name, ...attrs } = rawAttrs;
+const keys = useMagicKeys();
+whenever(keys.Shift_Ctrl_X, () => model.value = !model.value);
 
 </script>
 <template>

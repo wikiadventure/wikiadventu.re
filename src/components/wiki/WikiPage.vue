@@ -8,6 +8,7 @@ import SafemodeInterrupt from "../game/safemode/SafemodeInterrupt.vue";
 import { useSafemode } from "../game/safemode/useSafemode.tsx";
 import { useWikiStyleSheets } from "./useWikiPage.ts";
 import { computedAsync } from "@vueuse/core";
+import type { WikiPageId } from "../../stores/game.ts";
 // import { useThemeStore } from "@/composables/useTheme";
 
 export type LinkClickContext = {
@@ -28,7 +29,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    (e: 'wikiLink', value: [title:string, id:number]): void
+    (e: 'wikiLink', value: [title:string, id:WikiPageId]): void
 }>();
 
 const wikiRef = useTemplateRef<HTMLDivElement | null>("wikiRef");

@@ -1,35 +1,18 @@
 <script lang="ts" setup>
-import ControlIcon from '~icons/material-symbols/tv-options-input-settings'
-import PlaygroundIcon from '~icons/solar/gamepad-bold';
-import EndIcon from '~icons/material-symbols-light/sports-score-rounded';
 
-function scrollToId(id:string) {
-    document.getElementById(id)?.scrollIntoView({behavior:'instant'});
-}
 </script>
 <template>
-<nav class="desktop-nav">
-    <ul>
-        <li>
-            <button @click="scrollToId('control-area')">
-                <ControlIcon/>
-                <span>Menu</span>
-            </button>
-        </li>
-        <li>
-            <button @click="scrollToId('play-area')">
-                <PlaygroundIcon/>
-                <span>Wiki playground</span>
-            </button>
-        </li>
-        <li>
-            <button @click="scrollToId('end-page-area')">
-                <EndIcon/>
-                <span>Wiki end page</span>
-            </button>
-        </li>
-    </ul>
-</nav>
+<section>
+    <h2>Help</h2>
+    <p>
+        You can shift + scroll or swipe verticaly on mobile to see  various game screen.
+        Screen are in this order [Game control] | [Wiki playground] | [Wiki end page]
+    </p>
+    <p>
+        There is also a popover menu to navigate to the different screen.
+        You can it view by hovering the middle top of the window.
+    </p>
+</section>
 </template>
 <style>
 .desktop-nav {
@@ -44,13 +27,8 @@ function scrollToId(id:string) {
 
     &:after {
         content: "";
-        position: absolute;
         border: 2px solid var(--front-color);
-        border-radius: 0 0 30px 30px;
-        height: 0;
-        width: 50%;
-        z-index: -1;
-        margin: -1.56lh 25% 0 25%;
+        border-radius: 0 0 2px 2px;
     }
 
     > ul {

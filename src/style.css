@@ -17,7 +17,7 @@ body {
 	--dark-box-shadow: 0 1px 5px rgba(0, 195, 205, 0.2),0 2px 2px rgba(0, 195, 205, 0.15),0 3px 1px -2px rgba(0, 195, 205, 0.125);
 
 	--light-back-color: #fff;
-	--dark-front-focus-color: #ddd;
+	--light-back-focus-color: #ddd;
 	--light-front-color: #000;
 	--light-box-shadow: 0 1px 5px #0003,0 2px 2px #00000024,0 3px 1px -2px #0000001f;
 }

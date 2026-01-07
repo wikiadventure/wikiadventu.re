@@ -4,8 +4,13 @@ import SafemodeInterrupt from './safemode/SafemodeInterrupt.vue';
 import { useSafemode } from './safemode/useSafemode';
 import "./safemode/safemode.css";
 import { computed, watch } from 'vue';
+import { useMagicKeys, whenever } from '@vueuse/core';
 
 const open = defineModel<boolean>({ required: true });
+
+const keys = useMagicKeys();
+
+whenever(keys.Shift_Ctrl_Q, () => open.value = false);
 
 const { SharpEdgeBlurFilter, safemodeActiveState, safemodeActive } = useSafemode();
 

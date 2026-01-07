@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { useGameStore } from '../../stores/useGameStore';
+import type { PlayerID } from '../../stores/game';
 
 const { store } = useGameStore();
 
 const winners_by_score = computed(()=>
     Object.entries(store.gamedata.round_data[store.gamedata.round.current]?.winners ?? {})
         .map(([player_id, x]) => ({
-            ...store.players[player_id],
-            score: Object.values(store.gamedata.player_data[player_id] ?? {}).reduce<number>((acc,p)=>acc+p.score,0),
+            ...store.players[player_id as PlayerID],
+            score: Object.values(store.gamedata.player_data[player_id as PlayerID] ?? {}).reduce<number>((acc,p)=>acc+p.score,0),
             round_score: x.score,
         }))
         .sort((a,b)=>b.round_score-a.round_score)
